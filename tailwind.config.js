@@ -1,11 +1,3 @@
-/** @type {import('tailwindcss').Config} */
-export default {
-  content: [
-    "./resources/**/*.blade.php",
-    "./resources/**/*.js",
-  ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-}
+// Tailwind CSS v4: konfigurasi tidak lagi menggunakan file ini.
+// Konfigurasi dilakukan via CSS di resources/css/app.css
+export default {}

@@ -26,34 +26,59 @@
                 <a href="/verification" class="px-3 py-2">Verifikasi</a>
             </div>
 
-            <!-- Button -->
+            <!-- Auth Buttons -->
             <div class="hidden lg:flex items-center gap-2">
 
-    <!-- LOGIN -->
-    <a href="/login" 
-       class="border border-gray-300 px-4 py-2 rounded hover:bg-gray-100">
-        Login
-    </a>
+                @guest
+                    <!-- Belum login: tampilkan Login & Register -->
+                    <a href="{{ route('login') }}"
+                       class="border border-gray-300 px-4 py-2 rounded hover:bg-gray-100 text-sm font-medium">
+                        Login
+                    </a>
+                    <a href="{{ route('register') }}"
+                       class="bg-[#FF7A00] text-white px-4 py-2 rounded hover:opacity-90 text-sm font-medium">
+                        Register
+                    </a>
+                @endguest
 
-    <!-- REGISTER -->
-    <a href="/register" 
-       class="bg-[#FF7A00] text-white px-4 py-2 rounded hover:opacity-90">
-        Register
-    </a>
+                @auth
+                    <!-- Sudah login: tampilkan nama user + avatar + Logout -->
+                    <div class="flex items-center gap-3">
 
-    <!-- DASHBOARD -->
-    <a href="/dashboard" 
-       class="border px-4 py-2 rounded">
-        Dashboard
-    </a>
+                        {{-- Avatar --}}
+                        @if (Auth::user()->avatar)
+                            <img src="{{ Auth::user()->avatar }}"
+                                 alt="{{ Auth::user()->name }}"
+                                 class="w-8 h-8 rounded-full object-cover border border-gray-200">
+                        @else
+                            <div class="w-8 h-8 rounded-full bg-[#00A8A8] flex items-center justify-center text-white text-sm font-bold">
+                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                            </div>
+                        @endif
 
-    <!-- ADMIN -->
-    <a href="/admin" 
-       class="bg-teal-500 text-white px-4 py-2 rounded">
-        Admin
-    </a>
+                        {{-- Nama user --}}
+                        <span class="text-sm font-medium text-gray-700">
+                            {{ Auth::user()->name }}
+                        </span>
 
-</div>
+                        {{-- Link Dashboard --}}
+                        <a href="{{ route('dashboard') }}"
+                           class="border px-3 py-1.5 rounded text-sm hover:bg-gray-50">
+                            Dashboard
+                        </a>
+
+                        {{-- Logout --}}
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit"
+                                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded text-sm transition">
+                                Logout
+                            </button>
+                        </form>
+                    </div>
+                @endauth
+
+            </div>
 
         </div>
     </nav>
