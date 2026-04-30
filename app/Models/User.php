@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'google_id',
+        'avatar',
     ];
 
     /**
@@ -41,4 +43,64 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | RELASI
+    |--------------------------------------------------------------------------
+    */
+
+    /** User bisa menjadi Admin */
+    public function admin()
+    {
+        return $this->hasOne(Admin::class);
+    }
+
+    /** User bisa memiliki profil Klien Individu */
+    public function klienIndividu()
+    {
+        return $this->hasOne(KlienIndividu::class);
+    }
+
+    /** User bisa memiliki profil Klien Perusahaan */
+    public function klienPerusahaan()
+    {
+        return $this->hasOne(KlienPerusahaan::class);
+    }
+
+    /** User memiliki banyak Pendaftaran layanan */
+    public function pendaftaran()
+    {
+        return $this->hasMany(Pendaftaran::class);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | HELPER
+    |--------------------------------------------------------------------------
+    */
+
+    /** Cek apakah user adalah admin (role apapun) */
+    public function isAdmin(): bool
+    {
+        return $this->admin()->exists();
+    }
+
+    /** Cek apakah user adalah superadmin */
+    public function isSuperAdmin(): bool
+    {
+        return $this->admin?->role === 'superadmin';
+    }
+
+    /** Cek apakah user adalah klien individu */
+    public function isIndividu(): bool
+    {
+        return $this->klienIndividu()->exists();
+    }
+
+    /** Cek apakah user adalah klien perusahaan */
+    public function isPerusahaan(): bool
+    {
+        return $this->klienPerusahaan()->exists();
+    }
 }

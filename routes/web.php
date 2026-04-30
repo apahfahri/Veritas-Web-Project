@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\GoogleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -10,18 +13,41 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'pages.home')->name('home');
 
-Route::view('/login', 'pages.login')->name('login');
-Route::view('/register', 'pages.register')->name('register');
+// Redirect /home ke beranda (untuk backward compat & middleware redirect fallback)
+Route::redirect('/home', '/');
 
 
 /*
 |--------------------------------------------------------------------------
-| DASHBOARD
+| AUTH ROUTES
 |--------------------------------------------------------------------------
 */
 
-Route::view('/dashboard', 'pages.dashboard')->name('dashboard');
-Route::view('/admin', 'pages.admin')->name('admin');
+// Guest only (redirect ke dashboard jika sudah login)
+Route::middleware('guest')->group(function () {
+    Route::get('/login',     [LoginController::class,    'showForm'])->name('login');
+    Route::post('/login',    [LoginController::class,    'login']);
+    Route::get('/register',  [RegisterController::class, 'showForm'])->name('register');
+    Route::post('/register', [RegisterController::class, 'register']);
+});
+
+// Google OAuth (tidak perlu middleware guest karena bisa update google_id user yang sudah ada)
+Route::get('/auth/google',          [GoogleController::class, 'redirect'])->name('google.login');
+Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('google.callback');
+
+// Logout
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+/*
+|--------------------------------------------------------------------------
+| DASHBOARD (AUTH REQUIRED)
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('auth')->group(function () {
+    Route::view('/dashboard', 'pages.dashboard')->name('dashboard');
+    Route::view('/admin',     'pages.admin')->name('admin');
+});
 
 
 /*
