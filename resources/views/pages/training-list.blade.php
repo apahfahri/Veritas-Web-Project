@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Pelatihan K3 — PT Katiga Veritas Indonesia')
 @section('content')
 
 <div class="min-h-screen bg-[#F5F7FA]">
@@ -8,139 +8,89 @@
     <div class="bg-gradient-to-r from-[#0A2540] to-[#00A8A8] text-white py-12">
         <div class="max-w-7xl mx-auto px-6">
             <h1 class="text-4xl font-bold mb-4">Pelatihan K3</h1>
-            <p class="text-lg text-gray-200">
-                Pilih program pelatihan K3 yang sesuai dengan kebutuhan Anda
-            </p>
+            <p class="text-lg text-gray-200">Pilih program pelatihan K3 yang sesuai dengan kebutuhan Anda</p>
         </div>
     </div>
 
     <div class="max-w-7xl mx-auto px-6 py-8">
 
         <!-- SEARCH + FILTER -->
-        <div class="bg-white p-6 rounded-xl shadow mb-8">
-
-            <div class="grid md:grid-cols-5 gap-4">
-
-                <!-- SEARCH -->
+        <form method="GET" action="{{ route('training.list') }}" class="bg-white p-6 rounded-xl shadow mb-8">
+            <div class="grid md:grid-cols-3 gap-4">
                 <div class="md:col-span-2 relative">
                     <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
-                    <input type="text"
-                           placeholder="Cari pelatihan..."
-                           class="w-full border rounded pl-10 py-2">
+                    <input type="text" name="search" value="{{ request('search') }}"
+                           placeholder="Cari materi pelatihan..."
+                           class="w-full border rounded pl-10 py-2 focus:outline-none focus:ring-2 focus:ring-[#00A8A8]">
                 </div>
-
-                <!-- CATEGORY -->
-                <select class="border rounded px-3 py-2">
-                    <option>Semua Kategori</option>
-                    <option>K3 Umum</option>
-                    <option>K3 Listrik</option>
+                <select name="jenis" onchange="this.form.submit()"
+                        class="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00A8A8]">
+                    <option value="">Semua Mode</option>
+                    <option value="online"  {{ request('jenis') == 'online'  ? 'selected' : '' }}>Online</option>
+                    <option value="offline" {{ request('jenis') == 'offline' ? 'selected' : '' }}>Offline</option>
                 </select>
-
-                <!-- MODE -->
-                <select class="border rounded px-3 py-2">
-                    <option>Semua Mode</option>
-                    <option>Online</option>
-                    <option>Offline</option>
-                    <option>Hybrid</option>
-                </select>
-
-                <!-- PRICE -->
-                <select class="border rounded px-3 py-2">
-                    <option>Semua Harga</option>
-                    <option>&lt; Rp 3jt</option>
-                    <option>Rp 3jt - 5jt</option>
-                    <option>&gt; Rp 5jt</option>
-                </select>
-
             </div>
+        </form>
 
-        </div>
-
-        <!-- RESULT -->
+        <!-- RESULT COUNT -->
         <div class="mb-6 text-gray-600">
-            Menampilkan 6 dari 6 pelatihan
+            Menampilkan <strong>{{ $pelatihans->count() }}</strong> pelatihan
         </div>
 
-
-        <!-- GRID -->
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-            <!-- CARD -->
-            <div class="bg-white rounded-xl shadow overflow-hidden group hover:shadow-xl transition">
-
-                <!-- IMAGE -->
-                <div class="aspect-video overflow-hidden bg-gray-200">
-                    <img src="https://images.unsplash.com/photo-1601021545082-4385509b3074"
-                         class="w-full h-full object-cover group-hover:scale-105 transition">
-                </div>
-
-                <div class="p-6">
-
-                    <!-- BADGE -->
-                    <div class="flex justify-between mb-3">
-                        <span class="bg-[#0A2540] text-white text-xs px-2 py-1 rounded">
-                            K3 Umum
-                        </span>
-
-                        <span class="border text-xs px-2 py-1 rounded">
-                            Online
-                        </span>
-                    </div>
-
-                    <!-- TITLE -->
-                    <h3 class="text-xl font-semibold text-[#0A2540] mb-2">
-                        Pelatihan K3 Umum Sertifikasi
-                    </h3>
-
-                    <!-- DESC -->
-                    <p class="text-sm text-gray-600 mb-4">
-                        Pelatihan lengkap K3 untuk profesional industri
-                    </p>
-
-                    <!-- INFO -->
-                    <div class="space-y-2 text-sm text-gray-600 mb-4">
-                        <div class="flex justify-between">
-                            <span>Durasi:</span>
-                            <span class="font-medium">3 Hari</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Instruktur:</span>
-                            <span class="font-medium">Ahmad</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Batch:</span>
-                            <span class="font-medium">2</span>
-                        </div>
-                    </div>
-
-                    <!-- PRICE -->
-                    <div class="border-t pt-4 flex justify-between items-center">
-                        <div>
-                            <div class="text-sm text-gray-500">Mulai dari</div>
-                            <div class="text-2xl font-bold text-[#0A2540]">
-                                Rp 2jt
-                            </div>
-                        </div>
-
-                        <a href="{{ route('training.detail', ['id' => 1]) }}"
-   class="bg-[#00A8A8] text-white px-4 py-2 rounded">
-    Daftar
-</a>
-                    </div>
-
-                </div>
+        @if($pelatihans->isEmpty())
+            <div class="text-center py-20 bg-white rounded-xl shadow">
+                <div class="text-5xl mb-4">📭</div>
+                <h3 class="text-xl font-bold text-gray-600">Tidak ada pelatihan ditemukan</h3>
+                <a href="{{ route('training.list') }}" class="mt-4 inline-block text-[#00A8A8] hover:underline">Reset filter</a>
             </div>
+        @else
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach($pelatihans as $pelatihan)
+                <div class="bg-white rounded-xl shadow overflow-hidden group hover:shadow-xl transition">
+                    <div class="aspect-video overflow-hidden bg-gradient-to-br from-[#0A2540] to-[#00A8A8] flex items-center justify-center">
+                        <span class="text-6xl">🎓</span>
+                    </div>
+                    <div class="p-6">
+                        <!-- BADGE -->
+                        <div class="flex justify-between mb-3">
+                            <span class="bg-[#0A2540] text-white text-xs px-2 py-1 rounded">
+                                {{ $pelatihan->layanan?->nama ?? 'Pelatihan K3' }}
+                            </span>
+                            <span class="border text-xs px-2 py-1 rounded {{ $pelatihan->jenis_pertemuan === 'online' ? 'border-[#00A8A8] text-[#00A8A8]' : 'border-orange-400 text-orange-500' }}">
+                                {{ ucfirst($pelatihan->jenis_pertemuan) }}
+                            </span>
+                        </div>
 
+                        <h3 class="text-xl font-semibold text-[#0A2540] mb-2">{{ $pelatihan->materi }}</h3>
+                        <p class="text-sm text-gray-600 mb-4 line-clamp-2">{{ $pelatihan->deskripsi ?? 'Pelatihan K3 profesional bersertifikat nasional.' }}</p>
 
+                        <div class="space-y-1 text-sm text-gray-600 mb-4">
+                            @if($pelatihan->tanggal_pertemuan)
+                            <div>📅 {{ $pelatihan->tanggal_pertemuan->format('d M Y') }}</div>
+                            @endif
+                            @if($pelatihan->jam_pertemuan)
+                            <div>⏰ {{ substr($pelatihan->jam_pertemuan, 0, 5) }} WIB</div>
+                            @endif
+                            @if($pelatihan->lokasi)
+                            <div>📍 {{ $pelatihan->lokasi }}</div>
+                            @endif
+                            @if($pelatihan->kapasitas)
+                            <div>👥 Kapasitas: {{ $pelatihan->kapasitas }} peserta</div>
+                            @endif
+                        </div>
 
-@foreach (range(1,5) as $i)
-    <div class="bg-white rounded-xl shadow overflow-hidden"></div>
-@endforeach
-
-        </div>
-
+                        <div class="border-t pt-4">
+                            <a href="{{ route('training.detail', $pelatihan->id) }}"
+                               class="block w-full text-center bg-[#00A8A8] text-white py-2 rounded hover:opacity-90 transition">
+                                Lihat Detail & Daftar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        @endif
     </div>
-
 </div>
 
 @endsection
