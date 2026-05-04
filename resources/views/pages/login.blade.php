@@ -112,7 +112,7 @@
                         <span class="text-gray-600">Ingat saya</span>
                     </label>
 
-                    <a href="#" class="text-[#00A8A8] hover:underline">
+                    <a href="{{ route('password.request') }}" class="text-[#00A8A8] hover:underline">
                         Lupa password?
                     </a>
                 </div>

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\PelatihanController;
 use App\Http\Controllers\VerifikasiController;
 use App\Http\Controllers\PendaftaranController;
@@ -50,8 +51,22 @@ Route::post('/verification/cek', [VerifikasiController::class, 'cek'])->name('ve
 Route::middleware('guest')->group(function () {
     Route::get('/login',     [LoginController::class,    'showForm'])->name('login');
     Route::post('/login',    [LoginController::class,    'login']);
-    Route::get('/register',  [RegisterController::class, 'showForm'])->name('register');
-    Route::post('/register', [RegisterController::class, 'register']);
+
+    // Register + OTP Verifikasi
+    Route::get('/register',              [RegisterController::class, 'showForm'])->name('register');
+    Route::post('/register',             [RegisterController::class, 'register']);
+    Route::get('/register/otp',          [RegisterController::class, 'showOtp'])->name('register.otp');
+    Route::post('/register/otp/verify',  [RegisterController::class, 'verifyOtp'])->name('register.otp.verify');
+    Route::post('/register/otp/resend',  [RegisterController::class, 'resendOtp'])->name('register.otp.resend');
+
+    // Lupa Password
+    Route::get('/forgot-password',              [ForgotPasswordController::class, 'showForm'])->name('password.request');
+    Route::post('/forgot-password',             [ForgotPasswordController::class, 'sendOtp'])->name('password.email');
+    Route::get('/forgot-password/otp',          [ForgotPasswordController::class, 'showOtpForm'])->name('password.otp');
+    Route::post('/forgot-password/otp/verify',  [ForgotPasswordController::class, 'verifyOtp'])->name('password.otp.verify');
+    Route::post('/forgot-password/otp/resend',  [ForgotPasswordController::class, 'resendOtp'])->name('password.otp.resend');
+    Route::get('/forgot-password/reset',        [ForgotPasswordController::class, 'showResetForm'])->name('password.reset.form');
+    Route::post('/forgot-password/reset',       [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
 });
 
 Route::get('/auth/google',          [GoogleController::class, 'redirect'])->name('google.login');
