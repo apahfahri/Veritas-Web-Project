@@ -131,7 +131,7 @@
             <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="bg-gray-50 px-8 py-4 border-b border-gray-100">
                     <h2 class="text-lg font-bold text-gray-800 flex items-center gap-3">
-                        <span>🔒</span> Ganti Kata Sandi
+                        <span>🔒</span> Konfirmasi Kata Sandi
                     </h2>
                 </div>
                 
