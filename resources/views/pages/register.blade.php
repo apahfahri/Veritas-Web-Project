@@ -170,7 +170,8 @@
                             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">🔒</span>
                             <input id="password-ind" type="password" name="password"
                                 placeholder="Minimal 8 karakter"
-                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('password') ? 'border-red-400' : '' }}">
+                                class="w-full border border-gray-300 rounded-lg pl-10 pr-10 py-2.5 text-sm focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('password') ? 'border-red-400' : '' }}">
+                            <button type="button" onclick="togglePassword('password-ind', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none text-sm">👁️</button>
                         </div>
                     </div>
 
@@ -183,7 +184,8 @@
                             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">🔒</span>
                             <input id="password-confirm-ind" type="password" name="password_confirmation"
                                 placeholder="Ulangi password"
-                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition">
+                                class="w-full border border-gray-300 rounded-lg pl-10 pr-10 py-2.5 text-sm focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition">
+                            <button type="button" onclick="togglePassword('password-confirm-ind', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none text-sm">👁️</button>
                         </div>
                     </div>
 
@@ -328,7 +330,8 @@
                             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">🔒</span>
                             <input id="password-com" type="password" name="password"
                                 placeholder="Minimal 8 karakter"
-                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('password') ? 'border-red-400' : '' }}">
+                                class="w-full border border-gray-300 rounded-lg pl-10 pr-10 py-2.5 text-sm focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('password') ? 'border-red-400' : '' }}">
+                            <button type="button" onclick="togglePassword('password-com', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none text-sm">👁️</button>
                         </div>
                     </div>
 
@@ -341,7 +344,8 @@
                             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">🔒</span>
                             <input id="password-confirm-com" type="password" name="password_confirmation"
                                 placeholder="Ulangi password"
-                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition">
+                                class="w-full border border-gray-300 rounded-lg pl-10 pr-10 py-2.5 text-sm focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition">
+                            <button type="button" onclick="togglePassword('password-confirm-com', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none text-sm">👁️</button>
                         </div>
                     </div>
 
@@ -425,6 +429,17 @@
 
     // Init on page load — restore old('user_type') after validation error
     switchType('{{ old('user_type', 'individual') }}');
+
+    function togglePassword(inputId, btn) {
+        const input = document.getElementById(inputId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            btn.innerHTML = '🙈';
+        } else {
+            input.type = 'password';
+            btn.innerHTML = '👁️';
+        }
+    }
 </script>
 
 @endsection

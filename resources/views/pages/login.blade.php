@@ -97,11 +97,15 @@
                             🔒
                         </span>
                         <input
+                            id="login-password"
                             type="password"
                             name="password"
                             placeholder="••••••••"
-                            class="w-full border rounded px-10 py-2 focus:outline-none focus:ring-2 focus:ring-[#00A8A8]"
+                            class="w-full border rounded pl-10 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-[#00A8A8]"
                         >
+                        <button type="button" onclick="togglePassword('login-password', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none text-sm">
+                            👁️
+                        </button>
                     </div>
                 </div>
 
@@ -141,5 +145,18 @@
     </div>
 
 </div>
+
+<script>
+    function togglePassword(inputId, btn) {
+        const input = document.getElementById(inputId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            btn.innerHTML = '🙈';
+        } else {
+            input.type = 'password';
+            btn.innerHTML = '👁️';
+        }
+    }
+</script>
 
 @endsection
