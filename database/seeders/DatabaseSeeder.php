@@ -15,11 +15,12 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            UserAdminSeeder::class,  // 1. Users & Admin (tidak ada FK eksternal)
-            PetugasSeeder::class,    // 2. Petugas (tidak ada FK eksternal)
-            LayananSeeder::class,    // 3. Layanan + Pelatihan + Konsultasi + Audit
-            // PendaftaranSeeder::class — tambahkan nanti setelah ada data klien
-            // SertifikatSeeder::class — tambahkan nanti setelah ada pendaftaran selesai
+            UserAdminSeeder::class,  // 1. Users & Admin
+            PetugasSeeder::class,    // 2. Petugas
+            LayananSeeder::class,    // 3. Layanan + Pelatihan
+            PerusahaanSeeder::class, // 4. Data Perusahaan
+            KlienSeeder::class,      // 5. Data Klien (Individu & Perusahaan)
+            PendaftaranSeeder::class, // 6. Data Pendaftaran + Sertifikat
         ]);
     }
 }
