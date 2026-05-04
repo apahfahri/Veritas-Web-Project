@@ -8,7 +8,7 @@
 <!-- STATS GRID -->
 <div class="grid grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
     <div class="bg-white p-6 rounded-xl shadow flex justify-between items-center">
-        <div><p class="text-sm text-gray-500">Total Pendaftaran</p><p class="text-3xl font-bold text-[#0A2540]">{{ $stats['pendaftaran'] }}</p></div>
+        <div><p class="text-sm text-gray-500">Total Pendaftaran</p><p class="text-3xl font-bold text-[#7d2ae7]">{{ $stats['pendaftaran'] }}</p></div>
         <div class="text-3xl">📋</div>
     </div>
     <div class="bg-white p-6 rounded-xl shadow flex justify-between items-center">
@@ -20,7 +20,7 @@
         <div class="text-3xl">✅</div>
     </div>
     <div class="bg-white p-6 rounded-xl shadow flex justify-between items-center">
-        <div><p class="text-sm text-gray-500">Total Pelatihan</p><p class="text-3xl font-bold text-[#00A8A8]">{{ $stats['pelatihan'] }}</p></div>
+        <div><p class="text-sm text-gray-500">Total Pelatihan</p><p class="text-3xl font-bold text-[#7d2ae7]">{{ $stats['pelatihan'] }}</p></div>
         <div class="text-3xl">🎓</div>
     </div>
     <div class="bg-white p-6 rounded-xl shadow flex justify-between items-center">
@@ -28,20 +28,20 @@
         <div class="text-3xl">👥</div>
     </div>
     <div class="bg-white p-6 rounded-xl shadow flex justify-between items-center">
-        <div><p class="text-sm text-gray-500">Sertifikat Terbit</p><p class="text-3xl font-bold text-[#FF7A00]">{{ $stats['sertifikat'] }}</p></div>
+        <div><p class="text-sm text-gray-500">Sertifikat Terbit</p><p class="text-3xl font-bold text-[#7d2ae7]">{{ $stats['sertifikat'] }}</p></div>
         <div class="text-3xl">🏆</div>
     </div>
 </div>
 
 <!-- QUICK LINKS -->
 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-    <a href="{{ route('admin.pendaftaran.index') }}" class="bg-[#0A2540] text-white p-4 rounded-xl text-center hover:opacity-90 transition">
+    <a href="{{ route('admin.pendaftaran.index') }}" class="bg-[#7d2ae7] text-white p-4 rounded-xl text-center hover:opacity-90 transition">
         <div class="text-2xl mb-2">📋</div><div class="text-sm font-medium">Kelola Pendaftaran</div>
     </a>
-    <a href="{{ route('admin.pelatihan.create') }}" class="bg-[#00A8A8] text-white p-4 rounded-xl text-center hover:opacity-90 transition">
+    <a href="{{ route('admin.pelatihan.create') }}" class="bg-[#7d2ae7] text-white p-4 rounded-xl text-center hover:opacity-90 transition">
         <div class="text-2xl mb-2">➕</div><div class="text-sm font-medium">Tambah Pelatihan</div>
     </a>
-    <a href="{{ route('admin.sertifikat.index') }}" class="bg-[#FF7A00] text-white p-4 rounded-xl text-center hover:opacity-90 transition">
+    <a href="{{ route('admin.sertifikat.index') }}" class="bg-[#7d2ae7] text-white p-4 rounded-xl text-center hover:opacity-90 transition">
         <div class="text-2xl mb-2">🏆</div><div class="text-sm font-medium">Manajemen Sertifikat</div>
     </a>
     <a href="{{ route('admin.petugas.index') }}" class="bg-blue-600 text-white p-4 rounded-xl text-center hover:opacity-90 transition">
@@ -52,8 +52,8 @@
 <!-- PENDAFTARAN TERBARU -->
 <div class="bg-white rounded-xl shadow">
     <div class="p-6 border-b flex justify-between items-center">
-        <h2 class="text-lg font-semibold text-[#0A2540]">Pendaftaran Terbaru</h2>
-        <a href="{{ route('admin.pendaftaran.index') }}" class="text-sm text-[#00A8A8] hover:underline">Lihat Semua →</a>
+        <h2 class="text-lg font-semibold text-[#7d2ae7]">Pendaftaran Terbaru</h2>
+        <a href="{{ route('admin.pendaftaran.index') }}" class="text-sm text-[#7d2ae7] hover:underline">Lihat Semua →</a>
     </div>
     <div class="overflow-x-auto">
         <table class="w-full text-sm">
@@ -82,7 +82,7 @@
                         <span class="px-2 py-1 rounded text-xs {{ $cb }}">{{ str_replace('_', ' ', $p->status_bayar) }}</span>
                     </td>
                     <td class="p-4">
-                        <a href="{{ route('admin.pendaftaran.show', $p->id) }}" class="text-[#00A8A8] hover:underline text-xs">Detail</a>
+                        <a href="{{ route('admin.pendaftaran.show', $p->id) }}" class="text-[#7d2ae7] hover:underline text-xs">Detail</a>
                     </td>
                 </tr>
                 @empty

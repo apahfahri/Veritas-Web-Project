@@ -3,14 +3,14 @@
 @section('content')
 
 <!-- HERO -->
-<section class="relative bg-gradient-to-br from-[#0A2540] via-[#0d3456] to-[#00A8A8] text-white overflow-hidden">
+<section class="relative bg-gradient-to-br from-[#7d2ae7] via-[#3969e7] to-[#07b9ce] text-white overflow-hidden">
     <div class="absolute inset-0 bg-[size:20px_20px] opacity-10"></div>
 
     <div class="relative max-w-7xl mx-auto px-6 py-20 lg:py-32 grid lg:grid-cols-2 gap-12 items-center">
 
         <div class="space-y-6">
 
-            <span class="bg-[#FF7A00] px-4 py-1 rounded-full text-sm">
+            <span class="bg-[#7d2ae7] px-4 py-1 rounded-full text-sm">
                 Terpercaya & Bersertifikat
             </span>
 
@@ -23,7 +23,7 @@
             </p>
 
             <div class="flex gap-4 pt-4">
-                <a href="/training" class="bg-[#FF7A00] px-6 py-3 rounded">
+                <a href="/training" class="bg-[#7d2ae7] px-6 py-3 rounded">
                     🎓 Lihat Pelatihan
                 </a>
 
@@ -60,7 +60,7 @@
 
 <!-- COMPANY -->
 <section class="py-16 text-center">
-    <h2 class="text-3xl font-bold text-[#0A2540]">
+    <h2 class="text-3xl font-bold text-[#7d2ae7]">
         PT Katiga Veritas Indonesia
     </h2>
 
@@ -105,7 +105,7 @@
 
 <!-- WHY -->
 <section class="py-16 text-center">
-    <h2 class="text-3xl font-bold text-[#0A2540] mb-10">
+    <h2 class="text-3xl font-bold text-[#7d2ae7] mb-10">
         Mengapa Memilih Kami?
     </h2>
 
@@ -172,13 +172,13 @@
 
 
 <!-- CTA -->
-<section class="py-16 bg-gradient-to-r from-[#0A2540] to-[#00A8A8] text-white text-center">
+<section class="py-16 bg-gradient-to-r from-[#7d2ae7] via-[#3969e7] to-[#07b9ce] text-white text-center">
     <h2 class="text-3xl font-bold">
         Siap Meningkatkan Standar K3?
     </h2>
 
     <div class="mt-6 flex justify-center gap-4">
-        <a href="#" class="bg-[#FF7A00] px-6 py-3 rounded">
+        <a href="#" class="bg-[#7d2ae7] px-6 py-3 rounded">
             WhatsApp
         </a>
         <a href="#" class="border px-6 py-3 rounded">

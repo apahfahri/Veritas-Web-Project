@@ -5,9 +5,9 @@
 @section('content')
 
 <div class="flex justify-between items-center mb-6">
-    <h2 class="text-xl font-semibold text-[#0A2540]">Daftar Pelatihan ({{ $pelatihans->total() }})</h2>
+    <h2 class="text-xl font-semibold text-[#7d2ae7]">Daftar Pelatihan ({{ $pelatihans->total() }})</h2>
     <a href="{{ route('admin.pelatihan.create') }}"
-       class="bg-[#00A8A8] text-white px-4 py-2 rounded-lg hover:opacity-90 transition text-sm">
+       class="bg-[#7d2ae7] text-white px-4 py-2 rounded-lg hover:opacity-90 transition text-sm">
         ➕ Tambah Pelatihan
     </a>
 </div>
@@ -28,7 +28,7 @@
         <tbody class="divide-y">
             @forelse($pelatihans as $p)
             <tr class="hover:bg-gray-50">
-                <td class="p-4 font-medium text-[#0A2540] max-w-xs">{{ $p->materi }}</td>
+                <td class="p-4 font-medium text-[#7d2ae7] max-w-xs">{{ $p->materi }}</td>
                 <td class="p-4 text-gray-600">{{ $p->layanan?->nama ?? '-' }}</td>
                 <td class="p-4">
                     <span class="px-2 py-1 rounded text-xs {{ $p->jenis_pertemuan === 'online' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700' }}">
@@ -43,7 +43,7 @@
                 <td class="p-4">
                     <div class="flex gap-2">
                         <a href="{{ route('admin.pelatihan.edit', $p->id) }}"
-                           class="border border-[#00A8A8] text-[#00A8A8] px-3 py-1 rounded text-xs hover:bg-[#00A8A8] hover:text-white transition">
+                           class="border border-[#7d2ae7] text-[#7d2ae7] px-3 py-1 rounded text-xs hover:bg-[#7d2ae7] hover:text-white transition">
                             Edit
                         </a>
                         <form method="POST" action="{{ route('admin.pelatihan.destroy', $p->id) }}"

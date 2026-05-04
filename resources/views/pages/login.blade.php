@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="min-h-screen bg-gradient-to-br from-[#0A2540] via-[#0d3456] to-[#00A8A8] flex items-center justify-center p-4">
+<div class="min-h-screen bg-gradient-to-br from-[#7d2ae7] via-[#3969e7] to-[#07b9ce] flex items-center justify-center p-4">
 
     <div class="w-full max-w-md">
 
@@ -20,7 +20,7 @@
 
             <!-- HEADER -->
             <div class="text-center mb-6">
-                <div class="w-16 h-16 bg-[#0A2540] rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl">
+                <div class="w-16 h-16 bg-[#7d2ae7] rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl">
                     🛡️
                 </div>
 
@@ -84,7 +84,7 @@
                             name="email"
                             value="{{ old('email') }}"
                             placeholder="nama@email.com"
-                            class="w-full border rounded px-10 py-2 focus:outline-none focus:ring-2 focus:ring-[#00A8A8] @error('email') border-red-400 @enderror"
+                            class="w-full border rounded px-10 py-2 focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] @error('email') border-red-400 @enderror"
                         >
                     </div>
                 </div>
@@ -100,7 +100,7 @@
                             type="password"
                             name="password"
                             placeholder="••••••••"
-                            class="w-full border rounded px-10 py-2 focus:outline-none focus:ring-2 focus:ring-[#00A8A8]"
+                            class="w-full border rounded px-10 py-2 focus:outline-none focus:ring-2 focus:ring-[#7d2ae7]"
                         >
                     </div>
                 </div>
@@ -112,7 +112,7 @@
                         <span class="text-gray-600">Ingat saya</span>
                     </label>
 
-                    <a href="{{ route('password.request') }}" class="text-[#00A8A8] hover:underline">
+                    <a href="{{ route('password.request') }}" class="text-[#7d2ae7] hover:underline">
                         Lupa password?
                     </a>
                 </div>
@@ -120,7 +120,7 @@
                 <!-- BUTTON -->
                 <button
                     type="submit"
-                    class="w-full bg-[#00A8A8] hover:bg-[#008888] text-white py-3 rounded font-semibold transition"
+                    class="w-full bg-[#7d2ae7] hover:bg-[#008888] text-white py-3 rounded font-semibold transition"
                 >
                     Login
                 </button>
@@ -131,7 +131,7 @@
             <div class="mt-6 text-center text-sm">
                 <p class="text-gray-600">
                     Belum punya akun?
-                    <a href="/register" class="text-[#00A8A8] font-medium hover:underline">
+                    <a href="/register" class="text-[#7d2ae7] font-medium hover:underline">
                         Daftar sekarang
                     </a>
                 </p>

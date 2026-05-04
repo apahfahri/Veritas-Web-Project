@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="min-h-screen bg-gradient-to-br from-[#0A2540] via-[#0d3456] to-[#00A8A8] flex items-center justify-center p-4 py-10">
+<div class="min-h-screen bg-gradient-to-br from-[#7d2ae7] via-[#3969e7] to-[#07b9ce] flex items-center justify-center p-4 py-10">
     <div class="w-full max-w-md">
 
         {{-- BACK --}}
@@ -20,10 +20,10 @@
 
             {{-- HEADER --}}
             <div class="text-center mb-7">
-                <div class="w-16 h-16 bg-[#0A2540] rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg">
+                <div class="w-16 h-16 bg-[#7d2ae7] rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg">
                     🔑
                 </div>
-                <h1 class="text-2xl font-bold text-[#0A2540]">Lupa Password?</h1>
+                <h1 class="text-2xl font-bold text-[#7d2ae7]">Lupa Password?</h1>
                 <p class="text-sm text-gray-500 mt-2 leading-relaxed">
                     Masukkan email akun Anda. Kami akan mengirimkan kode OTP untuk mereset password.
                 </p>
@@ -66,14 +66,14 @@
                             placeholder="nama@email.com"
                             required
                             autofocus
-                            class="w-full border border-gray-300 rounded-xl pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('email') ? 'border-red-400' : '' }}"
+                            class="w-full border border-gray-300 rounded-xl pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#7d2ae7] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('email') ? 'border-red-400' : '' }}"
                         >
                     </div>
                 </div>
 
                 {{-- SUBMIT --}}
                 <button type="submit"
-                    class="w-full bg-[#00A8A8] hover:bg-[#008f8f] active:scale-[.98] text-white py-3 rounded-xl font-semibold text-sm tracking-wide transition-all shadow-md hover:shadow-lg">
+                    class="w-full bg-[#7d2ae7] hover:bg-[#008f8f] active:scale-[.98] text-white py-3 rounded-xl font-semibold text-sm tracking-wide transition-all shadow-md hover:shadow-lg">
                     Kirim Kode OTP
                 </button>
 
@@ -83,7 +83,7 @@
             <div class="mt-6 text-center">
                 <p class="text-sm text-gray-500">
                     Ingat password Anda?
-                    <a href="{{ route('login') }}" class="text-[#00A8A8] font-semibold hover:underline">Login di sini</a>
+                    <a href="{{ route('login') }}" class="text-[#7d2ae7] font-semibold hover:underline">Login di sini</a>
                 </p>
             </div>
 

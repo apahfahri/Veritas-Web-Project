@@ -8,10 +8,10 @@
         {{-- ── HEADER ──────────────────────────────────────────────── --}}
         <div class="bg-white p-6 rounded-2xl shadow-sm mb-8 border border-gray-100">
             <a href="{{ route('training.detail', $pelatihan->id) }}"
-               class="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-[#00A8A8] mb-4 transition">
+               class="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-[#7d2ae7] mb-4 transition">
                 ← Kembali ke Detail Pelatihan
             </a>
-            <h1 class="text-2xl font-bold text-[#0A2540]">Form Pendaftaran Pelatihan</h1>
+            <h1 class="text-2xl font-bold text-[#7d2ae7]">Form Pendaftaran Pelatihan</h1>
             <p class="text-gray-500 mt-1 text-sm">{{ $pelatihan->layanan->nama ?? $pelatihan->materi }}</p>
             <p class="text-gray-400 text-xs mt-1">
                 📅 {{ \Carbon\Carbon::parse($pelatihan->tanggal_pertemuan)->translatedFormat('d F Y') }}
@@ -59,19 +59,19 @@
             @if(!$sudahPunyaProfil)
             {{-- ── STEP 1 · Jenis Pendaftar ──────────────────────── --}}
             <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mb-6">
-                <h2 class="text-lg font-semibold text-[#0A2540] mb-5">1. Jenis Pendaftar</h2>
+                <h2 class="text-lg font-semibold text-[#7d2ae7] mb-5">1. Jenis Pendaftar</h2>
 
                 <div class="grid md:grid-cols-2 gap-4">
                     <label id="card-individu"
                            class="relative flex flex-col gap-2 border-2 p-5 rounded-xl cursor-pointer transition-all
-                                  {{ $jenisKlien === 'individu' ? 'border-[#00A8A8] bg-[#F0FAFA]' : 'border-gray-200 hover:border-[#00A8A8]' }}">
+                                  {{ $jenisKlien === 'individu' ? 'border-[#7d2ae7] bg-[#F0FAFA]' : 'border-gray-200 hover:border-[#7d2ae7]' }}">
                         <input type="radio" name="_jenis_klien_radio" value="individu" class="sr-only"
                                {{ $jenisKlien === 'individu' ? 'checked' : '' }}>
                         <span class="text-2xl">👤</span>
-                        <span class="font-semibold text-[#0A2540]">Individu</span>
+                        <span class="font-semibold text-[#7d2ae7]">Individu</span>
                         <span class="text-xs text-gray-500">Pendaftaran perorangan / pribadi</span>
                         <span id="check-individu"
-                              class="absolute top-3 right-3 w-5 h-5 bg-[#00A8A8] rounded-full flex items-center justify-center
+                              class="absolute top-3 right-3 w-5 h-5 bg-[#7d2ae7] rounded-full flex items-center justify-center
                                      {{ $jenisKlien === 'individu' ? '' : 'hidden' }}">
                             <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
@@ -81,14 +81,14 @@
 
                     <label id="card-perusahaan"
                            class="relative flex flex-col gap-2 border-2 p-5 rounded-xl cursor-pointer transition-all
-                                  {{ $jenisKlien === 'perusahaan' ? 'border-[#00A8A8] bg-[#F0FAFA]' : 'border-gray-200 hover:border-[#00A8A8]' }}">
+                                  {{ $jenisKlien === 'perusahaan' ? 'border-[#7d2ae7] bg-[#F0FAFA]' : 'border-gray-200 hover:border-[#7d2ae7]' }}">
                         <input type="radio" name="_jenis_klien_radio" value="perusahaan" class="sr-only"
                                {{ $jenisKlien === 'perusahaan' ? 'checked' : '' }}>
                         <span class="text-2xl">🏢</span>
-                        <span class="font-semibold text-[#0A2540]">Perusahaan</span>
+                        <span class="font-semibold text-[#7d2ae7]">Perusahaan</span>
                         <span class="text-xs text-gray-500">Mewakili instansi / perusahaan</span>
                         <span id="check-perusahaan"
-                              class="absolute top-3 right-3 w-5 h-5 bg-[#00A8A8] rounded-full flex items-center justify-center
+                              class="absolute top-3 right-3 w-5 h-5 bg-[#7d2ae7] rounded-full flex items-center justify-center
                                      {{ $jenisKlien === 'perusahaan' ? '' : 'hidden' }}">
                             <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
@@ -103,7 +103,7 @@
             <div id="section-individu"
                  class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mb-6
                         {{ $jenisKlien === 'perusahaan' ? 'hidden' : '' }}">
-                <h2 class="text-lg font-semibold text-[#0A2540] mb-5">2. Data Peserta</h2>
+                <h2 class="text-lg font-semibold text-[#7d2ae7] mb-5">2. Data Peserta</h2>
 
                 <div class="space-y-4">
                     <div>
@@ -113,7 +113,7 @@
                         <input type="text" name="nama_lengkap"
                                value="{{ old('nama_lengkap', $profilIndividu->nama_lengkap ?? $user->name) }}"
                                placeholder="Masukkan nama lengkap sesuai KTP"
-                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#00A8A8] focus:border-transparent transition">
+                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition">
                     </div>
 
                     <div>
@@ -123,7 +123,7 @@
                         <input type="text" name="no_hp"
                                value="{{ old('no_hp', $profilIndividu->no_hp ?? '') }}"
                                placeholder="Contoh: 08123456789"
-                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#00A8A8] focus:border-transparent transition">
+                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition">
                     </div>
 
                     <div>
@@ -134,7 +134,7 @@
                                value="{{ old('nik', $profilIndividu->nik ?? '') }}"
                                placeholder="16 digit nomor KTP"
                                maxlength="16"
-                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#00A8A8] focus:border-transparent transition">
+                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition">
                     </div>
                 </div>
             </div>
@@ -143,7 +143,7 @@
             <div id="section-perusahaan"
                  class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mb-6
                         {{ $jenisKlien === 'perusahaan' ? '' : 'hidden' }}">
-                <h2 class="text-lg font-semibold text-[#0A2540] mb-5">2. Data Peserta & Perusahaan</h2>
+                <h2 class="text-lg font-semibold text-[#7d2ae7] mb-5">2. Data Peserta & Perusahaan</h2>
 
                 <div class="space-y-4">
                     {{-- Peserta --}}
@@ -156,7 +156,7 @@
                         <input type="text" name="nama_lengkap"
                                value="{{ old('nama_lengkap', $profilPerusahaan->nama_lengkap ?? $user->name) }}"
                                placeholder="Nama perwakilan dari perusahaan"
-                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#00A8A8] focus:border-transparent transition">
+                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition">
                     </div>
 
                     <div>
@@ -164,7 +164,7 @@
                         <input type="text" name="jabatan"
                                value="{{ old('jabatan', $profilPerusahaan->jabatan ?? '') }}"
                                placeholder="Contoh: HRD Manager, Training Officer"
-                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#00A8A8] focus:border-transparent transition">
+                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition">
                     </div>
 
                     {{-- Perusahaan --}}
@@ -177,7 +177,7 @@
                         <input type="text" name="nama_perusahaan"
                                value="{{ old('nama_perusahaan', $perusahaan->nama ?? '') }}"
                                placeholder="PT / CV / Instansi"
-                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#00A8A8] focus:border-transparent transition">
+                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition">
                     </div>
 
                     <div>
@@ -186,7 +186,7 @@
                         </label>
                         <textarea name="alamat_perusahaan" rows="2"
                                   placeholder="Alamat lengkap kantor / perusahaan"
-                                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#00A8A8] focus:border-transparent transition resize-none">{{ old('alamat_perusahaan', $perusahaan->alamat ?? '') }}</textarea>
+                                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition resize-none">{{ old('alamat_perusahaan', $perusahaan->alamat ?? '') }}</textarea>
                     </div>
 
                     <div class="grid md:grid-cols-2 gap-4">
@@ -195,14 +195,14 @@
                             <input type="text" name="npwp_perusahaan"
                                    value="{{ old('npwp_perusahaan', $perusahaan->npwp_perusahaan ?? '') }}"
                                    placeholder="XX.XXX.XXX.X-XXX.XXX"
-                                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#00A8A8] focus:border-transparent transition">
+                                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">NIB / OSS (Opsional)</label>
                             <input type="text" name="nib_oss"
                                    value="{{ old('nib_oss', $perusahaan->nib_oss ?? '') }}"
                                    placeholder="Nomor Induk Berusaha"
-                                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#00A8A8] focus:border-transparent transition">
+                                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition">
                         </div>
                     </div>
 
@@ -212,14 +212,14 @@
                             <input type="text" name="sektor_industri"
                                    value="{{ old('sektor_industri', $perusahaan->sektor_industri ?? '') }}"
                                    placeholder="Contoh: Manufaktur, Jasa, dll."
-                                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#00A8A8] focus:border-transparent transition">
+                                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Jumlah Karyawan (Opsional)</label>
                             <input type="number" name="jumlah_karyawan" min="1"
                                    value="{{ old('jumlah_karyawan', $perusahaan->jumlah_karyawan ?? '') }}"
                                    placeholder="Contoh: 50"
-                                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#00A8A8] focus:border-transparent transition">
+                                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition">
                         </div>
                     </div>
                 </div>
@@ -227,30 +227,30 @@
 
             {{-- ── STEP 3 · Ringkasan & Submit ────────────────────── --}}
             <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mb-6">
-                <h2 class="text-lg font-semibold text-[#0A2540] mb-5">3. Ringkasan Pendaftaran</h2>
+                <h2 class="text-lg font-semibold text-[#7d2ae7] mb-5">3. Ringkasan Pendaftaran</h2>
 
                 <div class="bg-[#F5F7FA] rounded-xl p-5 space-y-3 text-sm">
                     <div class="flex justify-between">
                         <span class="text-gray-500">Pelatihan</span>
-                        <span class="font-medium text-[#0A2540] text-right max-w-[60%]">
+                        <span class="font-medium text-[#7d2ae7] text-right max-w-[60%]">
                             {{ $pelatihan->layanan->nama ?? $pelatihan->materi }}
                         </span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-500">Tanggal</span>
-                        <span class="font-medium text-[#0A2540]">
+                        <span class="font-medium text-[#7d2ae7]">
                             {{ \Carbon\Carbon::parse($pelatihan->tanggal_pertemuan)->translatedFormat('d F Y') }}
                         </span>
                     </div>
                     @if($pelatihan->lokasi)
                     <div class="flex justify-between">
                         <span class="text-gray-500">Lokasi</span>
-                        <span class="font-medium text-[#0A2540]">{{ $pelatihan->lokasi }}</span>
+                        <span class="font-medium text-[#7d2ae7]">{{ $pelatihan->lokasi }}</span>
                     </div>
                     @endif
                     <div class="flex justify-between">
                         <span class="text-gray-500">Jenis Pertemuan</span>
-                        <span class="font-medium text-[#0A2540] capitalize">{{ $pelatihan->jenis_pertemuan }}</span>
+                        <span class="font-medium text-[#7d2ae7] capitalize">{{ $pelatihan->jenis_pertemuan }}</span>
                     </div>
                     <div class="border-t border-gray-200 pt-3 flex justify-between">
                         <span class="text-gray-500">Status Bayar</span>
@@ -266,11 +266,11 @@
             {{-- ── TOMBOL SUBMIT ───────────────────────────────────── --}}
             <div class="flex items-center justify-between gap-4">
                 <a href="{{ route('training.detail', $pelatihan->id) }}"
-                   class="text-sm text-gray-500 hover:text-[#0A2540] transition">
+                   class="text-sm text-gray-500 hover:text-[#7d2ae7] transition">
                     ← Batalkan
                 </a>
                 <button type="submit"
-                        class="bg-[#00A8A8] hover:bg-[#008f8f] text-white font-semibold px-8 py-3 rounded-xl transition-all shadow-sm hover:shadow-md active:scale-95">
+                        class="bg-[#7d2ae7] hover:bg-[#008f8f] text-white font-semibold px-8 py-3 rounded-xl transition-all shadow-sm hover:shadow-md active:scale-95">
                     Kirim Pendaftaran →
                 </button>
             </div>
@@ -309,12 +309,12 @@ document.addEventListener('DOMContentLoaded', function () {
             if(sectionPerus) sectionPerus.classList.add('hidden');
 
             if(cardInd) {
-                cardInd.classList.add('border-[#00A8A8]', 'bg-[#F0FAFA]');
+                cardInd.classList.add('border-[#7d2ae7]', 'bg-[#F0FAFA]');
                 cardInd.classList.remove('border-gray-200');
                 if(checkInd) checkInd.classList.remove('hidden');
             }
             if(cardPerus) {
-                cardPerus.classList.remove('border-[#00A8A8]', 'bg-[#F0FAFA]');
+                cardPerus.classList.remove('border-[#7d2ae7]', 'bg-[#F0FAFA]');
                 cardPerus.classList.add('border-gray-200');
                 if(checkPerus) checkPerus.classList.add('hidden');
             }
@@ -323,12 +323,12 @@ document.addEventListener('DOMContentLoaded', function () {
             if(sectionPerus) sectionPerus.classList.remove('hidden');
 
             if(cardPerus) {
-                cardPerus.classList.add('border-[#00A8A8]', 'bg-[#F0FAFA]');
+                cardPerus.classList.add('border-[#7d2ae7]', 'bg-[#F0FAFA]');
                 cardPerus.classList.remove('border-gray-200');
                 if(checkPerus) checkPerus.classList.remove('hidden');
             }
             if(cardInd) {
-                cardInd.classList.remove('border-[#00A8A8]', 'bg-[#F0FAFA]');
+                cardInd.classList.remove('border-[#7d2ae7]', 'bg-[#F0FAFA]');
                 cardInd.classList.add('border-gray-200');
                 if(checkInd) checkInd.classList.add('hidden');
             }

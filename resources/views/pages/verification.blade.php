@@ -5,7 +5,7 @@
 <div class="min-h-screen bg-[#F5F7FA]">
 
     <!-- HEADER -->
-    <div class="bg-gradient-to-r from-[#0A2540] to-[#00A8A8] text-white py-12">
+    <div class="bg-gradient-to-r from-[#7d2ae7] via-[#3969e7] to-[#07b9ce] text-white py-12">
         <div class="max-w-4xl mx-auto px-6">
             <a href="{{ route('home') }}" class="inline-flex items-center gap-2 mb-4 hover:bg-white/10 px-3 py-2 rounded">
                 ← Kembali
@@ -22,17 +22,17 @@
 
     <div class="max-w-4xl mx-auto px-6 py-8">
 
-        <div class="mb-8 border border-[#00A8A8] bg-blue-50 p-4 rounded text-sm text-[#0A2540]">
+        <div class="mb-8 border border-[#7d2ae7] bg-blue-50 p-4 rounded text-sm text-[#7d2ae7]">
             🔒 Verifikasi sertifikat untuk memastikan keaslian dan mencegah pemalsuan dokumen.
         </div>
 
         <!-- FORM CARD -->
         <div class="bg-white p-8 rounded-xl shadow">
             <div class="text-center mb-8">
-                <div class="w-20 h-20 bg-[#0A2540] rounded-full flex items-center justify-center mx-auto mb-4 text-white text-3xl">
+                <div class="w-20 h-20 bg-[#7d2ae7] rounded-full flex items-center justify-center mx-auto mb-4 text-white text-3xl">
                     🛡️
                 </div>
-                <h2 class="text-2xl font-semibold text-[#0A2540] mb-2">Verifikasi Sertifikat</h2>
+                <h2 class="text-2xl font-semibold text-[#7d2ae7] mb-2">Verifikasi Sertifikat</h2>
                 <p class="text-gray-600">Masukkan nomor sertifikat untuk memeriksa keasliannya</p>
             </div>
 
@@ -41,11 +41,11 @@
                 <input type="text" name="no_sertifikat"
                        value="{{ old('no_sertifikat') }}"
                        placeholder="Contoh: KV-K3-2026-000001"
-                       class="w-full border p-3 rounded text-center text-lg uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-[#00A8A8] @error('no_sertifikat') border-red-400 @enderror">
+                       class="w-full border p-3 rounded text-center text-lg uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] @error('no_sertifikat') border-red-400 @enderror">
                 @error('no_sertifikat')
                     <p class="text-red-500 text-sm text-center">{{ $message }}</p>
                 @enderror
-                <button type="submit" class="w-full bg-[#00A8A8] text-white py-3 rounded font-semibold hover:opacity-90 transition">
+                <button type="submit" class="w-full bg-[#7d2ae7] text-white py-3 rounded font-semibold hover:opacity-90 transition">
                     🔍 Verifikasi Sertifikat
                 </button>
             </form>
@@ -68,7 +68,7 @@
                 <!-- DETAIL -->
                 <div class="bg-white p-8 rounded-xl shadow">
                     <div class="flex justify-between mb-6">
-                        <h3 class="text-xl font-semibold text-[#0A2540]">Detail Sertifikat</h3>
+                        <h3 class="text-xl font-semibold text-[#7d2ae7]">Detail Sertifikat</h3>
                         <span class="bg-green-600 text-white px-3 py-1 rounded text-sm">✓ Terverifikasi</span>
                     </div>
 
@@ -98,7 +98,7 @@
                         </div>
 
                         <div class="flex flex-col items-center justify-center">
-                            <div class="w-32 h-32 bg-[#0A2540] rounded-xl flex items-center justify-center text-white text-4xl shadow">
+                            <div class="w-32 h-32 bg-[#7d2ae7] rounded-xl flex items-center justify-center text-white text-4xl shadow">
                                 🏆
                             </div>
                             <p class="text-sm text-gray-500 mt-4 text-center">
@@ -128,7 +128,7 @@
 
             <!-- ACTION -->
             <div class="flex gap-3">
-                <a href="{{ route('verification') }}" class="flex-1 bg-[#00A8A8] text-white py-2 rounded text-center hover:opacity-90">
+                <a href="{{ route('verification') }}" class="flex-1 bg-[#7d2ae7] text-white py-2 rounded text-center hover:opacity-90">
                     Verifikasi Lagi
                 </a>
                 <a href="{{ route('home') }}" class="border px-6 py-2 rounded hover:bg-gray-50">Beranda</a>
@@ -139,7 +139,7 @@
 
 
         <!-- HELP -->
-        <div class="mt-8 bg-gradient-to-br from-[#0A2540] to-[#00A8A8] text-white p-6 rounded-xl">
+        <div class="mt-8 bg-gradient-to-br from-[#7d2ae7] via-[#3969e7] to-[#07b9ce] text-white p-6 rounded-xl">
             <h3 class="font-semibold mb-2">Butuh Bantuan?</h3>
             <p class="text-sm mb-4">Hubungi tim kami jika ada kendala dalam verifikasi sertifikat.</p>
             <div class="flex gap-3">

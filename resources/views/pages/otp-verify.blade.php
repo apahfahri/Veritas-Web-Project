@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="min-h-screen bg-gradient-to-br from-[#0A2540] via-[#0d3456] to-[#00A8A8] flex items-center justify-center p-4 py-10">
+<div class="min-h-screen bg-gradient-to-br from-[#7d2ae7] via-[#3969e7] to-[#07b9ce] flex items-center justify-center p-4 py-10">
     <div class="w-full max-w-md">
 
         {{-- BACK --}}
@@ -20,17 +20,17 @@
 
             {{-- HEADER --}}
             <div class="text-center mb-7">
-                <div class="w-16 h-16 bg-[#0A2540] rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg">
+                <div class="w-16 h-16 bg-[#7d2ae7] rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg">
                     📧
                 </div>
-                <h1 class="text-2xl font-bold text-[#0A2540]">{{ $title }}</h1>
+                <h1 class="text-2xl font-bold text-[#7d2ae7]">{{ $title }}</h1>
                 <p class="text-sm text-gray-500 mt-2 leading-relaxed">{{ $message }}</p>
             </div>
 
             {{-- EMAIL TARGET --}}
             <div class="flex items-center justify-center gap-2 bg-teal-50 border border-teal-200 rounded-xl px-4 py-3 mb-6">
                 <span class="text-lg">📩</span>
-                <span class="text-sm font-medium text-[#0A2540]">{{ $email }}</span>
+                <span class="text-sm font-medium text-[#7d2ae7]">{{ $email }}</span>
             </div>
 
             {{-- INFO / ERROR --}}
@@ -64,7 +64,7 @@
                             pattern="[0-9]"
                             maxlength="1"
                             id="otp-{{ $i }}"
-                            class="w-12 h-14 text-center text-xl font-bold border-2 border-gray-300 rounded-xl focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition caret-transparent"
+                            class="w-12 h-14 text-center text-xl font-bold border-2 border-gray-300 rounded-xl focus:outline-none focus:border-[#7d2ae7] focus:ring-2 focus:ring-teal-100 transition caret-transparent"
                             autocomplete="off"
                         >
                     @endfor
@@ -77,13 +77,13 @@
                 <div class="text-center mb-5">
                     <p class="text-sm text-gray-500">
                         Kode berlaku selama
-                        <span id="timer" class="font-semibold text-[#00A8A8]">10:00</span>
+                        <span id="timer" class="font-semibold text-[#7d2ae7]">10:00</span>
                     </p>
                 </div>
 
                 {{-- SUBMIT --}}
                 <button type="submit" id="submit-btn"
-                    class="w-full bg-[#00A8A8] hover:bg-[#008f8f] active:scale-[.98] text-white py-3 rounded-xl font-semibold text-sm tracking-wide transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                    class="w-full bg-[#7d2ae7] hover:bg-[#008f8f] active:scale-[.98] text-white py-3 rounded-xl font-semibold text-sm tracking-wide transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
                     Verifikasi OTP
                 </button>
 
@@ -96,7 +96,7 @@
                       action="{{ $type === 'register' ? route('register.otp.resend') : route('password.otp.resend') }}">
                     @csrf
                     <button type="submit"
-                        class="text-[#00A8A8] font-semibold text-sm hover:underline disabled:text-gray-400 disabled:no-underline"
+                        class="text-[#7d2ae7] font-semibold text-sm hover:underline disabled:text-gray-400 disabled:no-underline"
                         id="resend-btn">
                         Kirim ulang kode OTP
                     </button>
@@ -172,7 +172,7 @@
         if (seconds <= 0) {
             clearInterval(interval);
             timerEl.textContent = '00:00';
-            timerEl.classList.replace('text-[#00A8A8]', 'text-red-500');
+            timerEl.classList.replace('text-[#7d2ae7]', 'text-red-500');
         } else {
             timerEl.textContent = pad(Math.floor(seconds / 60)) + ':' + pad(seconds % 60);
         }
