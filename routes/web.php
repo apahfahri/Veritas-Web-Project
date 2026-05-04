@@ -32,7 +32,7 @@ Route::view('/audit', 'pages.audit')->name('audit');
 */
 Route::get('/training',              [PelatihanController::class, 'index'])->name('training.list');
 Route::get('/training/{id}',         [PelatihanController::class, 'show'])->name('training.detail');
-Route::view('/training/{id}/register', 'pages.training-register')->name('training.register');
+Route::get('/training/{id}/register',  [PelatihanController::class, 'register'])->name('training.register');
 
 /*
 |--------------------------------------------------------------------------

@@ -25,34 +25,92 @@
                 <p class="text-gray-600 mb-6">Lengkapi form di bawah ini</p>
 
                 @auth
-                <form method="POST" action="{{ route('pendaftaran.store') }}" class="space-y-6">
+                <form method="POST" action="{{ route('pendaftaran.store') }}" class="space-y-6" id="form-pendaftaran">
                     @csrf
                     {{-- Layanan ID untuk Konsultasi K3 --}}
                     @php $layananKonsultasi = \App\Models\Layanan::where('nama', 'like', '%Konsultasi%')->first(); @endphp
                     <input type="hidden" name="layanan_id" value="{{ $layananKonsultasi?->id }}">
+                    @php
+                        $user = Auth::user();
+                        $profilIndividu = $user->klienIndividu;
+                        $profilPerusahaan = $user->klienPerusahaan;
+                        $perusahaan = $profilPerusahaan ? $profilPerusahaan->perusahaan : null;
 
+                        $isIndividu = $profilIndividu !== null;
+                        $isPerusahaan = $profilPerusahaan !== null;
+                        $sudahPunyaProfil = $isIndividu || $isPerusahaan;
+
+                        $defaultJenis = 'individu';
+                        if ($isPerusahaan) $defaultJenis = 'perusahaan';
+                        if ($isIndividu) $defaultJenis = 'individu';
+                        $jenisKlien = old('jenis_klien', $defaultJenis);
+                    @endphp
+                    <input type="hidden" name="jenis_klien" id="hidden_jenis_klien" value="{{ $jenisKlien }}">
+
+                    @if(!$sudahPunyaProfil)
+                    <!-- Jenis Pendaftar -->
                     <div>
-                        <label class="font-medium text-sm">Nama Lengkap</label>
-                        <input type="text" value="{{ Auth::user()->name }}" readonly
-                               class="w-full border p-2 rounded mt-1 bg-gray-50 text-gray-600">
+                        <label class="font-medium text-sm">Jenis Pendaftar *</label>
+                        <div class="grid grid-cols-2 gap-3 mt-1">
+                            <label class="border p-3 rounded cursor-pointer text-center transition" id="btn-individu">
+                                <input type="radio" name="_jenis_klien_radio" value="individu" class="sr-only" {{ $jenisKlien === 'individu' ? 'checked' : '' }}>
+                                👤 Individu
+                            </label>
+                            <label class="border p-3 rounded cursor-pointer text-center transition" id="btn-perusahaan">
+                                <input type="radio" name="_jenis_klien_radio" value="perusahaan" class="sr-only" {{ $jenisKlien === 'perusahaan' ? 'checked' : '' }}>
+                                🏢 Perusahaan
+                            </label>
+                        </div>
+                    </div>
+                    @endif
+
+                    <!-- Data Individu -->
+                    <div id="section-individu" class="space-y-4 {{ $jenisKlien === 'perusahaan' ? 'hidden' : '' }}">
+                        <div>
+                            <label class="font-medium text-sm">Nama Lengkap *</label>
+                            <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap', $profilIndividu->nama_lengkap ?? Auth::user()->name) }}" class="w-full border p-2 rounded mt-1" required>
+                        </div>
+                        <div>
+                            <label class="font-medium text-sm">Nomor HP *</label>
+                            <input type="text" name="no_hp" value="{{ old('no_hp', $profilIndividu->no_hp ?? '') }}" class="w-full border p-2 rounded mt-1" required>
+                        </div>
+                        <div>
+                            <label class="font-medium text-sm">NIK (Opsional)</label>
+                            <input type="text" name="nik" value="{{ old('nik', $profilIndividu->nik ?? '') }}" class="w-full border p-2 rounded mt-1" maxlength="16">
+                        </div>
                     </div>
 
-                    <div>
-                        <label class="font-medium text-sm">Email</label>
-                        <input type="email" value="{{ Auth::user()->email }}" readonly
-                               class="w-full border p-2 rounded mt-1 bg-gray-50 text-gray-600">
+                    <!-- Data Perusahaan -->
+                    <div id="section-perusahaan" class="space-y-4 {{ $jenisKlien === 'perusahaan' ? '' : 'hidden' }}">
+                        <div>
+                            <label class="font-medium text-sm">Nama Lengkap PIC *</label>
+                            <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap', $profilPerusahaan->nama_lengkap ?? Auth::user()->name) }}" class="w-full border p-2 rounded mt-1" disabled required>
+                        </div>
+                        <div>
+                            <label class="font-medium text-sm">Jabatan (Opsional)</label>
+                            <input type="text" name="jabatan" value="{{ old('jabatan', $profilPerusahaan->jabatan ?? '') }}" class="w-full border p-2 rounded mt-1" disabled>
+                        </div>
+                        <div>
+                            <label class="font-medium text-sm">Nama Perusahaan *</label>
+                            <input type="text" name="nama_perusahaan" value="{{ old('nama_perusahaan', $perusahaan->nama ?? '') }}" class="w-full border p-2 rounded mt-1" disabled required>
+                        </div>
+                        <div>
+                            <label class="font-medium text-sm">Alamat Perusahaan *</label>
+                            <textarea name="alamat_perusahaan" class="w-full border p-2 rounded mt-1" disabled required>{{ old('alamat_perusahaan', $perusahaan->alamat ?? '') }}</textarea>
+                        </div>
                     </div>
 
                     <div>
                         <label class="font-medium text-sm">Tanggal yang Diinginkan *</label>
                         <input type="date" name="tanggal_daftar" required
                                min="{{ date('Y-m-d') }}"
+                               value="{{ old('tanggal_daftar') }}"
                                class="w-full border p-2 rounded mt-1 focus:ring-2 focus:ring-[#00A8A8] focus:outline-none @error('tanggal_daftar') border-red-400 @enderror">
                         @error('tanggal_daftar')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
 
                     <div class="flex gap-3">
-                        <a href="{{ route('home') }}" class="border px-4 py-2 rounded hover:bg-gray-50">Batal</a>
+                        <a href="{{ route('home') }}" class="border px-4 py-2 rounded hover:bg-gray-50 flex items-center justify-center">Batal</a>
                         <button type="submit" class="flex-1 bg-[#00A8A8] text-white py-2 rounded hover:opacity-90">
                             Ajukan Konsultasi
                         </button>
@@ -97,3 +155,71 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const radios = document.querySelectorAll('input[name="_jenis_klien_radio"]');
+    const sectionInd = document.getElementById('section-individu');
+    const sectionPerus = document.getElementById('section-perusahaan');
+    const hiddenJenis = document.getElementById('hidden_jenis_klien');
+    const btnInd = document.getElementById('btn-individu');
+    const btnPerus = document.getElementById('btn-perusahaan');
+    const form = document.getElementById('form-pendaftaran');
+
+    if (!form) return;
+
+    function disableSection(section, shouldDisable) {
+        if (!section) return;
+        section.querySelectorAll('input, textarea, select').forEach(el => {
+            el.disabled = shouldDisable;
+        });
+    }
+
+    function switchJenis(val) {
+        hiddenJenis.value = val;
+        if (val === 'individu') {
+            if(sectionInd) sectionInd.classList.remove('hidden');
+            if(sectionPerus) sectionPerus.classList.add('hidden');
+            if(btnInd) {
+                btnInd.classList.add('bg-[#00A8A8]', 'text-white', 'border-[#00A8A8]');
+                btnInd.classList.remove('bg-white', 'text-gray-700', 'border-gray-200');
+            }
+            if(btnPerus) {
+                btnPerus.classList.add('bg-white', 'text-gray-700', 'border-gray-200');
+                btnPerus.classList.remove('bg-[#00A8A8]', 'text-white', 'border-[#00A8A8]');
+            }
+        } else {
+            if(sectionInd) sectionInd.classList.add('hidden');
+            if(sectionPerus) sectionPerus.classList.remove('hidden');
+            if(btnPerus) {
+                btnPerus.classList.add('bg-[#00A8A8]', 'text-white', 'border-[#00A8A8]');
+                btnPerus.classList.remove('bg-white', 'text-gray-700', 'border-gray-200');
+            }
+            if(btnInd) {
+                btnInd.classList.add('bg-white', 'text-gray-700', 'border-gray-200');
+                btnInd.classList.remove('bg-[#00A8A8]', 'text-white', 'border-[#00A8A8]');
+            }
+        }
+        disableSection(sectionInd, val !== 'individu');
+        disableSection(sectionPerus, val !== 'perusahaan');
+    }
+
+    if (radios.length > 0) {
+        radios.forEach(radio => {
+            radio.closest('label').addEventListener('click', function () {
+                switchJenis(radio.value);
+            });
+        });
+    }
+
+    switchJenis(hiddenJenis.value || 'individu');
+
+    form.addEventListener('submit', function () {
+        const val = hiddenJenis.value;
+        disableSection(sectionInd, val !== 'individu');
+        disableSection(sectionPerus, val !== 'perusahaan');
+    });
+});
+</script>
+@endpush
