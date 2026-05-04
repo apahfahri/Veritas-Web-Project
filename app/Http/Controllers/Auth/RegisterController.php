@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Mail\OtpMail;
+use App\Models\KlienIndividu;
+use App\Models\KlienPerusahaan;
 use App\Models\OtpCode;
+use App\Models\Perusahaan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +28,7 @@ class RegisterController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | STEP 2 — Validasi form, simpan ke session, kirim OTP, redirect ke OTP
+    | STEP 2 — Validasi form, simpan ke session, kirim OTP
     |--------------------------------------------------------------------------
     */
     public function register(Request $request)
@@ -47,17 +50,20 @@ class RegisterController extends Controller
             $rules['pic_name']     = ['required', 'string', 'max:255'];
         }
 
-        $validated = $request->validate($rules);
+        $request->validate($rules);
 
-        // Simpan semua data form ke session (sementara, belum buat user)
+        // Simpan semua data ke session (belum buat user)
         $request->session()->put('register_data', [
             'user_type'      => $type,
             'name'           => $type === 'individual' ? $request->name : $request->pic_name,
             'email'          => $request->email,
             'password'       => $request->password,
+            // Individu
             'nik'            => $request->nik,
             'phone'          => $request->phone,
+            // Perusahaan
             'company_name'   => $request->company_name,
+            'alamat'         => $request->alamat,
             'npwp'           => $request->npwp,
             'business_field' => $request->business_field,
             'pic_name'       => $request->pic_name,
@@ -66,7 +72,6 @@ class RegisterController extends Controller
 
         // Generate OTP & kirim email
         $otp = OtpCode::generate($request->email, 'register');
-
         Mail::to($request->email)->send(new OtpMail($otp, 'register'));
 
         return redirect()->route('register.otp')
@@ -80,24 +85,23 @@ class RegisterController extends Controller
     */
     public function showOtp()
     {
-        // Jika tidak ada data registrasi di session, kembali ke form
         if (!session()->has('register_data')) {
-            return redirect()->route('register')->with('error', 'Silakan isi form registrasi terlebih dahulu.');
+            return redirect()->route('register')
+                             ->with('error', 'Silakan isi form registrasi terlebih dahulu.');
         }
 
-        $email = session('register_data.email');
         return view('pages.otp-verify', [
-            'email'   => $email,
+            'email'   => session('register_data.email'),
             'type'    => 'register',
             'action'  => route('register.otp.verify'),
             'title'   => 'Verifikasi Email',
-            'message' => 'Masukkan kode OTP 6 digit yang telah dikirim ke email Anda untuk menyelesaikan pendaftaran.',
+            'message' => 'Masukkan kode OTP 6 digit yang dikirim ke email Anda untuk menyelesaikan pendaftaran.',
         ]);
     }
 
     /*
     |--------------------------------------------------------------------------
-    | STEP 4 — Verifikasi OTP & buat akun
+    | STEP 4 — Verifikasi OTP → buat User + profil klien
     |--------------------------------------------------------------------------
     */
     public function verifyOtp(Request $request)
@@ -107,30 +111,60 @@ class RegisterController extends Controller
         ]);
 
         if (!session()->has('register_data')) {
-            return redirect()->route('register')->with('error', 'Sesi registrasi telah berakhir. Silakan ulangi.');
+            return redirect()->route('register')
+                             ->with('error', 'Sesi registrasi telah berakhir. Silakan ulangi.');
         }
 
         $data  = session('register_data');
         $email = $data['email'];
-        $otp   = implode('', $request->input('otp_digit', [])) ?: $request->input('otp');
+        $otp   = $request->input('otp');
 
         if (!OtpCode::verify($email, 'register', $otp)) {
             return back()->withErrors(['otp' => 'Kode OTP tidak valid atau sudah kedaluwarsa.']);
         }
 
-        // Buat user
+        // ── Buat user utama ──────────────────────────────────────────────
         $user = User::create([
             'name'     => $data['name'],
             'email'    => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
 
-        // Bersihkan session
-        session()->forget('register_data');
+        // ── Buat profil sesuai tipe ──────────────────────────────────────
+        if ($data['user_type'] === 'individual') {
 
+            KlienIndividu::create([
+                'user_id'      => $user->id,
+                'nik'          => $data['nik']   ?? null,
+                'nama_lengkap' => $data['name'],
+                'no_hp'        => $data['phone'] ?? null,
+            ]);
+
+        } else {
+
+            // 1. Buat record Perusahaan
+            $perusahaan = Perusahaan::create([
+                'nama'             => $data['company_name'],
+                'alamat'           => $data['alamat']         ?? null,
+                'npwp_perusahaan'  => $data['npwp']           ?? null,
+                'sektor_industri'  => $data['business_field'] ?? null,
+            ]);
+
+            // 2. Buat record KlienPerusahaan (PIC / contact person)
+            KlienPerusahaan::create([
+                'user_id'       => $user->id,
+                'perusahaan_id' => $perusahaan->id,
+                'nama_lengkap'  => $data['pic_name']      ?? $data['name'],
+                'jabatan'       => $data['pic_position']  ?? null,
+            ]);
+        }
+
+        // ── Bersihkan session & login ────────────────────────────────────
+        session()->forget('register_data');
         Auth::login($user);
 
-        return redirect('/dashboard')->with('success', 'Akun berhasil dibuat! Selamat datang.');
+        return redirect('/dashboard')
+                   ->with('success', 'Akun berhasil dibuat! Selamat datang di PT Katiga Veritas Indonesia.');
     }
 
     /*
@@ -138,10 +172,11 @@ class RegisterController extends Controller
     | Resend OTP
     |--------------------------------------------------------------------------
     */
-    public function resendOtp(Request $request)
+    public function resendOtp()
     {
         if (!session()->has('register_data')) {
-            return redirect()->route('register')->with('error', 'Sesi registrasi telah berakhir.');
+            return redirect()->route('register')
+                             ->with('error', 'Sesi registrasi telah berakhir.');
         }
 
         $email = session('register_data.email');

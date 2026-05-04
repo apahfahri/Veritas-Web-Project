@@ -33,4 +33,10 @@ class PelatihanController extends Controller
         $related   = Pelatihan::where('id', '!=', $id)->take(3)->get();
         return view('pages.training-detail', compact('pelatihan', 'sisaKursi', 'related'));
     }
+
+    public function register($id)
+    {
+        $pelatihan = Pelatihan::with('layanan')->findOrFail($id);
+        return view('pages.training-register', compact('pelatihan'));
+    }
 }

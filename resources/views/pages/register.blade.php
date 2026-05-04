@@ -214,6 +214,19 @@
                         </div>
                     </div>
 
+                    {{-- Alamat Perusahaan --}}
+                    <div>
+                        <label for="alamat" class="block text-sm font-medium text-gray-700 mb-1">
+                            Alamat Perusahaan <span class="text-gray-400 font-normal">(opsional)</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 text-base pointer-events-none select-none">📍</span>
+                            <textarea id="alamat" name="alamat" rows="2"
+                                placeholder="Jl. Nama Jalan No. XX, Kota, Provinsi"
+                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition resize-none">{{ old('alamat') }}</textarea>
+                        </div>
+                    </div>
+
                     {{-- NPWP --}}
                     <div>
                         <label for="npwp" class="block text-sm font-medium text-gray-700 mb-1">
