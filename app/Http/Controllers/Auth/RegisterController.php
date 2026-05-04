@@ -145,6 +145,7 @@ class RegisterController extends Controller
             // 1. Buat record Perusahaan
             $perusahaan = Perusahaan::create([
                 'nama'             => $data['company_name'],
+                'no_telp'          => $data['phone']          ?? null,
                 'alamat'           => $data['alamat']         ?? null,
                 'npwp_perusahaan'  => $data['npwp']           ?? null,
                 'sektor_industri'  => $data['business_field'] ?? null,
@@ -156,6 +157,7 @@ class RegisterController extends Controller
                 'perusahaan_id' => $perusahaan->id,
                 'nama_lengkap'  => $data['pic_name']      ?? $data['name'],
                 'jabatan'       => $data['pic_position']  ?? null,
+                'no_hp'         => $data['phone']          ?? null,
             ]);
         }
 

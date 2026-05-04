@@ -16,6 +16,7 @@ class KlienPerusahaan extends Model
         'perusahaan_id',
         'nama_lengkap',
         'jabatan',
+        'no_hp',
     ];
 
     /*
