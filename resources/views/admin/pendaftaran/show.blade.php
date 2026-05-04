@@ -5,7 +5,7 @@
 @section('content')
 
 <div class="mb-4">
-    <a href="{{ route('admin.pendaftaran.index') }}" class="text-gray-500 hover:text-[#00A8A8] text-sm">← Kembali ke Daftar Pendaftaran</a>
+    <a href="{{ route('admin.pendaftaran.index') }}" class="text-gray-500 hover:text-[#7d2ae7] text-sm">← Kembali ke Daftar Pendaftaran</a>
 </div>
 
 <div class="grid lg:grid-cols-3 gap-6">
@@ -13,7 +13,7 @@
     <!-- DETAIL INFO -->
     <div class="lg:col-span-2 space-y-6">
         <div class="bg-white p-6 rounded-xl shadow">
-            <h2 class="text-lg font-semibold text-[#0A2540] mb-4">Informasi Pendaftaran</h2>
+            <h2 class="text-lg font-semibold text-[#7d2ae7] mb-4">Informasi Pendaftaran</h2>
             <dl class="grid grid-cols-2 gap-4 text-sm">
                 <div>
                     <dt class="text-gray-500">ID Pendaftaran</dt>
@@ -54,14 +54,14 @@
 
     <!-- UPDATE FORM -->
     <div class="bg-white p-6 rounded-xl shadow">
-        <h3 class="font-semibold text-[#0A2540] mb-4">Update Status</h3>
+        <h3 class="font-semibold text-[#7d2ae7] mb-4">Update Status</h3>
 
         <form method="POST" action="{{ route('admin.pendaftaran.update', $pendaftaran->id) }}" class="space-y-4">
             @csrf @method('PUT')
 
             <div>
                 <label class="block text-xs font-medium mb-1 text-gray-600">Status Progres *</label>
-                <select name="status_progres" required class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-[#00A8A8] focus:outline-none">
+                <select name="status_progres" required class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-[#7d2ae7] focus:outline-none">
                     <option value="menunggu"    {{ $pendaftaran->status_progres === 'menunggu'    ? 'selected' : '' }}>⏳ Menunggu</option>
                     <option value="diproses"    {{ $pendaftaran->status_progres === 'diproses'    ? 'selected' : '' }}>🔄 Diproses</option>
                     <option value="selesai"     {{ $pendaftaran->status_progres === 'selesai'     ? 'selected' : '' }}>✅ Selesai</option>
@@ -71,7 +71,7 @@
 
             <div>
                 <label class="block text-xs font-medium mb-1 text-gray-600">Status Pembayaran *</label>
-                <select name="status_bayar" required class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-[#00A8A8] focus:outline-none">
+                <select name="status_bayar" required class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-[#7d2ae7] focus:outline-none">
                     <option value="belum_bayar"          {{ $pendaftaran->status_bayar === 'belum_bayar'          ? 'selected' : '' }}>💳 Belum Bayar</option>
                     <option value="menunggu_konfirmasi"  {{ $pendaftaran->status_bayar === 'menunggu_konfirmasi'  ? 'selected' : '' }}>⏳ Menunggu Konfirmasi</option>
                     <option value="lunas"                {{ $pendaftaran->status_bayar === 'lunas'                ? 'selected' : '' }}>💰 Lunas</option>
@@ -80,7 +80,7 @@
 
             <div>
                 <label class="block text-xs font-medium mb-1 text-gray-600">Tugaskan Petugas</label>
-                <select name="petugas_id" class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-[#00A8A8] focus:outline-none">
+                <select name="petugas_id" class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-[#7d2ae7] focus:outline-none">
                     <option value="">— Belum ditugaskan —</option>
                     @foreach($petugas as $pt)
                         <option value="{{ $pt->id }}" {{ $pendaftaran->petugas_id == $pt->id ? 'selected' : '' }}>
@@ -90,7 +90,7 @@
                 </select>
             </div>
 
-            <button type="submit" class="w-full bg-[#0A2540] text-white py-2.5 rounded-lg hover:opacity-90 text-sm">
+            <button type="submit" class="w-full bg-[#7d2ae7] text-white py-2.5 rounded-lg hover:opacity-90 text-sm">
                 Simpan Perubahan
             </button>
         </form>
@@ -98,7 +98,7 @@
         @if($pendaftaran->status_progres === 'selesai' && !$pendaftaran->sertifikat)
         <div class="mt-4 pt-4 border-t">
             <a href="{{ route('admin.sertifikat.create', $pendaftaran->id) }}"
-               class="block w-full text-center bg-[#FF7A00] text-white py-2.5 rounded-lg hover:opacity-90 text-sm">
+               class="block w-full text-center bg-[#7d2ae7] text-white py-2.5 rounded-lg hover:opacity-90 text-sm">
                 🏆 Terbitkan Sertifikat
             </a>
         </div>

@@ -5,13 +5,13 @@
 <div class="min-h-screen bg-[#F5F7FA] flex">
 
     <!-- SIDEBAR -->
-    <aside class="w-64 bg-[#0A2540] text-white min-h-screen p-6">
+    <aside class="w-64 bg-[#7d2ae7] text-white min-h-screen p-6">
 
         <h2 class="text-xl font-bold mb-8">Admin Panel</h2>
 
         <nav class="space-y-2">
 
-            <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-[#00A8A8]">
+            <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-[#7d2ae7]">
                 📊 Dashboard
             </a>
 
@@ -49,7 +49,7 @@
 
         <!-- TOPBAR -->
         <header class="bg-white px-8 py-4 border-b flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-[#0A2540]">
+            <h1 class="text-2xl font-bold text-[#7d2ae7]">
                 Dashboard Overview
             </h1>
 
@@ -73,12 +73,12 @@
 
                 <div class="bg-white p-6 rounded-xl shadow">
                     <div class="text-sm text-gray-500">Pelatihan Aktif</div>
-                    <div class="text-2xl font-bold mt-2 text-[#00A8A8]">24</div>
+                    <div class="text-2xl font-bold mt-2 text-[#7d2ae7]">24</div>
                 </div>
 
                 <div class="bg-white p-6 rounded-xl shadow">
                     <div class="text-sm text-gray-500">Audit Selesai</div>
-                    <div class="text-2xl font-bold mt-2 text-[#FF7A00]">50</div>
+                    <div class="text-2xl font-bold mt-2 text-[#7d2ae7]">50</div>
                 </div>
 
                 <div class="bg-white p-6 rounded-xl shadow">

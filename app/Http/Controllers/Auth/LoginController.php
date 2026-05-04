@@ -31,6 +31,15 @@ class LoginController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
+            if (Auth::user()->isAdmin() && Auth::user()->admin->status === 'nonaktif') {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                return back()->withErrors([
+                    'email' => 'Akun admin Anda telah dinonaktifkan.',
+                ])->onlyInput('email');
+            }
+
             if (Auth::user()->isBranchAdmin()) {
                 return redirect()->intended('/branch-admin');
             }

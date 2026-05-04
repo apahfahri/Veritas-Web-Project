@@ -7,11 +7,11 @@
     <!-- BREADCRUMB -->
     <div class="bg-white border-b">
         <div class="max-w-7xl mx-auto px-6 py-4 text-sm">
-            <a href="{{ route('home') }}" class="text-gray-500 hover:text-[#00A8A8]">Home</a>
+            <a href="{{ route('home') }}" class="text-gray-500 hover:text-[#7d2ae7]">Home</a>
             <span class="mx-2 text-gray-400">/</span>
-            <a href="{{ route('training.list') }}" class="text-gray-500 hover:text-[#00A8A8]">Pelatihan</a>
+            <a href="{{ route('training.list') }}" class="text-gray-500 hover:text-[#7d2ae7]">Pelatihan</a>
             <span class="mx-2 text-gray-400">/</span>
-            <span class="text-[#0A2540] font-medium">{{ $pelatihan->materi }}</span>
+            <span class="text-[#7d2ae7] font-medium">{{ $pelatihan->materi }}</span>
         </div>
     </div>
 
@@ -28,15 +28,15 @@
                 <!-- HEADER CARD -->
                 <div class="bg-white p-8 rounded-xl shadow">
                     <div class="flex gap-3 mb-4">
-                        <span class="bg-[#0A2540] text-white text-xs px-3 py-1 rounded">
+                        <span class="bg-[#7d2ae7] text-white text-xs px-3 py-1 rounded">
                             {{ $pelatihan->layanan?->nama ?? 'Pelatihan K3' }}
                         </span>
-                        <span class="border text-xs px-3 py-1 rounded {{ $pelatihan->jenis_pertemuan === 'online' ? 'border-[#00A8A8] text-[#00A8A8]' : 'border-orange-400 text-orange-500' }}">
+                        <span class="border text-xs px-3 py-1 rounded {{ $pelatihan->jenis_pertemuan === 'online' ? 'border-[#7d2ae7] text-[#7d2ae7]' : 'border-orange-400 text-orange-500' }}">
                             {{ ucfirst($pelatihan->jenis_pertemuan) }}
                         </span>
                     </div>
 
-                    <h1 class="text-3xl font-bold text-[#0A2540] mb-4">{{ $pelatihan->materi }}</h1>
+                    <h1 class="text-3xl font-bold text-[#7d2ae7] mb-4">{{ $pelatihan->materi }}</h1>
 
                     <!-- INFO GRID -->
                     <div class="grid sm:grid-cols-3 gap-4 mb-6 text-sm bg-[#F5F7FA] p-4 rounded-lg">
@@ -63,14 +63,14 @@
                     <!-- DESCRIPTION -->
                     @if($pelatihan->deskripsi)
                     <div class="mb-6">
-                        <h2 class="text-xl font-semibold text-[#0A2540] mb-3">Deskripsi Pelatihan</h2>
+                        <h2 class="text-xl font-semibold text-[#7d2ae7] mb-3">Deskripsi Pelatihan</h2>
                         <p class="text-gray-600 leading-relaxed">{{ $pelatihan->deskripsi }}</p>
                     </div>
                     @endif
 
                     <!-- SCHEDULE -->
                     <div>
-                        <h2 class="text-xl font-semibold text-[#0A2540] mb-4">Jadwal</h2>
+                        <h2 class="text-xl font-semibold text-[#7d2ae7] mb-4">Jadwal</h2>
                         <div class="border rounded-lg p-4 space-y-2 text-sm">
                             @if($pelatihan->tanggal_pertemuan)
                             <div>📅 {{ $pelatihan->tanggal_pertemuan->format('l, d F Y') }}</div>
@@ -99,7 +99,7 @@
                 <div class="bg-white p-6 rounded-xl shadow sticky top-4">
                     <div class="mb-4">
                         <div class="text-sm text-gray-500">Layanan</div>
-                        <div class="text-xl font-bold text-[#0A2540]">{{ $pelatihan->layanan?->nama }}</div>
+                        <div class="text-xl font-bold text-[#7d2ae7]">{{ $pelatihan->layanan?->nama }}</div>
                     </div>
 
                     <hr class="my-4">
@@ -113,21 +113,21 @@
 
                     @auth
                         <a href="{{ route('training.register', $pelatihan->id) }}"
-                           class="block w-full text-center bg-[#FF7A00] text-white py-3 rounded-lg font-semibold hover:opacity-90 transition">
+                           class="block w-full text-center bg-[#7d2ae7] text-white py-3 rounded-lg font-semibold hover:opacity-90 transition">
                             Daftar Sekarang
                         </a>
                     @else
                         <a href="{{ route('login') }}"
-                           class="block w-full text-center bg-[#0A2540] text-white py-3 rounded-lg hover:opacity-90 transition">
+                           class="block w-full text-center bg-[#7d2ae7] text-white py-3 rounded-lg hover:opacity-90 transition">
                             Login untuk Mendaftar
                         </a>
                         <p class="text-xs text-center text-gray-500 mt-2">
-                            Belum punya akun? <a href="{{ route('register') }}" class="text-[#00A8A8] hover:underline">Daftar</a>
+                            Belum punya akun? <a href="{{ route('register') }}" class="text-[#7d2ae7] hover:underline">Daftar</a>
                         </p>
                     @endauth
 
                     <div class="mt-4 text-center text-sm">
-                        <a href="{{ route('consultation') }}" class="text-[#00A8A8] hover:underline">
+                        <a href="{{ route('consultation') }}" class="text-[#7d2ae7] hover:underline">
                             Butuh konsultasi dulu?
                         </a>
                     </div>
@@ -135,12 +135,12 @@
 
                 @if(!$related->isEmpty())
                 <div class="bg-white p-6 rounded-xl shadow">
-                    <h3 class="font-semibold text-[#0A2540] mb-4">Pelatihan Lainnya</h3>
+                    <h3 class="font-semibold text-[#7d2ae7] mb-4">Pelatihan Lainnya</h3>
                     <div class="space-y-3">
                         @foreach($related as $rel)
                         <a href="{{ route('training.detail', $rel->id) }}"
-                           class="block p-3 border rounded hover:border-[#00A8A8] transition text-sm">
-                            <div class="font-medium text-[#0A2540]">{{ $rel->materi }}</div>
+                           class="block p-3 border rounded hover:border-[#7d2ae7] transition text-sm">
+                            <div class="font-medium text-[#7d2ae7]">{{ $rel->materi }}</div>
                             <div class="text-gray-500 text-xs">{{ ucfirst($rel->jenis_pertemuan) }}</div>
                         </a>
                         @endforeach

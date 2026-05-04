@@ -5,7 +5,7 @@
 <div class="min-h-screen bg-[#F5F7FA]">
 
     <!-- HEADER -->
-    <div class="bg-gradient-to-r from-[#0A2540] to-[#00A8A8] text-white py-8">
+    <div class="bg-gradient-to-r from-[#7d2ae7] via-[#3969e7] to-[#07b9ce] text-white py-8">
         <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
             <div>
                 <h1 class="text-3xl font-bold">Dashboard</h1>
@@ -40,7 +40,7 @@
             <div class="bg-white p-6 rounded-xl shadow flex justify-between items-center">
                 <div>
                     <p class="text-sm text-gray-500">Total Pendaftaran</p>
-                    <p class="text-3xl font-bold text-[#0A2540]">{{ $stats['total'] }}</p>
+                    <p class="text-3xl font-bold text-[#7d2ae7]">{{ $stats['total'] }}</p>
                 </div>
                 <div class="text-3xl">📋</div>
             </div>
@@ -61,7 +61,7 @@
             <div class="bg-white p-6 rounded-xl shadow flex justify-between items-center">
                 <div>
                     <p class="text-sm text-gray-500">Sertifikat</p>
-                    <p class="text-3xl font-bold text-[#FF7A00]">{{ $stats['sertifikat'] }}</p>
+                    <p class="text-3xl font-bold text-[#7d2ae7]">{{ $stats['sertifikat'] }}</p>
                 </div>
                 <div class="text-3xl">🏆</div>
             </div>
@@ -70,9 +70,9 @@
         <!-- PENDAFTARAN LIST -->
         <div class="bg-white rounded-xl shadow">
             <div class="p-6 border-b flex justify-between items-center">
-                <h2 class="text-xl font-semibold text-[#0A2540]">Riwayat Pendaftaran</h2>
+                <h2 class="text-xl font-semibold text-[#7d2ae7]">Riwayat Pendaftaran</h2>
                 <a href="{{ route('training.list') }}"
-                   class="bg-[#00A8A8] text-white px-4 py-2 rounded text-sm hover:opacity-90">
+                   class="bg-[#7d2ae7] text-white px-4 py-2 rounded text-sm hover:opacity-90">
                     + Daftar Layanan Baru
                 </a>
             </div>
@@ -83,7 +83,7 @@
                     <h3 class="text-xl font-bold text-gray-600">Belum Ada Pendaftaran</h3>
                     <p class="text-gray-500 mb-6">Mulai dengan mendaftar pelatihan K3 pilihan Anda</p>
                     <a href="{{ route('training.list') }}"
-                       class="bg-[#00A8A8] text-white px-6 py-3 rounded-lg hover:opacity-90">
+                       class="bg-[#7d2ae7] text-white px-6 py-3 rounded-lg hover:opacity-90">
                         Lihat Pelatihan
                     </a>
                 </div>
@@ -93,7 +93,7 @@
                     <div class="p-6">
                         <div class="flex justify-between items-start mb-3">
                             <div>
-                                <h3 class="font-bold text-lg text-[#0A2540]">
+                                <h3 class="font-bold text-lg text-[#7d2ae7]">
                                     {{ $p->layanan?->nama ?? 'Layanan K3' }}
                                 </h3>
                                 <p class="text-sm text-gray-500">
@@ -144,7 +144,7 @@
                             {{-- Sertifikat jika ada --}}
                             @if($p->sertifikat)
                                 <a href="{{ route('verification') }}?no={{ $p->sertifikat->no_sertifikat }}"
-                                   class="bg-[#FF7A00] text-white px-4 py-1.5 rounded text-sm hover:opacity-90">
+                                   class="bg-[#7d2ae7] text-white px-4 py-1.5 rounded text-sm hover:opacity-90">
                                     🏆 Lihat Sertifikat ({{ $p->sertifikat->no_sertifikat }})
                                 </a>
                             @endif
