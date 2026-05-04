@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="min-h-screen bg-gradient-to-br from-[#0A2540] via-[#0d3456] to-[#00A8A8] flex items-center justify-center p-4 py-10">
+<div class="min-h-screen bg-gradient-to-br from-[#7d2ae7] via-[#3969e7] to-[#07b9ce] flex items-center justify-center p-4 py-10">
 
     <div class="w-full max-w-lg">
 
@@ -20,10 +20,10 @@
 
             {{-- HEADER --}}
             <div class="text-center mb-7">
-                <div class="w-16 h-16 bg-[#0A2540] rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg">
+                <div class="w-16 h-16 bg-[#7d2ae7] rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg">
                     🛡️
                 </div>
-                <h1 class="text-2xl font-bold text-[#0A2540]">Daftar Akun</h1>
+                <h1 class="text-2xl font-bold text-[#7d2ae7]">Daftar Akun</h1>
                 <p class="text-sm text-gray-500 mt-1">Buat akun untuk mengakses layanan kami</p>
             </div>
 
@@ -65,20 +65,20 @@
                     {{-- INDIVIDU CARD --}}
                     <button type="button" id="card-individual"
                         onclick="switchType('individual')"
-                        class="relative flex flex-col items-center gap-1 border-2 border-[#00A8A8] bg-teal-50 rounded-xl p-4 text-center cursor-pointer transition-all hover:shadow-md focus:outline-none">
-                        <span class="absolute top-2 right-2 text-[#00A8A8] text-xs font-bold" id="check-individual">✓</span>
+                        class="relative flex flex-col items-center gap-1 border-2 border-[#7d2ae7] bg-teal-50 rounded-xl p-4 text-center cursor-pointer transition-all hover:shadow-md focus:outline-none">
+                        <span class="absolute top-2 right-2 text-[#7d2ae7] text-xs font-bold" id="check-individual">✓</span>
                         <span class="text-3xl">👤</span>
-                        <span class="text-sm font-semibold text-[#0A2540]">Individu</span>
+                        <span class="text-sm font-semibold text-[#7d2ae7]">Individu</span>
                         <span class="text-xs text-gray-400">Perorangan / Personal</span>
                     </button>
 
                     {{-- PERUSAHAAN CARD --}}
                     <button type="button" id="card-company"
                         onclick="switchType('company')"
-                        class="relative flex flex-col items-center gap-1 border-2 border-gray-200 bg-white rounded-xl p-4 text-center cursor-pointer transition-all hover:border-[#00A8A8] hover:bg-teal-50 hover:shadow-md focus:outline-none">
-                        <span class="absolute top-2 right-2 text-[#00A8A8] text-xs font-bold hidden" id="check-company">✓</span>
+                        class="relative flex flex-col items-center gap-1 border-2 border-gray-200 bg-white rounded-xl p-4 text-center cursor-pointer transition-all hover:border-[#7d2ae7] hover:bg-teal-50 hover:shadow-md focus:outline-none">
+                        <span class="absolute top-2 right-2 text-[#7d2ae7] text-xs font-bold hidden" id="check-company">✓</span>
                         <span class="text-3xl">🏢</span>
-                        <span class="text-sm font-semibold text-[#0A2540]">Perusahaan</span>
+                        <span class="text-sm font-semibold text-[#7d2ae7]">Perusahaan</span>
                         <span class="text-xs text-gray-400">Badan Usaha / Institusi</span>
                     </button>
 
@@ -111,7 +111,7 @@
                             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">🪪</span>
                             <input id="nik" type="text" name="nik" value="{{ old('nik') }}"
                                 placeholder="16 digit NIK sesuai KTP" maxlength="16"
-                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('nik') ? 'border-red-400' : '' }}">
+                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#7d2ae7] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('nik') ? 'border-red-400' : '' }}">
                         </div>
                     </div>
 
@@ -124,7 +124,7 @@
                             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">👤</span>
                             <input id="name" type="text" name="name" value="{{ old('name') }}"
                                 placeholder="Nama sesuai KTP"
-                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('name') ? 'border-red-400' : '' }}">
+                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#7d2ae7] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('name') ? 'border-red-400' : '' }}">
                         </div>
                     </div>
 
@@ -137,7 +137,7 @@
                             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">📧</span>
                             <input id="email-ind" type="email" name="email" value="{{ old('email') }}"
                                 placeholder="nama@email.com"
-                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('email') ? 'border-red-400' : '' }}">
+                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#7d2ae7] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('email') ? 'border-red-400' : '' }}">
                         </div>
                     </div>
 
@@ -150,7 +150,7 @@
                             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">📱</span>
                             <input id="phone-ind" type="text" name="phone" value="{{ old('phone') }}"
                                 placeholder="08xxxxxxxxxx"
-                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition">
+                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#7d2ae7] focus:ring-2 focus:ring-teal-100 transition">
                         </div>
                     </div>
 
@@ -212,7 +212,7 @@
                             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">🏢</span>
                             <input id="company_name" type="text" name="company_name" value="{{ old('company_name') }}"
                                 placeholder="PT. Nama Perusahaan"
-                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('company_name') ? 'border-red-400' : '' }}">
+                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#7d2ae7] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('company_name') ? 'border-red-400' : '' }}">
                         </div>
                     </div>
 
@@ -225,7 +225,7 @@
                             <span class="absolute left-3 top-3 text-base pointer-events-none select-none">📍</span>
                             <textarea id="alamat" name="alamat" rows="2"
                                 placeholder="Jl. Nama Jalan No. XX, Kota, Provinsi"
-                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition resize-none">{{ old('alamat') }}</textarea>
+                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#7d2ae7] focus:ring-2 focus:ring-teal-100 transition resize-none">{{ old('alamat') }}</textarea>
                         </div>
                     </div>
 
@@ -238,7 +238,7 @@
                             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">📋</span>
                             <input id="npwp" type="text" name="npwp" value="{{ old('npwp') }}"
                                 placeholder="xx.xxx.xxx.x-xxx.xxx"
-                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition">
+                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#7d2ae7] focus:ring-2 focus:ring-teal-100 transition">
                         </div>
                     </div>
 
@@ -251,7 +251,7 @@
                             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">💼</span>
                             <input id="business_field" type="text" name="business_field" value="{{ old('business_field') }}"
                                 placeholder="Misal: Konstruksi, Pertambangan, dll."
-                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition">
+                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#7d2ae7] focus:ring-2 focus:ring-teal-100 transition">
                         </div>
                     </div>
 
@@ -271,7 +271,7 @@
                             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">👤</span>
                             <input id="pic_name" type="text" name="pic_name" value="{{ old('pic_name') }}"
                                 placeholder="Nama penanggung jawab"
-                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('pic_name') ? 'border-red-400' : '' }}">
+                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#7d2ae7] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('pic_name') ? 'border-red-400' : '' }}">
                         </div>
                     </div>
 
@@ -284,7 +284,7 @@
                             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">🏷️</span>
                             <input id="pic_position" type="text" name="pic_position" value="{{ old('pic_position') }}"
                                 placeholder="Misal: HRD Manager, Direktur"
-                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition">
+                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#7d2ae7] focus:ring-2 focus:ring-teal-100 transition">
                         </div>
                     </div>
 
@@ -304,7 +304,7 @@
                             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">📧</span>
                             <input id="email-com" type="email" name="email" value="{{ old('email') }}"
                                 placeholder="info@perusahaan.com"
-                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('email') ? 'border-red-400' : '' }}">
+                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#7d2ae7] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('email') ? 'border-red-400' : '' }}">
                         </div>
                     </div>
 
@@ -317,7 +317,7 @@
                             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">📞</span>
                             <input id="phone-com" type="text" name="phone" value="{{ old('phone') }}"
                                 placeholder="021-xxxxxxxx"
-                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition">
+                                class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#7d2ae7] focus:ring-2 focus:ring-teal-100 transition">
                         </div>
                     </div>
 
@@ -357,16 +357,16 @@
                         class="mt-0.5 w-4 h-4 accent-teal-500 shrink-0 cursor-pointer">
                     <label for="agreement" class="text-gray-600 leading-relaxed">
                         Saya setuju dengan
-                        <a href="#" class="text-[#00A8A8] hover:underline font-medium">Syarat &amp; Ketentuan</a>
+                        <a href="#" class="text-[#7d2ae7] hover:underline font-medium">Syarat &amp; Ketentuan</a>
                         dan
-                        <a href="#" class="text-[#00A8A8] hover:underline font-medium">Kebijakan Privasi</a>
+                        <a href="#" class="text-[#7d2ae7] hover:underline font-medium">Kebijakan Privasi</a>
                         PT Katiga Veritas Indonesia
                     </label>
                 </div>
 
                 {{-- SUBMIT BUTTON --}}
                 <button type="submit"
-                    class="w-full mt-5 bg-[#00A8A8] hover:bg-[#008f8f] active:scale-[.98] text-white py-3 rounded-xl font-semibold text-sm tracking-wide transition-all shadow-md hover:shadow-lg">
+                    class="w-full mt-5 bg-[#7d2ae7] hover:bg-[#008f8f] active:scale-[.98] text-white py-3 rounded-xl font-semibold text-sm tracking-wide transition-all shadow-md hover:shadow-lg">
                     Buat Akun
                 </button>
 
@@ -376,7 +376,7 @@
             <div class="mt-5 text-center text-sm">
                 <p class="text-gray-500">
                     Sudah punya akun?
-                    <a href="/login" class="text-[#00A8A8] font-semibold hover:underline">Login di sini</a>
+                    <a href="/login" class="text-[#7d2ae7] font-semibold hover:underline">Login di sini</a>
                 </p>
             </div>
 
@@ -386,7 +386,7 @@
 </div>
 
 <script>
-    const ACTIVE_CARD   = ['border-[#00A8A8]', 'bg-teal-50'];
+    const ACTIVE_CARD   = ['border-[#7d2ae7]', 'bg-teal-50'];
     const INACTIVE_CARD = ['border-gray-200', 'bg-white'];
 
     function switchType(type) {

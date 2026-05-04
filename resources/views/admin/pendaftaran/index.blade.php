@@ -8,7 +8,7 @@
 <form method="GET" class="bg-white p-4 rounded-xl shadow mb-6 flex gap-4 items-end">
     <div>
         <label class="block text-xs font-medium mb-1 text-gray-600">Status Progres</label>
-        <select name="status" class="border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#00A8A8] focus:outline-none">
+        <select name="status" class="border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#7d2ae7] focus:outline-none">
             <option value="">Semua Status</option>
             <option value="menunggu"    {{ request('status') === 'menunggu'    ? 'selected' : '' }}>Menunggu</option>
             <option value="diproses"    {{ request('status') === 'diproses'    ? 'selected' : '' }}>Diproses</option>
@@ -18,14 +18,14 @@
     </div>
     <div>
         <label class="block text-xs font-medium mb-1 text-gray-600">Status Bayar</label>
-        <select name="bayar" class="border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#00A8A8] focus:outline-none">
+        <select name="bayar" class="border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#7d2ae7] focus:outline-none">
             <option value="">Semua Bayar</option>
             <option value="belum_bayar"          {{ request('bayar') === 'belum_bayar'          ? 'selected' : '' }}>Belum Bayar</option>
             <option value="menunggu_konfirmasi"  {{ request('bayar') === 'menunggu_konfirmasi'  ? 'selected' : '' }}>Menunggu Konfirmasi</option>
             <option value="lunas"                {{ request('bayar') === 'lunas'                ? 'selected' : '' }}>Lunas</option>
         </select>
     </div>
-    <button type="submit" class="bg-[#0A2540] text-white px-4 py-2 rounded-lg text-sm hover:opacity-90">Filter</button>
+    <button type="submit" class="bg-[#7d2ae7] text-white px-4 py-2 rounded-lg text-sm hover:opacity-90">Filter</button>
     <a href="{{ route('admin.pendaftaran.index') }}" class="border px-4 py-2 rounded-lg text-sm hover:bg-gray-50">Reset</a>
 </form>
 
@@ -51,7 +51,7 @@
                 @forelse($pendaftarans as $p)
                 <tr class="hover:bg-gray-50">
                     <td class="p-4">
-                        <div class="font-medium text-[#0A2540]">{{ $p->user?->name }}</div>
+                        <div class="font-medium text-[#7d2ae7]">{{ $p->user?->name }}</div>
                         <div class="text-xs text-gray-500">{{ $p->user?->email }}</div>
                     </td>
                     <td class="p-4 text-gray-600">{{ $p->layanan?->nama ?? '-' }}</td>
@@ -68,12 +68,12 @@
                     <td class="p-4">
                         <div class="flex gap-2 flex-wrap">
                             <a href="{{ route('admin.pendaftaran.show', $p->id) }}"
-                               class="border border-[#00A8A8] text-[#00A8A8] px-3 py-1 rounded text-xs hover:bg-[#00A8A8] hover:text-white transition">
+                               class="border border-[#7d2ae7] text-[#7d2ae7] px-3 py-1 rounded text-xs hover:bg-[#7d2ae7] hover:text-white transition">
                                 Detail
                             </a>
                             @if($p->status_progres === 'selesai' && !$p->sertifikat)
                             <a href="{{ route('admin.sertifikat.create', $p->id) }}"
-                               class="border border-[#FF7A00] text-[#FF7A00] px-3 py-1 rounded text-xs hover:bg-[#FF7A00] hover:text-white transition">
+                               class="border border-[#7d2ae7] text-[#7d2ae7] px-3 py-1 rounded text-xs hover:bg-[#7d2ae7] hover:text-white transition">
                                 🏆 Sertifikat
                             </a>
                             @endif

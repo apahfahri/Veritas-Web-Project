@@ -1,4 +1,4 @@
-<footer class="bg-[#0A2540] text-white">
+<footer class="bg-[#7d2ae7] text-white">
     <div class="max-w-7xl mx-auto px-6 py-12">
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -6,7 +6,7 @@
             <!-- COMPANY -->
             <div>
                 <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 bg-[#00A8A8] rounded-lg flex items-center justify-center text-white">
+                    <div class="w-10 h-10 bg-[#7d2ae7] rounded-lg flex items-center justify-center text-white">
                         🛡️
                     </div>
                     <div>

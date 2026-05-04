@@ -5,7 +5,7 @@
 <div class="min-h-screen bg-[#F5F7FA]">
 
     <!-- HEADER -->
-    <div class="bg-gradient-to-r from-[#0A2540] to-[#00A8A8] text-white py-12">
+    <div class="bg-gradient-to-r from-[#7d2ae7] via-[#3969e7] to-[#07b9ce] text-white py-12">
         <div class="max-w-7xl mx-auto px-6">
 
             <a href="/" class="inline-flex items-center gap-2 mb-4 hover:bg-white/10 px-3 py-2 rounded">
@@ -44,7 +44,7 @@
                     <a href="/consultation" class="font-bold underline hover:text-red-800">Konsultasi K3</a>.
                 </p>
                 <div class="mt-8">
-                    <a href="/" class="inline-block bg-[#0A2540] text-white px-6 py-3 rounded-lg hover:bg-opacity-90 transition">Kembali ke Beranda</a>
+                    <a href="/" class="inline-block bg-[#7d2ae7] text-white px-6 py-3 rounded-lg hover:bg-opacity-90 transition">Kembali ke Beranda</a>
                 </div>
             </div>
         @else
@@ -61,7 +61,7 @@
             <!-- FORM -->
             <div class="lg:col-span-2 bg-white p-8 rounded-xl shadow">
 
-                <h2 class="text-2xl font-semibold text-[#0A2540] mb-2">
+                <h2 class="text-2xl font-semibold text-[#7d2ae7] mb-2">
                     Form Pengajuan Audit
                 </h2>
 
@@ -97,7 +97,7 @@
 
                     <!-- COMPANY -->
                     <div>
-                        <h3 class="font-semibold text-lg mb-4 text-[#0A2540]">Informasi Perusahaan</h3>
+                        <h3 class="font-semibold text-lg mb-4 text-[#7d2ae7]">Informasi Perusahaan</h3>
 
                         <input type="text" name="nama_perusahaan" value="{{ old('nama_perusahaan', $perusahaan->nama ?? '') }}" placeholder="Nama Perusahaan *" class="w-full border p-2 rounded mb-3" required>
 
@@ -115,7 +115,7 @@
 
                     <!-- PIC -->
                     <div>
-                        <h3 class="font-semibold text-lg mb-4 text-[#0A2540]">Person In Charge (PIC)</h3>
+                        <h3 class="font-semibold text-lg mb-4 text-[#7d2ae7]">Person In Charge (PIC)</h3>
 
                         <div class="grid md:grid-cols-2 gap-4">
                             <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap', $profilPerusahaan->nama_lengkap ?? Auth::user()->name) }}" placeholder="Nama PIC *" class="border p-2 rounded" required>
@@ -134,7 +134,7 @@
 
                     <!-- AUDIT -->
                     <div>
-                        <h3 class="font-semibold text-lg mb-4 text-[#0A2540]">Detail Audit</h3>
+                        <h3 class="font-semibold text-lg mb-4 text-[#7d2ae7]">Detail Audit</h3>
 
                         <select name="jenis_audit" class="w-full border p-2 rounded mb-3">
                             <option value="">Pilih Jenis Audit</option>
@@ -160,7 +160,7 @@
                     <!-- BUTTON -->
                     <div class="flex gap-3">
                         <a href="/" class="border px-4 py-2 rounded flex items-center justify-center">Batal</a>
-                        <button type="submit" class="flex-1 bg-[#FF7A00] text-white py-2 rounded hover:opacity-90">
+                        <button type="submit" class="flex-1 bg-[#7d2ae7] text-white py-2 rounded hover:opacity-90">
                             Ajukan Audit
                         </button>
                     </div>
@@ -170,7 +170,7 @@
                 <div class="text-center py-8">
                     <div class="text-4xl mb-4">🔒</div>
                     <p class="text-gray-600 mb-4">Silakan login terlebih dahulu untuk mengajukan audit</p>
-                    <a href="{{ route('login') }}" class="bg-[#FF7A00] text-white px-6 py-2 rounded hover:opacity-90 transition">Login Sekarang</a>
+                    <a href="{{ route('login') }}" class="bg-[#7d2ae7] text-white px-6 py-2 rounded hover:opacity-90 transition">Login Sekarang</a>
                 </div>
                 @endauth
 
@@ -182,7 +182,7 @@
 
                 <!-- SERVICE -->
                 <div class="bg-white p-6 rounded-xl shadow">
-                    <h3 class="font-semibold mb-4 text-[#0A2540]">Layanan Audit Kami</h3>
+                    <h3 class="font-semibold mb-4 text-[#7d2ae7]">Layanan Audit Kami</h3>
 
                     <ul class="space-y-2 text-sm text-gray-600">
                         <li>✔ Auditor bersertifikat</li>
@@ -195,19 +195,19 @@
 
                 <!-- STANDAR -->
                 <div class="bg-[#F5F7FA] p-6 rounded-xl shadow">
-                    <h3 class="font-semibold mb-4 text-[#0A2540]">Standar Audit</h3>
+                    <h3 class="font-semibold mb-4 text-[#7d2ae7]">Standar Audit</h3>
 
                     <div class="flex gap-2 flex-wrap">
-                        <span class="bg-[#0A2540] text-white px-2 py-1 rounded text-xs">ISO 45001</span>
-                        <span class="bg-[#00A8A8] text-white px-2 py-1 rounded text-xs">PP 50/2012</span>
-                        <span class="bg-[#FF7A00] text-white px-2 py-1 rounded text-xs">Permenaker</span>
+                        <span class="bg-[#7d2ae7] text-white px-2 py-1 rounded text-xs">ISO 45001</span>
+                        <span class="bg-[#7d2ae7] text-white px-2 py-1 rounded text-xs">PP 50/2012</span>
+                        <span class="bg-[#7d2ae7] text-white px-2 py-1 rounded text-xs">Permenaker</span>
                     </div>
                 </div>
 
 
                 <!-- PROCESS -->
                 <div class="bg-white p-6 rounded-xl shadow">
-                    <h3 class="font-semibold mb-4 text-[#0A2540]">Alur Proses</h3>
+                    <h3 class="font-semibold mb-4 text-[#7d2ae7]">Alur Proses</h3>
 
                     <ol class="space-y-3 text-sm">
                         <li>1. Pengajuan</li>
@@ -220,7 +220,7 @@
 
 
                 <!-- CTA -->
-                <div class="bg-gradient-to-br from-[#0A2540] to-[#00A8A8] text-white p-6 rounded-xl">
+                <div class="bg-gradient-to-br from-[#7d2ae7] via-[#3969e7] to-[#07b9ce] text-white p-6 rounded-xl">
                     <h3 class="font-semibold mb-2">Butuh Konsultasi?</h3>
                     <p class="text-sm mb-4">Hubungi tim kami</p>
 

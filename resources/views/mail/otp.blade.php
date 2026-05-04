@@ -8,20 +8,20 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6fb; color: #1a2236; }
         .wrapper { max-width: 520px; margin: 40px auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
-        .header { background: linear-gradient(135deg, #0A2540 0%, #00A8A8 100%); padding: 36px 32px; text-align: center; }
+        .header { background: linear-gradient(135deg, #7d2ae7 0%, #7d2ae7 100%); padding: 36px 32px; text-align: center; }
         .header-icon { font-size: 48px; margin-bottom: 12px; }
         .header h1 { color: #ffffff; font-size: 22px; font-weight: 700; letter-spacing: 0.3px; }
         .header p { color: rgba(255,255,255,0.75); font-size: 13px; margin-top: 4px; }
         .body { padding: 36px 32px; }
         .body p { font-size: 14px; color: #4b5563; line-height: 1.7; }
-        .otp-box { background: #f0fdfc; border: 2px dashed #00A8A8; border-radius: 12px; text-align: center; padding: 24px 16px; margin: 24px 0; }
-        .otp-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #00A8A8; margin-bottom: 8px; }
-        .otp-code { font-size: 44px; font-weight: 800; letter-spacing: 12px; color: #0A2540; font-family: 'Courier New', monospace; }
+        .otp-box { background: #f0fdfc; border: 2px dashed #7d2ae7; border-radius: 12px; text-align: center; padding: 24px 16px; margin: 24px 0; }
+        .otp-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #7d2ae7; margin-bottom: 8px; }
+        .otp-code { font-size: 44px; font-weight: 800; letter-spacing: 12px; color: #7d2ae7; font-family: 'Courier New', monospace; }
         .otp-expiry { font-size: 12px; color: #9ca3af; margin-top: 8px; }
         .warning { background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 6px; padding: 12px 16px; margin-top: 20px; font-size: 13px; color: #92400e; }
         .footer { background: #f9fafb; border-top: 1px solid #e5e7eb; padding: 20px 32px; text-align: center; }
         .footer p { font-size: 12px; color: #9ca3af; line-height: 1.6; }
-        .footer strong { color: #0A2540; }
+        .footer strong { color: #7d2ae7; }
     </style>
 </head>
 <body>

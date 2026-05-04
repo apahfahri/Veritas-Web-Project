@@ -4,11 +4,11 @@
 
             <!-- Logo -->
             <a href="/" class="flex items-center gap-3">
-                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-900 text-white">
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#7d2ae7] to-[#07b9ce] text-white shadow-sm">
                     🛡️
                 </div>
                 <div class="hidden sm:block">
-                    <div class="font-bold text-lg text-blue-900">
+                    <div class="font-bold text-lg text-[#7d2ae7]">
                         PT Katiga Veritas
                     </div>
                     <div class="text-xs text-gray-500">
@@ -36,48 +36,89 @@
                         Login
                     </a>
                     <a href="{{ route('register') }}"
-                       class="bg-[#FF7A00] text-white px-4 py-2 rounded hover:opacity-90 text-sm font-medium">
+                       class="bg-[#7d2ae7] text-white px-4 py-2 rounded hover:opacity-90 text-sm font-medium">
                         Register
                     </a>
                 @endguest
-
                 @auth
-                    <!-- Sudah login: tampilkan nama user + avatar + Logout -->
-                    <div class="flex items-center gap-3">
+                    <!-- Sudah login: tampilkan dropdown profil -->
+                    <div class="relative">
+                        <button id="profile-menu-button" class="flex items-center gap-3 focus:outline-none group">
+                            {{-- Avatar --}}
+                            @if (Auth::user()->avatar)
+                                <img src="{{ Auth::user()->avatar }}"
+                                     alt="{{ Auth::user()->name }}"
+                                     class="w-10 h-10 rounded-full object-cover border-2 border-[#7d2ae7] group-hover:scale-105 transition-transform">
+                            @else
+                                <div class="w-10 h-10 rounded-full bg-[#7d2ae7] flex items-center justify-center text-white text-sm font-bold shadow-sm group-hover:scale-105 transition-transform">
+                                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                </div>
+                            @endif
 
-                        {{-- Avatar --}}
-                        @if (Auth::user()->avatar)
-                            <img src="{{ Auth::user()->avatar }}"
-                                 alt="{{ Auth::user()->name }}"
-                                 class="w-8 h-8 rounded-full object-cover border border-gray-200">
-                        @else
-                            <div class="w-8 h-8 rounded-full bg-[#00A8A8] flex items-center justify-center text-white text-sm font-bold">
-                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                            <div class="hidden sm:flex flex-col items-start text-left">
+                                <span class="text-sm font-bold text-gray-800 leading-tight">
+                                    {{ Auth::user()->name }}
+                                </span>
+                                <span class="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">
+                                    Pengguna
+                                </span>
                             </div>
-                        @endif
+                            
+                            <svg class="w-4 h-4 text-gray-400 group-hover:text-[#7d2ae7] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
 
-                        {{-- Nama user --}}
-                        <span class="text-sm font-medium text-gray-700">
-                            {{ Auth::user()->name }}
-                        </span>
+                        <!-- Dropdown Menu -->
+                        <div id="profile-dropdown" class="absolute right-0 mt-3 w-60 bg-white rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] border border-gray-100 py-2 hidden z-50 overflow-hidden">
+                            <div class="px-5 py-4 border-b border-gray-50 bg-gray-50/30">
+                                <p class="text-[11px] text-gray-400 font-bold uppercase tracking-widest mb-1">Akun Saya</p>
+                                <p class="text-sm font-bold text-gray-800 truncate">{{ Auth::user()->name }}</p>
+                                <p class="text-xs text-gray-500 truncate">{{ Auth::user()->email }}</p>
+                            </div>
 
-                        {{-- Link Dashboard --}}
-                        <a href="{{ route('dashboard') }}"
-                           class="border px-3 py-1.5 rounded text-sm hover:bg-gray-50">
-                            Dashboard
-                        </a>
+                            <div class="p-2">
+                                <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-xl transition-all group/item">
+                                    <span class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-xl group-hover/item:bg-[#7d2ae7]/10 group-hover/item:text-[#7d2ae7] transition-all text-lg">📊</span>
+                                    <div class="flex flex-col">
+                                        <span class="font-bold">Dashboard</span>
+                                        <span class="text-[10px] text-gray-400">Kelola pendaftaran & profil</span>
+                                    </div>
+                                </a>
 
-                        {{-- Logout --}}
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit"
-                                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded text-sm transition">
-                                Logout
-                            </button>
-                        </form>
+                                <div class="my-2 border-t border-gray-50"></div>
+
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="w-full flex items-center gap-3 px-3 py-3 text-sm text-red-600 hover:bg-red-50 rounded-xl transition-all group/item">
+                                        <span class="w-10 h-10 flex items-center justify-center bg-red-50 rounded-xl group-hover/item:bg-red-600 group-hover/item:text-white transition-all text-lg">🚪</span>
+                                        <span class="font-bold">Logout</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
-                @endauth
 
+                    <script>
+                        (function() {
+                            const btn = document.getElementById('profile-menu-button');
+                            const dropdown = document.getElementById('profile-dropdown');
+
+                            if (btn && dropdown) {
+                                btn.addEventListener('click', function(e) {
+                                    e.stopPropagation();
+                                    dropdown.classList.toggle('hidden');
+                                });
+
+                                document.addEventListener('click', function(e) {
+                                    if (!dropdown.contains(e.target) && !btn.contains(e.target)) {
+                                        dropdown.classList.add('hidden');
+                                    }
+                                });
+                            }
+                        })();
+                    </script>
+                @endauth
             </div>
 
         </div>
