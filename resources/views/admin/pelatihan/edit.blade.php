@@ -46,9 +46,9 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1">Jam Mulai</label>
-                    <input type="time" name="jam_pertemuan"
+                    <input type="text" id="jam_pertemuan" name="jam_pertemuan"
                            value="{{ old('jam_pertemuan', substr($pelatihan->jam_pertemuan ?? '', 0, 5)) }}"
-                           class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-[#00A8A8] focus:outline-none">
+                           class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-[#00A8A8] focus:outline-none" readonly>
                 </div>
             </div>
 
@@ -79,3 +79,19 @@
     </div>
 </div>
 @endsection
+
+@push('styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@2.0.1/dist/mdtimepicker.min.css">
+@endpush
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@2.0.1/dist/mdtimepicker.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        mdtimepicker('#jam_pertemuan', {
+            format: 'hh:mm',
+            is24hour: true
+        });
+    });
+</script>
+@endpush

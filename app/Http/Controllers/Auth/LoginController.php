@@ -30,6 +30,15 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
+
+            if (Auth::user()->isBranchAdmin()) {
+                return redirect()->intended('/branch-admin');
+            }
+
+            if (Auth::user()->isAdmin()) {
+                return redirect()->intended('/admin');
+            }
+
             return redirect()->intended('/dashboard');
         }
 

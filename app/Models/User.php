@@ -92,6 +92,18 @@ class User extends Authenticatable
         return $this->admin?->role === 'superadmin';
     }
 
+    /** Cek apakah user adalah admin cabang */
+    public function isBranchAdmin(): bool
+    {
+        return $this->admin?->role === 'admin' && !empty($this->admin?->cabang);
+    }
+
+    /** Mendapatkan nama cabang dari admin cabang */
+    public function adminCabang(): ?string
+    {
+        return $this->admin?->cabang;
+    }
+
     /** Cek apakah user adalah klien individu */
     public function isIndividu(): bool
     {

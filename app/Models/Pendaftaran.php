@@ -18,6 +18,7 @@ class Pendaftaran extends Model
         'tanggal_daftar',
         'status_progres',
         'status_bayar',
+        'cabang',
     ];
 
     protected $casts = [
