@@ -71,18 +71,22 @@
 
                         <!-- Dropdown Menu -->
                         <div id="profile-dropdown" class="absolute right-0 mt-3 w-60 bg-white rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] border border-gray-100 py-2 hidden z-50 overflow-hidden">
-                            <div class="px-5 py-4 border-b border-gray-50 bg-gray-50/30">
-                                <p class="text-[11px] text-gray-400 font-bold uppercase tracking-widest mb-1">Akun Saya</p>
-                                <p class="text-sm font-bold text-gray-800 truncate">{{ Auth::user()->name }}</p>
-                                <p class="text-xs text-gray-500 truncate">{{ Auth::user()->email }}</p>
-                            </div>
-
+                            
                             <div class="p-2">
+                                <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-3 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-xl transition-all group/item">
+                                    <span class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-xl group-hover/item:bg-[#7d2ae7]/10 group-hover/item:text-[#7d2ae7] transition-all text-lg">🧑‍💼</span>
+                                    <div class="flex flex-col">
+                                        <p class="text-sm font-bold text-gray-800 truncate">{{ Auth::user()->name }}</p>
+                                        <p class="text-xs text-gray-500 truncate">{{ Auth::user()->email }}</p>
+                                        <span class="text-[10px] text-gray-400">Update data diri & akun</span>
+                                    </div>
+                                </a>
+
                                 <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-xl transition-all group/item">
                                     <span class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-xl group-hover/item:bg-[#7d2ae7]/10 group-hover/item:text-[#7d2ae7] transition-all text-lg">📊</span>
                                     <div class="flex flex-col">
                                         <span class="font-bold">Dashboard</span>
-                                        <span class="text-[10px] text-gray-400">Kelola pendaftaran & profil</span>
+                                        <span class="text-[10px] text-gray-400">Kelola pendaftaran</span>
                                     </div>
                                 </a>
 
