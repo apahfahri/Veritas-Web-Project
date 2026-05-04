@@ -42,6 +42,48 @@ class UserAdminSeeder extends Seeder
         ]);
 
         // =========================================================
+        // ADMIN CABANG — jambi, lampung, jakarta
+        // =========================================================
+        $adminJambi = User::create([
+            'name'     => 'Admin Cabang Jambi',
+            'email'    => 'admin.jambi@katigaveritas.com',
+            'password' => Hash::make('admin123'),
+        ]);
+
+        Admin::create([
+            'user_id' => $adminJambi->id,
+            'role'    => 'admin',
+            'status'  => 'aktif',
+            'cabang'  => 'jambi',
+        ]);
+
+        $adminLampung = User::create([
+            'name'     => 'Admin Cabang Lampung',
+            'email'    => 'admin.lampung@katigaveritas.com',
+            'password' => Hash::make('admin123'),
+        ]);
+
+        Admin::create([
+            'user_id' => $adminLampung->id,
+            'role'    => 'admin',
+            'status'  => 'aktif',
+            'cabang'  => 'lampung',
+        ]);
+
+        $adminJakarta = User::create([
+            'name'     => 'Admin Cabang Jakarta',
+            'email'    => 'admin.jakarta@katigaveritas.com',
+            'password' => Hash::make('admin123'),
+        ]);
+
+        Admin::create([
+            'user_id' => $adminJakarta->id,
+            'role'    => 'admin',
+            'status'  => 'aktif',
+            'cabang'  => 'jakarta',
+        ]);
+
+        // =========================================================
         // USER DEMO — klien biasa untuk testing
         // =========================================================
         User::create([

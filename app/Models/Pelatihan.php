@@ -20,6 +20,7 @@ class Pelatihan extends Model
         'lokasi',
         'kapasitas',
         'deskripsi',
+        'cabang',
     ];
 
     protected $casts = [
