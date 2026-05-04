@@ -11,6 +11,7 @@
         .sidebar-link:hover, .sidebar-link.active { background:rgba(255,255,255,.1); color:#fff; }
         .badge { display:inline-block; font-size:11px; padding:2px 8px; border-radius:9999px; font-weight:600; }
     </style>
+    @stack('styles')
 </head>
 <body class="min-h-screen bg-[#F5F7FA] flex">
 
@@ -134,5 +135,6 @@
 
     </div>
 
+    @stack('scripts')
 </body>
 </html>
