@@ -23,6 +23,9 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
+                if (Auth::guard($guard)->user()->isAdmin()) {
+                    return redirect('/admin');
+                }
                 return redirect(RouteServiceProvider::HOME);
             }
         }
