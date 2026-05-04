@@ -17,10 +17,15 @@ class Pendaftaran extends Model
         'tanggal_daftar',
         'status_progres',
         'status_bayar',
+        'cabang',
+        'dokumen_lengkap',
+        'last_reminder_sent_at',
+        'last_reminder_details',
     ];
 
     protected $casts = [
         'tanggal_daftar' => 'date',
+        'last_reminder_sent_at' => 'datetime',
     ];
 
     /*

@@ -132,6 +132,42 @@ Route::middleware(['auth', 'is.admin'])->prefix('admin')->name('admin.')->group(
 
 /*
 |--------------------------------------------------------------------------
+| ADMIN CABANG PANEL — AUTH + IS.ADMIN_CABANG REQUIRED
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'is.admin_cabang'])->prefix('admin-cabang')->name('admin-cabang.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\AdminCabang\AdminCabangDashboardController::class, 'index'])->name('dashboard');
+
+    // Pendaftaran
+    Route::get('/pendaftaran', [\App\Http\Controllers\AdminCabang\AdminCabangPendaftaranController::class, 'index'])->name('pendaftaran.index');
+    Route::get('/pendaftaran/{id}', [\App\Http\Controllers\AdminCabang\AdminCabangPendaftaranController::class, 'show'])->name('pendaftaran.show');
+    Route::put('/pendaftaran/{id}', [\App\Http\Controllers\AdminCabang\AdminCabangPendaftaranController::class, 'update'])->name('pendaftaran.update');
+    Route::delete('/pendaftaran/{id}', [\App\Http\Controllers\AdminCabang\AdminCabangPendaftaranController::class, 'destroy'])->name('pendaftaran.destroy');
+    Route::post('/pendaftaran/{id}/send-reminder', [\App\Http\Controllers\AdminCabang\AdminCabangPendaftaranController::class, 'sendReminder'])->name('pendaftaran.send-reminder');
+
+    // Klien
+    Route::resource('klien', \App\Http\Controllers\AdminCabang\AdminCabangKlienController::class)->except(['show']);
+
+    // Sertifikat
+    Route::get('/sertifikat', [\App\Http\Controllers\AdminCabang\AdminCabangSertifikatController::class, 'index'])->name('sertifikat.index');
+    Route::get('/sertifikat/create/{pendaftaran_id}', [\App\Http\Controllers\AdminCabang\AdminCabangSertifikatController::class, 'create'])->name('sertifikat.create');
+    Route::post('/sertifikat', [\App\Http\Controllers\AdminCabang\AdminCabangSertifikatController::class, 'store'])->name('sertifikat.store');
+    Route::get('/sertifikat/{id}/edit', [\App\Http\Controllers\AdminCabang\AdminCabangSertifikatController::class, 'edit'])->name('sertifikat.edit');
+    Route::put('/sertifikat/{id}', [\App\Http\Controllers\AdminCabang\AdminCabangSertifikatController::class, 'update'])->name('sertifikat.update');
+    Route::delete('/sertifikat/{id}', [\App\Http\Controllers\AdminCabang\AdminCabangSertifikatController::class, 'destroy'])->name('sertifikat.destroy');
+
+    // Pelatihan (View Only)
+    Route::get('/pelatihan', [\App\Http\Controllers\AdminCabang\AdminCabangPelatihanController::class, 'index'])->name('pelatihan.index');
+
+    // Petugas (View Only)
+    Route::get('/petugas', [\App\Http\Controllers\AdminCabang\AdminCabangPetugasController::class, 'index'])->name('petugas.index');
+
+    // Layanan (View Only)
+    Route::get('/layanan', [\App\Http\Controllers\AdminCabang\AdminCabangLayananController::class, 'index'])->name('layanan.index');
+});
+
+/*
+|--------------------------------------------------------------------------
 | FALLBACK
 |--------------------------------------------------------------------------
 */
