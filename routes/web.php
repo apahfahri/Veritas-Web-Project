@@ -121,6 +121,9 @@ Route::middleware(['auth', 'is.admin'])->prefix('admin')->name('admin.')->group(
     Route::get('/sertifikat',                          [SertifikatAdminController::class, 'index'])->name('sertifikat.index');
     Route::get('/sertifikat/create/{pendaftaran_id}',  [SertifikatAdminController::class, 'create'])->name('sertifikat.create');
     Route::post('/sertifikat',                         [SertifikatAdminController::class, 'store'])->name('sertifikat.store');
+
+    // Admin Cabang management (Superadmin only)
+    Route::resource('admin-cabang', \App\Http\Controllers\Admin\AdminCabangController::class)->except(['show']);
 });
 
 /*

@@ -56,6 +56,12 @@ class GoogleController extends Controller
             }
         }
 
+        if ($user->isAdmin() && $user->admin->status === 'nonaktif') {
+            return redirect('/login')->withErrors([
+                'email' => 'Akun admin Anda telah dinonaktifkan.',
+            ]);
+        }
+
         Auth::login($user, true); // true = remember me
 
         return redirect('/dashboard');

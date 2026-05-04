@@ -77,6 +77,13 @@
                 👥 Petugas
             </a>
 
+            @if(Auth::user()->isSuperAdmin())
+            <a href="{{ route('admin.admin-cabang.index') }}"
+               class="sidebar-link {{ request()->routeIs('admin.admin-cabang.*') ? 'active' : '' }}">
+                🏢 Admin Cabang
+            </a>
+            @endif
+
             <div class="text-xs font-semibold text-slate-500 uppercase px-2 mb-2 mt-4">Lainnya</div>
 
             <a href="{{ route('home') }}" class="sidebar-link">🌐 Lihat Website</a>
