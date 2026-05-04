@@ -40,10 +40,6 @@ class LoginController extends Controller
                 ])->onlyInput('email');
             }
 
-            if (Auth::user()->isBranchAdmin()) {
-                return redirect()->intended('/branch-admin');
-            }
-
             if (Auth::user()->isAdmin()) {
                 return redirect()->intended('/admin');
             }

@@ -25,7 +25,7 @@ class VerifikasiController extends Controller
 
         Verifikasi::create([
             'no_sertifikat' => $request->no_sertifikat,
-            'sertifikat_id' => $sertifikat?->id,
+            'sertifikat_no' => $sertifikat?->no_sertifikat,
             'status'        => $status,
             'ip_address'    => $request->ip(),
         ]);

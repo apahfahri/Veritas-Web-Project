@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Pendaftaran;
 use App\Models\Layanan;
 use App\Models\User;
-use App\Models\Petugas;
 use App\Models\Sertifikat;
 use App\Models\Verifikasi;
 use Illuminate\Database\Seeder;
@@ -17,7 +16,6 @@ class PendaftaranSeeder extends Seeder
     {
         $layanan   = Layanan::all();
         $users     = User::whereDoesntHave('admin')->get(); // Ambil user klien
-        $petugas   = Petugas::all();
 
         if ($layanan->isEmpty() || $users->isEmpty()) return;
 
@@ -25,7 +23,6 @@ class PendaftaranSeeder extends Seeder
         Pendaftaran::create([
             'layanan_id'      => $layanan->where('nama', 'Pelatihan K3')->first()->id,
             'user_id'         => $users->where('email', 'ahmad.z@example.com')->first()->id,
-            'petugas_id'      => null,
             'tanggal_daftar'  => Carbon::now()->subDays(2),
             'status_progres'  => 'menunggu',
             'status_bayar'    => 'belum_bayar',
@@ -35,7 +32,6 @@ class PendaftaranSeeder extends Seeder
         $p2 = Pendaftaran::create([
             'layanan_id'      => $layanan->where('nama', 'Audit K3')->first()->id,
             'user_id'         => $users->where('email', 'herry.k@adhikarya.com')->first()->id,
-            'petugas_id'      => $petugas->first()->id,
             'tanggal_daftar'  => Carbon::now()->subDays(5),
             'status_progres'  => 'diproses',
             'status_bayar'    => 'lunas',
@@ -46,7 +42,6 @@ class PendaftaranSeeder extends Seeder
         $p3 = Pendaftaran::create([
             'layanan_id'      => $layanan->where('nama', 'Pelatihan K3')->first()->id,
             'user_id'         => $userSelesai->id,
-            'petugas_id'      => $petugas->last()->id,
             'tanggal_daftar'  => Carbon::now()->subDays(15),
             'status_progres'  => 'selesai',
             'status_bayar'    => 'lunas',
@@ -63,7 +58,7 @@ class PendaftaranSeeder extends Seeder
         // 4. Verifikasi Log
         Verifikasi::create([
             'no_sertifikat'  => $sertifikat->no_sertifikat,
-            'sertifikat_id'  => $sertifikat->id,
+            'sertifikat_no'  => $sertifikat->no_sertifikat,
             'status'         => 'valid',
             'catatan'        => 'Verifikasi sukses melalui portal publik.',
             'ip_address'     => '127.0.0.1',
@@ -71,7 +66,7 @@ class PendaftaranSeeder extends Seeder
 
         Verifikasi::create([
             'no_sertifikat'  => 'VERITAS/FAKE/9999',
-            'sertifikat_id'  => null,
+            'sertifikat_no'  => null,
             'status'         => 'tidak_ditemukan',
             'catatan'        => 'User mencoba memverifikasi nomor yang tidak terdaftar.',
             'ip_address'     => '192.168.1.1',

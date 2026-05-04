@@ -16,7 +16,7 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        $pendaftarans = Pendaftaran::with(['layanan', 'sertifikat', 'petugas'])
+        $pendaftarans = Pendaftaran::with(['layanan', 'sertifikat'])
             ->where('user_id', $user->id)
             ->latest()
             ->get();

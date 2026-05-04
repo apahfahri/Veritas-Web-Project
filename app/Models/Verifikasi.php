@@ -13,7 +13,7 @@ class Verifikasi extends Model
 
     protected $fillable = [
         'no_sertifikat',
-        'sertifikat_id',
+        'sertifikat_no',
         'status',
         'catatan',
         'ip_address',
@@ -28,7 +28,7 @@ class Verifikasi extends Model
     /** Verifikasi merujuk ke satu Sertifikat (nullable jika tidak ditemukan) */
     public function sertifikat()
     {
-        return $this->belongsTo(Sertifikat::class);
+        return $this->belongsTo(Sertifikat::class, 'sertifikat_no', 'no_sertifikat');
     }
 
     /*

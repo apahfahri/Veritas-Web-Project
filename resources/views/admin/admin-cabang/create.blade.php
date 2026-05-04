@@ -8,8 +8,8 @@
         @csrf
 
         <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap *</label>
-            <input type="text" name="name" value="{{ old('name') }}" required
+            <label class="block text-sm font-medium text-gray-700 mb-1">Username *</label>
+            <input type="text" name="username" value="{{ old('username') }}" required
                    class="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-[#00A8A8] focus:border-[#00A8A8]">
         </div>
 
@@ -24,12 +24,6 @@
             <input type="password" name="password" required
                    class="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-[#00A8A8] focus:border-[#00A8A8]">
             <p class="text-xs text-gray-500 mt-1">Minimal 6 karakter.</p>
-        </div>
-
-        <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Cabang *</label>
-            <input type="text" name="cabang" value="{{ old('cabang') }}" required placeholder="Contoh: jakarta"
-                   class="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-[#00A8A8] focus:border-[#00A8A8]">
         </div>
 
         <div class="mb-6">
@@ -47,7 +41,7 @@
             </a>
             <button type="submit"
                     class="bg-[#00A8A8] text-white px-4 py-2 rounded-lg hover:opacity-90 transition text-sm font-medium cursor-pointer">
-                Simpan Admin Cabang
+                Simpan Admin
             </button>
         </div>
     </form>

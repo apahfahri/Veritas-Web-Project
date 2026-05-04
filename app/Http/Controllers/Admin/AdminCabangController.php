@@ -36,15 +36,14 @@ class AdminCabangController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'     => 'required|string|max:255',
+            'username' => 'required|string|max:255',
             'email'    => 'required|email|unique:users,email',
             'password' => 'required|min:6',
-            'cabang'   => 'required|string|max:255',
             'status'   => 'required|in:aktif,nonaktif',
         ]);
 
         $user = User::create([
-            'name'     => $request->name,
+            'username' => $request->username,
             'email'    => $request->email,
             'password' => Hash::make($request->password),
         ]);
@@ -53,11 +52,10 @@ class AdminCabangController extends Controller
             'user_id' => $user->id,
             'role'    => 'admin',
             'status'  => $request->status,
-            'cabang'  => $request->cabang,
         ]);
 
         return redirect()->route('admin.admin-cabang.index')
-            ->with('success', 'Admin Cabang berhasil ditambahkan.');
+            ->with('success', 'Admin berhasil ditambahkan.');
     }
 
     public function edit($id)
@@ -71,16 +69,15 @@ class AdminCabangController extends Controller
         $admin = Admin::findOrFail($id);
 
         $request->validate([
-            'name'     => 'required|string|max:255',
+            'username' => 'required|string|max:255',
             'email'    => 'required|email|unique:users,email,' . $admin->user_id,
             'password' => 'nullable|min:6',
-            'cabang'   => 'required|string|max:255',
             'status'   => 'required|in:aktif,nonaktif',
         ]);
 
         $userData = [
-            'name'  => $request->name,
-            'email' => $request->email,
+            'username' => $request->username,
+            'email'    => $request->email,
         ];
 
         if ($request->filled('password')) {
@@ -90,12 +87,11 @@ class AdminCabangController extends Controller
         $admin->user->update($userData);
 
         $admin->update([
-            'cabang' => $request->cabang,
             'status' => $request->status,
         ]);
 
         return redirect()->route('admin.admin-cabang.index')
-            ->with('success', 'Admin Cabang berhasil diperbarui.');
+            ->with('success', 'Admin berhasil diperbarui.');
     }
 
     public function destroy($id)

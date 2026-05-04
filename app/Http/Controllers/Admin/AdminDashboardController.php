@@ -21,7 +21,7 @@ class AdminDashboardController extends Controller
             'selesai'     => Pendaftaran::where('status_progres', 'selesai')->count(),
         ];
 
-        $pendaftaranTerbaru = Pendaftaran::with(['user', 'layanan', 'petugas'])
+        $pendaftaranTerbaru = Pendaftaran::with(['user', 'layanan'])
             ->latest()
             ->take(8)
             ->get();

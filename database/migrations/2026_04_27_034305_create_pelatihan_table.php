@@ -11,6 +11,7 @@ class CreatePelatihanTable extends Migration
         Schema::create('pelatihan', function (Blueprint $table) {
             $table->id();
             $table->foreignId('layanan_id')->constrained('layanan')->onDelete('cascade');
+            $table->foreignId('petugas_id')->nullable()->constrained('petugas')->onDelete('set null');
             $table->string('materi');
             $table->string('jenis_pertemuan'); // 'online', 'offline'
             $table->time('jam_pertemuan')->nullable();

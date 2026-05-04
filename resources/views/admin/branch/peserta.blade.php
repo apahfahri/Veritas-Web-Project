@@ -22,7 +22,7 @@
                             class="w-full text-sm px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-cyan-500 focus:bg-white transition">
                         <option value="">Pilih User</option>
                         @foreach($users as $user)
-                            <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
+                            <option value="{{ $user->id }}">{{ $user->username }} ({{ $user->email }})</option>
                         @endforeach
                     </select>
                 </div>

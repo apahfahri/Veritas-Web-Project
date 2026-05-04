@@ -41,7 +41,6 @@
                     <th class="text-left p-4">Pendaftar</th>
                     <th class="text-left p-4">Layanan</th>
                     <th class="text-left p-4">Tgl Daftar</th>
-                    <th class="text-left p-4">Petugas</th>
                     <th class="text-left p-4">Progres</th>
                     <th class="text-left p-4">Bayar</th>
                     <th class="text-left p-4">Aksi</th>
@@ -51,12 +50,11 @@
                 @forelse($pendaftarans as $p)
                 <tr class="hover:bg-gray-50">
                     <td class="p-4">
-                        <div class="font-medium text-[#7d2ae7]">{{ $p->user?->name }}</div>
+                        <div class="font-medium text-[#7d2ae7]">{{ $p->user?->username }}</div>
                         <div class="text-xs text-gray-500">{{ $p->user?->email }}</div>
                     </td>
                     <td class="p-4 text-gray-600">{{ $p->layanan?->nama ?? '-' }}</td>
                     <td class="p-4 text-gray-500 whitespace-nowrap">{{ $p->tanggal_daftar->format('d M Y') }}</td>
-                    <td class="p-4 text-gray-600">{{ $p->petugas?->nama_lengkap ?? '—' }}</td>
                     <td class="p-4">
                         @php $c = match($p->status_progres) { 'selesai' => 'bg-green-100 text-green-700', 'diproses' => 'bg-blue-100 text-blue-700', 'dibatalkan' => 'bg-red-100 text-red-700', default => 'bg-orange-100 text-orange-700' }; @endphp
                         <span class="px-2 py-1 rounded-full text-xs {{ $c }}">{{ ucfirst($p->status_progres) }}</span>
@@ -81,7 +79,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="7" class="p-8 text-center text-gray-500">Tidak ada pendaftaran</td></tr>
+                <tr><td colspan="6" class="p-8 text-center text-gray-500">Tidak ada pendaftaran</td></tr>
                 @endforelse
             </tbody>
         </table>

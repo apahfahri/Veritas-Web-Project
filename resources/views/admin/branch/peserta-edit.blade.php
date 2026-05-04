@@ -19,7 +19,7 @@
                 <select id="user_id" name="user_id" required 
                         class="w-full text-sm px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-cyan-500 focus:bg-white transition">
                     @foreach($users as $user)
-                        <option value="{{ $user->id }}" {{ $peserta->user_id == $user->id ? 'selected' : '' }}>{{ $user->name }} ({{ $user->email }})</option>
+                        <option value="{{ $user->id }}" {{ $peserta->user_id == $user->id ? 'selected' : '' }}>{{ $user->username }} ({{ $user->email }})</option>
                     @endforeach
                 </select>
             </div>

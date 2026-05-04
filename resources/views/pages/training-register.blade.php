@@ -111,7 +111,7 @@
                             Nama Lengkap <span class="text-red-500">*</span>
                         </label>
                         <input type="text" name="nama_lengkap"
-                               value="{{ old('nama_lengkap', $profilIndividu->nama_lengkap ?? $user->name) }}"
+                               value="{{ old('nama_lengkap', $profilIndividu->nama_lengkap ?? $user->username) }}"
                                placeholder="Masukkan nama lengkap sesuai KTP"
                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition">
                     </div>
@@ -154,7 +154,7 @@
                             Nama Lengkap <span class="text-red-500">*</span>
                         </label>
                         <input type="text" name="nama_lengkap"
-                               value="{{ old('nama_lengkap', $profilPerusahaan->nama_lengkap ?? $user->name) }}"
+                               value="{{ old('nama_lengkap', $profilPerusahaan->nama_lengkap ?? $user->username) }}"
                                placeholder="Nama perwakilan dari perusahaan"
                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition">
                     </div>

@@ -47,7 +47,7 @@ class GoogleController extends Controller
             } else {
                 // Buat user baru dari data Google
                 $user = User::create([
-                    'name'      => $googleUser->getName(),
+                    'username'  => $googleUser->getName(),
                     'email'     => $googleUser->getEmail(),
                     'google_id' => $googleUser->getId(),
                     'avatar'    => $googleUser->getAvatar(),

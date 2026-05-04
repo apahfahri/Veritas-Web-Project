@@ -6,12 +6,16 @@ use App\Models\Layanan;
 use App\Models\Pelatihan;
 use App\Models\Konsultasi;
 use App\Models\Audit;
+use App\Models\Petugas;
 use Illuminate\Database\Seeder;
 
 class LayananSeeder extends Seeder
 {
     public function run()
     {
+        $petugasIds = Petugas::pluck('id')->toArray();
+        if (empty($petugasIds)) $petugasIds = [null];
+
         // =========================================================
         // LAYANAN 1 — PELATIHAN K3
         // =========================================================
@@ -22,6 +26,7 @@ class LayananSeeder extends Seeder
 
         Pelatihan::create([
             'layanan_id'       => $layananPelatihan->id,
+            'petugas_id'       => $petugasIds[0] ?? null,
             'materi'           => 'K3 Umum & Pengenalan Hazard',
             'jenis_pertemuan'  => 'offline',
             'jam_pertemuan'    => '08:00:00',
@@ -33,6 +38,7 @@ class LayananSeeder extends Seeder
 
         Pelatihan::create([
             'layanan_id'       => $layananPelatihan->id,
+            'petugas_id'       => $petugasIds[1] ?? null,
             'materi'           => 'K3 Kebakaran & Evakuasi',
             'jenis_pertemuan'  => 'offline',
             'jam_pertemuan'    => '09:00:00',
@@ -44,6 +50,7 @@ class LayananSeeder extends Seeder
 
         Pelatihan::create([
             'layanan_id'       => $layananPelatihan->id,
+            'petugas_id'       => $petugasIds[2] ?? null,
             'materi'           => 'K3 Online — HIRADC & Risk Assessment',
             'jenis_pertemuan'  => 'online',
             'jam_pertemuan'    => '13:00:00',
@@ -63,6 +70,7 @@ class LayananSeeder extends Seeder
 
         Konsultasi::create([
             'layanan_id'       => $layananKonsultasi->id,
+            'petugas_id'       => $petugasIds[3] ?? null,
             'jenis_pertemuan'  => 'online',
             'jam_pertemuan'    => '10:00:00',
             'tanggal_pertemuan'=> '2026-05-10',
@@ -71,6 +79,7 @@ class LayananSeeder extends Seeder
 
         Konsultasi::create([
             'layanan_id'       => $layananKonsultasi->id,
+            'petugas_id'       => $petugasIds[0] ?? null,
             'jenis_pertemuan'  => 'offline',
             'jam_pertemuan'    => '14:00:00',
             'tanggal_pertemuan'=> '2026-05-20',
@@ -87,6 +96,7 @@ class LayananSeeder extends Seeder
 
         Audit::create([
             'layanan_id'       => $layananAudit->id,
+            'petugas_id'       => $petugasIds[1] ?? null,
             'lingkup'          => 'Audit Internal SMK3 PP 50/2012',
             'jam_pertemuan'    => '08:00:00',
             'tanggal_pertemuan'=> '2026-05-25',
@@ -95,6 +105,7 @@ class LayananSeeder extends Seeder
 
         Audit::create([
             'layanan_id'       => $layananAudit->id,
+            'petugas_id'       => $petugasIds[2] ?? null,
             'lingkup'          => 'Audit ISO 45001:2018',
             'jam_pertemuan'    => '09:00:00',
             'tanggal_pertemuan'=> '2026-06-10',

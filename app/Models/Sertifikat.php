@@ -11,13 +11,16 @@ class Sertifikat extends Model
 
     protected $table = 'sertifikat';
 
+    protected $primaryKey = 'no_sertifikat';
+    public $incrementing = false;
+    protected $keyType = 'string';
+
     protected $fillable = [
         'no_sertifikat',
         'pendaftaran_id',
         'nama_lengkap',
         'tanggal_terbit',
         'file',
-        'cabang',
     ];
 
     protected $casts = [
@@ -39,7 +42,7 @@ class Sertifikat extends Model
     /** Sertifikat dapat diverifikasi berkali-kali */
     public function verifikasi()
     {
-        return $this->hasMany(Verifikasi::class);
+        return $this->hasMany(Verifikasi::class, 'sertifikat_no', 'no_sertifikat');
     }
 
     /*

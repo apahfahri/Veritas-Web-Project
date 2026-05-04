@@ -9,12 +9,11 @@ class CreateSertifikatTable extends Migration
     public function up()
     {
         Schema::create('sertifikat', function (Blueprint $table) {
-            $table->id();
-            $table->string('no_sertifikat')->unique(); // nomor sertifikat unik (format string)
+            $table->string('no_sertifikat')->primary();
             $table->foreignId('pendaftaran_id')->constrained('pendaftaran')->onDelete('cascade');
-            $table->string('nama_lengkap'); // snapshot nama penerima saat sertifikat diterbitkan
+            $table->string('nama_lengkap');
             $table->date('tanggal_terbit');
-            $table->string('file')->nullable(); // path file PDF sertifikat
+            $table->string('file')->nullable();
             $table->timestamps();
         });
     }

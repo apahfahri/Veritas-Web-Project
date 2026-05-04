@@ -13,6 +13,7 @@ class Pelatihan extends Model
 
     protected $fillable = [
         'layanan_id',
+        'petugas_id',
         'materi',
         'jenis_pertemuan',
         'jam_pertemuan',
@@ -20,7 +21,6 @@ class Pelatihan extends Model
         'lokasi',
         'kapasitas',
         'deskripsi',
-        'cabang',
     ];
 
     protected $casts = [
@@ -37,5 +37,11 @@ class Pelatihan extends Model
     public function layanan()
     {
         return $this->belongsTo(Layanan::class);
+    }
+
+    /** Pelatihan ditangani oleh satu Petugas */
+    public function petugas()
+    {
+        return $this->belongsTo(Petugas::class);
     }
 }

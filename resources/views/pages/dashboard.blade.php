@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
             <div>
                 <h1 class="text-3xl font-bold">Dashboard</h1>
-                <p class="text-gray-200">Selamat datang, <strong>{{ $user->name }}</strong></p>
+                <p class="text-gray-200">Selamat datang, <strong>{{ $user->username }}</strong></p>
             </div>
             <div class="flex gap-3">
                 <a href="{{ route('training.list') }}" class="px-4 py-2 hover:bg-white/10 rounded text-sm">Pelatihan</a>
@@ -98,7 +98,6 @@
                                 </h3>
                                 <p class="text-sm text-gray-500">
                                     Didaftarkan: {{ $p->tanggal_daftar->format('d M Y') }}
-                                    @if($p->petugas) · Petugas: {{ $p->petugas->nama_lengkap }} @endif
                                 </p>
                             </div>
                             <div class="flex gap-2 flex-wrap justify-end">
