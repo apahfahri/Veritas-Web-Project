@@ -14,6 +14,7 @@ class CreateKlienPerusahaanTable extends Migration
             $table->foreignId('perusahaan_id')->nullable()->constrained('perusahaan')->onDelete('set null');
             $table->string('nama_lengkap');
             $table->string('jabatan')->nullable();
+            $table->string('no_hp', 20)->nullable();
             $table->timestamps();
         });
     }

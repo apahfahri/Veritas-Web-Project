@@ -25,7 +25,7 @@
                 </div>
                 <div>
                     <dt class="text-gray-500">Nama Pendaftar</dt>
-                    <dd class="font-semibold">{{ $pendaftaran->user?->name }}</dd>
+                    <dd class="font-semibold">{{ $pendaftaran->user?->username }}</dd>
                 </div>
                 <div>
                     <dt class="text-gray-500">Email</dt>
@@ -35,10 +35,7 @@
                     <dt class="text-gray-500">Layanan</dt>
                     <dd class="font-semibold">{{ $pendaftaran->layanan?->nama ?? '-' }}</dd>
                 </div>
-                <div>
-                    <dt class="text-gray-500">Petugas</dt>
-                    <dd class="font-semibold">{{ $pendaftaran->petugas?->nama_lengkap ?? '— Belum ditugaskan —' }}</dd>
-                </div>
+
             </dl>
         </div>
 
@@ -78,17 +75,7 @@
                 </select>
             </div>
 
-            <div>
-                <label class="block text-xs font-medium mb-1 text-gray-600">Tugaskan Petugas</label>
-                <select name="petugas_id" class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-[#7d2ae7] focus:outline-none">
-                    <option value="">— Belum ditugaskan —</option>
-                    @foreach($petugas as $pt)
-                        <option value="{{ $pt->id }}" {{ $pendaftaran->petugas_id == $pt->id ? 'selected' : '' }}>
-                            {{ $pt->nama_lengkap }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+
 
             <button type="submit" class="w-full bg-[#7d2ae7] text-white py-2.5 rounded-lg hover:opacity-90 text-sm">
                 Simpan Perubahan

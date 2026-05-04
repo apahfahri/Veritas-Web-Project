@@ -14,11 +14,9 @@ class Pendaftaran extends Model
     protected $fillable = [
         'layanan_id',
         'user_id',
-        'petugas_id',
         'tanggal_daftar',
         'status_progres',
         'status_bayar',
-        'cabang',
     ];
 
     protected $casts = [
@@ -41,12 +39,6 @@ class Pendaftaran extends Model
     public function layanan()
     {
         return $this->belongsTo(Layanan::class);
-    }
-
-    /** Pendaftaran ditangani oleh satu Petugas (nullable) */
-    public function petugas()
-    {
-        return $this->belongsTo(Petugas::class);
     }
 
     /** Pendaftaran menghasilkan satu Sertifikat */

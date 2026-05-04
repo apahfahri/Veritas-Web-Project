@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'username',
         'email',
         'password',
         'google_id',
@@ -90,18 +90,6 @@ class User extends Authenticatable
     public function isSuperAdmin(): bool
     {
         return $this->admin?->role === 'superadmin';
-    }
-
-    /** Cek apakah user adalah admin cabang */
-    public function isBranchAdmin(): bool
-    {
-        return $this->admin?->role === 'admin' && !empty($this->admin?->cabang);
-    }
-
-    /** Mendapatkan nama cabang dari admin cabang */
-    public function adminCabang(): ?string
-    {
-        return $this->admin?->cabang;
     }
 
     /** Cek apakah user adalah klien individu */

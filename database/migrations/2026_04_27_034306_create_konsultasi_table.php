@@ -11,6 +11,7 @@ class CreateKonsultasiTable extends Migration
         Schema::create('konsultasi', function (Blueprint $table) {
             $table->id();
             $table->foreignId('layanan_id')->constrained('layanan')->onDelete('cascade');
+            $table->foreignId('petugas_id')->nullable()->constrained('petugas')->onDelete('set null');
             $table->string('jenis_pertemuan'); // 'online', 'offline'
             $table->time('jam_pertemuan')->nullable();
             $table->date('tanggal_pertemuan')->nullable();

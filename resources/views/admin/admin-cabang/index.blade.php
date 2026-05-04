@@ -17,20 +17,18 @@
         <thead class="bg-gray-50 text-gray-600">
             <tr>
                 <th class="text-left p-4">#</th>
-                <th class="text-left p-4">Nama Lengkap</th>
-                <th class="text-left p-4">Email</th>
-                <th class="text-left p-4">Cabang</th>
-                <th class="text-left p-4">Status</th>
-                <th class="text-left p-4">Aksi</th>
+                <th class="p-4 text-left text-sm font-semibold text-gray-600">Username</th>
+                <th class="p-4 text-left text-sm font-semibold text-gray-600">Email</th>
+                <th class="p-4 text-left text-sm font-semibold text-gray-600">Status</th>
+                <th class="p-4 text-left text-sm font-semibold text-gray-600">Aksi</th>
             </tr>
         </thead>
         <tbody class="divide-y">
             @forelse($admins as $a)
             <tr class="hover:bg-gray-50">
                 <td class="p-4 text-gray-400">{{ $loop->iteration }}</td>
-                <td class="p-4 font-medium text-[#0A2540]">{{ $a->user->name }}</td>
+                <td class="p-4 font-medium text-[#0A2540]">{{ $a->user->username }}</td>
                 <td class="p-4 text-gray-600">{{ $a->user->email }}</td>
-                <td class="p-4 text-gray-600 capitalize">{{ $a->cabang }}</td>
                 <td class="p-4">
                     @if($a->status === 'aktif')
                         <span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-medium">Aktif</span>
@@ -45,7 +43,7 @@
                             Edit
                         </a>
                         <form method="POST" action="{{ route('admin.admin-cabang.destroy', $a->id) }}"
-                              onsubmit="return confirm('Hapus admin {{ $a->user->name }}?')">
+                              onsubmit="return confirm('Hapus admin {{ $a->user->username }}?')">
                             @csrf @method('DELETE')
                             <button type="submit"
                                     class="border border-red-400 text-red-500 px-3 py-1 rounded text-xs hover:bg-red-500 hover:text-white transition">

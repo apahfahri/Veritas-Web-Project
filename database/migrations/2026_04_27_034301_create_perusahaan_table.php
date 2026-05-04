@@ -11,11 +11,12 @@ class CreatePerusahaanTable extends Migration
         Schema::create('perusahaan', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->text('alamat');
+            $table->text('alamat')->nullable();
             $table->string('nib_oss')->nullable();
             $table->string('npwp_perusahaan')->nullable();
             $table->string('sektor_industri')->nullable();
             $table->integer('jumlah_karyawan')->nullable();
+            $table->string('no_telp', 20)->nullable();
             $table->timestamps();
         });
     }

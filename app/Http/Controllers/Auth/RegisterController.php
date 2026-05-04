@@ -43,8 +43,8 @@ class RegisterController extends Controller
 
         // Validasi tambahan per tipe
         if ($type === 'individual') {
-            $rules['name'] = ['required', 'string', 'max:255'];
-            $rules['nik']  = ['required', 'string', 'size:16'];
+            $rules['username'] = ['required', 'string', 'max:255'];
+            $rules['nik']      = ['required', 'string', 'size:16'];
         } else {
             $rules['company_name'] = ['required', 'string', 'max:255'];
             $rules['pic_name']     = ['required', 'string', 'max:255'];
@@ -55,7 +55,7 @@ class RegisterController extends Controller
         // Simpan semua data ke session (belum buat user)
         $request->session()->put('register_data', [
             'user_type'      => $type,
-            'name'           => $type === 'individual' ? $request->name : $request->pic_name,
+            'username'       => $type === 'individual' ? $request->username : $request->pic_name,
             'email'          => $request->email,
             'password'       => $request->password,
             // Individu
@@ -125,7 +125,7 @@ class RegisterController extends Controller
 
         // ── Buat user utama ──────────────────────────────────────────────
         $user = User::create([
-            'name'     => $data['name'],
+            'username' => $data['username'],
             'email'    => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
@@ -136,7 +136,7 @@ class RegisterController extends Controller
             KlienIndividu::create([
                 'user_id'      => $user->id,
                 'nik'          => $data['nik']   ?? null,
-                'nama_lengkap' => $data['name'],
+                'nama_lengkap' => $data['username'],
                 'no_hp'        => $data['phone'] ?? null,
             ]);
 
@@ -155,7 +155,7 @@ class RegisterController extends Controller
             KlienPerusahaan::create([
                 'user_id'       => $user->id,
                 'perusahaan_id' => $perusahaan->id,
-                'nama_lengkap'  => $data['pic_name']      ?? $data['name'],
+                'nama_lengkap'  => $data['pic_name']      ?? $data['username'],
                 'jabatan'       => $data['pic_position']  ?? null,
                 'no_hp'         => $data['phone']          ?? null,
             ]);

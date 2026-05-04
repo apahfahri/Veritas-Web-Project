@@ -19,7 +19,6 @@ class Perusahaan extends Model
         'npwp_perusahaan',
         'sektor_industri',
         'jumlah_karyawan',
-        'cabang',
     ];
 
     /*

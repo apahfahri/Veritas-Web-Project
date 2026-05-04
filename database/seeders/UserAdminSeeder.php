@@ -15,7 +15,7 @@ class UserAdminSeeder extends Seeder
         // SUPERADMIN — akses penuh termasuk data perusahaan web
         // =========================================================
         $superadmin = User::create([
-            'name'     => 'Super Admin',
+            'username' => 'Super Admin',
             'email'    => 'superadmin@katigaveritas.com',
             'password' => Hash::make('superadmin123'),
         ]);
@@ -30,7 +30,7 @@ class UserAdminSeeder extends Seeder
         // ADMIN — kelola data operasional
         // =========================================================
         $admin = User::create([
-            'name'     => 'Admin Operasional',
+            'username' => 'Admin Operasional',
             'email'    => 'admin@katigaveritas.com',
             'password' => Hash::make('admin123'),
         ]);
@@ -45,7 +45,7 @@ class UserAdminSeeder extends Seeder
         // ADMIN CABANG — jambi, lampung, jakarta
         // =========================================================
         $adminJambi = User::create([
-            'name'     => 'Admin Cabang Jambi',
+            'username' => 'Admin Cabang Jambi',
             'email'    => 'admin.jambi@katigaveritas.com',
             'password' => Hash::make('admin123'),
         ]);
@@ -54,11 +54,10 @@ class UserAdminSeeder extends Seeder
             'user_id' => $adminJambi->id,
             'role'    => 'admin',
             'status'  => 'aktif',
-            'cabang'  => 'jambi',
         ]);
 
         $adminLampung = User::create([
-            'name'     => 'Admin Cabang Lampung',
+            'username' => 'Admin Cabang Lampung',
             'email'    => 'admin.lampung@katigaveritas.com',
             'password' => Hash::make('admin123'),
         ]);
@@ -67,11 +66,10 @@ class UserAdminSeeder extends Seeder
             'user_id' => $adminLampung->id,
             'role'    => 'admin',
             'status'  => 'aktif',
-            'cabang'  => 'lampung',
         ]);
 
         $adminJakarta = User::create([
-            'name'     => 'Admin Cabang Jakarta',
+            'username' => 'Admin Cabang Jakarta',
             'email'    => 'admin.jakarta@katigaveritas.com',
             'password' => Hash::make('admin123'),
         ]);
@@ -80,20 +78,19 @@ class UserAdminSeeder extends Seeder
             'user_id' => $adminJakarta->id,
             'role'    => 'admin',
             'status'  => 'aktif',
-            'cabang'  => 'jakarta',
         ]);
 
         // =========================================================
         // USER DEMO — klien biasa untuk testing
         // =========================================================
         User::create([
-            'name'     => 'Budi Santoso',
+            'username' => 'Budi Santoso',
             'email'    => 'budi@example.com',
             'password' => Hash::make('password123'),
         ]);
 
         User::create([
-            'name'     => 'Siti Rahayu',
+            'username' => 'Siti Rahayu',
             'email'    => 'siti@example.com',
             'password' => Hash::make('password123'),
         ]);

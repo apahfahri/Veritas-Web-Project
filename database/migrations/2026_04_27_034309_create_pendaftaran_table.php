@@ -12,7 +12,6 @@ class CreatePendaftaranTable extends Migration
             $table->id();
             $table->foreignId('layanan_id')->constrained('layanan');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('petugas_id')->nullable()->constrained('petugas')->onDelete('set null');
             $table->date('tanggal_daftar');
             $table->enum('status_progres', ['menunggu', 'diproses', 'selesai', 'dibatalkan'])->default('menunggu');
             $table->enum('status_bayar', ['belum_bayar', 'menunggu_konfirmasi', 'lunas'])->default('belum_bayar');

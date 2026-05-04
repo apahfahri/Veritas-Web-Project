@@ -13,6 +13,7 @@ class Konsultasi extends Model
 
     protected $fillable = [
         'layanan_id',
+        'petugas_id',
         'jenis_pertemuan',
         'jam_pertemuan',
         'tanggal_pertemuan',
@@ -33,5 +34,11 @@ class Konsultasi extends Model
     public function layanan()
     {
         return $this->belongsTo(Layanan::class);
+    }
+
+    /** Konsultasi ditangani oleh satu Petugas */
+    public function petugas()
+    {
+        return $this->belongsTo(Petugas::class);
     }
 }

@@ -90,6 +90,24 @@
                             @endif
                         </div>
                     </div>
+
+                    <!-- PEMATERI -->
+                    @if($pelatihan->petugas)
+                    <div class="mt-8">
+                        <h2 class="text-xl font-semibold text-[#7d2ae7] mb-4">Pemateri</h2>
+                        <div class="border border-gray-200 rounded-lg p-4 flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-[#00A8A8]/10 text-[#00A8A8] flex items-center justify-center font-bold text-xl shrink-0">
+                                {{ strtoupper(substr($pelatihan->petugas->nama_lengkap, 0, 1)) }}
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">{{ $pelatihan->petugas->nama_lengkap }}</h3>
+                                @if($pelatihan->petugas->spesialisasi)
+                                    <p class="text-sm text-gray-500">{{ $pelatihan->petugas->spesialisasi }}</p>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                 </div>
 
             </div>

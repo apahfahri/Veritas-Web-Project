@@ -34,10 +34,10 @@
         <div class="px-4 py-3 border-b border-white/10">
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white text-xs font-bold backdrop-blur-sm">
-                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                    {{ strtoupper(substr(Auth::user()->username, 0, 1)) }}
                 </div>
                 <div>
-                    <div class="text-white text-sm font-medium">{{ Auth::user()->name }}</div>
+                    <div class="text-white text-sm font-medium">{{ Auth::user()->username }}</div>
                     <div class="text-xs text-slate-400">
                         {{ Auth::user()->admin?->role === 'superadmin' ? 'Super Admin' : 'Admin' }}
                     </div>
@@ -80,7 +80,7 @@
             @if(Auth::user()->isSuperAdmin())
             <a href="{{ route('admin.admin-cabang.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.admin-cabang.*') ? 'active' : '' }}">
-                🏢 Admin Cabang
+                🏢 Admin Management
             </a>
             @endif
 

@@ -15,7 +15,7 @@ class KlienSeeder extends Seeder
     {
         // 1. Klien Individu
         $user1 = User::create([
-            'name'     => 'Ahmad Zulkarnaen',
+            'username' => 'Ahmad Zulkarnaen',
             'email'    => 'ahmad.z@example.com',
             'password' => Hash::make('password123'),
         ]);
@@ -28,7 +28,7 @@ class KlienSeeder extends Seeder
         ]);
 
         $user2 = User::create([
-            'name'     => 'Linda Permata',
+            'username' => 'Linda Permata',
             'email'    => 'linda.p@example.com',
             'password' => Hash::make('password123'),
         ]);
@@ -43,7 +43,7 @@ class KlienSeeder extends Seeder
         // 2. Klien Perusahaan (PIC)
         $ptAdhi = Perusahaan::where('nama', 'LIKE', '%Adhi Karya%')->first();
         $userPic1 = User::create([
-            'name'     => 'Herry Kusuma',
+            'username' => 'Herry Kusuma',
             'email'    => 'herry.k@adhikarya.com',
             'password' => Hash::make('password123'),
         ]);
@@ -57,7 +57,7 @@ class KlienSeeder extends Seeder
 
         $ptPertamina = Perusahaan::where('nama', 'LIKE', '%Pertamina%')->first();
         $userPic2 = User::create([
-            'name'     => 'Ratna Sari',
+            'username' => 'Ratna Sari',
             'email'    => 'ratna.s@pertamina.com',
             'password' => Hash::make('password123'),
         ]);

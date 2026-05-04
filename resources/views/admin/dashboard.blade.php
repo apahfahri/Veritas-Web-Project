@@ -70,7 +70,7 @@
             <tbody class="divide-y">
                 @forelse($pendaftaranTerbaru as $p)
                 <tr class="hover:bg-gray-50">
-                    <td class="p-4 font-medium">{{ $p->user?->name ?? '-' }}</td>
+                    <td class="p-4 font-medium">{{ $p->user?->username ?? '-' }}</td>
                     <td class="p-4 text-gray-600">{{ $p->layanan?->nama ?? '-' }}</td>
                     <td class="p-4 text-gray-500">{{ $p->tanggal_daftar->format('d M Y') }}</td>
                     <td class="p-4">

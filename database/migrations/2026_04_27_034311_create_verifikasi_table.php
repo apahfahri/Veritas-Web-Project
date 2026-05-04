@@ -10,11 +10,12 @@ class CreateVerifikasiTable extends Migration
     {
         Schema::create('verifikasi', function (Blueprint $table) {
             $table->id();
-            $table->string('no_sertifikat'); // nomor yang diinput user untuk dicek
-            $table->foreignId('sertifikat_id')->nullable()->constrained('sertifikat')->onDelete('set null');
+            $table->string('no_sertifikat');
+            $table->string('sertifikat_no')->nullable();
+            $table->foreign('sertifikat_no')->references('no_sertifikat')->on('sertifikat')->onDelete('set null');
             $table->enum('status', ['valid', 'tidak_valid', 'tidak_ditemukan'])->default('tidak_ditemukan');
             $table->text('catatan')->nullable();
-            $table->string('ip_address', 45)->nullable(); // log IP untuk keamanan
+            $table->string('ip_address', 45)->nullable();
             $table->timestamps();
         });
     }
