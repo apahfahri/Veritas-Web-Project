@@ -16,6 +16,7 @@ class KlienIndividu extends Model
         'nik',
         'nama_lengkap',
         'no_hp',
+        'cabang',
     ];
 
     /*

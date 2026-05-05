@@ -14,6 +14,7 @@ class CreateKlienIndividuTable extends Migration
             $table->string('nik', 16)->nullable();
             $table->string('nama_lengkap');
             $table->string('no_hp', 20)->nullable();
+            $table->string('cabang')->nullable();
             $table->timestamps();
         });
     }

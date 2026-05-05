@@ -15,6 +15,10 @@ class CreatePendaftaranTable extends Migration
             $table->date('tanggal_daftar');
             $table->enum('status_progres', ['menunggu', 'diproses', 'selesai', 'dibatalkan'])->default('menunggu');
             $table->enum('status_bayar', ['belum_bayar', 'menunggu_konfirmasi', 'lunas'])->default('belum_bayar');
+            $table->string('cabang')->nullable();
+            $table->boolean('dokumen_lengkap')->default(false);
+            $table->timestamp('last_reminder_sent_at')->nullable();
+            $table->text('last_reminder_details')->nullable();
             $table->timestamps();
         });
     }

@@ -26,6 +26,7 @@ class PendaftaranSeeder extends Seeder
             'tanggal_daftar'  => Carbon::now()->subDays(2),
             'status_progres'  => 'menunggu',
             'status_bayar'    => 'belum_bayar',
+            'cabang'          => 'Jambi',
         ]);
 
         // 2. Pendaftaran Diproses (Perusahaan)
@@ -35,6 +36,7 @@ class PendaftaranSeeder extends Seeder
             'tanggal_daftar'  => Carbon::now()->subDays(5),
             'status_progres'  => 'diproses',
             'status_bayar'    => 'lunas',
+            'cabang'          => 'Lampung',
         ]);
 
         // 3. Pendaftaran Selesai + Sertifikat (Individu)
@@ -45,6 +47,7 @@ class PendaftaranSeeder extends Seeder
             'tanggal_daftar'  => Carbon::now()->subDays(15),
             'status_progres'  => 'selesai',
             'status_bayar'    => 'lunas',
+            'cabang'          => 'Jakarta',
         ]);
 
         $sertifikat = Sertifikat::create([

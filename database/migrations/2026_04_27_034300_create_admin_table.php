@@ -11,8 +11,9 @@ class CreateAdminTable extends Migration
         Schema::create('admin', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->enum('role', ['admin', 'superadmin'])->default('admin');
+            $table->enum('role', ['admin', 'superadmin', 'admin_cabang'])->default('admin');
             $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
+            $table->string('cabang')->nullable();
             $table->timestamps();
         });
     }

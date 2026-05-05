@@ -52,8 +52,9 @@ class UserAdminSeeder extends Seeder
 
         Admin::create([
             'user_id' => $adminJambi->id,
-            'role'    => 'admin',
+            'role'    => 'admin_cabang',
             'status'  => 'aktif',
+            'cabang'  => 'Jambi',
         ]);
 
         $adminLampung = User::create([
@@ -64,8 +65,9 @@ class UserAdminSeeder extends Seeder
 
         Admin::create([
             'user_id' => $adminLampung->id,
-            'role'    => 'admin',
+            'role'    => 'admin_cabang',
             'status'  => 'aktif',
+            'cabang'  => 'Lampung',
         ]);
 
         $adminJakarta = User::create([
@@ -76,8 +78,9 @@ class UserAdminSeeder extends Seeder
 
         Admin::create([
             'user_id' => $adminJakarta->id,
-            'role'    => 'admin',
+            'role'    => 'admin_cabang',
             'status'  => 'aktif',
+            'cabang'  => 'Jakarta',
         ]);
 
         // =========================================================

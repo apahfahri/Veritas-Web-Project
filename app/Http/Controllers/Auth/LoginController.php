@@ -41,6 +41,9 @@ class LoginController extends Controller
             }
 
             if (Auth::user()->isAdmin()) {
+                if (Auth::user()->admin?->role === 'admin_cabang') {
+                    return redirect()->intended('/admin-cabang/dashboard');
+                }
                 return redirect()->intended('/admin');
             }
 

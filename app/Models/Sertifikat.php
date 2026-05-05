@@ -21,6 +21,7 @@ class Sertifikat extends Model
         'nama_lengkap',
         'tanggal_terbit',
         'file',
+        'cabang',
     ];
 
     protected $casts = [

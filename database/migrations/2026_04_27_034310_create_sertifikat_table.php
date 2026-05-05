@@ -14,6 +14,7 @@ class CreateSertifikatTable extends Migration
             $table->string('nama_lengkap');
             $table->date('tanggal_terbit');
             $table->string('file')->nullable();
+            $table->string('cabang')->nullable();
             $table->timestamps();
         });
     }

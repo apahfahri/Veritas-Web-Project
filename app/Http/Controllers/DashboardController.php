@@ -16,6 +16,13 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
+        if ($user->isAdmin()) {
+            if ($user->admin?->role === 'admin_cabang') {
+                return redirect()->route('admin-cabang.dashboard');
+            }
+            return redirect()->route('admin.dashboard');
+        }
+
         $pendaftarans = Pendaftaran::with(['layanan', 'sertifikat'])
             ->where('user_id', $user->id)
             ->latest()
