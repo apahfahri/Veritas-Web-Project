@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pelatihan;
+use App\Models\Layanan;
 use Illuminate\Http\Request;
 
 class PelatihanController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Pelatihan::with('layanan')->orderBy('tanggal_pertemuan');
+        $query = Layanan::with('kategori')->whereHas('kategori', function ($q) {
+            $q->where('nama', 'like', '%Pelatihan%');
+        })->orderBy('tanggal_pertemuan');
 
         if ($request->filled('jenis')) {
             $query->where('jenis_pertemuan', $request->jenis);
@@ -28,15 +30,22 @@ class PelatihanController extends Controller
 
     public function show($id)
     {
-        $pelatihan = Pelatihan::with('layanan')->findOrFail($id);
-        $sisaKursi = $pelatihan->kapasitas;
-        $related   = Pelatihan::where('id', '!=', $id)->take(3)->get();
+        $pelatihan = Layanan::with(['kategori', 'pemateri'])->findOrFail($id);
+        
+        // Count pendaftaran to get sisa kursi
+        $terdaftar = $pelatihan->pendaftaran()->count();
+        $sisaKursi = $pelatihan->kapasitas ? max(0, $pelatihan->kapasitas - $terdaftar) : null;
+        
+        $related = Layanan::whereHas('kategori', function ($q) {
+            $q->where('nama', 'like', '%Pelatihan%');
+        })->where('id_layanan', '!=', $id)->take(3)->get();
+        
         return view('pages.training-detail', compact('pelatihan', 'sisaKursi', 'related'));
     }
 
     public function register($id)
     {
-        $pelatihan = Pelatihan::with('layanan')->findOrFail($id);
+        $pelatihan = Layanan::with('kategori')->findOrFail($id);
         return view('pages.training-register', compact('pelatihan'));
     }
 }

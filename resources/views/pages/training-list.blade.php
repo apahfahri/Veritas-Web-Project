@@ -54,7 +54,7 @@
                         <!-- BADGE -->
                         <div class="flex justify-between mb-3">
                             <span class="bg-[#7d2ae7] text-white text-xs px-2 py-1 rounded">
-                                {{ $pelatihan->layanan?->nama ?? 'Pelatihan K3' }}
+                                {{ $pelatihan->kategori?->nama ?? 'Pelatihan K3' }}
                             </span>
                             <span class="border text-xs px-2 py-1 rounded {{ $pelatihan->jenis_pertemuan === 'online' ? 'border-[#7d2ae7] text-[#7d2ae7]' : 'border-orange-400 text-orange-500' }}">
                                 {{ ucfirst($pelatihan->jenis_pertemuan) }}
@@ -80,7 +80,7 @@
                         </div>
 
                         <div class="border-t pt-4">
-                            <a href="{{ route('training.detail', $pelatihan->id) }}"
+                            <a href="{{ route('training.detail', $pelatihan->id_layanan) }}"
                                class="block w-full text-center bg-[#7d2ae7] text-white py-2 rounded hover:opacity-90 transition">
                                 Lihat Detail & Daftar
                             </a>

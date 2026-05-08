@@ -9,13 +9,14 @@ class CreateKlienPerusahaanTable extends Migration
     public function up()
     {
         Schema::create('klien_perusahaan', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('perusahaan_id')->nullable()->constrained('perusahaan')->onDelete('set null');
-            $table->string('nama_lengkap');
+            $table->id('id_k_perusahaan');
+            $table->unsignedBigInteger('id_user');
+            $table->unsignedBigInteger('id_perusahaan');
             $table->string('jabatan')->nullable();
-            $table->string('no_hp', 20)->nullable();
             $table->timestamps();
+
+            $table->foreign('id_user')->references('id_user')->on('users')->onDelete('cascade');
+            $table->foreign('id_perusahaan')->references('id_perusahaan')->on('perusahaan')->onDelete('cascade');
         });
     }
 

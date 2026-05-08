@@ -21,6 +21,7 @@
             <div class="hidden lg:flex gap-4">
                 <a href="/" class="px-3 py-2">Beranda</a>
                 <a href="/training" class="px-3 py-2">Pelatihan</a>
+                <a href="{{ route('training.status') }}" class="px-3 py-2">Cek Status</a>
                 <a href="/consultation" class="px-3 py-2">Konsultasi</a>
                 <a href="/audit" class="px-3 py-2">Audit</a>
                 <a href="/verification" class="px-3 py-2">Verifikasi</a>
@@ -30,14 +31,10 @@
             <div class="hidden lg:flex items-center gap-2">
 
                 @guest
-                    <!-- Belum login: tampilkan Login & Register -->
+                    <!-- Belum login: tampilkan Login -->
                     <a href="{{ route('login') }}"
-                       class="border border-gray-300 px-4 py-2 rounded hover:bg-gray-100 text-sm font-medium">
-                        Login
-                    </a>
-                    <a href="{{ route('register') }}"
-                       class="bg-[#7d2ae7] text-white px-4 py-2 rounded hover:opacity-90 text-sm font-medium">
-                        Register
+                       class="border border-[#7d2ae7] text-[#7d2ae7] px-4 py-2 rounded hover:bg-[#7d2ae7] hover:text-white transition-colors text-sm font-medium">
+                        Login Admin
                     </a>
                 @endguest
                 @auth
@@ -45,22 +42,16 @@
                     <div class="relative">
                         <button id="profile-menu-button" class="flex items-center gap-3 focus:outline-none group">
                             {{-- Avatar --}}
-                            @if (Auth::user()->avatar)
-                                <img src="{{ Auth::user()->avatar }}"
-                                     alt="{{ Auth::user()->name }}"
-                                     class="w-10 h-10 rounded-full object-cover border-2 border-[#7d2ae7] group-hover:scale-105 transition-transform">
-                            @else
-                                <div class="w-10 h-10 rounded-full bg-[#7d2ae7] flex items-center justify-center text-white text-sm font-bold shadow-sm group-hover:scale-105 transition-transform">
-                                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                                </div>
-                            @endif
+                            <div class="w-10 h-10 rounded-full bg-[#7d2ae7] flex items-center justify-center text-white text-sm font-bold shadow-sm group-hover:scale-105 transition-transform">
+                                {{ strtoupper(substr(Auth::user()->username, 0, 1)) }}
+                            </div>
 
                             <div class="hidden sm:flex flex-col items-start text-left">
                                 <span class="text-sm font-bold text-gray-800 leading-tight">
-                                    {{ Auth::user()->name }}
+                                    {{ Auth::user()->username }}
                                 </span>
                                 <span class="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">
-                                    Pengguna
+                                    Admin
                                 </span>
                             </div>
                             
@@ -73,20 +64,11 @@
                         <div id="profile-dropdown" class="absolute right-0 mt-3 w-60 bg-white rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] border border-gray-100 py-2 hidden z-50 overflow-hidden">
                             
                             <div class="p-2">
-                                <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-3 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-xl transition-all group/item">
-                                    <span class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-xl group-hover/item:bg-[#7d2ae7]/10 group-hover/item:text-[#7d2ae7] transition-all text-lg">🧑‍💼</span>
-                                    <div class="flex flex-col">
-                                        <p class="text-sm font-bold text-gray-800 truncate">{{ Auth::user()->name }}</p>
-                                        <p class="text-xs text-gray-500 truncate">{{ Auth::user()->email }}</p>
-                                        <span class="text-[10px] text-gray-400">Update data diri & akun</span>
-                                    </div>
-                                </a>
-
-                                <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-xl transition-all group/item">
+                                <a href="{{ Auth::user()->isSubadmin() ? route('subadmin.dashboard') : route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-xl transition-all group/item">
                                     <span class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-xl group-hover/item:bg-[#7d2ae7]/10 group-hover/item:text-[#7d2ae7] transition-all text-lg">📊</span>
                                     <div class="flex flex-col">
-                                        <span class="font-bold">Dashboard</span>
-                                        <span class="text-[10px] text-gray-400">Kelola pendaftaran</span>
+                                        <span class="font-bold">Dashboard Admin</span>
+                                        <span class="text-[10px] text-gray-400">Kelola sistem</span>
                                     </div>
                                 </a>
 

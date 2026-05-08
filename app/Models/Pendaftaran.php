@@ -10,63 +10,38 @@ class Pendaftaran extends Model
     use HasFactory;
 
     protected $table = 'pendaftaran';
+    protected $primaryKey = 'id_pendaftaran';
 
     protected $fillable = [
-        'layanan_id',
-        'user_id',
+        'id_layanan',
+        'id_admin',
+        'id_user',
         'tanggal_daftar',
         'status_progres',
         'status_bayar',
-        'cabang',
-        'dokumen_lengkap',
-        'last_reminder_sent_at',
-        'last_reminder_details',
     ];
 
     protected $casts = [
         'tanggal_daftar' => 'date',
-        'last_reminder_sent_at' => 'datetime',
     ];
 
-    /*
-    |--------------------------------------------------------------------------
-    | RELASI
-    |--------------------------------------------------------------------------
-    */
-
-    /** Pendaftaran dilakukan oleh satu User */
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    /** Pendaftaran untuk satu Layanan */
     public function layanan()
     {
-        return $this->belongsTo(Layanan::class);
+        return $this->belongsTo(Layanan::class, 'id_layanan', 'id_layanan');
     }
 
-    /** Pendaftaran menghasilkan satu Sertifikat */
+    public function admin()
+    {
+        return $this->belongsTo(Admin::class, 'id_admin', 'id_admin');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id_user');
+    }
+
     public function sertifikat()
     {
-        return $this->hasOne(Sertifikat::class);
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | HELPER
-    |--------------------------------------------------------------------------
-    */
-
-    /** Cek apakah pendaftaran sudah selesai */
-    public function isSelesai(): bool
-    {
-        return $this->status_progres === 'selesai';
-    }
-
-    /** Cek apakah pembayaran sudah lunas */
-    public function isLunas(): bool
-    {
-        return $this->status_bayar === 'lunas';
+        return $this->hasOne(Sertifikat::class, 'id_pendaftaran', 'id_pendaftaran');
     }
 }

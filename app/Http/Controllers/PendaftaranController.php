@@ -2,112 +2,121 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\KlienIndividu;
-use App\Models\KlienPerusahaan;
-use App\Models\Pendaftaran;
+use App\Models\User;
 use App\Models\Perusahaan;
+use App\Models\Pendaftaran;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PendaftaranController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function store(Request $request)
     {
         $jenis = $request->input('jenis_klien'); // 'individu' | 'perusahaan'
 
         // ── Validasi umum ──────────────────────────────────────────────────
         $rules = [
+            'layanan_id'     => 'required|exists:layanan,id_layanan',
             'jenis_klien'    => 'required|in:individu,perusahaan',
-            'layanan_id'     => 'required|exists:layanan,id',
-            'tanggal_daftar' => 'required|date|after_or_equal:today',
+            'nama_lengkap'   => 'required|string|max:255',
+            'email'          => 'required|email|max:255',
+            'no_telp'        => 'required|string|max:20',
+            'pendidikan'     => 'nullable|string|max:100',
         ];
 
         // ── Validasi khusus per jenis ──────────────────────────────────────
-        if ($jenis === 'individu') {
-            $rules['nama_lengkap'] = 'required|string|max:255';
-            $rules['no_hp']        = 'required|string|max:20';
-            $rules['nik']          = 'nullable|string|max:16';
-        } else {
-            $rules['nama_lengkap']     = 'required|string|max:255';
-            $rules['jabatan']          = 'nullable|string|max:255';
+        if ($jenis === 'perusahaan') {
             $rules['nama_perusahaan']  = 'required|string|max:255';
             $rules['alamat_perusahaan']= 'required|string';
-            $rules['npwp_perusahaan']  = 'nullable|string|max:30';
-            $rules['nib_oss']          = 'nullable|string|max:50';
             $rules['sektor_industri']  = 'nullable|string|max:100';
             $rules['jumlah_karyawan']  = 'nullable|integer|min:1';
+            $rules['jabatan']          = 'nullable|string|max:255';
         }
 
         $request->validate($rules);
 
         DB::transaction(function () use ($request, $jenis) {
 
-            $userId = Auth::id();
-
-            // ── Simpan/update profil klien ─────────────────────────────────
-            if ($jenis === 'individu') {
-                KlienIndividu::updateOrCreate(
-                    ['user_id' => $userId],
-                    [
-                        'nama_lengkap' => $request->nama_lengkap,
-                        'no_hp'        => $request->no_hp,
-                        'nik'          => $request->nik,
-                    ]
-                );
+            // ── Cari/Buat User ─────────────────────────────────────────────
+            $user = User::where('email', $request->email)->first();
+            if (!$user) {
+                $user = User::create([
+                    'nama' => $request->nama_lengkap,
+                    'email' => $request->email,
+                    'no_telp' => $request->no_telp,
+                    'pendidikan' => $request->pendidikan,
+                ]);
             } else {
-                // Cari atau buat record perusahaan
+                $user->update([
+                    'nama' => $request->nama_lengkap,
+                    'no_telp' => $request->no_telp,
+                    'pendidikan' => $request->pendidikan,
+                ]);
+            }
+
+            // ── Simpan/update profil perusahaan ────────────────────────────
+            if ($jenis === 'perusahaan') {
                 $perusahaan = Perusahaan::firstOrCreate(
                     ['nama' => $request->nama_perusahaan],
                     [
                         'alamat'          => $request->alamat_perusahaan,
-                        'npwp_perusahaan' => $request->npwp_perusahaan,
-                        'nib_oss'         => $request->nib_oss,
                         'sektor_industri' => $request->sektor_industri,
                         'jumlah_karyawan' => $request->jumlah_karyawan,
                     ]
                 );
 
-                KlienPerusahaan::updateOrCreate(
-                    ['user_id' => $userId],
+                DB::table('klien_perusahaan')->updateOrInsert(
+                    ['id_user' => $user->id_user, 'id_perusahaan' => $perusahaan->id_perusahaan],
                     [
-                        'perusahaan_id' => $perusahaan->id,
-                        'nama_lengkap'  => $request->nama_lengkap,
-                        'jabatan'       => $request->jabatan,
+                        'jabatan' => $request->jabatan,
+                        'updated_at' => now(),
+                        'created_at' => now(),
                     ]
                 );
             }
 
             // ── Buat record pendaftaran ────────────────────────────────────
             Pendaftaran::create([
-                'layanan_id'     => $request->layanan_id,
-                'user_id'        => $userId,
-                'tanggal_daftar' => $request->tanggal_daftar,
-                'status_progres' => 'menunggu',
-                'status_bayar'   => 'belum_bayar',
+                'id_layanan'     => $request->layanan_id,
+                'id_user'        => $user->id_user,
+                'tanggal_daftar' => now(),
+                'status_progres' => 'menunggu_pembayaran',
+                'status_bayar'   => 'belum_lunas',
             ]);
         });
 
-        return redirect()->route('dashboard')
-            ->with('success', 'Pendaftaran berhasil dikirim! Tim kami akan segera menghubungi Anda.');
+        return redirect()->route('training.list')
+            ->with('success', 'Pendaftaran berhasil dikirim! Tim kami akan segera menghubungi Anda melalui Email atau WhatsApp. Anda juga dapat memantau status pendaftaran di halaman Cek Status.');
     }
 
-    public function destroy($id)
+    public function statusForm()
     {
-        $pendaftaran = Pendaftaran::where('user_id', Auth::id())->findOrFail($id);
+        return view('pages.training-status');
+    }
 
-        if ($pendaftaran->status_progres !== 'menunggu') {
-            return back()->with('error', 'Pendaftaran tidak dapat dibatalkan karena sudah diproses.');
+    public function checkStatus(Request $request)
+    {
+        $request->validate([
+            'identifier' => 'required|string',
+        ]);
+
+        $identifier = $request->identifier;
+
+        // Cari user berdasarkan email atau nomor telepon
+        $user = User::where('email', $identifier)
+            ->orWhere('no_telp', $identifier)
+            ->first();
+
+        if (!$user) {
+            return back()->withErrors(['identifier' => 'Data pendaftaran tidak ditemukan untuk email/nomor telepon tersebut.'])
+                         ->withInput();
         }
 
-        $pendaftaran->update(['status_progres' => 'dibatalkan']);
+        $pendaftarans = Pendaftaran::with('layanan')
+            ->where('id_user', $user->id_user)
+            ->latest()
+            ->get();
 
-        return redirect()->route('dashboard')
-            ->with('success', 'Pendaftaran berhasil dibatalkan.');
+        return view('pages.training-status', compact('pendaftarans', 'identifier'));
     }
 }

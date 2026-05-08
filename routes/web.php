@@ -10,8 +10,8 @@ use App\Http\Controllers\VerifikasiController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\AdminDashboardController;
-use App\Http\Controllers\Admin\PetugasController;
-use App\Http\Controllers\Admin\PelatihanAdminController;
+use App\Http\Controllers\Admin\PemateriController;
+use App\Http\Controllers\Admin\LayananAdminController;
 use App\Http\Controllers\Admin\PendaftaranAdminController;
 use App\Http\Controllers\Admin\SertifikatAdminController;
 
@@ -32,6 +32,8 @@ Route::view('/audit', 'pages.audit')->name('audit');
 |--------------------------------------------------------------------------
 */
 Route::get('/training',              [PelatihanController::class, 'index'])->name('training.list');
+Route::get('/training/status',       [PendaftaranController::class, 'statusForm'])->name('training.status');
+Route::post('/training/status',      [PendaftaranController::class, 'checkStatus'])->name('training.status.check');
 Route::get('/training/{id}',         [PelatihanController::class, 'show'])->name('training.detail');
 Route::get('/training/{id}/register',  [PelatihanController::class, 'register'])->name('training.register');
 
@@ -52,43 +54,13 @@ Route::middleware('guest')->group(function () {
     Route::get('/login',     [LoginController::class,    'showForm'])->name('login');
     Route::post('/login',    [LoginController::class,    'login']);
 
-    // Register + OTP Verifikasi
-    Route::get('/register',              [RegisterController::class, 'showForm'])->name('register');
-    Route::post('/register',             [RegisterController::class, 'register']);
-    Route::get('/register/otp',          [RegisterController::class, 'showOtp'])->name('register.otp');
-    Route::post('/register/otp/verify',  [RegisterController::class, 'verifyOtp'])->name('register.otp.verify');
-    Route::post('/register/otp/resend',  [RegisterController::class, 'resendOtp'])->name('register.otp.resend');
-
-    // Lupa Password
-    Route::get('/forgot-password',              [ForgotPasswordController::class, 'showForm'])->name('password.request');
-    Route::post('/forgot-password',             [ForgotPasswordController::class, 'sendOtp'])->name('password.email');
-    Route::get('/forgot-password/otp',          [ForgotPasswordController::class, 'showOtpForm'])->name('password.otp');
-    Route::post('/forgot-password/otp/verify',  [ForgotPasswordController::class, 'verifyOtp'])->name('password.otp.verify');
-    Route::post('/forgot-password/otp/resend',  [ForgotPasswordController::class, 'resendOtp'])->name('password.otp.resend');
-    Route::get('/forgot-password/reset',        [ForgotPasswordController::class, 'showResetForm'])->name('password.reset.form');
-    Route::post('/forgot-password/reset',       [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
+    // User Auth Routes Removed
 });
 
-Route::get('/auth/google',          [GoogleController::class, 'redirect'])->name('google.login');
-Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('google.callback');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-/*
-|--------------------------------------------------------------------------
-| USER — AUTH REQUIRED
-|--------------------------------------------------------------------------
-*/
-Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-    // Pendaftaran
-    Route::post('/pendaftaran',         [PendaftaranController::class, 'store'])->name('pendaftaran.store');
-    Route::delete('/pendaftaran/{id}',  [PendaftaranController::class, 'destroy'])->name('pendaftaran.destroy');
-
-    // Profil
-    Route::get('/profile',    [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile',    [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
-});
+// Pendaftaran (Public)
+Route::post('/pendaftaran', [\App\Http\Controllers\PendaftaranController::class, 'store'])->name('pendaftaran.store');
 
 /*
 |--------------------------------------------------------------------------
@@ -100,21 +72,21 @@ Route::middleware(['auth', 'is.admin'])->prefix('admin')->name('admin.')->group(
     // Dashboard
     Route::get('/',  [AdminDashboardController::class, 'index'])->name('dashboard');
 
-    // Petugas CRUD
-    Route::get('/petugas',             [PetugasController::class, 'index'])->name('petugas.index');
-    Route::get('/petugas/create',      [PetugasController::class, 'create'])->name('petugas.create');
-    Route::post('/petugas',            [PetugasController::class, 'store'])->name('petugas.store');
-    Route::get('/petugas/{id}/edit',   [PetugasController::class, 'edit'])->name('petugas.edit');
-    Route::put('/petugas/{id}',        [PetugasController::class, 'update'])->name('petugas.update');
-    Route::delete('/petugas/{id}',     [PetugasController::class, 'destroy'])->name('petugas.destroy');
+    // Pemateri CRUD
+    Route::get('/petugas',             [PemateriController::class, 'index'])->name('petugas.index');
+    Route::get('/petugas/create',      [PemateriController::class, 'create'])->name('petugas.create');
+    Route::post('/petugas',            [PemateriController::class, 'store'])->name('petugas.store');
+    Route::get('/petugas/{id}/edit',   [PemateriController::class, 'edit'])->name('petugas.edit');
+    Route::put('/petugas/{id}',        [PemateriController::class, 'update'])->name('petugas.update');
+    Route::delete('/petugas/{id}',     [PemateriController::class, 'destroy'])->name('petugas.destroy');
 
-    // Pelatihan CRUD
-    Route::get('/pelatihan',           [PelatihanAdminController::class, 'index'])->name('pelatihan.index');
-    Route::get('/pelatihan/create',    [PelatihanAdminController::class, 'create'])->name('pelatihan.create');
-    Route::post('/pelatihan',          [PelatihanAdminController::class, 'store'])->name('pelatihan.store');
-    Route::get('/pelatihan/{id}/edit', [PelatihanAdminController::class, 'edit'])->name('pelatihan.edit');
-    Route::put('/pelatihan/{id}',      [PelatihanAdminController::class, 'update'])->name('pelatihan.update');
-    Route::delete('/pelatihan/{id}',   [PelatihanAdminController::class, 'destroy'])->name('pelatihan.destroy');
+    // Layanan CRUD
+    Route::get('/pelatihan',           [LayananAdminController::class, 'index'])->name('pelatihan.index');
+    Route::get('/pelatihan/create',    [LayananAdminController::class, 'create'])->name('pelatihan.create');
+    Route::post('/pelatihan',          [LayananAdminController::class, 'store'])->name('pelatihan.store');
+    Route::get('/pelatihan/{id}/edit', [LayananAdminController::class, 'edit'])->name('pelatihan.edit');
+    Route::put('/pelatihan/{id}',      [LayananAdminController::class, 'update'])->name('pelatihan.update');
+    Route::delete('/pelatihan/{id}',   [LayananAdminController::class, 'destroy'])->name('pelatihan.destroy');
 
     // Pendaftaran management
     Route::get('/pendaftaran',         [PendaftaranAdminController::class, 'index'])->name('pendaftaran.index');
@@ -126,44 +98,46 @@ Route::middleware(['auth', 'is.admin'])->prefix('admin')->name('admin.')->group(
     Route::get('/sertifikat/create/{pendaftaran_id}',  [SertifikatAdminController::class, 'create'])->name('sertifikat.create');
     Route::post('/sertifikat',                         [SertifikatAdminController::class, 'store'])->name('sertifikat.store');
 
-    // Admin Cabang management (Superadmin only)
-    Route::resource('admin-cabang', \App\Http\Controllers\Admin\AdminCabangController::class)->except(['show']);
+    // Subadmin management (Superadmin only)
+    Route::resource('subadmin', \App\Http\Controllers\Admin\SubadminController::class)->except(['show']);
 });
 
 /*
 |--------------------------------------------------------------------------
-| ADMIN CABANG PANEL — AUTH + IS.ADMIN_CABANG REQUIRED
+| SUBADMIN PANEL — AUTH + IS.SUBADMIN REQUIRED
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'is.admin_cabang'])->prefix('admin-cabang')->name('admin-cabang.')->group(function () {
-    Route::get('/dashboard', [\App\Http\Controllers\AdminCabang\AdminCabangDashboardController::class, 'index'])->name('dashboard');
+Route::middleware(['auth', 'is.subadmin'])->prefix('subadmin')->name('subadmin.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Subadmin\SubadminDashboardController::class, 'index'])->name('dashboard');
 
     // Pendaftaran
-    Route::get('/pendaftaran', [\App\Http\Controllers\AdminCabang\AdminCabangPendaftaranController::class, 'index'])->name('pendaftaran.index');
-    Route::get('/pendaftaran/{id}', [\App\Http\Controllers\AdminCabang\AdminCabangPendaftaranController::class, 'show'])->name('pendaftaran.show');
-    Route::put('/pendaftaran/{id}', [\App\Http\Controllers\AdminCabang\AdminCabangPendaftaranController::class, 'update'])->name('pendaftaran.update');
-    Route::delete('/pendaftaran/{id}', [\App\Http\Controllers\AdminCabang\AdminCabangPendaftaranController::class, 'destroy'])->name('pendaftaran.destroy');
-    Route::post('/pendaftaran/{id}/send-reminder', [\App\Http\Controllers\AdminCabang\AdminCabangPendaftaranController::class, 'sendReminder'])->name('pendaftaran.send-reminder');
+    Route::get('/pendaftaran', [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'index'])->name('pendaftaran.index');
+    Route::get('/pendaftaran/{id}', [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'show'])->name('pendaftaran.show');
+    Route::put('/pendaftaran/{id}', [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'update'])->name('pendaftaran.update');
+    Route::delete('/pendaftaran/{id}', [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'destroy'])->name('pendaftaran.destroy');
+    Route::post('/pendaftaran/{id}/send-reminder', [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'sendReminder'])->name('pendaftaran.send-reminder');
 
     // Klien
-    Route::resource('klien', \App\Http\Controllers\AdminCabang\AdminCabangKlienController::class)->except(['show']);
+    Route::get('/klien', [\App\Http\Controllers\Subadmin\SubadminKlienController::class, 'index'])->name('klien.index');
+    Route::get('/klien/{id}', [\App\Http\Controllers\Subadmin\SubadminKlienController::class, 'show'])->name('klien.show');
+    Route::delete('/klien/{id}', [\App\Http\Controllers\Subadmin\SubadminKlienController::class, 'destroy'])->name('klien.destroy');
 
     // Sertifikat
-    Route::get('/sertifikat', [\App\Http\Controllers\AdminCabang\AdminCabangSertifikatController::class, 'index'])->name('sertifikat.index');
-    Route::get('/sertifikat/create/{pendaftaran_id}', [\App\Http\Controllers\AdminCabang\AdminCabangSertifikatController::class, 'create'])->name('sertifikat.create');
-    Route::post('/sertifikat', [\App\Http\Controllers\AdminCabang\AdminCabangSertifikatController::class, 'store'])->name('sertifikat.store');
-    Route::get('/sertifikat/{id}/edit', [\App\Http\Controllers\AdminCabang\AdminCabangSertifikatController::class, 'edit'])->name('sertifikat.edit');
-    Route::put('/sertifikat/{id}', [\App\Http\Controllers\AdminCabang\AdminCabangSertifikatController::class, 'update'])->name('sertifikat.update');
-    Route::delete('/sertifikat/{id}', [\App\Http\Controllers\AdminCabang\AdminCabangSertifikatController::class, 'destroy'])->name('sertifikat.destroy');
+    Route::get('/sertifikat', [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'index'])->name('sertifikat.index');
+    Route::get('/sertifikat/create/{pendaftaran_id}', [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'create'])->name('sertifikat.create');
+    Route::post('/sertifikat', [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'store'])->name('sertifikat.store');
+    Route::get('/sertifikat/{no_sertifikat}/edit', [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'edit'])->name('sertifikat.edit');
+    Route::put('/sertifikat/{no_sertifikat}', [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'update'])->name('subadmin.sertifikat.update');
+    Route::delete('/sertifikat/{no_sertifikat}', [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'destroy'])->name('sertifikat.destroy');
 
     // Pelatihan (View Only)
-    Route::get('/pelatihan', [\App\Http\Controllers\AdminCabang\AdminCabangPelatihanController::class, 'index'])->name('pelatihan.index');
+    Route::get('/pelatihan', [\App\Http\Controllers\Subadmin\SubadminLayananController::class, 'index'])->name('pelatihan.index');
 
     // Petugas (View Only)
-    Route::get('/petugas', [\App\Http\Controllers\AdminCabang\AdminCabangPetugasController::class, 'index'])->name('petugas.index');
+    Route::get('/petugas', [\App\Http\Controllers\Subadmin\SubadminPemateriController::class, 'index'])->name('petugas.index');
 
     // Layanan (View Only)
-    Route::get('/layanan', [\App\Http\Controllers\AdminCabang\AdminCabangLayananController::class, 'index'])->name('layanan.index');
+    Route::get('/layanan', [\App\Http\Controllers\Subadmin\SubadminLayananController::class, 'index'])->name('layanan.index');
 });
 
 /*

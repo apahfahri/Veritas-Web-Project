@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pendaftaran;
-use App\Models\Pelatihan;
-use App\Models\Petugas;
 use App\Models\Sertifikat;
+use App\Models\Layanan;
+use App\Models\Pemateri;
+use App\Models\User;
 
 class AdminDashboardController extends Controller
 {
@@ -14,10 +15,12 @@ class AdminDashboardController extends Controller
     {
         $stats = [
             'pendaftaran' => Pendaftaran::count(),
-            'pelatihan'   => Pelatihan::count(),
-            'petugas'     => Petugas::count(),
+            'pelatihan'   => Layanan::count(),
+            'petugas'     => Pemateri::count(),
             'sertifikat'  => Sertifikat::count(),
-            'menunggu'    => Pendaftaran::where('status_progres', 'menunggu')->count(),
+            'user'        => User::count(),
+            'menunggu'    => Pendaftaran::where('status_progres', 'like', '%menunggu%')->count(),
+            'diproses'    => Pendaftaran::where('status_progres', 'diproses')->count(),
             'selesai'     => Pendaftaran::where('status_progres', 'selesai')->count(),
         ];
 

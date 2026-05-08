@@ -10,39 +10,35 @@ class Layanan extends Model
     use HasFactory;
 
     protected $table = 'layanan';
+    protected $primaryKey = 'id_layanan';
 
     protected $fillable = [
-        'nama',
+        'id_kategori',
+        'materi',
+        'jenis_pertemuan',
+        'tanggal_pertemuan',
+        'jam_pertemuan',
+        'lokasi',
+        'kapasitas',
         'deskripsi',
     ];
 
-    /*
-    |--------------------------------------------------------------------------
-    | RELASI
-    |--------------------------------------------------------------------------
-    */
+    protected $casts = [
+        'tanggal_pertemuan' => 'date',
+    ];
 
-    /** Layanan memiliki satu detail Pelatihan */
-    public function pelatihan()
+    public function kategori()
     {
-        return $this->hasOne(Pelatihan::class);
+        return $this->belongsTo(KategoriLayanan::class, 'id_kategori', 'id_kategori');
     }
 
-    /** Layanan memiliki satu detail Konsultasi */
-    public function konsultasi()
+    public function pemateri()
     {
-        return $this->hasOne(Konsultasi::class);
+        return $this->belongsToMany(Pemateri::class, 'layanan_pemateri', 'id_layanan', 'id_pemateri');
     }
 
-    /** Layanan memiliki satu detail Audit */
-    public function audit()
-    {
-        return $this->hasOne(Audit::class);
-    }
-
-    /** Layanan memiliki banyak Pendaftaran */
     public function pendaftaran()
     {
-        return $this->hasMany(Pendaftaran::class);
+        return $this->hasMany(Pendaftaran::class, 'id_layanan', 'id_layanan');
     }
 }

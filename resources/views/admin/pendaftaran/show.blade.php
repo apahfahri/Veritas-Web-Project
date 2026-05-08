@@ -1,6 +1,6 @@
 @extends('layouts.admin')
-@section('page-title', 'Detail Pendaftaran #' . $pendaftaran->id)
-@section('page-subtitle', 'Kelola status dan penugasan petugas')
+@section('page-title', 'Detail Pendaftaran #' . $pendaftaran->id_pendaftaran)
+@section('page-subtitle', 'Kelola status dan informasi pendaftaran')
 
 @section('content')
 
@@ -17,15 +17,15 @@
             <dl class="grid grid-cols-2 gap-4 text-sm">
                 <div>
                     <dt class="text-gray-500">ID Pendaftaran</dt>
-                    <dd class="font-semibold">#{{ $pendaftaran->id }}</dd>
+                    <dd class="font-semibold">#{{ $pendaftaran->id_pendaftaran }}</dd>
                 </div>
                 <div>
                     <dt class="text-gray-500">Tanggal Daftar</dt>
-                    <dd class="font-semibold">{{ $pendaftaran->tanggal_daftar->format('d M Y') }}</dd>
+                    <dd class="font-semibold">{{ $pendaftaran->tanggal_daftar ? $pendaftaran->tanggal_daftar->format('d M Y') : '-' }}</dd>
                 </div>
                 <div>
                     <dt class="text-gray-500">Nama Pendaftar</dt>
-                    <dd class="font-semibold">{{ $pendaftaran->user?->username }}</dd>
+                    <dd class="font-semibold">{{ $pendaftaran->user?->nama }}</dd>
                 </div>
                 <div>
                     <dt class="text-gray-500">Email</dt>
@@ -33,7 +33,7 @@
                 </div>
                 <div>
                     <dt class="text-gray-500">Layanan</dt>
-                    <dd class="font-semibold">{{ $pendaftaran->layanan?->nama ?? '-' }}</dd>
+                    <dd class="font-semibold">{{ $pendaftaran->layanan?->materi ?? '-' }}</dd>
                 </div>
 
             </dl>
@@ -44,7 +44,7 @@
             <h3 class="font-semibold text-green-700 mb-2">🏆 Sertifikat Telah Diterbitkan</h3>
             <p class="text-sm text-green-600">No. Sertifikat: <strong>{{ $pendaftaran->sertifikat->no_sertifikat }}</strong></p>
             <p class="text-sm text-green-600">Nama: <strong>{{ $pendaftaran->sertifikat->nama_lengkap }}</strong></p>
-            <p class="text-sm text-green-600">Terbit: <strong>{{ $pendaftaran->sertifikat->tanggal_terbit->format('d M Y') }}</strong></p>
+            <p class="text-sm text-green-600">Terbit: <strong>{{ $pendaftaran->sertifikat->tanggal_terbit ? $pendaftaran->sertifikat->tanggal_terbit->format('d M Y') : '-' }}</strong></p>
         </div>
         @endif
     </div>
@@ -53,29 +53,26 @@
     <div class="bg-white p-6 rounded-xl shadow">
         <h3 class="font-semibold text-[#7d2ae7] mb-4">Update Status</h3>
 
-        <form method="POST" action="{{ route('admin.pendaftaran.update', $pendaftaran->id) }}" class="space-y-4">
+        <form method="POST" action="{{ route('admin.pendaftaran.update', $pendaftaran->id_pendaftaran) }}" class="space-y-4">
             @csrf @method('PUT')
 
             <div>
                 <label class="block text-xs font-medium mb-1 text-gray-600">Status Progres *</label>
                 <select name="status_progres" required class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-[#7d2ae7] focus:outline-none">
-                    <option value="menunggu"    {{ $pendaftaran->status_progres === 'menunggu'    ? 'selected' : '' }}>⏳ Menunggu</option>
-                    <option value="diproses"    {{ $pendaftaran->status_progres === 'diproses'    ? 'selected' : '' }}>🔄 Diproses</option>
-                    <option value="selesai"     {{ $pendaftaran->status_progres === 'selesai'     ? 'selected' : '' }}>✅ Selesai</option>
-                    <option value="dibatalkan"  {{ $pendaftaran->status_progres === 'dibatalkan'  ? 'selected' : '' }}>❌ Dibatalkan</option>
+                    <option value="menunggu_pembayaran" {{ $pendaftaran->status_progres === 'menunggu_pembayaran' ? 'selected' : '' }}>⏳ Menunggu Bayar</option>
+                    <option value="diproses"             {{ $pendaftaran->status_progres === 'diproses'             ? 'selected' : '' }}>🔄 Diproses</option>
+                    <option value="selesai"              {{ $pendaftaran->status_progres === 'selesai'              ? 'selected' : '' }}>✅ Selesai</option>
+                    <option value="dibatalkan"           {{ $pendaftaran->status_progres === 'dibatalkan'           ? 'selected' : '' }}>❌ Dibatalkan</option>
                 </select>
             </div>
 
             <div>
                 <label class="block text-xs font-medium mb-1 text-gray-600">Status Pembayaran *</label>
                 <select name="status_bayar" required class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-[#7d2ae7] focus:outline-none">
-                    <option value="belum_bayar"          {{ $pendaftaran->status_bayar === 'belum_bayar'          ? 'selected' : '' }}>💳 Belum Bayar</option>
-                    <option value="menunggu_konfirmasi"  {{ $pendaftaran->status_bayar === 'menunggu_konfirmasi'  ? 'selected' : '' }}>⏳ Menunggu Konfirmasi</option>
-                    <option value="lunas"                {{ $pendaftaran->status_bayar === 'lunas'                ? 'selected' : '' }}>💰 Lunas</option>
+                    <option value="belum_lunas" {{ $pendaftaran->status_bayar === 'belum_lunas' ? 'selected' : '' }}>💳 Belum Lunas</option>
+                    <option value="lunas"       {{ $pendaftaran->status_bayar === 'lunas'       ? 'selected' : '' }}>💰 Lunas</option>
                 </select>
             </div>
-
-
 
             <button type="submit" class="w-full bg-[#7d2ae7] text-white py-2.5 rounded-lg hover:opacity-90 text-sm">
                 Simpan Perubahan
@@ -84,7 +81,7 @@
 
         @if($pendaftaran->status_progres === 'selesai' && !$pendaftaran->sertifikat)
         <div class="mt-4 pt-4 border-t">
-            <a href="{{ route('admin.sertifikat.create', $pendaftaran->id) }}"
+            <a href="{{ route('admin.sertifikat.create', $pendaftaran->id_pendaftaran) }}"
                class="block w-full text-center bg-[#7d2ae7] text-white py-2.5 rounded-lg hover:opacity-90 text-sm">
                 🏆 Terbitkan Sertifikat
             </a>

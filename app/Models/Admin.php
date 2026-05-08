@@ -2,33 +2,28 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class Admin extends Model
+class Admin extends Authenticatable
 {
-    use HasFactory;
+    use Notifiable;
 
     protected $table = 'admin';
+    protected $primaryKey = 'id_admin';
 
     protected $fillable = [
-        'user_id',
+        'username',
+        'email',
+        'password',
+        'no_telp',
         'role',
         'status',
-        'cabang',
     ];
 
-    /*
-    |--------------------------------------------------------------------------
-    | RELASI
-    |--------------------------------------------------------------------------
-    */
-
-    /** Admin dimiliki oleh satu User */
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    protected $hidden = [
+        'password',
+    ];
 
     /*
     |--------------------------------------------------------------------------
@@ -36,13 +31,21 @@ class Admin extends Model
     |--------------------------------------------------------------------------
     */
 
-    /** Cek apakah admin adalah superadmin */
+    public function isAdmin(): bool
+    {
+        return true;
+    }
+
     public function isSuperAdmin(): bool
     {
         return $this->role === 'superadmin';
     }
 
-    /** Cek apakah admin aktif */
+    public function isSubadmin(): bool
+    {
+        return $this->role === 'subadmin';
+    }
+
     public function isAktif(): bool
     {
         return $this->status === 'aktif';

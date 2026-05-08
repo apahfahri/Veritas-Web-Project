@@ -9,17 +9,18 @@ class CreatePendaftaranTable extends Migration
     public function up()
     {
         Schema::create('pendaftaran', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('layanan_id')->constrained('layanan');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->id('id_pendaftaran');
+            $table->unsignedBigInteger('id_layanan');
+            $table->unsignedBigInteger('id_admin')->nullable();
+            $table->unsignedBigInteger('id_user');
             $table->date('tanggal_daftar');
-            $table->enum('status_progres', ['menunggu', 'diproses', 'selesai', 'dibatalkan'])->default('menunggu');
-            $table->enum('status_bayar', ['belum_bayar', 'menunggu_konfirmasi', 'lunas'])->default('belum_bayar');
-            $table->string('cabang')->nullable();
-            $table->boolean('dokumen_lengkap')->default(false);
-            $table->timestamp('last_reminder_sent_at')->nullable();
-            $table->text('last_reminder_details')->nullable();
+            $table->string('status_progres')->nullable();
+            $table->string('status_bayar')->nullable();
             $table->timestamps();
+
+            $table->foreign('id_layanan')->references('id_layanan')->on('layanan')->onDelete('cascade');
+            $table->foreign('id_admin')->references('id_admin')->on('admin')->onDelete('set null');
+            $table->foreign('id_user')->references('id_user')->on('users')->onDelete('cascade');
         });
     }
 

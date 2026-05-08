@@ -9,11 +9,13 @@ class CreateAdminTable extends Migration
     public function up()
     {
         Schema::create('admin', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->enum('role', ['admin', 'superadmin', 'admin_cabang'])->default('admin');
-            $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
-            $table->string('cabang')->nullable();
+            $table->id('id_admin');
+            $table->string('username');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->string('no_telp')->nullable();
+            $table->string('role');
+            $table->string('status');
             $table->timestamps();
         });
     }
