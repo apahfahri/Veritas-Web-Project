@@ -9,10 +9,18 @@ class CreateLayananTable extends Migration
     public function up()
     {
         Schema::create('layanan', function (Blueprint $table) {
-            $table->id();
-            $table->string('nama'); // contoh: 'Pelatihan K3', 'Konsultasi K3', 'Audit K3'
+            $table->id('id_layanan');
+            $table->unsignedBigInteger('id_kategori');
+            $table->string('materi');
+            $table->string('jenis_pertemuan');
+            $table->date('tanggal_pertemuan');
+            $table->time('jam_pertemuan');
+            $table->string('lokasi');
+            $table->integer('kapasitas')->nullable();
             $table->text('deskripsi')->nullable();
             $table->timestamps();
+
+            $table->foreign('id_kategori')->references('id_kategori')->on('kategori_layanan')->onDelete('cascade');
         });
     }
 

@@ -26,29 +26,6 @@
 
     <div class="max-w-5xl mx-auto px-6 py-8">
 
-        @php
-            $isIndividuOnly = false;
-            if(Auth::check()) {
-                $user = Auth::user();
-                $isIndividuOnly = $user->klienIndividu && !$user->klienPerusahaan;
-            }
-        @endphp
-
-        @if($isIndividuOnly)
-            <div class="bg-red-50 border border-red-300 text-red-700 p-12 rounded-xl text-center shadow-sm max-w-3xl mx-auto mt-10">
-                <div class="text-6xl mb-6">⚠️</div>
-                <h3 class="text-2xl font-bold mb-3">Akses Ditolak</h3>
-                <p class="text-xl">Layanan audit hanya tersedia untuk perusahaan.</p>
-                <p class="mt-6 text-base text-red-600">
-                    Akun Anda saat ini terdaftar sebagai pendaftar individu. Silakan gunakan layanan 
-                    <a href="/consultation" class="font-bold underline hover:text-red-800">Konsultasi K3</a>.
-                </p>
-                <div class="mt-8">
-                    <a href="/" class="inline-block bg-[#7d2ae7] text-white px-6 py-3 rounded-lg hover:bg-opacity-90 transition">Kembali ke Beranda</a>
-                </div>
-            </div>
-        @else
-
         <!-- ALERT -->
         <div class="mb-8 border border-orange-300 bg-orange-50 text-sm p-4 rounded">
             <strong>Penting:</strong> Layanan audit hanya untuk perusahaan. 
@@ -83,30 +60,31 @@
                     </div>
                 @endif
 
-                @auth
-                @php
-                    $user = Auth::user();
-                    $profilPerusahaan = $user->klienPerusahaan;
-                    $perusahaan = $profilPerusahaan ? $profilPerusahaan->perusahaan : null;
-                @endphp
                 <form method="POST" action="{{ route('pendaftaran.store') }}" class="space-y-6">
                     @csrf
-                    @php $layananAudit = \App\Models\Layanan::where('nama', 'like', '%Audit%')->first(); @endphp
-                    <input type="hidden" name="layanan_id" value="{{ $layananAudit?->id }}">
+                    @php 
+                        $kategoriAudit = \App\Models\KategoriLayanan::where('nama', 'like', '%Audit%')->first();
+                        $layananAudit = \App\Models\Layanan::where('id_kategori', $kategoriAudit?->id_kategori)->first(); 
+                        
+                        // Fallback id if seeder not run completely
+                        $layananId = $layananAudit ? $layananAudit->id_layanan : 1;
+                    @endphp
+                    
+                    <input type="hidden" name="layanan_id" value="{{ $layananId }}">
                     <input type="hidden" name="jenis_klien" value="perusahaan">
 
                     <!-- COMPANY -->
                     <div>
                         <h3 class="font-semibold text-lg mb-4 text-[#7d2ae7]">Informasi Perusahaan</h3>
 
-                        <input type="text" name="nama_perusahaan" value="{{ old('nama_perusahaan', $perusahaan->nama ?? '') }}" placeholder="Nama Perusahaan *" class="w-full border p-2 rounded mb-3" required>
+                        <input type="text" name="nama_perusahaan" value="{{ old('nama_perusahaan') }}" placeholder="Nama Perusahaan *" class="w-full border p-2 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-[#7d2ae7]" required>
 
                         <div class="grid md:grid-cols-2 gap-4">
-                            <input type="text" name="sektor_industri" value="{{ old('sektor_industri', $perusahaan->sektor_industri ?? '') }}" placeholder="Bidang Industri" class="border p-2 rounded">
-                            <input type="number" name="jumlah_karyawan" value="{{ old('jumlah_karyawan', $perusahaan->jumlah_karyawan ?? '') }}" placeholder="Jumlah Karyawan" class="border p-2 rounded">
+                            <input type="text" name="sektor_industri" value="{{ old('sektor_industri') }}" placeholder="Bidang Industri" class="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#7d2ae7]">
+                            <input type="number" name="jumlah_karyawan" value="{{ old('jumlah_karyawan') }}" placeholder="Jumlah Karyawan" class="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#7d2ae7]">
                         </div>
 
-                        <textarea name="alamat_perusahaan" placeholder="Alamat Perusahaan *" class="w-full border p-2 rounded mt-3" required>{{ old('alamat_perusahaan', $perusahaan->alamat ?? '') }}</textarea>
+                        <textarea name="alamat_perusahaan" placeholder="Alamat Perusahaan *" class="w-full border p-2 rounded mt-3 focus:outline-none focus:ring-2 focus:ring-[#7d2ae7]" required>{{ old('alamat_perusahaan') }}</textarea>
                     </div>
 
 
@@ -118,61 +96,29 @@
                         <h3 class="font-semibold text-lg mb-4 text-[#7d2ae7]">Person In Charge (PIC)</h3>
 
                         <div class="grid md:grid-cols-2 gap-4">
-                            <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap', $profilPerusahaan->nama_lengkap ?? Auth::user()->name) }}" placeholder="Nama PIC *" class="border p-2 rounded" required>
-                            <input type="text" name="jabatan" value="{{ old('jabatan', $profilPerusahaan->jabatan ?? '') }}" placeholder="Jabatan" class="border p-2 rounded">
+                            <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap') }}" placeholder="Nama PIC *" class="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#7d2ae7]" required>
+                            <input type="text" name="jabatan" value="{{ old('jabatan') }}" placeholder="Jabatan" class="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#7d2ae7]">
                         </div>
 
                         <div class="grid md:grid-cols-2 gap-4 mt-3">
-                            <input type="email" value="{{ Auth::user()->email }}" placeholder="Email PIC *" class="border p-2 rounded bg-gray-50" readonly>
-                            <input type="text" name="no_hp" value="{{ old('no_hp') }}" placeholder="Nomor Telepon PIC" class="border p-2 rounded">
+                            <input type="email" name="email" value="{{ old('email') }}" placeholder="Email PIC *" class="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#7d2ae7]" required>
+                            <input type="text" name="no_telp" value="{{ old('no_telp') }}" placeholder="Nomor HP / WhatsApp *" class="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#7d2ae7]" required>
                         </div>
+                        
+                        <input type="text" name="pendidikan" value="{{ old('pendidikan') }}" placeholder="Pendidikan Terakhir (Opsional)" class="w-full border p-2 rounded mt-3 focus:outline-none focus:ring-2 focus:ring-[#7d2ae7]">
                     </div>
-
-
-                    <hr>
-
-
-                    <!-- AUDIT -->
-                    <div>
-                        <h3 class="font-semibold text-lg mb-4 text-[#7d2ae7]">Detail Audit</h3>
-
-                        <select name="jenis_audit" class="w-full border p-2 rounded mb-3">
-                            <option value="">Pilih Jenis Audit</option>
-                            <option value="Audit SMK3">Audit SMK3</option>
-                            <option value="ISO 45001">ISO 45001</option>
-                        </select>
-
-                        <input type="text" name="sertifikasi_saat_ini" placeholder="Sertifikasi Saat Ini" class="w-full border p-2 rounded mb-3">
-
-                        <div class="grid md:grid-cols-2 gap-4">
-                            <input type="text" name="lokasi_audit" placeholder="Lokasi Audit *" class="border p-2 rounded">
-                            <input type="date" name="tanggal_daftar" value="{{ old('tanggal_daftar') }}" min="{{ date('Y-m-d') }}" class="border p-2 rounded" required>
-                        </div>
-
-                        <textarea name="tujuan_audit" placeholder="Tujuan Audit" class="w-full border p-2 rounded mt-3"></textarea>
-
-                        <textarea name="deskripsi_audit" placeholder="Deskripsi Kebutuhan Audit *" class="w-full border p-2 rounded mt-3 h-32"></textarea>
-                    </div>
-
 
                     <hr>
 
                     <!-- BUTTON -->
-                    <div class="flex gap-3">
-                        <a href="/" class="border px-4 py-2 rounded flex items-center justify-center">Batal</a>
-                        <button type="submit" class="flex-1 bg-[#7d2ae7] text-white py-2 rounded hover:opacity-90">
-                            Ajukan Audit
+                    <div class="flex gap-3 mt-6">
+                        <a href="/" class="border px-4 py-2 rounded flex items-center justify-center hover:bg-gray-50">Batal</a>
+                        <button type="submit" class="flex-1 bg-[#7d2ae7] text-white py-2 rounded hover:opacity-90 font-semibold shadow-sm">
+                            Ajukan Audit Sekarang
                         </button>
                     </div>
 
                 </form>
-                @else
-                <div class="text-center py-8">
-                    <div class="text-4xl mb-4">🔒</div>
-                    <p class="text-gray-600 mb-4">Silakan login terlebih dahulu untuk mengajukan audit</p>
-                    <a href="{{ route('login') }}" class="bg-[#7d2ae7] text-white px-6 py-2 rounded hover:opacity-90 transition">Login Sekarang</a>
-                </div>
-                @endauth
 
             </div>
 
@@ -224,7 +170,7 @@
                     <h3 class="font-semibold mb-2">Butuh Konsultasi?</h3>
                     <p class="text-sm mb-4">Hubungi tim kami</p>
 
-                    <a href="/consultation" class="bg-white text-black px-4 py-2 rounded block text-center">
+                    <a href="/consultation" class="bg-white text-black px-4 py-2 rounded block text-center hover:bg-gray-100 transition">
                         Hubungi Kami
                     </a>
                 </div>
@@ -232,7 +178,6 @@
             </div>
 
         </div>
-        @endif
 
     </div>
 

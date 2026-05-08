@@ -1,43 +1,43 @@
 @extends('layouts.admin')
-@section('page-title', 'Edit Petugas')
-@section('page-subtitle', 'Perbarui data petugas')
+@section('page-title', 'Edit Pemateri')
+@section('page-subtitle', 'Perbarui data pemateri / instruktur')
 
 @section('content')
 <div class="max-w-2xl">
     <div class="mb-4">
-        <a href="{{ route('admin.petugas.index') }}" class="text-gray-500 hover:text-[#7d2ae7] text-sm">← Kembali ke Daftar Petugas</a>
+        <a href="{{ route('admin.petugas.index') }}" class="text-gray-500 hover:text-[#7d2ae7] text-sm">← Kembali ke Daftar Pemateri</a>
     </div>
 
     <div class="bg-white p-8 rounded-xl shadow">
-        <h2 class="text-xl font-semibold text-[#7d2ae7] mb-6">Edit: {{ $petugas->nama_lengkap }}</h2>
+        <h2 class="text-xl font-semibold text-[#7d2ae7] mb-6">Edit: {{ $pemateri->nama_lengkap }}</h2>
 
-        <form method="POST" action="{{ route('admin.petugas.update', $petugas->id) }}" class="space-y-5">
+        <form method="POST" action="{{ route('admin.petugas.update', $pemateri->id_pemateri) }}" class="space-y-5">
             @csrf @method('PUT')
 
             <div>
                 <label class="block text-sm font-medium mb-1">Nama Lengkap *</label>
-                <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap', $petugas->nama_lengkap) }}" required
+                <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap', $pemateri->nama_lengkap) }}" required
                        class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-[#7d2ae7] focus:outline-none @error('nama_lengkap') border-red-400 @enderror">
                 @error('nama_lengkap')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div>
-                <label class="block text-sm font-medium mb-1">Email *</label>
-                <input type="email" name="email" value="{{ old('email', $petugas->email) }}" required
+                <label class="block text-sm font-medium mb-1">Email</label>
+                <input type="email" name="email" value="{{ old('email', $pemateri->email) }}"
                        class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-[#7d2ae7] focus:outline-none @error('email') border-red-400 @enderror">
                 @error('email')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div>
                 <label class="block text-sm font-medium mb-1">No. HP</label>
-                <input type="text" name="no_hp" value="{{ old('no_hp', $petugas->no_hp) }}"
+                <input type="text" name="no_hp" value="{{ old('no_hp', $pemateri->no_hp) }}"
                        class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-[#7d2ae7] focus:outline-none">
             </div>
 
             <div>
-                <label class="block text-sm font-medium mb-1">Spesialisasi</label>
-                <input type="text" name="spesialisasi" value="{{ old('spesialisasi', $petugas->spesialisasi) }}"
-                       class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-[#7d2ae7] focus:outline-none">
+                <label class="block text-sm font-medium mb-1">Kompetensi</label>
+                <textarea name="kompetensi" rows="3"
+                          class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-[#7d2ae7] focus:outline-none">{{ old('kompetensi', $pemateri->kompetensi) }}</textarea>
             </div>
 
             <div class="flex gap-3 pt-2">

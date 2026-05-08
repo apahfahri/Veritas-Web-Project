@@ -31,7 +31,7 @@ class LoginController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
-            if (Auth::user()->isAdmin() && Auth::user()->admin->status === 'nonaktif') {
+            if (Auth::user()->status === 'nonaktif') {
                 Auth::logout();
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
@@ -40,14 +40,11 @@ class LoginController extends Controller
                 ])->onlyInput('email');
             }
 
-            if (Auth::user()->isAdmin()) {
-                if (Auth::user()->admin?->role === 'admin_cabang') {
-                    return redirect()->intended('/admin-cabang/dashboard');
-                }
-                return redirect()->intended('/admin');
+            if (Auth::user()->isSubadmin()) {
+                return redirect()->intended('/subadmin/dashboard');
             }
-
-            return redirect()->intended('/dashboard');
+            
+            return redirect()->intended('/admin');
         }
 
         return back()->withErrors([

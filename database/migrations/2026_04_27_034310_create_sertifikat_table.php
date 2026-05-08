@@ -10,12 +10,13 @@ class CreateSertifikatTable extends Migration
     {
         Schema::create('sertifikat', function (Blueprint $table) {
             $table->string('no_sertifikat')->primary();
-            $table->foreignId('pendaftaran_id')->constrained('pendaftaran')->onDelete('cascade');
+            $table->unsignedBigInteger('id_pendaftaran');
             $table->string('nama_lengkap');
             $table->date('tanggal_terbit');
             $table->string('file')->nullable();
-            $table->string('cabang')->nullable();
             $table->timestamps();
+
+            $table->foreign('id_pendaftaran')->references('id_pendaftaran')->on('pendaftaran')->onDelete('cascade');
         });
     }
 

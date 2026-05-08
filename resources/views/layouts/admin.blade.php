@@ -39,7 +39,7 @@
                 <div>
                     <div class="text-white text-sm font-medium">{{ Auth::user()->username }}</div>
                     <div class="text-xs text-slate-400">
-                        {{ Auth::user()->admin?->role === 'superadmin' ? 'Super Admin' : 'Admin' }}
+                        {{ Auth::user()->role === 'superadmin' ? 'Super Admin' : 'Subadmin' }}
                     </div>
                 </div>
             </div>
@@ -69,18 +69,18 @@
 
             <a href="{{ route('admin.pelatihan.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.pelatihan.*') ? 'active' : '' }}">
-                🎓 Pelatihan
+                🎓 Layanan
             </a>
 
             <a href="{{ route('admin.petugas.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.petugas.*') ? 'active' : '' }}">
-                👥 Petugas
+                👥 Pemateri
             </a>
 
             @if(Auth::user()->isSuperAdmin())
-            <a href="{{ route('admin.admin-cabang.index') }}"
-               class="sidebar-link {{ request()->routeIs('admin.admin-cabang.*') ? 'active' : '' }}">
-                🏢 Admin Management
+            <a href="{{ route('admin.subadmin.index') }}"
+               class="sidebar-link {{ request()->routeIs('admin.subadmin.*') ? 'active' : '' }}">
+                🏢 Subadmin Management
             </a>
             @endif
 

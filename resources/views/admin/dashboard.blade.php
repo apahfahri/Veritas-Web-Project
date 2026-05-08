@@ -70,19 +70,19 @@
             <tbody class="divide-y">
                 @forelse($pendaftaranTerbaru as $p)
                 <tr class="hover:bg-gray-50">
-                    <td class="p-4 font-medium">{{ $p->user?->username ?? '-' }}</td>
-                    <td class="p-4 text-gray-600">{{ $p->layanan?->nama ?? '-' }}</td>
-                    <td class="p-4 text-gray-500">{{ $p->tanggal_daftar->format('d M Y') }}</td>
+                    <td class="p-4 font-medium">{{ $p->user?->nama ?? '-' }}</td>
+                    <td class="p-4 text-gray-600">{{ $p->layanan?->materi ?? '-' }}</td>
+                    <td class="p-4 text-gray-500">{{ $p->tanggal_daftar ? $p->tanggal_daftar->format('d M Y') : '-' }}</td>
                     <td class="p-4">
-                        @php $c = match($p->status_progres) { 'selesai' => 'bg-green-100 text-green-700', 'diproses' => 'bg-blue-100 text-blue-700', 'dibatalkan' => 'bg-red-100 text-red-700', default => 'bg-orange-100 text-orange-700' }; @endphp
-                        <span class="px-2 py-1 rounded text-xs {{ $c }}">{{ ucfirst($p->status_progres) }}</span>
+                        @php $c = match($p->status_progres) { 'selesai' => 'bg-green-100 text-green-700', 'diproses' => 'bg-blue-100 text-blue-700', 'dibatalkan' => 'bg-red-100 text-red-700', 'menunggu_pembayaran' => 'bg-yellow-100 text-yellow-700', default => 'bg-orange-100 text-orange-700' }; @endphp
+                        <span class="px-2 py-1 rounded text-xs {{ $c }}">{{ ucfirst(str_replace('_', ' ', $p->status_progres)) }}</span>
                     </td>
                     <td class="p-4">
                         @php $cb = match($p->status_bayar) { 'lunas' => 'bg-green-100 text-green-700', 'menunggu_konfirmasi' => 'bg-yellow-100 text-yellow-700', default => 'bg-gray-100 text-gray-600' }; @endphp
                         <span class="px-2 py-1 rounded text-xs {{ $cb }}">{{ str_replace('_', ' ', $p->status_bayar) }}</span>
                     </td>
                     <td class="p-4">
-                        <a href="{{ route('admin.pendaftaran.show', $p->id) }}" class="text-[#7d2ae7] hover:underline text-xs">Detail</a>
+                        <a href="{{ route('admin.pendaftaran.show', $p->id_pendaftaran) }}" class="text-[#7d2ae7] hover:underline text-xs">Detail</a>
                     </td>
                 </tr>
                 @empty

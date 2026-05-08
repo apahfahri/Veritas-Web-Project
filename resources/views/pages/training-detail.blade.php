@@ -29,7 +29,7 @@
                 <div class="bg-white p-8 rounded-xl shadow">
                     <div class="flex gap-3 mb-4">
                         <span class="bg-[#7d2ae7] text-white text-xs px-3 py-1 rounded">
-                            {{ $pelatihan->layanan?->nama ?? 'Pelatihan K3' }}
+                            {{ $pelatihan->kategori?->nama ?? 'Pelatihan K3' }}
                         </span>
                         <span class="border text-xs px-3 py-1 rounded {{ $pelatihan->jenis_pertemuan === 'online' ? 'border-[#7d2ae7] text-[#7d2ae7]' : 'border-orange-400 text-orange-500' }}">
                             {{ ucfirst($pelatihan->jenis_pertemuan) }}
@@ -92,19 +92,23 @@
                     </div>
 
                     <!-- PEMATERI -->
-                    @if($pelatihan->petugas)
+                    @if($pelatihan->pemateri && $pelatihan->pemateri->count() > 0)
                     <div class="mt-8">
                         <h2 class="text-xl font-semibold text-[#7d2ae7] mb-4">Pemateri</h2>
-                        <div class="border border-gray-200 rounded-lg p-4 flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-full bg-[#00A8A8]/10 text-[#00A8A8] flex items-center justify-center font-bold text-xl shrink-0">
-                                {{ strtoupper(substr($pelatihan->petugas->nama_lengkap, 0, 1)) }}
+                        <div class="grid gap-4">
+                            @foreach($pelatihan->pemateri as $pemateri)
+                            <div class="border border-gray-200 rounded-lg p-4 flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-full bg-[#00A8A8]/10 text-[#00A8A8] flex items-center justify-center font-bold text-xl shrink-0">
+                                    {{ strtoupper(substr($pemateri->nama_lengkap, 0, 1)) }}
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-gray-800">{{ $pemateri->nama_lengkap }}</h3>
+                                    @if($pemateri->kompetensi)
+                                        <p class="text-sm text-gray-500">{{ $pemateri->kompetensi }}</p>
+                                    @endif
+                                </div>
                             </div>
-                            <div>
-                                <h3 class="font-semibold text-gray-800">{{ $pelatihan->petugas->nama_lengkap }}</h3>
-                                @if($pelatihan->petugas->spesialisasi)
-                                    <p class="text-sm text-gray-500">{{ $pelatihan->petugas->spesialisasi }}</p>
-                                @endif
-                            </div>
+                            @endforeach
                         </div>
                     </div>
                     @endif
@@ -117,7 +121,7 @@
                 <div class="bg-white p-6 rounded-xl shadow sticky top-4">
                     <div class="mb-4">
                         <div class="text-sm text-gray-500">Layanan</div>
-                        <div class="text-xl font-bold text-[#7d2ae7]">{{ $pelatihan->layanan?->nama }}</div>
+                        <div class="text-xl font-bold text-[#7d2ae7]">{{ $pelatihan->kategori?->nama }}</div>
                     </div>
 
                     <hr class="my-4">
@@ -129,20 +133,10 @@
                         <li>✔ Berlaku seumur hidup</li>
                     </ul>
 
-                    @auth
-                        <a href="{{ route('training.register', $pelatihan->id) }}"
-                           class="block w-full text-center bg-[#7d2ae7] text-white py-3 rounded-lg font-semibold hover:opacity-90 transition">
-                            Daftar Sekarang
-                        </a>
-                    @else
-                        <a href="{{ route('login') }}"
-                           class="block w-full text-center bg-[#7d2ae7] text-white py-3 rounded-lg hover:opacity-90 transition">
-                            Login untuk Mendaftar
-                        </a>
-                        <p class="text-xs text-center text-gray-500 mt-2">
-                            Belum punya akun? <a href="{{ route('register') }}" class="text-[#7d2ae7] hover:underline">Daftar</a>
-                        </p>
-                    @endauth
+                    <a href="{{ route('training.register', $pelatihan->id_layanan) }}"
+                       class="block w-full text-center bg-[#7d2ae7] text-white py-3 rounded-lg font-semibold hover:opacity-90 transition">
+                        Daftar Sekarang
+                    </a>
 
                     <div class="mt-4 text-center text-sm">
                         <a href="{{ route('consultation') }}" class="text-[#7d2ae7] hover:underline">
@@ -156,7 +150,7 @@
                     <h3 class="font-semibold text-[#7d2ae7] mb-4">Pelatihan Lainnya</h3>
                     <div class="space-y-3">
                         @foreach($related as $rel)
-                        <a href="{{ route('training.detail', $rel->id) }}"
+                        <a href="{{ route('training.detail', $rel->id_layanan) }}"
                            class="block p-3 border rounded hover:border-[#7d2ae7] transition text-sm">
                             <div class="font-medium text-[#7d2ae7]">{{ $rel->materi }}</div>
                             <div class="text-gray-500 text-xs">{{ ucfirst($rel->jenis_pertemuan) }}</div>
