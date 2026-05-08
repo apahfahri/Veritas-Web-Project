@@ -12,24 +12,28 @@ class LayananSeeder extends Seeder
         DB::table('layanan')->insert([
             [
                 'id_kategori' => 1, // Pelatihan
+                'nama' => 'Pelatihan Ahli K3 Umum',
                 'materi' => 'Ahli K3 Umum',
                 'jenis_pertemuan' => 'offline',
                 'tanggal_pertemuan' => now()->addDays(10)->toDateString(),
                 'jam_pertemuan' => '08:00:00',
                 'lokasi' => 'Hotel Aston Jakarta',
                 'kapasitas' => 30,
+                'harga' => 5000000,
                 'deskripsi' => 'Pelatihan Ahli K3 Umum tersertifikasi Kemnaker.',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'id_kategori' => 1, // Pelatihan
+                'nama' => 'Pelatihan Petugas P3K',
                 'materi' => 'Petugas P3K',
                 'jenis_pertemuan' => 'online',
                 'tanggal_pertemuan' => now()->addDays(15)->toDateString(),
                 'jam_pertemuan' => '09:00:00',
                 'lokasi' => 'Zoom Meeting',
                 'kapasitas' => 50,
+                'harga' => 1500000,
                 'deskripsi' => 'Pelatihan Petugas Pertolongan Pertama Pada Kecelakaan.',
                 'created_at' => now(),
                 'updated_at' => now(),

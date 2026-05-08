@@ -23,7 +23,14 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium mb-1">Materi / Judul *</label>
+                <label class="block text-sm font-medium mb-1">Nama Layanan *</label>
+                <input type="text" name="nama" value="{{ old('nama', $layanan->nama) }}" required
+                       class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-[#7d2ae7] focus:outline-none @error('nama') border-red-400 @enderror">
+                @error('nama')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1">Materi / Detail *</label>
                 <input type="text" name="materi" value="{{ old('materi', $layanan->materi) }}" required
                        class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-[#7d2ae7] focus:outline-none @error('materi') border-red-400 @enderror">
                 @error('materi')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
@@ -76,6 +83,13 @@
                     @endforeach
                 </select>
                 <p class="text-gray-400 text-[10px] mt-1">Tahan Ctrl/Cmd untuk memilih lebih dari satu.</p>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1">Harga (IDR) *</label>
+                <input type="number" name="harga" value="{{ old('harga', $layanan->harga) }}" required min="0"
+                       class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-[#7d2ae7] focus:outline-none @error('harga') border-red-400 @enderror">
+                @error('harga')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div>

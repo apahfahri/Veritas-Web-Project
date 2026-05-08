@@ -20,6 +20,7 @@
                 <th class="text-left p-4">Kategori</th>
                 <th class="text-left p-4">Mode</th>
                 <th class="text-left p-4">Tanggal</th>
+                <th class="text-left p-4">Harga</th>
                 <th class="text-left p-4">Lokasi</th>
                 <th class="text-left p-4">Pemateri</th>
                 <th class="text-left p-4">Aksi</th>
@@ -42,6 +43,7 @@
                 <td class="p-4 text-gray-600">
                     {{ $l->tanggal_pertemuan ? $l->tanggal_pertemuan->format('d M Y') : '-' }}
                 </td>
+                <td class="p-4 font-semibold text-gray-700">Rp {{ number_format($l->harga, 0, ',', '.') }}</td>
                 <td class="p-4 text-gray-600">{{ $l->lokasi ?? 'Online' }}</td>
                 <td class="p-4 text-gray-600">
                     <div class="flex flex-wrap gap-1">

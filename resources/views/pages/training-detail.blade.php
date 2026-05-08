@@ -36,7 +36,8 @@
                         </span>
                     </div>
 
-                    <h1 class="text-3xl font-bold text-[#7d2ae7] mb-4">{{ $pelatihan->materi }}</h1>
+                    <h1 class="text-3xl font-bold text-[#7d2ae7] mb-2">{{ $pelatihan->nama }}</h1>
+                    <div class="text-2xl font-bold text-gray-800 mb-4">Rp {{ number_format($pelatihan->harga, 0, ',', '.') }}</div>
 
                     <!-- INFO GRID -->
                     <div class="grid sm:grid-cols-3 gap-4 mb-6 text-sm bg-[#F5F7FA] p-4 rounded-lg">
@@ -121,7 +122,8 @@
                 <div class="bg-white p-6 rounded-xl shadow sticky top-4">
                     <div class="mb-4">
                         <div class="text-sm text-gray-500">Layanan</div>
-                        <div class="text-xl font-bold text-[#7d2ae7]">{{ $pelatihan->kategori?->nama }}</div>
+                        <div class="text-xl font-bold text-[#7d2ae7] mb-1">{{ $pelatihan->kategori?->nama }}</div>
+                        <div class="text-2xl font-extrabold text-gray-800">Rp {{ number_format($pelatihan->harga, 0, ',', '.') }}</div>
                     </div>
 
                     <hr class="my-4">

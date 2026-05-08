@@ -10,13 +10,12 @@ class KlienPerusahaan extends Model
     use HasFactory;
 
     protected $table = 'klien_perusahaan';
+    protected $primaryKey = 'id_k_perusahaan';
 
     protected $fillable = [
-        'user_id',
-        'perusahaan_id',
-        'nama_lengkap',
+        'id_user',
+        'id_perusahaan',
         'jabatan',
-        'no_hp',
     ];
 
     /*
@@ -28,12 +27,12 @@ class KlienPerusahaan extends Model
     /** Profil klien perusahaan dimiliki oleh satu User */
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'id_user', 'id_user');
     }
 
     /** Klien perusahaan terhubung ke satu Perusahaan */
     public function perusahaan()
     {
-        return $this->belongsTo(Perusahaan::class);
+        return $this->belongsTo(Perusahaan::class, 'id_perusahaan', 'id_perusahaan');
     }
 }

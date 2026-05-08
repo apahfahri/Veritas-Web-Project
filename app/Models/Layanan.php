@@ -14,12 +14,14 @@ class Layanan extends Model
 
     protected $fillable = [
         'id_kategori',
+        'nama',
         'materi',
         'jenis_pertemuan',
         'tanggal_pertemuan',
         'jam_pertemuan',
         'lokasi',
         'kapasitas',
+        'harga',
         'deskripsi',
     ];
 
