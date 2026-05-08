@@ -25,9 +25,17 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium mb-1">Materi / Judul Layanan *</label>
+                <label class="block text-sm font-medium mb-1">Nama Layanan *</label>
+                <input type="text" name="nama" value="{{ old('nama') }}" required
+                       placeholder="Contoh: Pelatihan Ahli K3 Umum"
+                       class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-[#7d2ae7] focus:outline-none @error('nama') border-red-400 @enderror">
+                @error('nama')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1">Materi / Detail Layanan *</label>
                 <input type="text" name="materi" value="{{ old('materi') }}" required
-                       placeholder="Contoh: K3 Umum & Pengenalan Hazard"
+                       placeholder="Contoh: Ahli K3 Umum & Pengenalan Hazard"
                        class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-[#7d2ae7] focus:outline-none @error('materi') border-red-400 @enderror">
                 @error('materi')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
@@ -77,6 +85,14 @@
                     @endforeach
                 </select>
                 <p class="text-gray-400 text-[10px] mt-1">Tahan Ctrl/Cmd untuk memilih lebih dari satu.</p>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1">Harga (IDR) *</label>
+                <input type="number" name="harga" value="{{ old('harga') }}" required min="0"
+                       placeholder="Contoh: 1500000"
+                       class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-[#7d2ae7] focus:outline-none @error('harga') border-red-400 @enderror">
+                @error('harga')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div>

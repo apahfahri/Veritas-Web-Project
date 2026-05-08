@@ -17,11 +17,10 @@ class Sertifikat extends Model
 
     protected $fillable = [
         'no_sertifikat',
-        'pendaftaran_id',
+        'id_pendaftaran',
         'nama_lengkap',
         'tanggal_terbit',
         'file',
-        'cabang',
     ];
 
     protected $casts = [
@@ -37,7 +36,7 @@ class Sertifikat extends Model
     /** Sertifikat diterbitkan dari satu Pendaftaran */
     public function pendaftaran()
     {
-        return $this->belongsTo(Pendaftaran::class);
+        return $this->belongsTo(Pendaftaran::class, 'id_pendaftaran', 'id_pendaftaran');
     }
 
     /** Sertifikat dapat diverifikasi berkali-kali */

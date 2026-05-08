@@ -11,12 +11,14 @@ class CreateLayananTable extends Migration
         Schema::create('layanan', function (Blueprint $table) {
             $table->id('id_layanan');
             $table->unsignedBigInteger('id_kategori');
+            $table->string('nama');
             $table->string('materi');
             $table->string('jenis_pertemuan');
             $table->date('tanggal_pertemuan');
             $table->time('jam_pertemuan');
             $table->string('lokasi');
             $table->integer('kapasitas')->nullable();
+            $table->decimal('harga', 15, 2)->default(0);
             $table->text('deskripsi')->nullable();
             $table->timestamps();
 

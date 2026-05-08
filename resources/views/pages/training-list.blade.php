@@ -61,7 +61,8 @@
                             </span>
                         </div>
 
-                        <h3 class="text-xl font-semibold text-[#7d2ae7] mb-2">{{ $pelatihan->materi }}</h3>
+                        <h3 class="text-xl font-semibold text-[#7d2ae7] mb-1">{{ $pelatihan->nama }}</h3>
+                        <div class="text-lg font-bold text-gray-800 mb-2">Rp {{ number_format($pelatihan->harga, 0, ',', '.') }}</div>
                         <p class="text-sm text-gray-600 mb-4 line-clamp-2">{{ $pelatihan->deskripsi ?? 'Pelatihan K3 profesional bersertifikat nasional.' }}</p>
 
                         <div class="space-y-1 text-sm text-gray-600 mb-4">

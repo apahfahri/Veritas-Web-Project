@@ -13,10 +13,7 @@ class Perusahaan extends Model
 
     protected $fillable = [
         'nama',
-        'no_telp',
         'alamat',
-        'nib_oss',
-        'npwp_perusahaan',
         'sektor_industri',
         'jumlah_karyawan',
     ];
@@ -30,6 +27,6 @@ class Perusahaan extends Model
     /** Satu perusahaan memiliki banyak klien perusahaan (karyawan/perwakilan) */
     public function klienPerusahaan()
     {
-        return $this->hasMany(KlienPerusahaan::class);
+        return $this->hasMany(KlienPerusahaan::class, 'id_perusahaan', 'id_perusahaan');
     }
 }

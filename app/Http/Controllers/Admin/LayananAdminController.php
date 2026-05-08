@@ -27,20 +27,22 @@ class LayananAdminController extends Controller
     {
         $request->validate([
             'id_kategori'       => 'required|exists:kategori_layanan,id_kategori',
+            'nama'              => 'required|string|max:255',
             'materi'            => 'required|string|max:255',
             'jenis_pertemuan'   => 'required|in:online,offline',
             'jam_pertemuan'     => 'nullable',
             'tanggal_pertemuan' => 'nullable|date',
             'lokasi'            => 'nullable|string|max:255',
             'kapasitas'         => 'nullable|integer|min:1',
+            'harga'             => 'required|numeric|min:0',
             'deskripsi'         => 'nullable|string',
             'pemateri_ids'      => 'nullable|array',
             'pemateri_ids.*'    => 'exists:pemateri,id_pemateri',
         ]);
 
         $layanan = Layanan::create($request->only([
-            'id_kategori', 'materi', 'jenis_pertemuan', 'jam_pertemuan', 
-            'tanggal_pertemuan', 'lokasi', 'kapasitas', 'deskripsi'
+            'id_kategori', 'nama', 'materi', 'jenis_pertemuan', 'jam_pertemuan', 
+            'tanggal_pertemuan', 'lokasi', 'kapasitas', 'harga', 'deskripsi'
         ]));
 
         if ($request->has('pemateri_ids')) {
@@ -65,20 +67,22 @@ class LayananAdminController extends Controller
 
         $request->validate([
             'id_kategori'       => 'required|exists:kategori_layanan,id_kategori',
+            'nama'              => 'required|string|max:255',
             'materi'            => 'required|string|max:255',
             'jenis_pertemuan'   => 'required|in:online,offline',
             'jam_pertemuan'     => 'nullable',
             'tanggal_pertemuan' => 'nullable|date',
             'lokasi'            => 'nullable|string|max:255',
             'kapasitas'         => 'nullable|integer|min:1',
+            'harga'             => 'required|numeric|min:0',
             'deskripsi'         => 'nullable|string',
             'pemateri_ids'      => 'nullable|array',
             'pemateri_ids.*'    => 'exists:pemateri,id_pemateri',
         ]);
 
         $layanan->update($request->only([
-            'id_kategori', 'materi', 'jenis_pertemuan', 'jam_pertemuan', 
-            'tanggal_pertemuan', 'lokasi', 'kapasitas', 'deskripsi'
+            'id_kategori', 'nama', 'materi', 'jenis_pertemuan', 'jam_pertemuan', 
+            'tanggal_pertemuan', 'lokasi', 'kapasitas', 'harga', 'deskripsi'
         ]));
 
         if ($request->has('pemateri_ids')) {
