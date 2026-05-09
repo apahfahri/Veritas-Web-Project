@@ -55,10 +55,13 @@
                     @csrf
                     @php 
                         $kategoriKonsultasi = \App\Models\KategoriLayanan::where('nama', 'like', '%Konsultasi%')->first();
-                        $layananKonsultasi = \App\Models\Layanan::where('id_kategori', $kategoriKonsultasi?->id_kategori)->first(); 
+                        $layananKonsultasi = \App\Models\Layanan::where('id_kategori', $kategoriKonsultasi?->id_kategori)->first()
+                                            ?? \App\Models\Layanan::whereHas('kategori', function($q) {
+                                                $q->where('nama', 'like', '%Konsultasi%');
+                                            })->first()
+                                            ?? \App\Models\Layanan::first();
                         
-                        // Fallback id if seeder not run completely
-                        $layananId = $layananKonsultasi ? $layananKonsultasi->id_layanan : 1;
+                        $layananId = $layananKonsultasi ? $layananKonsultasi->id_layanan : null;
                         $jenisKlien = old('jenis_klien', 'individu');
                     @endphp
                     
@@ -159,6 +162,39 @@
                                            placeholder="Jumlah Karyawan (Opsional)"
                                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7]">
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr>
+
+                    <!-- JADWAL & MODE -->
+                    <div>
+                        <h3 class="font-semibold text-lg mb-4 text-[#7d2ae7]">4. Jadwal & Mode Konsultasi</h3>
+                        <div class="space-y-4">
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Rencana Tanggal Mulai *</label>
+                                    <input type="date" name="rencana_tanggal_mulai" required
+                                           value="{{ old('rencana_tanggal_mulai') }}"
+                                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7]">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Rencana Tanggal Selesai *</label>
+                                    <input type="date" name="rencana_tanggal_selesai" required
+                                           value="{{ old('rencana_tanggal_selesai') }}"
+                                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7]">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Mode Pertemuan *</label>
+                                <select name="mode_pertemuan" required
+                                        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7]">
+                                    <option value="online" {{ old('mode_pertemuan') === 'online' ? 'selected' : '' }}>🌐 Online (Zoom/Meet)</option>
+                                    <option value="offline" {{ old('mode_pertemuan') === 'offline' ? 'selected' : '' }}>🏢 Offline (Tatap Muka)</option>
+                                </select>
                             </div>
                         </div>
                     </div>

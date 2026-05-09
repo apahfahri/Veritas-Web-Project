@@ -19,24 +19,31 @@
 
             <!-- Navigation -->
             <div class="hidden lg:flex gap-4">
-                <a href="/" class="px-3 py-2">Beranda</a>
-                <a href="/training" class="px-3 py-2">Pelatihan</a>
-                <a href="{{ route('training.status') }}" class="px-3 py-2">Cek Status</a>
-                <a href="/consultation" class="px-3 py-2">Konsultasi</a>
-                <a href="/audit" class="px-3 py-2">Audit</a>
-                <a href="/verification" class="px-3 py-2">Verifikasi</a>
+                <a href="/" class="px-3 py-2 hover:text-[#7d2ae7] transition-colors font-medium">Beranda</a>
+                
+                <!-- Layanan Dropdown -->
+                <div class="relative group">
+                    <button class="px-3 py-2 flex items-center gap-1 hover:text-[#7d2ae7] transition-colors font-medium">
+                        Layanan
+                        <svg class="w-4 h-4 text-gray-400 group-hover:text-[#7d2ae7] transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="absolute left-0 mt-0 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-2 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300 z-50 translate-y-2 group-hover:translate-y-0">
+                        <a href="/training" class="block px-4 py-2 hover:bg-[#7d2ae7]/10 hover:text-[#7d2ae7] transition-colors">Pelatihan</a>
+                        <a href="/consultation" class="block px-4 py-2 hover:bg-[#7d2ae7]/10 hover:text-[#7d2ae7] transition-colors">Konsultasi</a>
+                        <a href="/audit" class="block px-4 py-2 hover:bg-[#7d2ae7]/10 hover:text-[#7d2ae7] transition-colors">Audit</a>
+                    </div>
+                </div>
+
+                <a href="{{ route('training.status') }}" class="px-3 py-2 hover:text-[#7d2ae7] transition-colors font-medium">Cek Status</a>
+                <a href="/verification" class="px-3 py-2 hover:text-[#7d2ae7] transition-colors font-medium">Verifikasi</a>
             </div>
 
             <!-- Auth Buttons -->
             <div class="hidden lg:flex items-center gap-2">
 
-                @guest
-                    <!-- Belum login: tampilkan Login -->
-                    <a href="{{ route('login') }}"
-                       class="border border-[#7d2ae7] text-[#7d2ae7] px-4 py-2 rounded hover:bg-[#7d2ae7] hover:text-white transition-colors text-sm font-medium">
-                        Login Admin
-                    </a>
-                @endguest
+
                 @auth
                     <!-- Sudah login: tampilkan dropdown profil -->
                     <div class="relative">

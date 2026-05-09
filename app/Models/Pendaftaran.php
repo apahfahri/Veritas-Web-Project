@@ -22,30 +22,19 @@ class Pendaftaran extends Model
         'is_utusan_perusahaan',
         'id_perusahaan',
         'tanggal_daftar',
+        'rencana_tanggal_mulai',
+        'rencana_tanggal_selesai',
+        'mode_pertemuan',
         'status_progres',
         'status_bayar',
         'cabang',
     ];
 
     protected $casts = [
-        'tanggal_daftar' => 'date',
-        'is_utusan_perusahaan' => 'boolean',
+        'tanggal_daftar'          => 'date',
+        'rencana_tanggal_mulai'   => 'date',
+        'rencana_tanggal_selesai' => 'date',
     ];
-
-    /**
-     * Scope a query to only include records from the subadmin's branch.
-     */
-    protected static function booted()
-    {
-        static::addGlobalScope('cabang', function (Builder $builder) {
-            if (Auth::check() && Auth::user()->isSubadmin()) {
-                $cabang = Auth::user()->admin?->cabang;
-                if ($cabang) {
-                    $builder->where('pendaftaran.cabang', $cabang);
-                }
-            }
-        });
-    }
 
     public function layanan()
     {

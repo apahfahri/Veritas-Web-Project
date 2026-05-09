@@ -17,6 +17,7 @@
     </main>
 
     @include('components.footer')
+    @include('components.success-modal')
 
 </body>
 </html>

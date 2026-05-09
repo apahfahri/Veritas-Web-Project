@@ -20,8 +20,11 @@ class PendaftaranController extends Controller
             'jenis_klien'    => 'required|in:individu,perusahaan',
             'nama_lengkap'   => 'required|string|max:255',
             'email'          => 'required|email|max:255',
-            'no_telp'        => 'required|string|max:20',
-            'pendidikan'     => 'nullable|string|max:100',
+            'no_telp'                => 'required|string|max:20',
+            'pendidikan'             => 'nullable|string|max:100',
+            'rencana_tanggal_mulai'  => 'nullable|date|after_or_equal:today',
+            'rencana_tanggal_selesai'=> 'nullable|date|after_or_equal:rencana_tanggal_mulai',
+            'mode_pertemuan'         => 'nullable|in:online,offline',
         ];
 
         // ── Validasi khusus per jenis ──────────────────────────────────────
@@ -65,33 +68,52 @@ class PendaftaranController extends Controller
                     ]
                 );
 
-                DB::table('klien_perusahaan')->updateOrInsert(
-                    ['id_user' => $user->id_user, 'id_perusahaan' => $perusahaan->id_perusahaan],
-                    [
-                        'jabatan' => $request->jabatan,
-                        'updated_at' => now(),
-                        'created_at' => now(),
-                    ]
+                // Pastikan ID perusahaan tidak null (terutama jika baru dibuat)
+                $idPerusahaan = $perusahaan->id_perusahaan;
+
+                \App\Models\KlienPerusahaan::updateOrCreate(
+                    ['id_user' => $user->id_user, 'id_perusahaan' => $idPerusahaan],
+                    ['jabatan' => $request->jabatan]
                 );
             }
 
             // ── Buat record pendaftaran ────────────────────────────────────
             Pendaftaran::create([
-                'id_layanan'     => $request->layanan_id,
-                'id_user'        => $user->id_user,
-                'tanggal_daftar' => now(),
-                'status_progres' => 'menunggu_pembayaran',
-                'status_bayar'   => 'belum_lunas',
+                'id_layanan'              => $request->layanan_id,
+                'id_user'                 => $user->id_user,
+                'tanggal_daftar'          => now(),
+                'rencana_tanggal_mulai'   => $request->rencana_tanggal_mulai,
+                'rencana_tanggal_selesai' => $request->rencana_tanggal_selesai,
+                'mode_pertemuan'          => $request->mode_pertemuan,
+                'status_progres'          => 'menunggu_pembayaran',
+                'status_bayar'            => 'belum_lunas',
             ]);
         });
 
-        return redirect()->route('training.list')
-            ->with('success', 'Pendaftaran berhasil dikirim! Tim kami akan segera menghubungi Anda melalui Email atau WhatsApp. Anda juga dapat memantau status pendaftaran di halaman Cek Status.');
+        return redirect()->route('training.status', ['identifier' => $request->email])
+            ->with('registration_success', true)
+            ->with('success_type', 'konsultasi');
     }
 
-    public function statusForm()
+    public function statusForm(Request $request)
     {
-        return view('pages.training-status');
+        $identifier = $request->query('identifier');
+        $pendaftarans = null;
+
+        if ($identifier) {
+            $user = User::where('email', $identifier)
+                ->orWhere('no_telp', $identifier)
+                ->first();
+
+            if ($user) {
+                $pendaftarans = Pendaftaran::with('layanan')
+                    ->where('id_user', $user->id_user)
+                    ->latest()
+                    ->get();
+            }
+        }
+
+        return view('pages.training-status', compact('pendaftarans', 'identifier'));
     }
 
     public function checkStatus(Request $request)
