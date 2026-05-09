@@ -16,8 +16,9 @@
     <table class="w-full text-sm">
         <thead class="bg-gray-50 text-gray-600">
             <tr>
+                <th class="text-left p-4">Kategori Layanan</th>
+                <th class="text-left p-4">Nama Layanan</th>
                 <th class="text-left p-4">Materi/Layanan</th>
-                <th class="text-left p-4">Kategori</th>
                 <th class="text-left p-4">Mode</th>
                 <th class="text-left p-4">Tanggal</th>
                 <th class="text-left p-4">Harga</th>
@@ -29,12 +30,9 @@
         <tbody class="divide-y">
             @forelse($layanans as $l)
             <tr class="hover:bg-gray-50">
-                <td class="p-4 font-medium text-[#7d2ae7] max-w-xs">{{ $l->materi }}</td>
-                <td class="p-4 text-gray-600">
-                    <span class="bg-gray-100 px-2 py-0.5 rounded text-xs">
-                        {{ $l->kategori?->nama ?? '-' }}
-                    </span>
-                </td>
+                <td class="p-4 font-bold text-gray-800">{{ $l->kategori?->nama ?? '-' }}</td>
+                <td class="p-4 text-gray-600">{{ $l->nama }}</td>
+                <td class="p-4 text-gray-600">{{ $l->materi }}</td>
                 <td class="p-4">
                     <span class="px-2 py-1 rounded text-xs {{ $l->jenis_pertemuan === 'online' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700' }}">
                         {{ ucfirst($l->jenis_pertemuan) }}
@@ -72,7 +70,7 @@
             </tr>
             @empty
             <tr>
-                <td colspan="7" class="p-8 text-center text-gray-500">Belum ada layanan</td>
+                <td colspan="9" class="p-8 text-center text-gray-500">Belum ada layanan</td>
             </tr>
             @endforelse
         </tbody>

@@ -18,7 +18,7 @@ class LayananAdminController extends Controller
 
     public function create()
     {
-        $kategoris = KategoriLayanan::all();
+        $kategoris = KategoriLayanan::with('jenis')->get();
         $pemateris = Pemateri::all();
         return view('admin.pelatihan.create', compact('kategoris', 'pemateris'));
     }
@@ -56,7 +56,7 @@ class LayananAdminController extends Controller
     public function edit($id)
     {
         $layanan = Layanan::with('pemateri')->findOrFail($id);
-        $kategoris = KategoriLayanan::all();
+        $kategoris = KategoriLayanan::with('jenis')->get();
         $pemateris = Pemateri::all();
         return view('admin.pelatihan.edit', compact('layanan', 'kategoris', 'pemateris'));
     }
