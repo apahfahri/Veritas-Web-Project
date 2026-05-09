@@ -15,10 +15,11 @@
 
             <div>
                 <label class="block text-sm font-medium mb-1">Kategori Layanan *</label>
-                <select name="id_kategori" required class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-[#7d2ae7] focus:outline-none @error('id_kategori') border-red-400 @enderror">
+                <select name="id_kategori" id="selectKategori" required onchange="handleKategoriChange()" 
+                        class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-[#7d2ae7] focus:outline-none @error('id_kategori') border-red-400 @enderror">
                     <option value="">-- Pilih Kategori --</option>
                     @foreach($kategoris as $k)
-                        <option value="{{ $k->id_kategori }}" {{ old('id_kategori') == $k->id_kategori ? 'selected' : '' }}>{{ $k->nama }}</option>
+                        <option value="{{ $k->id_kategori }}" data-jenis="{{ $k->jenis }}" {{ old('id_kategori') == $k->id_kategori ? 'selected' : '' }}>{{ $k->nama }}</option>
                     @endforeach
                 </select>
                 @error('id_kategori')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
@@ -26,9 +27,22 @@
 
             <div>
                 <label class="block text-sm font-medium mb-1">Nama Layanan *</label>
-                <input type="text" name="nama" value="{{ old('nama') }}" required
-                       placeholder="Contoh: Pelatihan Ahli K3 Umum"
-                       class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-[#7d2ae7] focus:outline-none @error('nama') border-red-400 @enderror">
+                
+                {{-- Dropdown Jenis (Hidden initially) --}}
+                <div id="containerJenis" class="hidden mb-2">
+                    <select id="selectJenis" onchange="handleJenisChange(this.value)" disabled
+                            class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-[#7d2ae7] focus:outline-none disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors">
+                        <option value="">-- Pilih Jenis --</option>
+                        {{-- Options populated via JS --}}
+                        <option value="lainnya">Lainnya (Input Manual)</option>
+                    </select>
+                </div>
+
+                {{-- Input Manual --}}
+                <input type="text" name="nama" id="inputNama" value="{{ old('nama') }}" required disabled
+                       placeholder="Pilih kategori terlebih dahulu..."
+                       class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-[#7d2ae7] focus:outline-none disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors @error('nama') border-red-400 @enderror">
+                
                 @error('nama')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
@@ -76,15 +90,40 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium mb-1">Pemateri (Bisa pilih lebih dari satu)</label>
-                <select name="pemateri_ids[]" multiple class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-[#7d2ae7] focus:outline-none h-32">
-                    @foreach($pemateris as $p)
-                        <option value="{{ $p->id_pemateri }}" {{ is_array(old('pemateri_ids')) && in_array($p->id_pemateri, old('pemateri_ids')) ? 'selected' : '' }}>
-                            {{ $p->nama_lengkap }}
-                        </option>
-                    @endforeach
-                </select>
-                <p class="text-gray-400 text-[10px] mt-1">Tahan Ctrl/Cmd untuk memilih lebih dari satu.</p>
+                <label class="block text-sm font-medium mb-2">Pemateri <span class="text-gray-400 font-normal">(bisa pilih lebih dari satu)</span></label>
+
+                {{-- Search --}}
+                <input type="text" id="searchPemateri" placeholder="🔍 Cari nama pemateri..."
+                       oninput="filterPemateri(this.value)"
+                       class="w-full border rounded-lg px-3 py-2 text-sm mb-2 focus:ring-2 focus:ring-[#7d2ae7] focus:outline-none">
+
+                {{-- Select All --}}
+                <label class="flex items-center gap-2 text-xs text-gray-500 mb-2 cursor-pointer select-none">
+                    <input type="checkbox" id="selectAllPemateri" onchange="toggleSelectAll(this)"
+                           class="w-4 h-4 accent-[#7d2ae7]">
+                    Pilih semua pemateri
+                </label>
+
+                {{-- Checkbox List --}}
+                <div id="pemateriList" class="border rounded-lg divide-y max-h-48 overflow-y-auto">
+                    @forelse($pemateris as $p)
+                    @php $checked = is_array(old('pemateri_ids')) && in_array($p->id_pemateri, old('pemateri_ids')); @endphp
+                    <label class="pemateri-item flex items-center gap-3 px-4 py-2.5 cursor-pointer hover:bg-purple-50 transition-colors"
+                           data-name="{{ strtolower($p->nama_lengkap) }}">
+                        <input type="checkbox" name="pemateri_ids[]" value="{{ $p->id_pemateri }}"
+                               {{ $checked ? 'checked' : '' }}
+                               onchange="updateSelectAll()"
+                               class="w-4 h-4 accent-[#7d2ae7] flex-shrink-0">
+                        <span class="text-sm text-gray-700">{{ $p->nama_lengkap }}</span>
+                    </label>
+                    @empty
+                    <p class="text-sm text-gray-400 p-4 text-center">Belum ada pemateri terdaftar.</p>
+                    @endforelse
+                </div>
+
+                <p id="pemateriCount" class="text-xs text-gray-400 mt-1">
+                    {{ count($pemateris) }} pemateri tersedia
+                </p>
             </div>
 
             <div>
@@ -109,3 +148,118 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    function filterPemateri(query) {
+        const items = document.querySelectorAll('.pemateri-item');
+        const q = query.toLowerCase().trim();
+        let visible = 0;
+        items.forEach(item => {
+            const name = item.getAttribute('data-name');
+            const match = name.includes(q);
+            item.style.display = match ? '' : 'none';
+            if (match) visible++;
+        });
+        document.getElementById('pemateriCount').textContent = visible + ' pemateri ditemukan';
+        updateSelectAll();
+    }
+
+    function toggleSelectAll(master) {
+        const items = document.querySelectorAll('.pemateri-item');
+        items.forEach(item => {
+            if (item.style.display !== 'none') {
+                const cb = item.querySelector('input[type=checkbox]');
+                if (cb) cb.checked = master.checked;
+            }
+        });
+    }
+
+    function updateSelectAll() {
+        const all  = document.querySelectorAll('.pemateri-item:not([style*="display: none"]) input[type=checkbox]');
+        const checked = document.querySelectorAll('.pemateri-item:not([style*="display: none"]) input[type=checkbox]:checked');
+        const master = document.getElementById('selectAllPemateri');
+        if (!master) return;
+        master.indeterminate = checked.length > 0 && checked.length < all.length;
+        master.checked = all.length > 0 && checked.length === all.length;
+    }
+
+    // Init on load
+    document.addEventListener('DOMContentLoaded', () => {
+        updateSelectAll();
+        handleKategoriChange(); // Handle old value or initial state
+    });
+
+    function handleKategoriChange() {
+        const selectKategori = document.getElementById('selectKategori');
+        const selectJenis = document.getElementById('selectJenis');
+        const containerJenis = document.getElementById('containerJenis');
+        const inputNama = document.getElementById('inputNama');
+        
+        const selectedOption = selectKategori.options[selectKategori.selectedIndex];
+        if (!selectedOption || !selectedOption.value) {
+            containerJenis.classList.add('hidden');
+            inputNama.classList.remove('hidden');
+            inputNama.disabled = true;
+            inputNama.placeholder = "Pilih kategori terlebih dahulu...";
+            selectJenis.disabled = true;
+            return;
+        }
+
+        const jenisData = JSON.parse(selectedOption.getAttribute('data-jenis') || '[]');
+        
+        // Enable inputs
+        selectJenis.disabled = false;
+        inputNama.disabled = false;
+
+        if (jenisData.length > 0) {
+            // Populate selectJenis
+            selectJenis.innerHTML = '<option value="">-- Pilih Jenis --</option>';
+            jenisData.forEach(j => {
+                const opt = document.createElement('option');
+                opt.value = j.nama;
+                opt.textContent = j.nama;
+                selectJenis.appendChild(opt);
+            });
+            const optOther = document.createElement('option');
+            optOther.value = 'lainnya';
+            optOther.textContent = 'Lainnya (Input Manual)';
+            selectJenis.appendChild(optOther);
+            
+            containerJenis.classList.remove('hidden');
+            
+            // If it's a new entry, hide inputNama until a choice is made or "lainnya"
+            if (!inputNama.value) {
+                inputNama.classList.add('hidden');
+            } else {
+                // If there's an old value, check if it's in the list
+                const exists = jenisData.some(j => j.nama === inputNama.value);
+                if (exists) {
+                    selectJenis.value = inputNama.value;
+                    inputNama.classList.add('hidden');
+                } else {
+                    selectJenis.value = 'lainnya';
+                    inputNama.classList.remove('hidden');
+                }
+            }
+        } else {
+            // No predefined jenis (e.g. Audit)
+            containerJenis.classList.add('hidden');
+            inputNama.classList.remove('hidden');
+            inputNama.placeholder = `Nama ${selectedOption.text}...`;
+        }
+    }
+
+    function handleJenisChange(val) {
+        const inputNama = document.getElementById('inputNama');
+        if (val === 'lainnya' || val === '') {
+            inputNama.classList.remove('hidden');
+            if (val === 'lainnya') inputNama.value = '';
+            inputNama.focus();
+        } else {
+            inputNama.classList.add('hidden');
+            inputNama.value = val;
+        }
+    }
+</script>
+@endpush

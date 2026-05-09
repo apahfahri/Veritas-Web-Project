@@ -17,6 +17,11 @@ class KategoriLayanan extends Model
         'deskripsi',
     ];
 
+    public function jenis()
+    {
+        return $this->hasMany(JenisLayanan::class, 'id_kategori', 'id_kategori');
+    }
+
     public function layanan()
     {
         return $this->hasMany(Layanan::class, 'id_kategori', 'id_kategori');
