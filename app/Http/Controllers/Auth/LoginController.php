@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -17,39 +19,67 @@ class LoginController extends Controller
     }
 
     /**
-     * Proses login dengan email & password.
+     * Proses login dengan email/username & password.
+     * Subadmin bisa login menggunakan username atau email.
+     * Superadmin login menggunakan email.
      */
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email'    => ['required', 'email'],
+        $request->validate([
+            'login'    => ['required', 'string'],
             'password' => ['required'],
         ]);
 
-        $remember = $request->boolean('remember_me');
+        $loginInput = $request->input('login');
+        $password   = $request->input('password');
+        $remember   = $request->boolean('remember_me');
 
-        if (Auth::attempt($credentials, $remember)) {
-            $request->session()->regenerate();
+        // Cek apakah input berupa email atau username
+        $isEmail = filter_var($loginInput, FILTER_VALIDATE_EMAIL);
 
-            if (Auth::user()->status === 'nonaktif') {
-                Auth::logout();
-                $request->session()->invalidate();
-                $request->session()->regenerateToken();
-                return back()->withErrors([
-                    'email' => 'Akun admin Anda telah dinonaktifkan.',
-                ])->onlyInput('email');
+        if ($isEmail) {
+            // Login dengan email (semua role)
+            $credentials = ['email' => $loginInput, 'password' => $password];
+
+            if (Auth::attempt($credentials, $remember)) {
+                return $this->handleAuthenticatedUser($request);
             }
+        } else {
+            // Login dengan username — cari admin berdasarkan username
+            $admin = Admin::where('username', $loginInput)->first();
 
-            if (Auth::user()->isSubadmin()) {
-                return redirect()->intended('/subadmin/dashboard');
+            if ($admin && Hash::check($password, $admin->password)) {
+                Auth::login($admin, $remember);
+                return $this->handleAuthenticatedUser($request);
             }
-            
-            return redirect()->intended('/admin');
         }
 
         return back()->withErrors([
-            'email' => 'Email atau password tidak cocok.',
-        ])->onlyInput('email');
+            'login' => 'Username/email atau password tidak cocok.',
+        ])->onlyInput('login');
+    }
+
+    /**
+     * Tangani user yang sudah berhasil login.
+     */
+    private function handleAuthenticatedUser(Request $request)
+    {
+        $request->session()->regenerate();
+
+        if (Auth::user()->status === 'nonaktif') {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return back()->withErrors([
+                'login' => 'Akun Anda telah dinonaktifkan.',
+            ])->onlyInput('login');
+        }
+
+        if (Auth::user()->isSubadmin()) {
+            return redirect()->intended('/subadmin/dashboard');
+        }
+
+        return redirect()->intended('/admin');
     }
 
     /**

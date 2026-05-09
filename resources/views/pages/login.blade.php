@@ -55,19 +55,19 @@
             <form method="POST" action="/login" class="space-y-4">
                 @csrf
 
-                <!-- EMAIL -->
+                <!-- USERNAME / EMAIL -->
                 <div>
-                    <label class="text-sm font-medium">Email</label>
+                    <label class="text-sm font-medium">Username / Email</label>
                     <div class="relative mt-1">
                         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                            📧
+                            👤
                         </span>
                         <input
-                            type="email"
-                            name="email"
-                            value="{{ old('email') }}"
-                            placeholder="nama@email.com"
-                            class="w-full border rounded px-10 py-2 focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] @error('email') border-red-400 @enderror"
+                            type="text"
+                            name="login"
+                            value="{{ old('login') }}"
+                            placeholder="username atau email"
+                            class="w-full border rounded px-10 py-2 focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] @error('login') border-red-400 @enderror"
                         >
                     </div>
                 </div>

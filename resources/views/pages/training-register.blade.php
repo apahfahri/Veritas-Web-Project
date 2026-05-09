@@ -38,55 +38,13 @@
             {{-- hidden fields --}}
             <input type="hidden" name="layanan_id"     value="{{ $pelatihan->id_layanan }}">
 
-            @php
-                $jenisKlien = old('jenis_klien', 'individu');
-            @endphp
-            <input type="hidden" name="jenis_klien" id="hidden_jenis_klien" value="{{ $jenisKlien }}">
+            <input type="hidden" name="jenis_klien" value="individu">
 
-            {{-- ── STEP 1 · Jenis Pendaftar ──────────────────────── --}}
+
+
+            {{-- ── STEP 1 · Data Diri & Kontak ────────────────────────── --}}
             <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mb-6">
-                <h2 class="text-lg font-semibold text-[#7d2ae7] mb-5">1. Jenis Pendaftar</h2>
-
-                <div class="grid md:grid-cols-2 gap-4">
-                    <label id="card-individu"
-                           class="relative flex flex-col gap-2 border-2 p-5 rounded-xl cursor-pointer transition-all
-                                  {{ $jenisKlien === 'individu' ? 'border-[#7d2ae7] bg-[#F0FAFA]' : 'border-gray-200 hover:border-[#7d2ae7]' }}">
-                        <input type="radio" name="_jenis_klien_radio" value="individu" class="sr-only"
-                               {{ $jenisKlien === 'individu' ? 'checked' : '' }}>
-                        <span class="text-2xl">👤</span>
-                        <span class="font-semibold text-[#7d2ae7]">Individu</span>
-                        <span class="text-xs text-gray-500">Pendaftaran perorangan / pribadi</span>
-                        <span id="check-individu"
-                              class="absolute top-3 right-3 w-5 h-5 bg-[#7d2ae7] rounded-full flex items-center justify-center
-                                     {{ $jenisKlien === 'individu' ? '' : 'hidden' }}">
-                            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-                            </svg>
-                        </span>
-                    </label>
-
-                    <label id="card-perusahaan"
-                           class="relative flex flex-col gap-2 border-2 p-5 rounded-xl cursor-pointer transition-all
-                                  {{ $jenisKlien === 'perusahaan' ? 'border-[#7d2ae7] bg-[#F0FAFA]' : 'border-gray-200 hover:border-[#7d2ae7]' }}">
-                        <input type="radio" name="_jenis_klien_radio" value="perusahaan" class="sr-only"
-                               {{ $jenisKlien === 'perusahaan' ? 'checked' : '' }}>
-                        <span class="text-2xl">🏢</span>
-                        <span class="font-semibold text-[#7d2ae7]">Perusahaan</span>
-                        <span class="text-xs text-gray-500">Mewakili instansi / perusahaan</span>
-                        <span id="check-perusahaan"
-                              class="absolute top-3 right-3 w-5 h-5 bg-[#7d2ae7] rounded-full flex items-center justify-center
-                                     {{ $jenisKlien === 'perusahaan' ? '' : 'hidden' }}">
-                            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-                            </svg>
-                        </span>
-                    </label>
-                </div>
-            </div>
-
-            {{-- ── STEP 2 · Data Diri & Kontak ────────────────────────── --}}
-            <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mb-6">
-                <h2 class="text-lg font-semibold text-[#7d2ae7] mb-5">2. Data Diri & Kontak</h2>
+                <h2 class="text-lg font-semibold text-[#7d2ae7] mb-5">1. Data Diri & Kontak</h2>
 
                 <div class="space-y-4">
                     <div>
@@ -133,62 +91,11 @@
                 </div>
             </div>
 
-            {{-- ── STEP 3 · Data Perusahaan (Hanya jika Perusahaan) ─── --}}
-            <div id="section-perusahaan"
-                 class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mb-6
-                        {{ $jenisKlien === 'perusahaan' ? '' : 'hidden' }}">
-                <h2 class="text-lg font-semibold text-[#7d2ae7] mb-5">3. Data Perusahaan</h2>
 
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">
-                            Nama Perusahaan <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text" name="nama_perusahaan"
-                               value="{{ old('nama_perusahaan') }}"
-                               placeholder="PT / CV / Instansi"
-                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition">
-                    </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Jabatan di Perusahaan (Opsional)</label>
-                        <input type="text" name="jabatan"
-                               value="{{ old('jabatan') }}"
-                               placeholder="Contoh: HRD Manager, Training Officer"
-                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">
-                            Alamat Perusahaan <span class="text-red-500">*</span>
-                        </label>
-                        <textarea name="alamat_perusahaan" rows="2"
-                                  placeholder="Alamat lengkap kantor / perusahaan"
-                                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition resize-none">{{ old('alamat_perusahaan') }}</textarea>
-                    </div>
-
-                    <div class="grid md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Sektor Industri (Opsional)</label>
-                            <input type="text" name="sektor_industri"
-                                   value="{{ old('sektor_industri') }}"
-                                   placeholder="Contoh: Manufaktur, Jasa, dll."
-                                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Jumlah Karyawan (Opsional)</label>
-                            <input type="number" name="jumlah_karyawan" min="1"
-                                   value="{{ old('jumlah_karyawan') }}"
-                                   placeholder="Contoh: 50"
-                                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {{-- ── STEP 4 · Ringkasan & Submit ────────────────────── --}}
+            {{-- ── STEP 2 · Ringkasan & Submit ────────────────────── --}}
             <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mb-6">
-                <h2 class="text-lg font-semibold text-[#7d2ae7] mb-5">Ringkasan Pendaftaran</h2>
+                <h2 class="text-lg font-semibold text-[#7d2ae7] mb-5">2. Ringkasan Pendaftaran</h2>
 
                 <div class="bg-[#F5F7FA] rounded-xl p-5 space-y-3 text-sm">
                     <div class="flex justify-between">
@@ -242,76 +149,5 @@
     </div>
 </div>
 
-{{-- ── SCRIPT: Toggle Individu / Perusahaan ─────────────────────────── --}}
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const radios       = document.querySelectorAll('input[name="_jenis_klien_radio"]');
-    const sectionPerus = document.getElementById('section-perusahaan');
-    const hiddenJenis  = document.getElementById('hidden_jenis_klien');
-    const cardInd      = document.getElementById('card-individu');
-    const cardPerus    = document.getElementById('card-perusahaan');
-    const checkInd     = document.getElementById('check-individu');
-    const checkPerus   = document.getElementById('check-perusahaan');
-    const form         = document.getElementById('form-pendaftaran');
-
-    function disableSection(section, shouldDisable) {
-        if (!section) return;
-        section.querySelectorAll('input, textarea, select').forEach(el => {
-            el.disabled = shouldDisable;
-        });
-    }
-
-    function switchJenis(val) {
-        hiddenJenis.value = val;
-
-        if (val === 'individu') {
-            if(sectionPerus) sectionPerus.classList.add('hidden');
-
-            if(cardInd) {
-                cardInd.classList.add('border-[#7d2ae7]', 'bg-[#F0FAFA]');
-                cardInd.classList.remove('border-gray-200');
-                if(checkInd) checkInd.classList.remove('hidden');
-            }
-            if(cardPerus) {
-                cardPerus.classList.remove('border-[#7d2ae7]', 'bg-[#F0FAFA]');
-                cardPerus.classList.add('border-gray-200');
-                if(checkPerus) checkPerus.classList.add('hidden');
-            }
-        } else {
-            if(sectionPerus) sectionPerus.classList.remove('hidden');
-
-            if(cardPerus) {
-                cardPerus.classList.add('border-[#7d2ae7]', 'bg-[#F0FAFA]');
-                cardPerus.classList.remove('border-gray-200');
-                if(checkPerus) checkPerus.classList.remove('hidden');
-            }
-            if(cardInd) {
-                cardInd.classList.remove('border-[#7d2ae7]', 'bg-[#F0FAFA]');
-                cardInd.classList.add('border-gray-200');
-                if(checkInd) checkInd.classList.add('hidden');
-            }
-        }
-
-        disableSection(sectionPerus, val !== 'perusahaan');
-    }
-
-    if (radios.length > 0) {
-        radios.forEach(radio => {
-            radio.closest('label').addEventListener('click', function () {
-                switchJenis(radio.value);
-            });
-        });
-    }
-
-    switchJenis(hiddenJenis.value || 'individu');
-
-    if (form) {
-        form.addEventListener('submit', function () {
-            const val = hiddenJenis.value;
-            disableSection(sectionPerus, val !== 'perusahaan');
-        });
-    }
-});
-</script>
 
 @endsection
