@@ -32,6 +32,16 @@
             </div>
         </form>
 
+        <!-- REQUEST COMPANY TRAINING BANNER -->
+        <div class="bg-gradient-to-r from-orange-400 to-orange-500 rounded-xl shadow p-6 mb-8 text-white flex flex-col md:flex-row items-center justify-between">
+            <div class="mb-4 md:mb-0">
+                <h2 class="text-xl font-bold mb-1">🏢 Butuh Pelatihan Khusus Perusahaan?</h2>
+                <p class="text-sm opacity-90">Kami menyediakan pelatihan in-house yang disesuaikan dengan kebutuhan perusahaan Anda.</p>
+            </div>
+            <a href="{{ route('request.training.create') }}" class="bg-white text-orange-500 font-semibold px-6 py-2 rounded-lg hover:bg-gray-100 transition whitespace-nowrap shadow-sm">
+                Isi Form Request
+            </a>
+        </div>
         <!-- RESULT COUNT -->
         <div class="mb-6 text-gray-600">
             Menampilkan <strong>{{ $pelatihans->count() }}</strong> pelatihan
