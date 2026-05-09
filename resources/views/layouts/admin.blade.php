@@ -77,6 +77,11 @@
                 👥 Pemateri
             </a>
 
+            <a href="{{ route('admin.kategori.index') }}"
+               class="sidebar-link {{ request()->routeIs('admin.kategori.*') ? 'active' : '' }}">
+                🗂️ Kategori Layanan
+            </a>
+
             @if(Auth::user()->isSuperAdmin())
             <a href="{{ route('admin.subadmin.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.subadmin.*') ? 'active' : '' }}">
