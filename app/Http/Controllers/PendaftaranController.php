@@ -78,16 +78,30 @@ class PendaftaranController extends Controller
             }
 
             // ── Buat record pendaftaran ────────────────────────────────────
-            Pendaftaran::create([
+            $pendaftaran = Pendaftaran::create([
                 'id_layanan'              => $request->layanan_id,
                 'id_user'                 => $user->id_user,
+                'id_perusahaan'           => ($jenis === 'perusahaan') ? $idPerusahaan : null,
+                'is_utusan_perusahaan'    => ($jenis === 'perusahaan') ? 1 : 0,
                 'tanggal_daftar'          => now(),
                 'rencana_tanggal_mulai'   => $request->rencana_tanggal_mulai,
                 'rencana_tanggal_selesai' => $request->rencana_tanggal_selesai,
                 'mode_pertemuan'          => $request->mode_pertemuan,
                 'status_progres'          => 'menunggu_pembayaran',
                 'status_bayar'            => 'belum_lunas',
+                'cabang'                  => 'Pusat', // Default to Pusat if not specified
             ]);
+
+            // ── Kirim WA Invoice Otomatis ──────────────────────────────────
+            if ($user->no_telp) {
+                try {
+                    $notification = new \App\Notifications\PendaftaranStatusNotification($pendaftaran, 'menunggu_pembayaran');
+                    $notification->sendInvoice($user->no_telp);
+                } catch (\Exception $e) {
+                    // Log error if WA service is down
+                    \Log::error('WA Invoice Error: ' . $e->getMessage());
+                }
+            }
         });
 
         return redirect()->route('training.status', ['identifier' => $request->email])

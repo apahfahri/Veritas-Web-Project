@@ -55,7 +55,7 @@
                         </div>
                     </td>
                     <td class="px-6 py-5">
-                        @if($p->is_utusan_perusahaan || $p->id_perusahaan)
+                        @if($p->id_perusahaan)
                             <div class="flex flex-col">
                                 <span class="text-[10px] bg-amber-50 text-amber-600 border border-amber-100 px-2 py-0.5 rounded-md font-black uppercase tracking-wider w-fit">Corporate</span>
                                 <span class="text-xs font-bold text-slate-700 mt-1">{{ $p->perusahaan?->nama_perusahaan }}</span>

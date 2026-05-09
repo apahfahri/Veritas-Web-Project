@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Dashboard — PT Katiga Veritas Indonesia')
+@section('title', 'Dashboard | PT Katiga Veritas Indonesia')
 @section('content')
 
 <div class="min-h-screen bg-[#F5F7FA]">

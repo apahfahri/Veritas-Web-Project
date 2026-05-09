@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('page-title', 'Edit Admin Cabang')
+@section('page-title', 'Edit Subadmin')
 
 @section('content')
 
@@ -42,7 +42,7 @@
             </a>
             <button type="submit"
                     class="bg-[#00A8A8] text-white px-4 py-2 rounded-lg hover:opacity-90 transition text-sm font-medium cursor-pointer">
-                Update Admin Cabang
+                Update Subadmin
             </button>
         </div>
     </form>

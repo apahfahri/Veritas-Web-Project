@@ -22,11 +22,10 @@ class SubadminPerusahaanController extends Controller
 
     public function index()
     {
-        // Menampilkan daftar perusahaan yang memiliki pendaftar di cabang ini
-        $cabang = Auth::user()->admin?->cabang;
-        $perusahaans = Perusahaan::whereHas('pendaftarans', function($q) use ($cabang) {
-            if ($cabang) $q->where('cabang', $cabang);
-        })->withCount(['pendaftarans' => function($q) use ($cabang) {
+        // Menampilkan daftar semua perusahaan agar subadmin bisa melihat profilnya
+        $cabang = Auth::user()->cabang;
+        
+        $perusahaans = Perusahaan::withCount(['pendaftarans' => function($q) use ($cabang) {
             if ($cabang) $q->where('cabang', $cabang);
         }])->latest()->paginate(15);
 

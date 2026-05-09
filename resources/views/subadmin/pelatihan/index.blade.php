@@ -1,7 +1,7 @@
 @extends('layouts.subadmin')
 
 @section('title', 'Pelatihan')
-@section('page-title', 'Daftar Pelatihan (Read-only)')
+@section('page-title', 'Daftar Pelatihan')
 
 @section('content')
 <div class="bg-white rounded-3xl border border-slate-100 p-8 shadow-sm select-none">

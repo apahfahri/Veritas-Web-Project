@@ -12,21 +12,25 @@ class PendaftaranSeeder extends Seeder
         DB::table('pendaftaran')->insert([
             [
                 'id_layanan' => 1,
-                'id_admin' => 2, // admin pusat
+                'id_admin' => 2, // admin bandung
                 'id_user' => 1,
                 'tanggal_daftar' => now()->subDays(5)->toDateString(),
                 'status_progres' => 'selesai',
                 'status_bayar' => 'lunas',
+                'cabang' => 'Bandung',
+                'id_perusahaan' => 1, // Link to a company
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'id_layanan' => 2,
-                'id_admin' => 3, // admin cabang
+                'id_admin' => 3, // admin jakarta
                 'id_user' => 2,
                 'tanggal_daftar' => now()->subDays(2)->toDateString(),
                 'status_progres' => 'menunggu_pembayaran',
                 'status_bayar' => 'belum_lunas',
+                'cabang' => 'Jakarta',
+                'id_perusahaan' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]

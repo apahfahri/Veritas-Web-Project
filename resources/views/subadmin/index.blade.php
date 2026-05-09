@@ -1,14 +1,14 @@
 @extends('layouts.admin')
-@section('page-title', 'Manajemen Admin Cabang')
-@section('page-subtitle', 'Kelola data admin cabang PT Katiga Veritas Indonesia')
+@section('page-title', 'Manajemen Subadmin')
+@section('page-subtitle', 'Kelola data subadmin PT Katiga Veritas Indonesia')
 
 @section('content')
 
 <div class="flex justify-between items-center mb-6">
-    <h2 class="text-xl font-semibold text-[#0A2540]">Daftar Admin Cabang ({{ $admins->total() }})</h2>
+    <h2 class="text-xl font-semibold text-[#0A2540]">Daftar Subadmin ({{ $admins->total() }})</h2>
     <a href="{{ route('admin.subadmin.create') }}"
        class="bg-[#00A8A8] text-white px-4 py-2 rounded-lg hover:opacity-90 transition text-sm">
-        ➕ Tambah Admin
+        ➕ Tambah Subadmin
     </a>
 </div>
 
@@ -55,7 +55,7 @@
             </tr>
             @empty
             <tr>
-                <td colspan="6" class="p-8 text-center text-gray-500">Belum ada admin cabang terdaftar</td>
+                <td colspan="6" class="p-8 text-center text-gray-500">Belum ada subadmin terdaftar</td>
             </tr>
             @endforelse
         </tbody>

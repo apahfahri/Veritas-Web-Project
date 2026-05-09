@@ -63,7 +63,7 @@
                     <div class="bg-amber-50 rounded-2xl p-4 border border-amber-100">
                         <p class="text-[10px] text-amber-700 font-bold leading-relaxed">
                             <span class="block mb-1 underline">CATATAN:</span>
-                            Jika klien adalah utusan perusahaan, pastikan memilih perusahaan yang benar untuk sinkronisasi penagihan dan laporan.
+                            Jika klien adalah peserta dari perusahaan, pastikan memilih perusahaan yang benar untuk sinkronisasi penagihan dan laporan.
                         </p>
                     </div>
                 </div>

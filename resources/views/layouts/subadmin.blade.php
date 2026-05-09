@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Subadmin') — Katiga Veritas</title>
+    <title>@yield('title', 'Subadmin') Katiga Veritas</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
@@ -139,10 +139,12 @@
                 </button>
                 <div>
                     <h1 class="text-xl font-black text-slate-900 tracking-tight">@yield('page-title', 'Subadmin Dashboard')</h1>
-                    <p class="text-xs text-slate-500 font-medium mt-0.5">PT Katiga Veritas Indonesia — Subadmin Access</p>
+                    <p class="text-xs text-slate-500 font-medium mt-0.5">PT Katiga Veritas Indonesia | Subadmin Access</p>
                 </div>
             </div>
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-4">
+                @yield('header-actions')
+                <div class="h-8 w-px bg-slate-100 mx-2"></div>
                 @if(session('success'))
                     <span class="text-sm font-semibold text-teal-700 bg-teal-50 border border-teal-200/60 px-3.5 py-1.5 rounded-xl shadow-sm flex items-center gap-1.5">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>

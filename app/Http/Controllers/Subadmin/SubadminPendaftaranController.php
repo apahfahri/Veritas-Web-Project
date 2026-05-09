@@ -7,6 +7,10 @@ use App\Models\Pendaftaran;
 use App\Models\Layanan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\PendaftaranStatusNotification;
+use App\Exports\PendaftaranExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SubadminPendaftaranController extends Controller
 {
@@ -44,6 +48,7 @@ class SubadminPendaftaranController extends Controller
     public function update(Request $request, $id)
     {
         $pendaftaran = Pendaftaran::findOrFail($id);
+        $oldStatus = $pendaftaran->status_progres;
 
         $request->validate([
             'status_progres'  => 'required|string',
@@ -55,8 +60,55 @@ class SubadminPendaftaranController extends Controller
             'status_bayar'    => $request->status_bayar,
         ]);
 
+        // Trigger Notification if status changed
+        if ($oldStatus !== $request->status_progres) {
+            $notification = new PendaftaranStatusNotification($pendaftaran, $request->status_progres);
+            
+            // Send via database (standard via())
+            $pendaftaran->user?->notify($notification);
+            
+            // Manually trigger WhatsApp as per generic request
+            if ($pendaftaran->user?->no_telp) {
+                try {
+                    $notification->sendWhatsapp($pendaftaran->user->no_telp);
+                } catch (\Exception $e) {
+                    // Log error or ignore
+                }
+            }
+        }
+
         return redirect()->route('subadmin.pendaftaran.index')
-            ->with('success', 'Status pendaftaran berhasil diperbarui.');
+            ->with('success', 'Status pendaftaran berhasil diperbarui dan notifikasi telah dikirim.');
+    }
+
+    public function exportExcel(Request $request)
+    {
+        $filters = [
+            'year' => $request->year ?? date('Y'),
+            'month' => $request->month
+        ];
+
+        return Excel::download(new PendaftaranExport($filters), 'laporan-pendaftaran-' . now()->format('Ymd') . '.xlsx');
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $filters = [
+            'year' => $request->year ?? date('Y'),
+            'month' => $request->month
+        ];
+
+        $query = Pendaftaran::with(['user', 'layanan']);
+        if ($filters['year']) $query->whereYear('tanggal_daftar', $filters['year']);
+        if ($filters['month']) $query->whereMonth('tanggal_daftar', $filters['month']);
+        
+        $pendaftarans = $query->get();
+        $cabang = Auth::user()->cabang ?? 'Pusat';
+
+        $pdf = Pdf::loadView('subadmin.pendaftaran.export_pdf', compact('pendaftarans', 'filters', 'cabang'))
+                  ->setPaper('a4', 'landscape');
+
+        return $pdf->download('laporan-pendaftaran-' . now()->format('Ymd') . '.pdf');
     }
 
     public function destroy($id)
@@ -68,21 +120,20 @@ class SubadminPendaftaranController extends Controller
             ->with('success', 'Pendaftaran berhasil dihapus.');
     }
 
-    public function sendReminder(Request $request, $id)
+    public function updateNote(Request $request, $id)
     {
         $pendaftaran = Pendaftaran::findOrFail($id);
 
         $request->validate([
-            'pesan_reminder' => 'required|string',
+            'admin_note' => 'required|string',
         ]);
 
         $pendaftaran->update([
-            'last_reminder_sent_at' => now(),
-            'last_reminder_details' => $request->pesan_reminder,
+            'last_reminder_sent_at' => now(), // Still using same column for timestamp
+            'last_reminder_details' => $request->admin_note, // Still using same column for note text
         ]);
 
         return redirect()->route('subadmin.pendaftaran.show', $id)
-            ->with('success', 'Catatan pengiriman reminder berhasil disimpan.');
+            ->with('success', 'Catatan internal admin berhasil diperbarui.');
     }
 }
-
