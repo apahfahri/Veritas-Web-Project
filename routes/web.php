@@ -14,6 +14,8 @@ use App\Http\Controllers\Admin\PemateriController;
 use App\Http\Controllers\Admin\LayananAdminController;
 use App\Http\Controllers\Admin\PendaftaranAdminController;
 use App\Http\Controllers\Admin\SertifikatAdminController;
+use App\Http\Controllers\RequestPelatihanController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +38,10 @@ Route::get('/training/status',       [PendaftaranController::class, 'statusForm'
 Route::post('/training/status',      [PendaftaranController::class, 'checkStatus'])->name('training.status.check');
 Route::get('/training/{id}',         [PelatihanController::class, 'show'])->name('training.detail');
 Route::get('/training/{id}/register',  [PelatihanController::class, 'register'])->name('training.register');
+
+Route::get('/request-training',      [RequestPelatihanController::class, 'create'])->name('request.training.create');
+Route::post('/request-training',     [RequestPelatihanController::class, 'store'])->name('request.training.store');
+
 
 /*
 |--------------------------------------------------------------------------
