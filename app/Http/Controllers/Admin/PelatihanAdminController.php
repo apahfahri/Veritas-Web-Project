@@ -24,7 +24,7 @@ class PelatihanAdminController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'layanan_id'        => 'required|exists:layanan,id',
+            'layanan_id'        => 'required|exists:layanan,id_layanan',
             'materi'            => 'required|string|max:255',
             'jenis_pertemuan'   => 'required|in:online,offline',
             'jam_pertemuan'     => 'nullable|date_format:H:i',
@@ -52,7 +52,7 @@ class PelatihanAdminController extends Controller
         $pelatihan = Pelatihan::findOrFail($id);
 
         $request->validate([
-            'layanan_id'        => 'required|exists:layanan,id',
+            'layanan_id'        => 'required|exists:layanan,id_layanan',
             'materi'            => 'required|string|max:255',
             'jenis_pertemuan'   => 'required|in:online,offline',
             'jam_pertemuan'     => 'nullable|date_format:H:i',

@@ -17,12 +17,17 @@ class Pendaftaran extends Model
         'id_admin',
         'id_user',
         'tanggal_daftar',
+        'rencana_tanggal_mulai',
+        'rencana_tanggal_selesai',
+        'mode_pertemuan',
         'status_progres',
         'status_bayar',
     ];
 
     protected $casts = [
-        'tanggal_daftar' => 'date',
+        'tanggal_daftar'          => 'date',
+        'rencana_tanggal_mulai'   => 'date',
+        'rencana_tanggal_selesai' => 'date',
     ];
 
     public function layanan()
