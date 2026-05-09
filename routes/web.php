@@ -22,7 +22,10 @@ use App\Http\Controllers\RequestPelatihanController;
 | PUBLIC PAGES
 |--------------------------------------------------------------------------
 */
-Route::view('/', 'pages.home')->name('home');
+Route::get('/', function() {
+    $pemateris = \App\Models\Pemateri::all();
+    return view('pages.home', compact('pemateris'));
+})->name('home');
 Route::redirect('/home', '/');
 
 Route::view('/consultation', 'pages.consultation')->name('consultation');
@@ -106,6 +109,12 @@ Route::middleware(['auth', 'is.admin'])->prefix('admin')->name('admin.')->group(
 
     // Subadmin management (Superadmin only)
     Route::resource('subadmin', \App\Http\Controllers\Admin\SubadminController::class)->except(['show']);
+
+    // Kategori & Jenis Layanan management
+    Route::get('/kategori', [\App\Http\Controllers\Admin\KategoriLayananController::class, 'index'])->name('kategori.index');
+    Route::post('/kategori/jenis', [\App\Http\Controllers\Admin\KategoriLayananController::class, 'storeJenis'])->name('kategori.jenis.store');
+    Route::put('/kategori/jenis/{id}', [\App\Http\Controllers\Admin\KategoriLayananController::class, 'updateJenis'])->name('kategori.jenis.update');
+    Route::delete('/kategori/jenis/{id}', [\App\Http\Controllers\Admin\KategoriLayananController::class, 'destroyJenis'])->name('kategori.jenis.destroy');
 });
 
 /*
