@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="min-h-screen bg-gradient-to-br from-[#7d2ae7] via-[#3969e7] to-[#07b9ce] flex items-center justify-center p-4 py-10">
+<div class="min-h-screen bg-gradient-to-br from-[#1E6B3D] to-[#3CDA7D] flex items-center justify-center p-4 py-10">
     <div class="w-full max-w-md">
 
         {{-- CARD --}}
@@ -12,12 +12,12 @@
 
             {{-- HEADER --}}
             <div class="text-center mb-7">
-                <div class="w-16 h-16 bg-[#7d2ae7] rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg">
+                <div class="w-16 h-16 bg-[#1E6B3D] rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg">
                     🔒
                 </div>
-                <h1 class="text-2xl font-bold text-[#7d2ae7]">Buat Password Baru</h1>
+                <h1 class="text-2xl font-bold text-[#1E6B3D]">Buat Password Baru</h1>
                 <p class="text-sm text-gray-500 mt-2 leading-relaxed">
-                    Masukkan password baru untuk akun <span class="font-medium text-[#7d2ae7]">{{ $email }}</span>
+                    Masukkan password baru untuk akun <span class="font-medium text-[#1E6B3D]">{{ $email }}</span>
                 </p>
             </div>
 
@@ -50,7 +50,7 @@
                             placeholder="Minimal 8 karakter"
                             required
                             autofocus
-                            class="w-full border border-gray-300 rounded-xl pl-10 pr-10 py-2.5 text-sm focus:outline-none focus:border-[#7d2ae7] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('password') ? 'border-red-400' : '' }}"
+                            class="w-full border border-gray-300 rounded-xl pl-10 pr-10 py-2.5 text-sm focus:outline-none focus:border-[#1E6B3D] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('password') ? 'border-red-400' : '' }}"
                         >
                         <button type="button" onclick="togglePass('new-password', 'eye1')"
                             class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-base select-none">
@@ -83,7 +83,7 @@
                             name="password_confirmation"
                             placeholder="Ulangi password baru"
                             required
-                            class="w-full border border-gray-300 rounded-xl pl-10 pr-10 py-2.5 text-sm focus:outline-none focus:border-[#7d2ae7] focus:ring-2 focus:ring-teal-100 transition"
+                            class="w-full border border-gray-300 rounded-xl pl-10 pr-10 py-2.5 text-sm focus:outline-none focus:border-[#1E6B3D] focus:ring-2 focus:ring-teal-100 transition"
                         >
                         <button type="button" onclick="togglePass('confirm-password', 'eye2')"
                             class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-base select-none">
@@ -96,7 +96,7 @@
 
                 {{-- SUBMIT --}}
                 <button type="submit"
-                    class="w-full bg-[#7d2ae7] hover:bg-[#008f8f] active:scale-[.98] text-white py-3 rounded-xl font-semibold text-sm tracking-wide transition-all shadow-md hover:shadow-lg">
+                    class="w-full bg-[#1E6B3D] hover:bg-[#3CDA7D] active:scale-[.98] text-white py-3 rounded-xl font-semibold text-sm tracking-wide transition-all shadow-md hover:shadow-lg">
                     Simpan Password Baru
                 </button>
 

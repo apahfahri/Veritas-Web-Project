@@ -5,16 +5,12 @@
 <div class="min-h-screen bg-[#F5F7FA]">
 
     <!-- HEADER -->
-    <div class="bg-gradient-to-r from-[#7d2ae7] via-[#3969e7] to-[#07b9ce] text-white py-12">
+    <div class="bg-gradient-to-r from-[#1E6B3D] to-[#3CDA7D] text-white py-8">
         <div class="max-w-7xl mx-auto px-6">
 
-            <a href="/" class="inline-flex items-center gap-2 mb-4 hover:bg-white/10 px-3 py-2 rounded">
-                ← Kembali
-            </a>
-
             <div class="flex items-center gap-3 mb-4">
-                <div class="text-3xl">📋</div>
-                <h1 class="text-4xl font-bold">Audit K3</h1>
+                <div class="text-2xl">📋</div>
+                <h1 class="text-3xl font-bold">Audit K3</h1>
             </div>
 
             <p class="text-gray-200 max-w-2xl">
@@ -38,7 +34,7 @@
             <!-- FORM -->
             <div class="lg:col-span-2 bg-white p-8 rounded-xl shadow">
 
-                <h2 class="text-2xl font-semibold text-[#7d2ae7] mb-2">
+                <h2 class="text-2xl font-semibold text-[#1E6B3D] mb-2">
                     Form Pengajuan Audit
                 </h2>
 
@@ -64,59 +60,86 @@
                     @csrf
                     @php 
                         $kategoriAudit = \App\Models\KategoriLayanan::where('nama', 'like', '%Audit%')->first();
-                        $layananAudit = \App\Models\Layanan::where('id_kategori', $kategoriAudit?->id_kategori)->first()
-                                        ?? \App\Models\Layanan::whereHas('kategori', function($q) {
-                                            $q->where('nama', 'like', '%Audit%');
-                                        })->first()
-                                        ?? \App\Models\Layanan::first();
+                        $layananAudit = \App\Models\Layanan::where('id_kategori', $kategoriAudit?->id_kategori)->first();
                         
                         $layananId = $layananAudit ? $layananAudit->id_layanan : null;
                     @endphp
                     
                     <input type="hidden" name="layanan_id" value="{{ $layananId }}">
+                    <input type="hidden" name="kategori_id" value="{{ $kategoriAudit?->id_kategori }}">
                     <input type="hidden" name="jenis_klien" value="perusahaan">
 
                     <!-- COMPANY -->
                     <div>
-                        <h3 class="font-semibold text-lg mb-4 text-[#7d2ae7]">Informasi Perusahaan</h3>
+                        <h3 class="font-semibold text-lg mb-4 text-[#1E6B3D]">Informasi Perusahaan</h3>
 
-                        <input type="text" name="nama_perusahaan" value="{{ old('nama_perusahaan') }}" placeholder="Nama Perusahaan *" class="w-full border p-2 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-[#7d2ae7]" required>
+                        <input type="text" name="nama_perusahaan" value="{{ old('nama_perusahaan') }}" placeholder="Nama Perusahaan *" class="w-full border p-2 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]" required>
 
                         <div class="grid md:grid-cols-2 gap-4">
-                            <input type="text" name="sektor_industri" value="{{ old('sektor_industri') }}" placeholder="Bidang Industri" class="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#7d2ae7]">
-                            <input type="number" name="jumlah_karyawan" value="{{ old('jumlah_karyawan') }}" placeholder="Jumlah Karyawan" class="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#7d2ae7]">
+                            <input type="text" name="sektor_industri" value="{{ old('sektor_industri') }}" placeholder="Bidang Industri" class="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
+                            <input type="number" name="jumlah_karyawan" value="{{ old('jumlah_karyawan') }}" placeholder="Jumlah Karyawan" class="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
                         </div>
 
-                        <textarea name="alamat_perusahaan" placeholder="Alamat Perusahaan *" class="w-full border p-2 rounded mt-3 focus:outline-none focus:ring-2 focus:ring-[#7d2ae7]" required>{{ old('alamat_perusahaan') }}</textarea>
+                        <textarea name="alamat_perusahaan" placeholder="Alamat Perusahaan *" class="w-full border p-2 rounded mt-3 focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]" required>{{ old('alamat_perusahaan') }}</textarea>
                     </div>
 
 
-                    <hr>
 
 
                     <!-- PIC -->
                     <div>
-                        <h3 class="font-semibold text-lg mb-4 text-[#7d2ae7]">Person In Charge (PIC)</h3>
+                        <h3 class="font-semibold text-lg mb-4 text-[#1E6B3D]">Person In Charge (PIC)</h3>
 
                         <div class="grid md:grid-cols-2 gap-4">
-                            <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap') }}" placeholder="Nama PIC *" class="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#7d2ae7]" required>
-                            <input type="text" name="jabatan" value="{{ old('jabatan') }}" placeholder="Jabatan" class="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#7d2ae7]">
+                            <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap') }}" placeholder="Nama PIC *" class="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]" required>
+                            <input type="text" name="jabatan" value="{{ old('jabatan') }}" placeholder="Jabatan" class="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
                         </div>
 
                         <div class="grid md:grid-cols-2 gap-4 mt-3">
-                            <input type="email" name="email" value="{{ old('email') }}" placeholder="Email PIC *" class="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#7d2ae7]" required>
-                            <input type="text" name="no_telp" value="{{ old('no_telp') }}" placeholder="Nomor HP / WhatsApp *" class="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#7d2ae7]" required>
+                            <input type="email" name="email" value="{{ old('email') }}" placeholder="Email PIC *" class="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]" required>
+                            <input type="text" name="no_telp" value="{{ old('no_telp') }}" placeholder="Nomor HP / WhatsApp *" class="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]" required>
                         </div>
                         
-                        <input type="text" name="pendidikan" value="{{ old('pendidikan') }}" placeholder="Pendidikan Terakhir (Opsional)" class="w-full border p-2 rounded mt-3 focus:outline-none focus:ring-2 focus:ring-[#7d2ae7]">
+                        <input type="text" name="pendidikan" value="{{ old('pendidikan') }}" placeholder="Pendidikan Terakhir (Opsional)" class="w-full border p-2 rounded mt-3 focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
                     </div>
 
-                    <hr>
+                    <hr class="my-6">
+                    
+                    <!-- JADWAL & MODE -->
+                    <div>
+                        <h3 class="font-semibold text-lg mb-4 text-[#1E6B3D]">Rencana Jadwal & Mode Audit</h3>
+                        <div class="space-y-4">
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Rencana Tanggal Mulai *</label>
+                                    <input type="date" name="rencana_tanggal_mulai" required
+                                           value="{{ old('rencana_tanggal_mulai') }}"
+                                           class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
+                                </div>
 
-                    <!-- BUTTON -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Rencana Tanggal Selesai *</label>
+                                    <input type="date" name="rencana_tanggal_selesai" required
+                                           value="{{ old('rencana_tanggal_selesai') }}"
+                                           class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Mode Audit *</label>
+                                <select name="mode_pertemuan" required
+                                        class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
+                                    <option value="offline" {{ old('mode_pertemuan') === 'offline' ? 'selected' : '' }}>🏢 On-Site (Langsung di Lokasi)</option>
+                                    <option value="online" {{ old('mode_pertemuan') === 'online' ? 'selected' : '' }}>🌐 Remote Audit (Online)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-6">
                     <div class="flex gap-3 mt-6">
                         <a href="/" class="border px-4 py-2 rounded flex items-center justify-center hover:bg-gray-50">Batal</a>
-                        <button type="submit" class="flex-1 bg-[#7d2ae7] text-white py-2 rounded hover:opacity-90 font-semibold shadow-sm">
+                        <button type="submit" class="flex-1 bg-[#1E6B3D] text-white py-2 rounded hover:opacity-90 font-semibold shadow-sm">
                             Ajukan Audit Sekarang
                         </button>
                     </div>
@@ -131,7 +154,7 @@
 
                 <!-- SERVICE -->
                 <div class="bg-white p-6 rounded-xl shadow">
-                    <h3 class="font-semibold mb-4 text-[#7d2ae7]">Layanan Audit Kami</h3>
+                    <h3 class="font-semibold mb-4 text-[#1E6B3D]">Layanan Audit Kami</h3>
 
                     <ul class="space-y-2 text-sm text-gray-600">
                         <li>✔ Auditor bersertifikat</li>
@@ -144,19 +167,19 @@
 
                 <!-- STANDAR -->
                 <div class="bg-[#F5F7FA] p-6 rounded-xl shadow">
-                    <h3 class="font-semibold mb-4 text-[#7d2ae7]">Standar Audit</h3>
+                    <h3 class="font-semibold mb-4 text-[#1E6B3D]">Standar Audit</h3>
 
                     <div class="flex gap-2 flex-wrap">
-                        <span class="bg-[#7d2ae7] text-white px-2 py-1 rounded text-xs">ISO 45001</span>
-                        <span class="bg-[#7d2ae7] text-white px-2 py-1 rounded text-xs">PP 50/2012</span>
-                        <span class="bg-[#7d2ae7] text-white px-2 py-1 rounded text-xs">Permenaker</span>
+                        <span class="bg-[#1E6B3D] text-white px-2 py-1 rounded text-xs">ISO 45001</span>
+                        <span class="bg-[#1E6B3D] text-white px-2 py-1 rounded text-xs">PP 50/2012</span>
+                        <span class="bg-[#1E6B3D] text-white px-2 py-1 rounded text-xs">Permenaker</span>
                     </div>
                 </div>
 
 
                 <!-- PROCESS -->
                 <div class="bg-white p-6 rounded-xl shadow">
-                    <h3 class="font-semibold mb-4 text-[#7d2ae7]">Alur Proses</h3>
+                    <h3 class="font-semibold mb-4 text-[#1E6B3D]">Alur Proses</h3>
 
                     <ol class="space-y-3 text-sm">
                         <li>1. Pengajuan</li>
@@ -169,7 +192,7 @@
 
 
                 <!-- CTA -->
-                <div class="bg-gradient-to-br from-[#7d2ae7] via-[#3969e7] to-[#07b9ce] text-white p-6 rounded-xl">
+                <div class="bg-gradient-to-br from-[#1E6B3D] to-[#3CDA7D] text-white p-6 rounded-xl">
                     <h3 class="font-semibold mb-2">Butuh Konsultasi?</h3>
                     <p class="text-sm mb-4">Hubungi tim kami</p>
 

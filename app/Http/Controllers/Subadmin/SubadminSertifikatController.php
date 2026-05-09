@@ -22,13 +22,25 @@ class SubadminSertifikatController extends Controller
 
     public function index()
     {
-        $sertifikats = Sertifikat::with('pendaftaran.user')->latest()->paginate(15);
+        // Sertifikat scope managed via Pendaftaran relation or Global Scope if needed
+        $sertifikats = Sertifikat::whereHas('pendaftaran', function($q) {
+            $cabang = Auth::user()->admin?->cabang;
+            if ($cabang) $q->where('cabang', $cabang);
+        })->with('pendaftaran.user')->latest()->paginate(15);
+
         return view('subadmin.sertifikat.index', compact('sertifikats'));
     }
 
     public function create($pendaftaran_id)
     {
         $pendaftaran = Pendaftaran::with(['user', 'layanan'])->findOrFail($pendaftaran_id);
+
+        // Alur Sertifikat: "Sertifikat hanya boleh diterbitkan jika status pendaftaran sudah 'Completed' atau 'Lulus'."
+        $allowedStatuses = ['selesai', 'lulus', 'completed'];
+        if (!in_array(strtolower($pendaftaran->status_progres), $allowedStatuses)) {
+            return redirect()->route('subadmin.pendaftaran.show', $pendaftaran_id)
+                ->with('error', 'Sertifikat hanya dapat diterbitkan untuk pendaftaran dengan status Selesai atau Lulus.');
+        }
 
         if ($pendaftaran->sertifikat) {
             return redirect()->route('subadmin.sertifikat.index')
@@ -47,6 +59,12 @@ class SubadminSertifikatController extends Controller
         ]);
 
         $pendaftaran = Pendaftaran::findOrFail($request->pendaftaran_id);
+
+        // Security check for branch
+        if ($pendaftaran->cabang !== Auth::user()->admin?->cabang) {
+            abort(403, 'Anda tidak memiliki akses ke data cabang lain.');
+        }
+
         $noSertifikat = $this->generateNoSertifikat();
 
         Sertifikat::create([
@@ -102,3 +120,4 @@ class SubadminSertifikatController extends Controller
         return sprintf('KV-SUB-K3-%s-%06d', $year, $count);
     }
 }
+

@@ -1,10 +1,10 @@
 @extends('layouts.admin')
-@section('page-title', 'Edit Admin Cabang')
+@section('page-title', 'Edit Subadmin')
 
 @section('content')
 
 <div class="bg-white rounded-xl shadow p-6 max-w-2xl">
-    <form method="POST" action="{{ route('admin.admin-cabang.update', $admin->id) }}">
+    <form method="POST" action="{{ route('admin.subadmin.update', $admin->id) }}">
         @csrf
         @method('PUT')
 
@@ -36,16 +36,17 @@
         </div>
 
         <div class="flex gap-2">
-            <a href="{{ route('admin.admin-cabang.index') }}"
+            <a href="{{ route('admin.subadmin.index') }}"
                class="bg-gray-100 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-200 transition text-sm cursor-pointer">
                 Batal
             </a>
             <button type="submit"
                     class="bg-[#00A8A8] text-white px-4 py-2 rounded-lg hover:opacity-90 transition text-sm font-medium cursor-pointer">
-                Update Admin Cabang
+                Update Subadmin
             </button>
         </div>
     </form>
 </div>
 
 @endsection
+

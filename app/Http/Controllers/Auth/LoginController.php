@@ -66,7 +66,9 @@ class LoginController extends Controller
     {
         $request->session()->regenerate();
 
-        if (Auth::user()->status === 'nonaktif') {
+        $user = Auth::user();
+
+        if ($user->status === 'nonaktif') {
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
@@ -75,11 +77,15 @@ class LoginController extends Controller
             ])->onlyInput('login');
         }
 
-        if (Auth::user()->isSubadmin()) {
-            return redirect()->intended('/subadmin/dashboard');
+        if ($user->isSubadmin()) {
+            return redirect('/subadmin/dashboard');
         }
 
-        return redirect()->intended('/admin');
+        if ($user->isSuperAdmin()) {
+            return redirect('/admin');
+        }
+
+        return redirect('/');
     }
 
     /**

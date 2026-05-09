@@ -1,4 +1,4 @@
-@extends('layouts.admin-cabang')
+@extends('layouts.subadmin')
 
 @section('title', 'Edit Klien')
 @section('page-title', 'Edit Data Klien')
@@ -7,7 +7,7 @@
 <div class="bg-white rounded-3xl border border-slate-100 p-8 shadow-sm max-w-xl select-none">
     <h3 class="text-lg font-black text-slate-900 tracking-tight mb-6">Ubah Formulir Klien</h3>
 
-    <form method="POST" action="{{ route('admin-cabang.klien.update', $klien->id) }}">
+    <form method="POST" action="{{ route('subadmin.klien.update', $klien->id) }}">
         @csrf
         @method('PUT')
 
@@ -31,7 +31,7 @@
                 <button type="submit" class="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white font-extrabold text-sm px-6 py-3.5 rounded-xl shadow-lg transition">
                     Perbarui Klien
                 </button>
-                <a href="{{ route('admin-cabang.klien.index') }}" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm px-6 py-3.5 rounded-xl transition">
+                <a href="{{ route('subadmin.klien.index') }}" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm px-6 py-3.5 rounded-xl transition">
                     Batal
                 </a>
             </div>
@@ -39,3 +39,5 @@
     </form>
 </div>
 @endsection
+
+

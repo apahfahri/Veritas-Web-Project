@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Admin') — Katiga Veritas</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <title>@yield('title', 'Admin') | PT Katiga Veritas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="module" src="http://localhost:5173/resources/js/app.js"></script>
     <style>
         body { font-family: 'Outfit', sans-serif; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }

@@ -1,4 +1,4 @@
-<footer class="bg-[#7d2ae7] text-white">
+<footer class="bg-[#1E6B3D] text-white">
     <div class="max-w-7xl mx-auto px-6 py-12">
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -6,7 +6,7 @@
             <!-- COMPANY -->
             <div>
                 <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 bg-[#7d2ae7] rounded-lg flex items-center justify-center text-white">
+                    <div class="w-10 h-10 bg-[#1E6B3D] rounded-lg flex items-center justify-center text-white">
                         🛡️
                     </div>
                     <div>
@@ -96,7 +96,7 @@
                 <h4 class="font-semibold mb-4">Ikuti Kami</h4>
 
                 <div class="flex gap-3">
-                    <a href="#" class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition">
+                    <a href="https://www.facebook.com/profile.php?id=100012661807050" class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition">
                         FB
                     </a>
                     <a href="#" class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition">

@@ -1,6 +1,6 @@
 @if(session('success'))
-<div id="success-modal" class="fixed inset-0 z-[9999] flex items-center justify-center bg-[#7d2ae7]/20 backdrop-blur-md transition-opacity duration-500">
-    <div class="bg-white rounded-[2rem] p-10 max-w-sm w-full mx-6 shadow-[0_20px_50px_rgba(125,42,231,0.3)] transform transition-all duration-500 scale-90 opacity-0" id="success-content">
+<div id="success-modal" class="fixed inset-0 z-[9999] flex items-center justify-center bg-[#1E6B3D]/20 backdrop-blur-md transition-opacity duration-500">
+    <div class="bg-white rounded-[2rem] p-10 max-w-sm w-full mx-6 shadow-[0_20px_50px_rgba(30,107,61,0.3)] transform transition-all duration-500 scale-90 opacity-0" id="success-content">
         <div class="flex flex-col items-center text-center">
             
             {{-- Checkmark Wrapper --}}
@@ -16,12 +16,12 @@
                 </div>
             </div>
 
-            <h3 class="text-3xl font-black text-[#7d2ae7] mb-3 tracking-tight">Berhasil!</h3>
+            <h3 class="text-3xl font-black text-[#1E6B3D] mb-3 tracking-tight">Berhasil!</h3>
             <p class="text-gray-500 leading-relaxed mb-8 px-2">{{ session('success') }}</p>
             
-            <button onclick="closeSuccessModal()" class="group relative w-full overflow-hidden bg-[#7d2ae7] text-white font-bold py-4 rounded-2xl transition-all hover:shadow-[0_10px_20px_rgba(125,42,231,0.4)] active:scale-95">
+            <button onclick="closeSuccessModal()" class="group relative w-full overflow-hidden bg-[#1E6B3D] text-white font-bold py-4 rounded-2xl transition-all hover:shadow-[0_10px_20px_rgba(30,107,61,0.4)] active:scale-95">
                 <span class="relative z-10">Lanjutkan</span>
-                <div class="absolute inset-0 bg-gradient-to-r from-[#7d2ae7] via-[#3969e7] to-[#07b9ce] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-[#1E6B3D] to-[#3CDA7D] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </button>
         </div>
     </div>

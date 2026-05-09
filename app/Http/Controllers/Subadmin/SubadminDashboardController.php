@@ -6,11 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Pendaftaran;
 use App\Models\User;
 use App\Models\Sertifikat;
-use App\Models\Layanan;
-use App\Models\Pemateri;
+use App\Models\Jadwal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class SubadminDashboardController extends Controller
 {
@@ -18,7 +18,7 @@ class SubadminDashboardController extends Controller
     {
         $this->middleware(function ($request, $next) {
             if (!Auth::check() || !Auth::user()->isSubadmin()) {
-                abort(403, 'Akses ditolak. Halaman khusus Subadmin.');
+                abort(403, 'Akses ditolak.');
             }
             return $next($request);
         });
@@ -27,42 +27,77 @@ class SubadminDashboardController extends Controller
     public function index(Request $request)
     {
         $selectedYear = $request->get('year', date('Y'));
+        $selectedMonth = $request->get('month', null); 
+        $cabang = Auth::user()->cabang;
         
-        // Stats
-        $totalPendaftaran = Pendaftaran::count();
-        $totalUser = User::count();
-        $totalSertifikat = Sertifikat::count();
-        $totalLayanan = Layanan::count();
+        // Stats by Category (Pelatihan: 1, Konsultasi: 2, Audit: 3)
+        $stats = Pendaftaran::join('layanan', 'pendaftaran.id_layanan', '=', 'layanan.id_layanan')
+            ->select('layanan.id_kategori', DB::raw('count(*) as total'))
+            ->groupBy('layanan.id_kategori')
+            ->pluck('total', 'id_kategori');
 
-        // Chart Data (Monthly registrations)
-        $chartData = Pendaftaran::whereYear('tanggal_daftar', $selectedYear)
-            ->select(DB::raw('MONTH(tanggal_daftar) as label'), DB::raw('count(*) as count'))
-            ->groupBy('label')
-            ->pluck('count', 'label')
-            ->toArray();
+        $totalPelatihan = $stats[1] ?? 0;
+        $totalKonsultasi = $stats[2] ?? 0;
+        $totalAudit = $stats[3] ?? 0;
 
-        $chartLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-        $chartCounts = array_fill(1, 12, 0);
-        foreach ($chartData as $month => $count) {
-            $chartCounts[$month] = $count;
+        $totalSertifikat = Sertifikat::whereHas('pendaftaran', function($q) use ($cabang) {
+            if ($cabang) $q->where('cabang', $cabang);
+        })->count();
+
+        // Multi-Series Chart Data
+        $categories = [1 => 'Pelatihan', 2 => 'Konsultasi', 3 => 'Audit'];
+        $series = [];
+
+        foreach ($categories as $catId => $catName) {
+            if ($selectedMonth) {
+                $daysInMonth = Carbon::createFromDate($selectedYear, $selectedMonth)->daysInMonth;
+                $chartLabels = range(1, $daysInMonth);
+                
+                $data = Pendaftaran::whereYear('tanggal_daftar', $selectedYear)
+                    ->whereMonth('tanggal_daftar', $selectedMonth)
+                    ->whereHas('layanan', function($q) use ($catId) { $q->where('id_kategori', $catId); })
+                    ->select(DB::raw('DAY(tanggal_daftar) as label'), DB::raw('count(*) as count'))
+                    ->groupBy('label')
+                    ->pluck('count', 'label')
+                    ->toArray();
+                
+                $counts = array_fill(1, $daysInMonth, 0);
+            } else {
+                $chartLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                $data = Pendaftaran::whereYear('tanggal_daftar', $selectedYear)
+                    ->whereHas('layanan', function($q) use ($catId) { $q->where('id_kategori', $catId); })
+                    ->select(DB::raw('MONTH(tanggal_daftar) as label'), DB::raw('count(*) as count'))
+                    ->groupBy('label')
+                    ->pluck('count', 'label')
+                    ->toArray();
+                
+                $counts = array_fill(1, 12, 0);
+            }
+
+            foreach ($data as $key => $count) {
+                $counts[$key] = $count;
+            }
+            $series[] = [
+                'name' => $catName,
+                'data' => array_values($counts)
+            ];
         }
-        $chartCounts = array_values($chartCounts);
 
-        // Latest registrations
         $latestPendaftarans = Pendaftaran::with(['user', 'layanan'])
             ->latest()
-            ->take(5)
+            ->take(6)
             ->get();
 
         return view('subadmin.dashboard', compact(
-            'totalPendaftaran',
-            'totalUser',
+            'totalPelatihan',
+            'totalKonsultasi',
+            'totalAudit',
             'totalSertifikat',
-            'totalLayanan',
-            'chartCounts',
+            'series',
             'chartLabels',
             'latestPendaftarans',
-            'selectedYear'
+            'selectedYear',
+            'selectedMonth'
         ));
     }
 }

@@ -19,6 +19,7 @@ class Admin extends Authenticatable
         'no_telp',
         'role',
         'status',
+        'cabang',
     ];
 
     protected $hidden = [

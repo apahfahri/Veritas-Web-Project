@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class Pendaftaran extends Model
 {
@@ -14,25 +16,37 @@ class Pendaftaran extends Model
 
     protected $fillable = [
         'id_layanan',
+        'id_jadwal',
         'id_admin',
         'id_user',
+        'is_utusan_perusahaan',
+        'id_perusahaan',
         'tanggal_daftar',
         'rencana_tanggal_mulai',
         'rencana_tanggal_selesai',
         'mode_pertemuan',
         'status_progres',
         'status_bayar',
+        'cabang',
+        'last_reminder_details',
+        'last_reminder_sent_at',
     ];
 
     protected $casts = [
         'tanggal_daftar'          => 'date',
         'rencana_tanggal_mulai'   => 'date',
         'rencana_tanggal_selesai' => 'date',
+        'last_reminder_sent_at'   => 'datetime',
     ];
 
     public function layanan()
     {
         return $this->belongsTo(Layanan::class, 'id_layanan', 'id_layanan');
+    }
+
+    public function jadwal()
+    {
+        return $this->belongsTo(Jadwal::class, 'id_jadwal', 'id_jadwal');
     }
 
     public function admin()
@@ -43,6 +57,11 @@ class Pendaftaran extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'id_user', 'id_user');
+    }
+
+    public function perusahaan()
+    {
+        return $this->belongsTo(Perusahaan::class, 'id_perusahaan', 'id_perusahaan');
     }
 
     public function sertifikat()

@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             LayananPemateriSeeder::class,
             PendaftaranSeeder::class,
             SertifikatSeeder::class,
+            KlienIndividuSeeder::class,
         ]);
     }
 }
