@@ -69,7 +69,7 @@
 
             <a href="{{ route('admin.pelatihan.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.pelatihan.*') ? 'active' : '' }}">
-                🎓 Layanan
+                🎓 Jadwal Layanan
             </a>
 
             <a href="{{ route('admin.petugas.index') }}"
