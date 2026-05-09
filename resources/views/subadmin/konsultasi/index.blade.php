@@ -38,7 +38,7 @@
                         @endif
                     </td>
                     <td class="p-4 text-right">
-                        <a href="{{ route('subadmin.konsultasi.show', $k->id_layanan) }}" class="bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-black uppercase tracking-[0.1em] px-4 py-2 rounded-lg shadow-sm transition opacity-0 group-hover:opacity-100">
+                        <a href="{{ route('subadmin.konsultasi.show', $k->id_layanan) }}" class="bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-black uppercase tracking-[0.1em] px-4 py-2 rounded-lg shadow-sm transition">
                             Kelola Order
                         </a>
                     </td>

@@ -28,12 +28,15 @@ class Pendaftaran extends Model
         'status_progres',
         'status_bayar',
         'cabang',
+        'last_reminder_details',
+        'last_reminder_sent_at',
     ];
 
     protected $casts = [
         'tanggal_daftar'          => 'date',
         'rencana_tanggal_mulai'   => 'date',
         'rencana_tanggal_selesai' => 'date',
+        'last_reminder_sent_at'   => 'datetime',
     ];
 
     public function layanan()

@@ -3,14 +3,15 @@
 @section('page-title', 'Overview Subadmin ' . strtoupper(Auth::user()->admin?->cabang))
 
 @section('header-actions')
-<a href="{{ route('subadmin.pendaftaran.export-pdf', ['year' => $selectedYear, 'month' => $selectedMonth]) }}" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-black uppercase tracking-wider px-5 py-3 rounded-xl transition-all shadow-lg shadow-indigo-600/20 flex items-center gap-2 group">
-    <svg class="w-4 h-4 group-hover:animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-    Export Laporan PDF
-</a>
+<button onclick="exportDashboardAsPNG()" class="bg-cyan-600 hover:bg-cyan-700 text-white text-[11px] font-black uppercase tracking-wider px-5 py-3 rounded-xl transition-all shadow-lg shadow-cyan-600/20 flex items-center gap-2 group">
+    <svg class="w-4 h-4 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+    Export Dashboard (PNG)
+</button>
 @endsection
 
 @section('content')
-<!-- Stats Grid -->
+<div id="dashboard-capture" class="p-2">
+    <!-- Stats Grid -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
     <!-- Stat Card: Pelatihan -->
     <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-4 hover:shadow-md transition group">
@@ -135,6 +136,7 @@
         @endif
     </div>
 </div>
+</div>
 
 @push('scripts')
 <script>
@@ -201,6 +203,40 @@
         var chart = new ApexCharts(document.querySelector("#pendaftaranChart"), options);
         chart.render();
     });
+
+    function exportDashboardAsPNG() {
+        const element = document.getElementById('dashboard-capture');
+        const btn = event.currentTarget;
+        const originalText = btn.innerHTML;
+        
+        btn.disabled = true;
+        btn.innerHTML = '<svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Memproses...';
+
+        html2canvas(element, {
+            scale: 2, // High quality
+            useCORS: true,
+            backgroundColor: '#f8fafc', // Match dashboard background
+            logging: false,
+            onclone: (clonedDoc) => {
+                // Ensure charts are rendered in clone
+                clonedDoc.getElementById('dashboard-capture').style.padding = '20px';
+            }
+        }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'Dashboard-Veritas-' + new Date().toISOString().slice(0,10) + '.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }).catch(err => {
+            console.error('Export failed:', err);
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+            alert('Gagal mengekspor dashboard. Silakan coba lagi.');
+        });
+    }
 </script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 @endpush
 @endsection

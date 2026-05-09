@@ -66,7 +66,7 @@
                         </span>
                     </td>
                     <td class="px-6 py-5 text-right">
-                        <a href="{{ route('subadmin.pendaftaran.show', $p->id_pendaftaran) }}" class="p-2 text-slate-400 hover:text-cyan-600 transition">
+                        <a href="{{ route('subadmin.pendaftaran.show', ['id' => $p->id_pendaftaran, 'context' => 'konsultasi']) }}" class="p-2 text-slate-400 hover:text-cyan-600 transition">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                         </a>
                     </td>

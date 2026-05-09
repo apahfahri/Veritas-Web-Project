@@ -132,7 +132,6 @@ Route::middleware(['auth', 'is.subadmin'])->prefix('subadmin')->name('subadmin.'
     Route::delete('/pendaftaran/{id}', [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'destroy'])->name('pendaftaran.destroy');
     Route::post('/pendaftaran/{id}/update-note', [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'updateNote'])->name('pendaftaran.update-note');
     Route::get('/pendaftaran-export/excel', [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'exportExcel'])->name('pendaftaran.export-excel');
-    Route::get('/pendaftaran-export/pdf', [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'exportPdf'])->name('pendaftaran.export-pdf');
 
     // Jadwal
     Route::resource('jadwal', \App\Http\Controllers\Subadmin\SubadminJadwalController::class);

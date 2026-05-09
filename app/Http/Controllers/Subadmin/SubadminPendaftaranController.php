@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Notifications\PendaftaranStatusNotification;
 use App\Exports\PendaftaranExport;
 use Maatwebsite\Excel\Facades\Excel;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class SubadminPendaftaranController extends Controller
 {
@@ -77,7 +76,7 @@ class SubadminPendaftaranController extends Controller
             }
         }
 
-        return redirect()->route('subadmin.pendaftaran.index')
+        return redirect()->route('subadmin.pendaftaran.show', ['id' => $id, 'context' => $request->query('context')])
             ->with('success', 'Status pendaftaran berhasil diperbarui dan notifikasi telah dikirim.');
     }
 
@@ -91,25 +90,7 @@ class SubadminPendaftaranController extends Controller
         return Excel::download(new PendaftaranExport($filters), 'laporan-pendaftaran-' . now()->format('Ymd') . '.xlsx');
     }
 
-    public function exportPdf(Request $request)
-    {
-        $filters = [
-            'year' => $request->year ?? date('Y'),
-            'month' => $request->month
-        ];
 
-        $query = Pendaftaran::with(['user', 'layanan']);
-        if ($filters['year']) $query->whereYear('tanggal_daftar', $filters['year']);
-        if ($filters['month']) $query->whereMonth('tanggal_daftar', $filters['month']);
-        
-        $pendaftarans = $query->get();
-        $cabang = Auth::user()->cabang ?? 'Pusat';
-
-        $pdf = Pdf::loadView('subadmin.pendaftaran.export_pdf', compact('pendaftarans', 'filters', 'cabang'))
-                  ->setPaper('a4', 'landscape');
-
-        return $pdf->download('laporan-pendaftaran-' . now()->format('Ymd') . '.pdf');
-    }
 
     public function destroy($id)
     {
@@ -133,7 +114,7 @@ class SubadminPendaftaranController extends Controller
             'last_reminder_details' => $request->admin_note, // Still using same column for note text
         ]);
 
-        return redirect()->route('subadmin.pendaftaran.show', $id)
+        return redirect()->route('subadmin.pendaftaran.show', ['id' => $id, 'context' => $request->query('context')])
             ->with('success', 'Catatan internal admin berhasil diperbarui.');
     }
 }

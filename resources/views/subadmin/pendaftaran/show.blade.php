@@ -73,7 +73,7 @@
         <div class="bg-white rounded-3xl border border-slate-100 p-8 shadow-sm">
             <h3 class="text-lg font-black text-slate-900 tracking-tight mb-6">Status Pendaftaran</h3>
 
-            <form method="POST" action="{{ route('subadmin.pendaftaran.update', $pendaftaran->id_pendaftaran) }}">
+            <form method="POST" action="{{ route('subadmin.pendaftaran.update', ['id' => $pendaftaran->id_pendaftaran, 'context' => request('context')]) }}">
                 @csrf
                 @method('PUT')
 
@@ -120,7 +120,7 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('subadmin.pendaftaran.update-note', $pendaftaran->id_pendaftaran) }}">
+            <form method="POST" action="{{ route('subadmin.pendaftaran.update-note', ['id' => $pendaftaran->id_pendaftaran, 'context' => request('context')]) }}">
                 @csrf
                 <textarea name="admin_note" rows="4" placeholder="Tulis catatan penting di sini..." required class="w-full bg-slate-50 border border-slate-100 rounded-2xl px-4 py-3.5 text-sm font-medium outline-none focus:ring-4 focus:ring-amber-500/10 transition mb-4"></textarea>
                 
@@ -130,8 +130,15 @@
             </form>
         </div>
 
-        <a href="{{ route('subadmin.pendaftaran.index') }}" class="w-full block text-center bg-slate-100 hover:bg-slate-200 text-slate-600 font-black text-xs px-6 py-4 rounded-2xl transition">
-            Kembali ke Daftar
+        @php
+            $backRoute = route('subadmin.pendaftaran.index');
+            $context = request('context');
+            if ($context == 'pelatihan') $backRoute = route('subadmin.pelatihan.index');
+            elseif ($context == 'konsultasi') $backRoute = route('subadmin.konsultasi.index');
+            elseif ($context == 'audit') $backRoute = route('subadmin.audit.index');
+        @endphp
+        <a href="{{ $backRoute }}" class="w-full block text-center bg-slate-100 hover:bg-slate-200 text-slate-600 font-black text-xs px-6 py-4 rounded-2xl transition">
+            Kembali
         </a>
     </div>
 </div>
