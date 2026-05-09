@@ -67,4 +67,22 @@ class SubadminPendaftaranController extends Controller
         return redirect()->route('subadmin.pendaftaran.index')
             ->with('success', 'Pendaftaran berhasil dihapus.');
     }
+
+    public function sendReminder(Request $request, $id)
+    {
+        $pendaftaran = Pendaftaran::findOrFail($id);
+
+        $request->validate([
+            'pesan_reminder' => 'required|string',
+        ]);
+
+        $pendaftaran->update([
+            'last_reminder_sent_at' => now(),
+            'last_reminder_details' => $request->pesan_reminder,
+        ]);
+
+        return redirect()->route('subadmin.pendaftaran.show', $id)
+            ->with('success', 'Catatan pengiriman reminder berhasil disimpan.');
+    }
 }
+

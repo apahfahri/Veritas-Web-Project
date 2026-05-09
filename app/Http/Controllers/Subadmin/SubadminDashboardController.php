@@ -7,7 +7,7 @@ use App\Models\Pendaftaran;
 use App\Models\User;
 use App\Models\Sertifikat;
 use App\Models\Layanan;
-use App\Models\Pemateri;
+use App\Models\Jadwal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +18,7 @@ class SubadminDashboardController extends Controller
     {
         $this->middleware(function ($request, $next) {
             if (!Auth::check() || !Auth::user()->isSubadmin()) {
-                abort(403, 'Akses ditolak. Halaman khusus Subadmin.');
+                abort(403, 'Akses ditolak.');
             }
             return $next($request);
         });
@@ -27,14 +27,26 @@ class SubadminDashboardController extends Controller
     public function index(Request $request)
     {
         $selectedYear = $request->get('year', date('Y'));
+        $cabang = Auth::user()->admin?->cabang;
         
-        // Stats
+        // Stats (Global Scopes handle branch isolation)
         $totalPendaftaran = Pendaftaran::count();
-        $totalUser = User::count();
-        $totalSertifikat = Sertifikat::count();
-        $totalLayanan = Layanan::count();
+        $totalUser = User::whereHas('klien', function($q) use ($cabang) {
+            if ($cabang) $q->where('cabang', $cabang);
+        })->count();
+        
+        $totalSertifikat = Sertifikat::whereHas('pendaftaran', function($q) use ($cabang) {
+            if ($cabang) $q->where('cabang', $cabang);
+        })->count();
+        
+        $totalJadwal = Jadwal::count();
 
-        // Chart Data (Monthly registrations)
+        // Passing Ratio Calculation
+        $passingRatio = $totalPendaftaran > 0 
+            ? round(($totalSertifikat / $totalPendaftaran) * 100, 1) 
+            : 0;
+
+        // Chart Data: Monthly registrations (Branch Specific)
         $chartData = Pendaftaran::whereYear('tanggal_daftar', $selectedYear)
             ->select(DB::raw('MONTH(tanggal_daftar) as label'), DB::raw('count(*) as count'))
             ->groupBy('label')
@@ -58,7 +70,8 @@ class SubadminDashboardController extends Controller
             'totalPendaftaran',
             'totalUser',
             'totalSertifikat',
-            'totalLayanan',
+            'totalJadwal',
+            'passingRatio',
             'chartCounts',
             'chartLabels',
             'latestPendaftarans',

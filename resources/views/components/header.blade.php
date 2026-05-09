@@ -64,7 +64,7 @@
                         <div id="profile-dropdown" class="absolute right-0 mt-3 w-60 bg-white rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] border border-gray-100 py-2 hidden z-50 overflow-hidden">
                             
                             <div class="p-2">
-                                <a href="{{ Auth::user()->isSubadmin() ? route('subadmin.dashboard') : route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-xl transition-all group/item">
+                                <a href="{{ Auth::user()->isSubadmin() ? route('admin-cabang.dashboard') : route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-xl transition-all group/item">
                                     <span class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-xl group-hover/item:bg-[#7d2ae7]/10 group-hover/item:text-[#7d2ae7] transition-all text-lg">📊</span>
                                     <div class="flex flex-col">
                                         <span class="font-bold">Dashboard Admin</span>

@@ -7,20 +7,22 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
-class KlienIndividu extends Model
+class Jadwal extends Model
 {
     use HasFactory;
 
-    protected $table = 'klien_individu';
+    protected $table = 'jadwal';
+    protected $primaryKey = 'id_jadwal';
 
     protected $fillable = [
-        'user_id',
-        'nik',
-        'nama_lengkap',
-        'no_hp',
-        'id_perusahaan',
-        'jabatan',
+        'id_layanan',
+        'tanggal',
+        'jam_mulai',
+        'jam_selesai',
+        'lokasi',
+        'kuota',
         'cabang',
+        'status',
     ];
 
     /**
@@ -32,19 +34,19 @@ class KlienIndividu extends Model
             if (Auth::check() && Auth::user()->isSubadmin()) {
                 $cabang = Auth::user()->admin?->cabang;
                 if ($cabang) {
-                    $builder->where('klien_individu.cabang', $cabang);
+                    $builder->where('jadwal.cabang', $cabang);
                 }
             }
         });
     }
 
-    public function user()
+    public function layanan()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id_user');
+        return $this->belongsTo(Layanan::class, 'id_layanan', 'id_layanan');
     }
 
-    public function perusahaan()
+    public function pendaftarans()
     {
-        return $this->belongsTo(Perusahaan::class, 'id_perusahaan', 'id_perusahaan');
+        return $this->hasMany(Pendaftaran::class, 'id_jadwal', 'id_jadwal');
     }
 }

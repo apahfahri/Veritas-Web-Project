@@ -1,4 +1,4 @@
-@extends('layouts.admin-cabang')
+@extends('layouts.subadmin')
 
 @section('title', 'Sertifikat Cabang')
 @section('page-title', 'Daftar Sertifikat Terbit')
@@ -33,10 +33,10 @@
                         {{ $s->tanggal_terbit ? $s->tanggal_terbit->format('d M Y') : '-' }}
                     </td>
                     <td class="p-4 text-sm font-medium flex items-center gap-2">
-                        <a href="{{ route('admin-cabang.sertifikat.edit', $s->no_sertifikat) }}" class="bg-cyan-50 hover:bg-cyan-100 text-cyan-600 px-3.5 py-1.5 rounded-xl text-xs font-black transition">
+                        <a href="{{ route('subadmin.sertifikat.edit', $s->no_sertifikat) }}" class="bg-cyan-50 hover:bg-cyan-100 text-cyan-600 px-3.5 py-1.5 rounded-xl text-xs font-black transition">
                             Edit
                         </a>
-                        <form action="{{ route('admin-cabang.sertifikat.destroy', $s->no_sertifikat) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus sertifikat ini?')">
+                        <form action="{{ route('subadmin.sertifikat.destroy', $s->no_sertifikat) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus sertifikat ini?')">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="bg-red-50 hover:bg-red-100 text-red-600 px-3.5 py-1.5 rounded-xl text-xs font-black transition">Hapus</button>
@@ -57,3 +57,5 @@
     </div>
 </div>
 @endsection
+
+

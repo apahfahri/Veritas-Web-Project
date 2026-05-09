@@ -29,4 +29,9 @@ class Perusahaan extends Model
     {
         return $this->hasMany(KlienPerusahaan::class, 'id_perusahaan', 'id_perusahaan');
     }
+
+    public function pendaftarans()
+    {
+        return $this->hasMany(Pendaftaran::class, 'id_perusahaan', 'id_perusahaan');
+    }
 }

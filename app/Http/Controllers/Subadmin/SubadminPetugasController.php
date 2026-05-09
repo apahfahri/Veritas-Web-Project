@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Pemateri;
 use Illuminate\Support\Facades\Auth;
 
-class SubadminPemateriController extends Controller
+class SubadminPetugasController extends Controller
 {
     public function __construct()
     {

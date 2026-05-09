@@ -1,7 +1,7 @@
-@extends('layouts.admin-cabang')
+@extends('layouts.subadmin')
 
 @section('title', 'Detail & Konfirmasi Pendaftaran')
-@section('page-title', 'Konfirmasi Pendaftaran #' . $pendaftaran->id)
+@section('page-title', 'Konfirmasi Pendaftaran #' . $pendaftaran->id_pendaftaran)
 
 @section('content')
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 select-none">
@@ -51,7 +51,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('admin-cabang.pendaftaran.send-reminder', $pendaftaran->id) }}">
+        <form method="POST" action="{{ route('subadmin.pendaftaran.send-reminder', $pendaftaran->id_pendaftaran) }}">
             @csrf
             <div>
                 <label class="text-xs font-extrabold text-slate-600 uppercase tracking-wider block mb-2">Catat Pengiriman Reminder Hari Ini</label>
@@ -76,7 +76,7 @@
     <div class="bg-white rounded-3xl border border-slate-100 p-8 shadow-sm h-fit">
         <h3 class="text-lg font-black text-slate-900 tracking-tight mb-4">Aksi Verifikasi</h3>
 
-        <form method="POST" action="{{ route('admin-cabang.pendaftaran.update', $pendaftaran->id) }}">
+        <form method="POST" action="{{ route('subadmin.pendaftaran.update', $pendaftaran->id_pendaftaran) }}">
             @csrf
             @method('PUT')
 
@@ -111,7 +111,7 @@
                     Simpan Perubahan
                 </button>
 
-                <a href="{{ route('admin-cabang.pendaftaran.index') }}" class="w-full block text-center bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm px-6 py-3.5 rounded-xl transition">
+                <a href="{{ route('subadmin.pendaftaran.index') }}" class="w-full block text-center bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm px-6 py-3.5 rounded-xl transition">
                     Kembali
                 </a>
             </div>
@@ -119,3 +119,5 @@
     </div>
 </div>
 @endsection
+
+

@@ -1,4 +1,4 @@
-@extends('layouts.admin-cabang')
+@extends('layouts.subadmin')
 
 @section('title', 'Pelatihan')
 @section('page-title', 'Daftar Pelatihan (Read-only)')
@@ -16,40 +16,51 @@
         <table class="w-full text-left border-collapse">
             <thead>
                 <tr class="bg-slate-50 border-b border-slate-100/80">
+                    <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider">Nama Pelatihan</th>
                     <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider">Materi</th>
-                    <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider">Layanan</th>
-                    <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider">Petugas</th>
-                    <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider">Jenis Pertemuan</th>
-                    <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider">Tanggal</th>
+                    <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider">Pemateri</th>
+                    <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider">Jenis</th>
+                    <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider text-right">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-50">
                 @forelse($pelatihans as $p)
-                <tr class="hover:bg-slate-50/60 transition">
-                    <td class="p-4 text-sm font-bold text-slate-900">{{ $p->materi }}</td>
-                    <td class="p-4 text-sm font-bold text-slate-800">{{ $p->layanan?->nama }}</td>
-                    <td class="p-4 text-sm font-medium text-slate-600">{{ $p->petugas?->nama ?? '-' }}</td>
-                    <td class="p-4 text-sm font-semibold">
+                <tr class="hover:bg-slate-50/60 transition group">
+                    <td class="p-4">
+                        <div class="text-sm font-bold text-slate-900">{{ $p->nama }}</div>
+                        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{{ $p->kategori?->nama_kategori }}</div>
+                    </td>
+                    <td class="p-4 text-sm font-medium text-slate-600">{{ $p->materi }}</td>
+                    <td class="p-4">
+                        @forelse($p->pemateri as $pemateri)
+                            <span class="inline-block bg-slate-100 text-slate-600 text-[10px] px-2 py-0.5 rounded-md font-bold mr-1">{{ $pemateri->nama_lengkap }}</span>
+                        @empty
+                            <span class="text-xs text-slate-400">-</span>
+                        @endforelse
+                    </td>
+                    <td class="p-4">
                         @if($p->jenis_pertemuan == 'online')
-                            <span class="text-xs bg-cyan-100 text-cyan-800 px-2.5 py-1 rounded-full font-bold">Online</span>
+                            <span class="text-[10px] bg-cyan-50 text-cyan-600 border border-cyan-100 px-2.5 py-1 rounded-full font-black uppercase tracking-wider">Online</span>
                         @else
-                            <span class="text-xs bg-slate-100 text-slate-800 px-2.5 py-1 rounded-full font-bold">Offline</span>
+                            <span class="text-[10px] bg-indigo-50 text-indigo-600 border border-indigo-100 px-2.5 py-1 rounded-full font-black uppercase tracking-wider">Offline</span>
                         @endif
                     </td>
-                    <td class="p-4 text-sm font-medium text-slate-600">
-                        {{ $p->tanggal_pertemuan ? \Carbon\Carbon::parse($p->tanggal_pertemuan)->format('d M Y') : '-' }}
+                    <td class="p-4 text-right">
+                        <a href="{{ route('subadmin.pelatihan.show', $p->id_layanan) }}" class="bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-black uppercase tracking-[0.1em] px-4 py-2 rounded-lg shadow-sm transition opacity-0 group-hover:opacity-100">
+                            Kelola Peserta
+                        </a>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="p-4 text-center text-sm font-medium text-slate-500">Belum ada pelatihan.</td>
+                    <td colspan="5" class="p-12 text-center text-sm font-medium text-slate-400">Belum ada data pelatihan tersedia.</td>
                 </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
 
-    <div class="mt-6">
+    <div class="mt-8">
         {{ $pelatihans->links() }}
     </div>
 </div>

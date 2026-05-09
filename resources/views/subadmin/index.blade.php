@@ -6,7 +6,7 @@
 
 <div class="flex justify-between items-center mb-6">
     <h2 class="text-xl font-semibold text-[#0A2540]">Daftar Admin Cabang ({{ $admins->total() }})</h2>
-    <a href="{{ route('admin.admin-cabang.create') }}"
+    <a href="{{ route('admin.subadmin.create') }}"
        class="bg-[#00A8A8] text-white px-4 py-2 rounded-lg hover:opacity-90 transition text-sm">
         ➕ Tambah Admin
     </a>
@@ -38,11 +38,11 @@
                 </td>
                 <td class="p-4">
                     <div class="flex gap-2">
-                        <a href="{{ route('admin.admin-cabang.edit', $a->id) }}"
+                        <a href="{{ route('admin.subadmin.edit', $a->id) }}"
                            class="border border-[#00A8A8] text-[#00A8A8] px-3 py-1 rounded text-xs hover:bg-[#00A8A8] hover:text-white transition">
                             Edit
                         </a>
-                        <form method="POST" action="{{ route('admin.admin-cabang.destroy', $a->id) }}"
+                        <form method="POST" action="{{ route('admin.subadmin.destroy', $a->id) }}"
                               onsubmit="return confirm('Hapus admin {{ $a->user->username }}?')">
                             @csrf @method('DELETE')
                             <button type="submit"
@@ -64,3 +64,4 @@
 </div>
 
 @endsection
+
