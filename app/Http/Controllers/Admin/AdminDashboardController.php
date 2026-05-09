@@ -29,6 +29,23 @@ class AdminDashboardController extends Controller
             ->take(8)
             ->get();
 
-        return view('admin.dashboard', compact('stats', 'pendaftaranTerbaru'));
+        // Chart Data: Monthly registration for current year
+        $year = date('Y');
+        $chartData = Pendaftaran::whereYear('created_at', $year)
+            ->selectRaw('MONTH(created_at) as month, count(*) as count')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get()
+            ->pluck('count', 'month')
+            ->toArray();
+
+        $chartCounts = [];
+        $chartLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        
+        for ($i = 1; $i <= 12; $i++) {
+            $chartCounts[] = $chartData[$i] ?? 0;
+        }
+
+        return view('admin.dashboard', compact('stats', 'pendaftaranTerbaru', 'chartCounts', 'chartLabels'));
     }
 }
