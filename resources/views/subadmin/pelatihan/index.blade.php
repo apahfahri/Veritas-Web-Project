@@ -28,7 +28,7 @@
                 <tr class="hover:bg-slate-50/60 transition group">
                     <td class="p-4">
                         <div class="text-sm font-bold text-slate-900">{{ $p->nama }}</div>
-                        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{{ $p->kategori?->nama_kategori }}</div>
+                        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{{ $p->kategori?->nama }}</div>
                     </td>
                     <td class="p-4 text-sm font-medium text-slate-600">{{ $p->materi }}</td>
                     <td class="p-4">

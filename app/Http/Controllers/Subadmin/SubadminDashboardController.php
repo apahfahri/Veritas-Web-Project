@@ -6,11 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Pendaftaran;
 use App\Models\User;
 use App\Models\Sertifikat;
-use App\Models\Layanan;
 use App\Models\Jadwal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class SubadminDashboardController extends Controller
 {
@@ -27,55 +27,65 @@ class SubadminDashboardController extends Controller
     public function index(Request $request)
     {
         $selectedYear = $request->get('year', date('Y'));
+        $selectedMonth = $request->get('month', null); // Jika null, tampilkan per bulan
         $cabang = Auth::user()->admin?->cabang;
         
-        // Stats (Global Scopes handle branch isolation)
+        // Stats
         $totalPendaftaran = Pendaftaran::count();
-        $totalUser = User::whereHas('klien', function($q) use ($cabang) {
-            if ($cabang) $q->where('cabang', $cabang);
-        })->count();
-        
         $totalSertifikat = Sertifikat::whereHas('pendaftaran', function($q) use ($cabang) {
             if ($cabang) $q->where('cabang', $cabang);
         })->count();
         
-        $totalJadwal = Jadwal::count();
-
-        // Passing Ratio Calculation
         $passingRatio = $totalPendaftaran > 0 
             ? round(($totalSertifikat / $totalPendaftaran) * 100, 1) 
             : 0;
 
-        // Chart Data: Monthly registrations (Branch Specific)
-        $chartData = Pendaftaran::whereYear('tanggal_daftar', $selectedYear)
-            ->select(DB::raw('MONTH(tanggal_daftar) as label'), DB::raw('count(*) as count'))
-            ->groupBy('label')
-            ->pluck('count', 'label')
-            ->toArray();
+        // Chart Data
+        if ($selectedMonth) {
+            // Statistik Harian dalam satu bulan
+            $daysInMonth = Carbon::createFromDate($selectedYear, $selectedMonth)->daysInMonth;
+            $chartLabels = range(1, $daysInMonth);
+            
+            $chartData = Pendaftaran::whereYear('tanggal_daftar', $selectedYear)
+                ->whereMonth('tanggal_daftar', $selectedMonth)
+                ->select(DB::raw('DAY(tanggal_daftar) as label'), DB::raw('count(*) as count'))
+                ->groupBy('label')
+                ->pluck('count', 'label')
+                ->toArray();
+                
+            $chartCounts = array_fill(1, $daysInMonth, 0);
+        } else {
+            // Statistik Bulanan dalam satu tahun
+            $chartLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            $chartData = Pendaftaran::whereYear('tanggal_daftar', $selectedYear)
+                ->select(DB::raw('MONTH(tanggal_daftar) as label'), DB::raw('count(*) as count'))
+                ->groupBy('label')
+                ->pluck('count', 'label')
+                ->toArray();
+                
+            $chartCounts = array_fill(1, 12, 0);
+        }
 
-        $chartLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-        $chartCounts = array_fill(1, 12, 0);
-        foreach ($chartData as $month => $count) {
-            $chartCounts[$month] = $count;
+        foreach ($chartData as $key => $count) {
+            $chartCounts[$key] = $count;
         }
         $chartCounts = array_values($chartCounts);
 
-        // Latest registrations
+        // Latest registrations (Limited to 3 fields in view: Nama, Layanan, Status)
         $latestPendaftarans = Pendaftaran::with(['user', 'layanan'])
             ->latest()
-            ->take(5)
+            ->take(6)
             ->get();
 
         return view('subadmin.dashboard', compact(
             'totalPendaftaran',
-            'totalUser',
             'totalSertifikat',
-            'totalJadwal',
             'passingRatio',
             'chartCounts',
             'chartLabels',
             'latestPendaftarans',
-            'selectedYear'
+            'selectedYear',
+            'selectedMonth'
         ));
     }
 }

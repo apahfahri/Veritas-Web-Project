@@ -7,7 +7,7 @@ use App\Models\Layanan;
 use App\Models\Pendaftaran;
 use Illuminate\Support\Facades\Auth;
 
-class SubadminPelatihanController extends Controller
+class SubadminAuditController extends Controller
 {
     public function __construct()
     {
@@ -21,23 +21,22 @@ class SubadminPelatihanController extends Controller
 
     public function index()
     {
-        // Filter by Pelatihan (ID 1)
-        $pelatihans = Layanan::where('id_kategori', 1)
+        // Filter by Audit (ID 3)
+        $audits = Layanan::where('id_kategori', 3)
             ->with(['kategori', 'pemateri'])
             ->latest()
             ->paginate(15);
-        return view('subadmin.pelatihan.index', compact('pelatihans'));
+        return view('subadmin.audit.index', compact('audits'));
     }
 
     public function show($id)
     {
-        $pelatihan = Layanan::with(['kategori', 'pemateri'])->findOrFail($id);
-        
+        $audit = Layanan::with(['kategori', 'pemateri'])->findOrFail($id);
         $pesertas = Pendaftaran::where('id_layanan', $id)
             ->with(['user', 'perusahaan'])
             ->latest()
             ->get();
 
-        return view('subadmin.pelatihan.show', compact('pelatihan', 'pesertas'));
+        return view('subadmin.audit.show', compact('audit', 'pesertas'));
     }
 }

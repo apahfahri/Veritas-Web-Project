@@ -145,11 +145,16 @@ Route::middleware(['auth', 'is.subadmin'])->prefix('subadmin')->name('subadmin.'
     Route::get('/pelatihan', [\App\Http\Controllers\Subadmin\SubadminPelatihanController::class, 'index'])->name('pelatihan.index');
     Route::get('/pelatihan/{id}', [\App\Http\Controllers\Subadmin\SubadminPelatihanController::class, 'show'])->name('pelatihan.show');
 
+    // Konsultasi (View Only)
+    Route::get('/konsultasi', [\App\Http\Controllers\Subadmin\SubadminKonsultasiController::class, 'index'])->name('konsultasi.index');
+    Route::get('/konsultasi/{id}', [\App\Http\Controllers\Subadmin\SubadminKonsultasiController::class, 'show'])->name('konsultasi.show');
+
+    // Audit (View Only)
+    Route::get('/audit', [\App\Http\Controllers\Subadmin\SubadminAuditController::class, 'index'])->name('audit.index');
+    Route::get('/audit/{id}', [\App\Http\Controllers\Subadmin\SubadminAuditController::class, 'show'])->name('audit.show');
+
     // Petugas (View Only)
     Route::get('/petugas', [\App\Http\Controllers\Subadmin\SubadminPetugasController::class, 'index'])->name('petugas.index');
-
-    // Layanan (View Only)
-    Route::get('/layanan', [\App\Http\Controllers\Subadmin\SubadminLayananController::class, 'index'])->name('layanan.index');
 });
 
 /*
