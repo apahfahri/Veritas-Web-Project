@@ -56,16 +56,19 @@
                                             ?? \App\Models\Layanan::whereHas('kategori', function($q) {
                                                 $q->where('nama', 'like', '%Konsultasi%');
                                             })->first()
-                                            ?? \App\Models\Layanan::first();
+                                            ?? null
+;
                         
                         $layananId = $layananKonsultasi ? $layananKonsultasi->id_layanan : null;
                         $jenisKlien = old('jenis_klien', 'individu');
                     @endphp
                     
                     <input type="hidden" name="layanan_id" value="{{ $layananId }}">
+                    <input type="hidden" name="kategori_id" value="{{ $kategoriKonsultasi?->id_kategori }}">
                     <input type="hidden" name="jenis_klien" id="hidden_jenis_klien" value="{{ $jenisKlien }}">
 
-                    <!-- TYPE SELECTOR -->
+
+                    <!-- ── STEP 1 · Jenis Pendaftar ──────────────────────── -->
                     <div>
                         <h3 class="font-semibold text-lg mb-4 text-[#1E6B3D]">1. Jenis Pendaftar</h3>
                         <div class="flex gap-4">
@@ -81,50 +84,40 @@
                             </button>
                         </div>
                     </div>
-                    
+
                     <hr>
 
-                    <!-- INDIVIDU & PIC DATA -->
+                    <!-- ── STEP 2 · Jenis Konsultasi ─────────────────────── -->
+                    @php
+                        $jenisLayanan = \App\Models\JenisLayanan::where('id_kategori', $kategoriKonsultasi?->id_kategori)->get();
+                    @endphp
                     <div>
-                        <h3 class="font-semibold text-lg mb-4 text-[#1E6B3D]">2. Data Diri & Kontak</h3>
-                        <div class="space-y-4">
-                            <div>
-                                <input type="text" name="nama_lengkap" required
-                                       value="{{ old('nama_lengkap') }}"
-                                       placeholder="Nama Lengkap *"
-                                       class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
-                            </div>
+                        <h3 class="font-semibold text-lg mb-4 text-[#1E6B3D]">2. Jenis Konsultasi</h3>
+                        <select name="topik_layanan" id="topik_layanan" required
+                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]"
+                                onchange="toggleCatatan(this.value)">
+                            <option value="">-- Pilih Jenis Konsultasi --</option>
+                            @foreach($jenisLayanan as $jenis)
+                                <option value="{{ $jenis->nama }}" {{ old('topik_layanan') == $jenis->nama ? 'selected' : '' }}>{{ $jenis->nama }}</option>
+                            @endforeach
+                            <option value="Lainnya" {{ old('topik_layanan') == 'Lainnya' ? 'selected' : '' }}>Lainnya (sebutkan di catatan)</option>
+                        </select>
 
-                            <div class="grid md:grid-cols-2 gap-4">
-                                <div>
-                                    <input type="email" name="email" required
-                                           value="{{ old('email') }}"
-                                           placeholder="Email Aktif *"
-                                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
-                                </div>
-
-                                <div>
-                                    <input type="text" name="no_telp" required
-                                           value="{{ old('no_telp') }}"
-                                           placeholder="Nomor HP / WhatsApp *"
-                                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
-                                </div>
-                            </div>
-
-                            <div>
-                                <input type="text" name="pendidikan"
-                                       value="{{ old('pendidikan') }}"
-                                       placeholder="Pendidikan Terakhir (Opsional)"
-                                       class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
-                            </div>
+                        {{-- Kolom catatan muncul hanya jika "Lainnya" dipilih --}}
+                        <div id="catatan-box" class="{{ old('topik_layanan') == 'Lainnya' ? '' : 'hidden' }} mt-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Catatan / Keterangan Konsultasi <span class="text-red-500">*</span>
+                            </label>
+                            <textarea name="catatan" id="catatan" rows="3"
+                                      placeholder="Tuliskan jenis konsultasi atau kebutuhan spesifik Anda di sini..."
+                                      class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] resize-none">{{ old('catatan') }}</textarea>
                         </div>
                     </div>
 
-                    <!-- PERUSAHAAN DATA -->
+                    <!-- ── STEP 3 · Data Perusahaan (hanya jika Perusahaan) ── -->
                     <div id="section-perusahaan" class="{{ $jenisKlien === 'perusahaan' ? '' : 'hidden' }}">
-                        <hr class="my-6">
+                        <hr class="mb-5">
                         <h3 class="font-semibold text-lg mb-4 text-[#1E6B3D]">3. Data Perusahaan</h3>
-                        
                         <div class="space-y-4">
                             <div>
                                 <input type="text" name="nama_perusahaan"
@@ -132,20 +125,17 @@
                                        placeholder="Nama PT / CV / Instansi *"
                                        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
                             </div>
-
                             <div>
                                 <input type="text" name="jabatan"
                                        value="{{ old('jabatan') }}"
                                        placeholder="Jabatan di Perusahaan (Opsional)"
                                        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
                             </div>
-
                             <div>
                                 <textarea name="alamat_perusahaan" rows="2"
                                           placeholder="Alamat Lengkap Perusahaan *"
                                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] resize-none">{{ old('alamat_perusahaan') }}</textarea>
                             </div>
-
                             <div class="grid md:grid-cols-2 gap-4">
                                 <div>
                                     <input type="text" name="sektor_industri"
@@ -162,12 +152,47 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <hr>
 
-                    <!-- JADWAL & MODE -->
+                    <!-- ── STEP 4 · Data Diri & Kontak ───────────────────── -->
                     <div>
-                        <h3 class="font-semibold text-lg mb-4 text-[#1E6B3D]">4. Jadwal & Mode Konsultasi</h3>
+                        <h3 class="font-semibold text-lg mb-4 text-[#1E6B3D]">4. Data Diri & Kontak</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <input type="text" name="nama_lengkap" required
+                                       value="{{ old('nama_lengkap') }}"
+                                       placeholder="Nama Lengkap *"
+                                       class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
+                            </div>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <input type="email" name="email" required
+                                           value="{{ old('email') }}"
+                                           placeholder="Email Aktif *"
+                                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
+                                </div>
+                                <div>
+                                    <input type="text" name="no_telp" required
+                                           value="{{ old('no_telp') }}"
+                                           placeholder="Nomor HP / WhatsApp *"
+                                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
+                                </div>
+                            </div>
+                            <div>
+                                <input type="text" name="pendidikan"
+                                       value="{{ old('pendidikan') }}"
+                                       placeholder="Pendidikan Terakhir (Opsional)"
+                                       class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- ── STEP 5 · Jadwal & Mode ─────────────────────────── -->
+                    <div>
+                        <h3 class="font-semibold text-lg mb-4 text-[#1E6B3D]">5. Jadwal & Mode Konsultasi</h3>
                         <div class="space-y-4">
                             <div class="grid md:grid-cols-2 gap-4">
                                 <div>
@@ -176,7 +201,6 @@
                                            value="{{ old('rencana_tanggal_mulai') }}"
                                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
                                 </div>
-
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Rencana Tanggal Selesai *</label>
                                     <input type="date" name="rencana_tanggal_selesai" required
@@ -184,7 +208,6 @@
                                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
                                 </div>
                             </div>
-
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Mode Pertemuan *</label>
                                 <select name="mode_pertemuan" required
@@ -198,7 +221,7 @@
 
                     <hr>
 
-                    <!-- BUTTON -->
+                    <!-- ── TOMBOL SUBMIT ───────────────────────────────────── -->
                     <div class="flex gap-3">
                         <a href="/" class="border px-4 py-2 rounded flex items-center justify-center hover:bg-gray-50">Batal</a>
                         <button type="submit" class="flex-1 bg-[#1E6B3D] text-white py-3 rounded-xl hover:bg-[#3CDA7D] font-semibold transition-all shadow-sm">
@@ -281,6 +304,21 @@
         section.querySelectorAll('input, textarea, select').forEach(el => {
             el.disabled = shouldDisable;
         });
+    }
+
+    window.toggleCatatan = function(val) {
+        const box     = document.getElementById('catatan-box');
+        const catatan = document.getElementById('catatan');
+        if (!box || !catatan) return;
+
+        if (val === 'Lainnya') {
+            box.classList.remove('hidden');
+            catatan.required = true;
+        } else {
+            box.classList.add('hidden');
+            catatan.required = false;
+            catatan.value = '';
+        }
     }
 
     window.switchJenis = function(val) {

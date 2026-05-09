@@ -16,7 +16,8 @@ class PendaftaranController extends Controller
 
         // ── Validasi umum ──────────────────────────────────────────────────
         $rules = [
-            'layanan_id'     => 'required|exists:layanan,id_layanan',
+            'layanan_id'     => 'nullable|exists:layanan,id_layanan',
+            'kategori_id'    => 'nullable|exists:kategori_layanan,id_kategori',
             'jenis_klien'    => 'required|in:individu,perusahaan',
             'nama_lengkap'   => 'required|string|max:255',
             'email'          => 'required|email|max:255',
@@ -26,6 +27,11 @@ class PendaftaranController extends Controller
             'rencana_tanggal_selesai'=> 'nullable|date|after_or_equal:rencana_tanggal_mulai',
             'mode_pertemuan'         => 'nullable|in:online,offline',
         ];
+
+        // Salah satu harus ada: layanan_id atau kategori_id
+        if (!$request->layanan_id && !$request->kategori_id) {
+            return back()->withErrors(['layanan_id' => 'Pilih layanan atau kategori yang valid.'])->withInput();
+        }
 
         // ── Validasi khusus per jenis ──────────────────────────────────────
         if ($jenis === 'perusahaan') {
@@ -39,6 +45,40 @@ class PendaftaranController extends Controller
         $request->validate($rules);
 
         DB::transaction(function () use ($request, $jenis) {
+            $layananId = $request->layanan_id;
+            $kategoriId = $request->kategori_id;
+
+            // Jika layanan_id tidak ada tapi kategori_id ada, kita gunakan kategori_id
+            if (!$layananId && $kategoriId) {
+                $kategori = \App\Models\KategoriLayanan::find($kategoriId);
+            } else {
+                $kategori = \App\Models\KategoriLayanan::find(\App\Models\Layanan::find($layananId)?->id_kategori);
+            }
+
+            $namaKategori = $kategori ? $kategori->nama : '';
+
+            // Jika mendaftar dari halaman konsultasi/audit, kita buat layanan baru yang spesifik 
+            // agar pendaftaran ini memiliki nama layanan sesuai jenisnya.
+            if ($kategori && (str_contains(strtolower($namaKategori), 'konsultasi') || str_contains(strtolower($namaKategori), 'audit'))) {
+                // Gabungkan topik + catatan jika memilih "Lainnya"
+                $topik = $request->topik_layanan ?? $namaKategori;
+                if ($topik === 'Lainnya' && $request->catatan) {
+                    $topik = 'Lainnya (' . trim($request->catatan) . ')';
+                }
+
+                $layananBespoke = \App\Models\Layanan::create([
+                    'id_kategori'       => $kategori->id_kategori,
+                    'nama'              => $topik . ' - ' . $request->nama_lengkap,
+                    'materi'            => $topik,
+                    'jenis_pertemuan'   => $request->mode_pertemuan ?? 'offline',
+                    'tanggal_pertemuan' => $request->rencana_tanggal_mulai,
+                    'jam_pertemuan'     => '08:00:00',
+                    'deskripsi'         => 'Permintaan ' . $namaKategori . ' dari ' . ($request->nama_perusahaan ?? $request->nama_lengkap),
+                    'harga'             => 0,
+                    'kapasitas'         => 1,
+                ]);
+                $layananId = $layananBespoke->id_layanan;
+            }
 
             // ── Cari/Buat User ─────────────────────────────────────────────
             $user = User::where('email', $request->email)->first();
@@ -78,8 +118,8 @@ class PendaftaranController extends Controller
             }
 
             // ── Buat record pendaftaran ────────────────────────────────────
-            Pendaftaran::create([
-                'id_layanan'              => $request->layanan_id,
+            $pendaftaran = Pendaftaran::create([
+                'id_layanan'              => $layananId,
                 'id_user'                 => $user->id_user,
                 'tanggal_daftar'          => now(),
                 'rencana_tanggal_mulai'   => $request->rencana_tanggal_mulai,
@@ -88,11 +128,17 @@ class PendaftaranController extends Controller
                 'status_progres'          => 'menunggu_pembayaran',
                 'status_bayar'            => 'belum_lunas',
             ]);
+
+            // Ambil nama kategori untuk feedback yang lebih spesifik
+            $kategori = $pendaftaran->layanan->kategori->nama ?? 'layanan';
+            $request->session()->put('temp_success_category', strtolower($kategori));
         });
+
+        $successCategory = session()->get('temp_success_category', 'layanan');
 
         return redirect()->route('training.status', ['identifier' => $request->email])
             ->with('registration_success', true)
-            ->with('success_type', 'konsultasi');
+            ->with('success_type', $successCategory);
     }
 
     public function statusForm(Request $request)

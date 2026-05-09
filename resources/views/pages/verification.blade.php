@@ -12,7 +12,7 @@
                 <h1 class="text-3xl font-bold">Verifikasi Sertifikat</h1>
             </div>
             <p class="text-gray-200 max-w-2xl">
-                Cek keaslian sertifikat pelatihan K3 yang dikeluarkan oleh PT Katiga Veritas Indonesia
+                Cek keaslian sertifikat layanan K3 yang dikeluarkan oleh PT Katiga Veritas Indonesia
             </p>
         </div>
     </div>

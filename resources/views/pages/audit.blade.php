@@ -60,16 +60,13 @@
                     @csrf
                     @php 
                         $kategoriAudit = \App\Models\KategoriLayanan::where('nama', 'like', '%Audit%')->first();
-                        $layananAudit = \App\Models\Layanan::where('id_kategori', $kategoriAudit?->id_kategori)->first()
-                                        ?? \App\Models\Layanan::whereHas('kategori', function($q) {
-                                            $q->where('nama', 'like', '%Audit%');
-                                        })->first()
-                                        ?? \App\Models\Layanan::first();
+                        $layananAudit = \App\Models\Layanan::where('id_kategori', $kategoriAudit?->id_kategori)->first();
                         
                         $layananId = $layananAudit ? $layananAudit->id_layanan : null;
                     @endphp
                     
                     <input type="hidden" name="layanan_id" value="{{ $layananId }}">
+                    <input type="hidden" name="kategori_id" value="{{ $kategoriAudit?->id_kategori }}">
                     <input type="hidden" name="jenis_klien" value="perusahaan">
 
                     <!-- COMPANY -->
@@ -87,7 +84,6 @@
                     </div>
 
 
-                    <hr>
 
 
                     <!-- PIC -->
@@ -107,9 +103,40 @@
                         <input type="text" name="pendidikan" value="{{ old('pendidikan') }}" placeholder="Pendidikan Terakhir (Opsional)" class="w-full border p-2 rounded mt-3 focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
                     </div>
 
-                    <hr>
+                    <hr class="my-6">
+                    
+                    <!-- JADWAL & MODE -->
+                    <div>
+                        <h3 class="font-semibold text-lg mb-4 text-[#1E6B3D]">Rencana Jadwal & Mode Audit</h3>
+                        <div class="space-y-4">
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Rencana Tanggal Mulai *</label>
+                                    <input type="date" name="rencana_tanggal_mulai" required
+                                           value="{{ old('rencana_tanggal_mulai') }}"
+                                           class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
+                                </div>
 
-                    <!-- BUTTON -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Rencana Tanggal Selesai *</label>
+                                    <input type="date" name="rencana_tanggal_selesai" required
+                                           value="{{ old('rencana_tanggal_selesai') }}"
+                                           class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Mode Audit *</label>
+                                <select name="mode_pertemuan" required
+                                        class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
+                                    <option value="offline" {{ old('mode_pertemuan') === 'offline' ? 'selected' : '' }}>🏢 On-Site (Langsung di Lokasi)</option>
+                                    <option value="online" {{ old('mode_pertemuan') === 'online' ? 'selected' : '' }}>🌐 Remote Audit (Online)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-6">
                     <div class="flex gap-3 mt-6">
                         <a href="/" class="border px-4 py-2 rounded flex items-center justify-center hover:bg-gray-50">Batal</a>
                         <button type="submit" class="flex-1 bg-[#1E6B3D] text-white py-2 rounded hover:opacity-90 font-semibold shadow-sm">

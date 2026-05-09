@@ -9,7 +9,7 @@
         {{-- ── HEADER ──────────────────────────────────────────────── --}}
         <div class="text-center mb-10">
             <h1 class="text-3xl font-bold text-[#1E6B3D] mb-2">Cek Status Pendaftaran</h1>
-            <p class="text-gray-500">Masukkan Email atau Nomor WhatsApp Anda untuk melihat progres pendaftaran pelatihan.</p>
+            <p class="text-gray-500">Masukkan Email atau Nomor WhatsApp Anda untuk melihat progres pendaftaran layanan kami.</p>
         </div>
 
         {{-- ── FORM SEARCH ─────────────────────────────────────────── --}}
@@ -142,7 +142,7 @@
                                         </a>
                                     @endif
                                     
-                                    <a href="https://wa.me/628123456789?text=Halo%20Admin%2C%20saya%20ingin%20menanyakan%20status%20pendaftaran%20pelatihan%20{{ urlencode($item->layanan->materi) }}%20atas%20nama%20{{ urlencode($item->user->nama) }}" 
+                                    <a href="https://wa.me/628123456789?text=Halo%20Admin%2C%20saya%20ingin%20menanyakan%20status%20pendaftaran%20layanan%20{{ urlencode($item->layanan->materi) }}%20atas%20nama%20{{ urlencode($item->user->nama) }}" 
                                        target="_blank"
                                        class="inline-flex items-center justify-center gap-2 bg-green-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-green-600 transition shadow-sm">
                                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
