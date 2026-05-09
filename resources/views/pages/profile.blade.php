@@ -33,7 +33,7 @@
 
             <!-- Informasi Dasar -->
             <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="bg-gradient-to-r from-[#7d2ae7] to-[#3969e7] px-8 py-6">
+                <div class="bg-gradient-to-r from-[#1E6B3D] to-[#3CDA7D] px-8 py-6">
                     <h2 class="text-xl font-bold text-white flex items-center gap-3">
                         <span>👤</span> Informasi Akun
                     </h2>
@@ -44,14 +44,14 @@
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Nama Lengkap</label>
                             <input type="text" name="name" value="{{ old('name', $user->name) }}" 
-                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition-all outline-none" required>
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition-all outline-none" required>
                             @error('name') <p class="mt-1 text-xs text-red-500 font-medium">{{ $message }}</p> @enderror
                         </div>
 
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Alamat Email</label>
                             <input type="email" name="email" value="{{ old('email', $user->email) }}" 
-                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition-all outline-none" required>
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition-all outline-none" required>
                             @error('email') <p class="mt-1 text-xs text-red-500 font-medium">{{ $message }}</p> @enderror
                         </div>
                     </div>
@@ -72,14 +72,14 @@
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">NIK (KTP)</label>
                             <input type="text" name="nik" value="{{ old('nik', $individu->nik) }}" 
-                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition-all outline-none">
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition-all outline-none">
                             @error('nik') <p class="mt-1 text-xs text-red-500 font-medium">{{ $message }}</p> @enderror
                         </div>
 
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Nomor WhatsApp</label>
                             <input type="text" name="no_hp" value="{{ old('no_hp', $individu->no_hp) }}" 
-                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition-all outline-none">
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition-all outline-none">
                             @error('no_hp') <p class="mt-1 text-xs text-red-500 font-medium">{{ $message }}</p> @enderror
                         </div>
                     </div>
@@ -100,27 +100,27 @@
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Nama Perusahaan</label>
                             <input type="text" name="nama_perusahaan" value="{{ old('nama_perusahaan', $perusahaan->nama ?? '') }}" 
-                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition-all outline-none">
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition-all outline-none">
                             @error('nama_perusahaan') <p class="mt-1 text-xs text-red-500 font-medium">{{ $message }}</p> @enderror
                         </div>
 
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Jabatan</label>
                             <input type="text" name="jabatan" value="{{ old('jabatan', $perusahaanProfil->jabatan ?? '') }}" 
-                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition-all outline-none">
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition-all outline-none">
                             @error('jabatan') <p class="mt-1 text-xs text-red-500 font-medium">{{ $message }}</p> @enderror
                         </div>
 
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">NIB OSS</label>
                             <input type="text" name="nib_oss" value="{{ old('nib_oss', $perusahaan->nib_oss ?? '') }}" 
-                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition-all outline-none">
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition-all outline-none">
                         </div>
 
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">NPWP Perusahaan</label>
                             <input type="text" name="npwp_perusahaan" value="{{ old('npwp_perusahaan', $perusahaan->npwp_perusahaan ?? '') }}" 
-                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition-all outline-none">
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition-all outline-none">
                         </div>
                     </div>
                 </div>
@@ -141,14 +141,14 @@
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Kata Sandi Baru</label>
                             <input type="password" name="password" 
-                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition-all outline-none">
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition-all outline-none">
                             @error('password') <p class="mt-1 text-xs text-red-500 font-medium">{{ $message }}</p> @enderror
                         </div>
 
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Konfirmasi Kata Sandi</label>
                             <input type="password" name="password_confirmation" 
-                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition-all outline-none">
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition-all outline-none">
                         </div>
                     </div>
                 </div>
@@ -158,7 +158,7 @@
             <div class="flex items-center justify-end gap-4 pt-4">
                 <a href="{{ route('dashboard') }}" class="px-6 py-3 text-sm font-bold text-gray-500 hover:text-gray-700 transition-colors">Batal</a>
                 <button type="submit" 
-                    class="bg-gradient-to-r from-[#7d2ae7] to-[#3969e7] text-white px-10 py-3 rounded-xl font-bold shadow-lg shadow-[#7d2ae7]/30 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                    class="bg-gradient-to-r from-[#1E6B3D] to-[#3CDA7D] text-white px-10 py-3 rounded-xl font-bold shadow-lg shadow-[#1E6B3D]/30 hover:scale-[1.02] active:scale-[0.98] transition-all">
                     Simpan Perubahan
                 </button>
             </div>

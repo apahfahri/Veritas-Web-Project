@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="min-h-screen bg-gradient-to-br from-[#7d2ae7] via-[#3969e7] to-[#07b9ce] flex items-center justify-center p-4">
+<div class="min-h-screen bg-gradient-to-br from-[#1E6B3D] to-[#3CDA7D] flex items-center justify-center p-4">
 
     <div class="w-full max-w-md">
 
@@ -20,7 +20,7 @@
 
             <!-- HEADER -->
             <div class="text-center mb-6">
-                <div class="w-16 h-16 bg-[#7d2ae7] rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl">
+                <div class="w-16 h-16 bg-[#1E6B3D] rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl">
                     🛡️
                 </div>
 
@@ -67,7 +67,7 @@
                             name="login"
                             value="{{ old('login') }}"
                             placeholder="username atau email"
-                            class="w-full border rounded px-10 py-2 focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] @error('login') border-red-400 @enderror"
+                            class="w-full border rounded px-10 py-2 focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] @error('login') border-red-400 @enderror"
                         >
                     </div>
                 </div>
@@ -105,7 +105,7 @@
                 <!-- BUTTON -->
                 <button
                     type="submit"
-                    class="w-full bg-[#7d2ae7] hover:bg-[#008888] text-white py-3 rounded font-semibold transition"
+                    class="w-full bg-[#1E6B3D] hover:bg-[#3CDA7D] text-white py-3 rounded font-semibold transition"
                 >
                     Login
                 </button>

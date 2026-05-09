@@ -22,7 +22,10 @@ use App\Http\Controllers\RequestPelatihanController;
 | PUBLIC PAGES
 |--------------------------------------------------------------------------
 */
-Route::view('/', 'pages.home')->name('home');
+Route::get('/', function() {
+    $pemateris = \App\Models\Pemateri::all();
+    return view('pages.home', compact('pemateris'));
+})->name('home');
 Route::redirect('/home', '/');
 
 Route::view('/consultation', 'pages.consultation')->name('consultation');
