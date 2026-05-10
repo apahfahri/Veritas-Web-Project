@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Admin') | PT Katiga Veritas</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="module" src="http://localhost:5173/resources/js/app.js"></script>
     <style>
         body { font-family: 'Outfit', sans-serif; }
@@ -130,6 +132,7 @@
                 <p class="text-xs text-slate-500 font-medium mt-0.5">@yield('page-subtitle', 'PT Katiga Veritas Indonesia — Superadmin Access')</p>
             </div>
             <div class="flex items-center gap-3">
+                @yield('header-actions')
                 @if(session('success'))
                     <span class="text-sm font-semibold text-teal-700 bg-teal-50 border border-teal-200/60 px-3.5 py-1.5 rounded-xl shadow-sm flex items-center gap-1.5">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
@@ -175,6 +178,38 @@
 
             document.addEventListener('click', () => {
                 if (profileDropdown) profileDropdown.classList.remove('show');
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // SweetAlert2 Global Delete Confirmation
+            document.querySelectorAll('.delete-form').forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const name = this.getAttribute('data-name') || 'item ini';
+                    
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: `Anda akan menghapus "${name}". Tindakan ini tidak dapat dibatalkan!`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#0f172a',
+                        cancelButtonColor: '#94a3b8',
+                        confirmButtonText: 'Ya, Hapus!',
+                        cancelButtonText: 'Batal',
+                        borderRadios: '20px',
+                        customClass: {
+                            popup: 'rounded-[32px]',
+                            confirmButton: 'rounded-xl font-black uppercase tracking-widest text-xs px-6 py-3',
+                            cancelButton: 'rounded-xl font-black uppercase tracking-widest text-xs px-6 py-3'
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            this.submit();
+                        }
+                    });
+                });
             });
         });
     </script>

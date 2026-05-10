@@ -9,10 +9,17 @@ use App\Models\Layanan;
 use App\Models\Pemateri;
 use App\Models\User;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+
 class AdminDashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $selectedYear = $request->get('year', date('Y'));
+        $selectedMonth = $request->get('month', null);
+
         $stats = [
             'pendaftaran' => Pendaftaran::count(),
             'pelatihan'   => Layanan::count(),
@@ -29,23 +36,55 @@ class AdminDashboardController extends Controller
             ->take(8)
             ->get();
 
-        // Chart Data: Monthly registration for current year
-        $year = date('Y');
-        $chartData = Pendaftaran::whereYear('created_at', $year)
-            ->selectRaw('MONTH(created_at) as month, count(*) as count')
-            ->groupBy('month')
-            ->orderBy('month')
-            ->get()
-            ->pluck('count', 'month')
-            ->toArray();
+        // Multi-Series Chart Data (Pelatihan, Konsultasi, Audit)
+        $categories = [1 => 'Pelatihan', 2 => 'Konsultasi', 3 => 'Audit'];
+        $series = [];
 
-        $chartCounts = [];
-        $chartLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-        
-        for ($i = 1; $i <= 12; $i++) {
-            $chartCounts[] = $chartData[$i] ?? 0;
+        if ($selectedMonth) {
+            $daysInMonth = Carbon::createFromDate($selectedYear, $selectedMonth)->daysInMonth;
+            $chartLabels = range(1, $daysInMonth);
+        } else {
+            $chartLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
         }
 
-        return view('admin.dashboard', compact('stats', 'pendaftaranTerbaru', 'chartCounts', 'chartLabels'));
+        foreach ($categories as $catId => $catName) {
+            if ($selectedMonth) {
+                $data = Pendaftaran::whereYear('tanggal_daftar', $selectedYear)
+                    ->whereMonth('tanggal_daftar', $selectedMonth)
+                    ->whereHas('layanan', function($q) use ($catId) { $q->where('id_kategori', $catId); })
+                    ->select(DB::raw('DAY(tanggal_daftar) as label'), DB::raw('count(*) as count'))
+                    ->groupBy('label')
+                    ->pluck('count', 'label')
+                    ->toArray();
+                
+                $counts = array_fill(1, $daysInMonth, 0);
+            } else {
+                $data = Pendaftaran::whereYear('tanggal_daftar', $selectedYear)
+                    ->whereHas('layanan', function($q) use ($catId) { $q->where('id_kategori', $catId); })
+                    ->select(DB::raw('MONTH(tanggal_daftar) as label'), DB::raw('count(*) as count'))
+                    ->groupBy('label')
+                    ->pluck('count', 'label')
+                    ->toArray();
+                
+                $counts = array_fill(1, 12, 0);
+            }
+
+            foreach ($data as $key => $count) {
+                $counts[$key] = $count;
+            }
+            $series[] = [
+                'name' => $catName,
+                'data' => array_values($counts)
+            ];
+        }
+
+        return view('admin.dashboard', compact(
+            'stats', 
+            'pendaftaranTerbaru', 
+            'series', 
+            'chartLabels',
+            'selectedYear',
+            'selectedMonth'
+        ));
     }
 }

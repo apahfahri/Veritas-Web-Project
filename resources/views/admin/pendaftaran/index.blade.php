@@ -7,7 +7,7 @@
 
 <!-- FILTER SECTION -->
 <div class="bg-white rounded-[32px] shadow-sm border border-slate-100 p-8 mb-8">
-    <form method="GET" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 items-end">
+    <form method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 items-end">
         <div>
             <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 ml-1">Status Progres</label>
             <select name="status" class="w-full bg-slate-50 border border-slate-100 px-5 py-3 rounded-2xl text-sm font-bold text-slate-700 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition">
@@ -19,9 +19,26 @@
             </select>
         </div>
         <div>
+            <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 ml-1">Bulan</label>
+            <select name="month" class="w-full bg-slate-50 border border-slate-100 px-5 py-3 rounded-2xl text-sm font-bold text-slate-700 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition">
+                <option value="">Semua Bulan</option>
+                @for($m=1; $m<=12; $m++)
+                    <option value="{{ $m }}" {{ request('month') == $m ? 'selected' : '' }}>{{ \Carbon\Carbon::create()->month($m)->format('F') }}</option>
+                @endfor
+            </select>
+        </div>
+        <div>
+            <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 ml-1">Tahun</label>
+            <select name="year" class="w-full bg-slate-50 border border-slate-100 px-5 py-3 rounded-2xl text-sm font-bold text-slate-700 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition">
+                @for($y=date('Y'); $y>=2024; $y--)
+                    <option value="{{ $y }}" {{ request('year', date('Y')) == $y ? 'selected' : '' }}>{{ $y }}</option>
+                @endfor
+            </select>
+        </div>
+        <div>
             <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 ml-1">Status Bayar</label>
             <select name="bayar" class="w-full bg-slate-50 border border-slate-100 px-5 py-3 rounded-2xl text-sm font-bold text-slate-700 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition">
-                <option value="">Semua Bayar</option>
+                <option value="">Semua</option>
                 <option value="belum_lunas"          {{ request('bayar') === 'belum_lunas'          ? 'selected' : '' }}>Belum Lunas</option>
                 <option value="lunas"                {{ request('bayar') === 'lunas'                ? 'selected' : '' }}>Lunas</option>
             </select>
