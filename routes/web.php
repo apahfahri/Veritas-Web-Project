@@ -99,6 +99,8 @@ Route::middleware(['auth', 'is.admin'])->prefix('admin')->name('admin.')->group(
 
     // Pendaftaran management
     Route::get('/pendaftaran',         [PendaftaranAdminController::class, 'index'])->name('pendaftaran.index');
+    Route::get('/pendaftaran/export/excel', [PendaftaranAdminController::class, 'exportExcel'])->name('pendaftaran.export-excel');
+    Route::get('/pendaftaran/export/pdf',   [PendaftaranAdminController::class, 'exportPDF'])->name('pendaftaran.export-pdf');
     Route::get('/pendaftaran/{id}',    [PendaftaranAdminController::class, 'show'])->name('pendaftaran.show');
     Route::put('/pendaftaran/{id}',    [PendaftaranAdminController::class, 'update'])->name('pendaftaran.update');
 

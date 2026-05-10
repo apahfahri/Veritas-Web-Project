@@ -18,6 +18,8 @@ class Layanan extends Model
         'materi',
         'jenis_pertemuan',
         'tanggal_pertemuan',
+        'tgl_mulai',
+        'tgl_selesai',
         'jam_pertemuan',
         'lokasi',
         'kapasitas',
@@ -27,6 +29,8 @@ class Layanan extends Model
 
     protected $casts = [
         'tanggal_pertemuan' => 'date',
+        'tgl_mulai'         => 'date',
+        'tgl_selesai'       => 'date',
     ];
 
     public function kategori()
