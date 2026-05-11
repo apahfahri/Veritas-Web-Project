@@ -1,4 +1,4 @@
-@extends('layouts.admin-cabang')
+@extends('layouts.subadmin')
 
 @section('title', 'Daftar Klien')
 @section('page-title', 'Daftar Klien Cabang')
@@ -10,7 +10,7 @@
             <h3 class="text-lg font-black text-slate-900 tracking-tight">Klien Terdaftar</h3>
             <p class="text-xs text-slate-500 mt-0.5">Kelola data klien yang berafiliasi dengan cabang Anda.</p>
         </div>
-        <a href="{{ route('admin-cabang.klien.create') }}" class="w-fit bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white font-extrabold text-sm px-6 py-3.5 rounded-xl shadow-lg transition">
+        <a href="{{ route('subadmin.klien.create') }}" class="w-fit bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white font-extrabold text-sm px-6 py-3.5 rounded-xl shadow-lg transition">
             + Tambah Klien
         </a>
     </div>
@@ -34,10 +34,10 @@
                     <td class="p-4 text-sm font-medium text-slate-600">{{ $k->no_hp ?? '-' }}</td>
                     <td class="p-4 text-sm font-semibold text-slate-600">{{ strtoupper($k->cabang) }}</td>
                     <td class="p-4 text-sm font-medium flex items-center gap-2">
-                        <a href="{{ route('admin-cabang.klien.edit', $k->id) }}" class="bg-cyan-50 hover:bg-cyan-100 text-cyan-600 px-3.5 py-1.5 rounded-xl text-xs font-black transition">
+                        <a href="{{ route('subadmin.klien.edit', $k->id) }}" class="bg-cyan-50 hover:bg-cyan-100 text-cyan-600 px-3.5 py-1.5 rounded-xl text-xs font-black transition">
                             Edit
                         </a>
-                        <form action="{{ route('admin-cabang.klien.destroy', $k->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus klien ini?')">
+                        <form action="{{ route('subadmin.klien.destroy', $k->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus klien ini?')">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="bg-red-50 hover:bg-red-100 text-red-600 px-3.5 py-1.5 rounded-xl text-xs font-black transition">Hapus</button>
@@ -58,3 +58,5 @@
     </div>
 </div>
 @endsection
+
+

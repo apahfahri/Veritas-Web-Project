@@ -5,10 +5,10 @@
 <div class="min-h-screen bg-[#F5F7FA]">
 
     <!-- HEADER -->
-    <div class="bg-gradient-to-r from-[#7d2ae7] via-[#3969e7] to-[#07b9ce] text-white py-12">
+    <div class="bg-gradient-to-r from-[#1E6B3D] to-[#3CDA7D] text-white py-8">
         <div class="max-w-7xl mx-auto px-6">
-            <h1 class="text-4xl font-bold mb-4">Pelatihan K3</h1>
-            <p class="text-lg text-gray-200">Pilih program pelatihan K3 yang sesuai dengan kebutuhan Anda</p>
+            <h1 class="text-3xl font-bold mb-4">Pelatihan K3</h1>
+            <p class="text-base text-gray-200">Pilih program pelatihan K3 yang sesuai dengan kebutuhan Anda</p>
         </div>
     </div>
 
@@ -21,10 +21,10 @@
                     <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
                     <input type="text" name="search" value="{{ request('search') }}"
                            placeholder="Cari materi pelatihan..."
-                           class="w-full border rounded pl-10 py-2 focus:outline-none focus:ring-2 focus:ring-[#7d2ae7]">
+                           class="w-full border rounded pl-10 py-2 focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
                 </div>
                 <select name="jenis" onchange="this.form.submit()"
-                        class="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#7d2ae7]">
+                        class="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
                     <option value="">Semua Mode</option>
                     <option value="online"  {{ request('jenis') == 'online'  ? 'selected' : '' }}>Online</option>
                     <option value="offline" {{ request('jenis') == 'offline' ? 'selected' : '' }}>Offline</option>
@@ -51,27 +51,27 @@
             <div class="text-center py-20 bg-white rounded-xl shadow">
                 <div class="text-5xl mb-4">📭</div>
                 <h3 class="text-xl font-bold text-gray-600">Tidak ada pelatihan ditemukan</h3>
-                <a href="{{ route('training.list') }}" class="mt-4 inline-block text-[#7d2ae7] hover:underline">Reset filter</a>
+                <a href="{{ route('training.list') }}" class="mt-4 inline-block text-[#1E6B3D] hover:underline">Reset filter</a>
             </div>
         @else
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($pelatihans as $pelatihan)
                 <div class="bg-white rounded-xl shadow overflow-hidden group hover:shadow-xl transition">
-                    <div class="aspect-video overflow-hidden bg-gradient-to-br from-[#7d2ae7] via-[#3969e7] to-[#07b9ce] flex items-center justify-center">
+                    <div class="aspect-video overflow-hidden bg-gradient-to-br from-[#1E6B3D] to-[#3CDA7D] flex items-center justify-center">
                         <span class="text-6xl">🎓</span>
                     </div>
                     <div class="p-6">
                         <!-- BADGE -->
                         <div class="flex justify-between mb-3">
-                            <span class="bg-[#7d2ae7] text-white text-xs px-2 py-1 rounded">
+                            <span class="bg-[#1E6B3D] text-white text-xs px-2 py-1 rounded">
                                 {{ $pelatihan->kategori?->nama ?? 'Pelatihan K3' }}
                             </span>
-                            <span class="border text-xs px-2 py-1 rounded {{ $pelatihan->jenis_pertemuan === 'online' ? 'border-[#7d2ae7] text-[#7d2ae7]' : 'border-orange-400 text-orange-500' }}">
+                            <span class="border text-xs px-2 py-1 rounded {{ $pelatihan->jenis_pertemuan === 'online' ? 'border-[#1E6B3D] text-[#1E6B3D]' : 'border-orange-400 text-orange-500' }}">
                                 {{ ucfirst($pelatihan->jenis_pertemuan) }}
                             </span>
                         </div>
 
-                        <h3 class="text-xl font-semibold text-[#7d2ae7] mb-1">{{ $pelatihan->nama }}</h3>
+                        <h3 class="text-xl font-semibold text-[#1E6B3D] mb-1">{{ $pelatihan->nama }}</h3>
                         <div class="text-lg font-bold text-gray-800 mb-2">Rp {{ number_format($pelatihan->harga, 0, ',', '.') }}</div>
                         <p class="text-sm text-gray-600 mb-4 line-clamp-2">{{ $pelatihan->deskripsi ?? 'Pelatihan K3 profesional bersertifikat nasional.' }}</p>
 
@@ -92,7 +92,7 @@
 
                         <div class="border-t pt-4">
                             <a href="{{ route('training.detail', $pelatihan->id_layanan) }}"
-                               class="block w-full text-center bg-[#7d2ae7] text-white py-2 rounded hover:opacity-90 transition">
+                               class="block w-full text-center bg-[#1E6B3D] text-white py-2 rounded hover:opacity-90 transition">
                                 Lihat Detail & Daftar
                             </a>
                         </div>

@@ -18,7 +18,7 @@ class LayananAdminController extends Controller
 
     public function create()
     {
-        $kategoris = KategoriLayanan::all();
+        $kategoris = KategoriLayanan::with('jenis')->get();
         $pemateris = Pemateri::all();
         return view('admin.pelatihan.create', compact('kategoris', 'pemateris'));
     }
@@ -32,6 +32,8 @@ class LayananAdminController extends Controller
             'jenis_pertemuan'   => 'required|in:online,offline',
             'jam_pertemuan'     => 'nullable',
             'tanggal_pertemuan' => 'nullable|date',
+            'tgl_mulai'         => 'nullable|date',
+            'tgl_selesai'       => 'nullable|date',
             'lokasi'            => 'nullable|string|max:255',
             'kapasitas'         => 'nullable|integer|min:1',
             'harga'             => 'required|numeric|min:0',
@@ -42,7 +44,7 @@ class LayananAdminController extends Controller
 
         $layanan = Layanan::create($request->only([
             'id_kategori', 'nama', 'materi', 'jenis_pertemuan', 'jam_pertemuan', 
-            'tanggal_pertemuan', 'lokasi', 'kapasitas', 'harga', 'deskripsi'
+            'tanggal_pertemuan', 'tgl_mulai', 'tgl_selesai', 'lokasi', 'kapasitas', 'harga', 'deskripsi'
         ]));
 
         if ($request->has('pemateri_ids')) {
@@ -56,7 +58,7 @@ class LayananAdminController extends Controller
     public function edit($id)
     {
         $layanan = Layanan::with('pemateri')->findOrFail($id);
-        $kategoris = KategoriLayanan::all();
+        $kategoris = KategoriLayanan::with('jenis')->get();
         $pemateris = Pemateri::all();
         return view('admin.pelatihan.edit', compact('layanan', 'kategoris', 'pemateris'));
     }
@@ -72,6 +74,8 @@ class LayananAdminController extends Controller
             'jenis_pertemuan'   => 'required|in:online,offline',
             'jam_pertemuan'     => 'nullable',
             'tanggal_pertemuan' => 'nullable|date',
+            'tgl_mulai'         => 'nullable|date',
+            'tgl_selesai'       => 'nullable|date',
             'lokasi'            => 'nullable|string|max:255',
             'kapasitas'         => 'nullable|integer|min:1',
             'harga'             => 'required|numeric|min:0',
@@ -82,7 +86,7 @@ class LayananAdminController extends Controller
 
         $layanan->update($request->only([
             'id_kategori', 'nama', 'materi', 'jenis_pertemuan', 'jam_pertemuan', 
-            'tanggal_pertemuan', 'lokasi', 'kapasitas', 'harga', 'deskripsi'
+            'tanggal_pertemuan', 'tgl_mulai', 'tgl_selesai', 'lokasi', 'kapasitas', 'harga', 'deskripsi'
         ]));
 
         if ($request->has('pemateri_ids')) {

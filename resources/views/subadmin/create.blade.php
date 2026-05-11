@@ -4,7 +4,7 @@
 @section('content')
 
 <div class="bg-white rounded-xl shadow p-6 max-w-2xl">
-    <form method="POST" action="{{ route('admin.admin-cabang.store') }}">
+    <form method="POST" action="{{ route('admin.subadmin.store') }}">
         @csrf
 
         <div class="mb-4">
@@ -35,7 +35,7 @@
         </div>
 
         <div class="flex gap-2">
-            <a href="{{ route('admin.admin-cabang.index') }}"
+            <a href="{{ route('admin.subadmin.index') }}"
                class="bg-gray-100 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-200 transition text-sm cursor-pointer">
                 Batal
             </a>
@@ -48,3 +48,4 @@
 </div>
 
 @endsection
+

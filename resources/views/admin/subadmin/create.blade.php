@@ -1,59 +1,97 @@
 @extends('layouts.admin')
+@section('title', 'Tambah Subadmin')
 @section('page-title', 'Tambah Subadmin')
-@section('page-subtitle', 'Tambahkan akun subadmin baru')
+@section('page-subtitle', 'Daftarkan akun staf baru untuk manajemen operasional')
 
 @section('content')
 
-<div class="bg-white rounded-xl shadow p-8 max-w-2xl">
-    <form method="POST" action="{{ route('admin.subadmin.store') }}">
-        @csrf
+<div class="max-w-3xl mx-auto">
+    <div class="mb-6">
+        <a href="{{ route('admin.subadmin.index') }}" class="inline-flex items-center gap-2 text-slate-400 hover:text-slate-900 font-bold text-xs uppercase tracking-widest transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Kembali ke Daftar
+        </a>
+    </div>
 
-        <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Username *</label>
-            <input type="text" name="username" value="{{ old('username') }}" required
-                   class="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-[#7d2ae7] focus:border-[#7d2ae7]">
-            @error('username')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+    <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="p-8 border-b border-slate-50 bg-slate-50/30 text-center">
+            <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-3xl flex items-center justify-center shadow-sm mx-auto mb-4">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+            </div>
+            <h2 class="text-xl font-black text-slate-900 tracking-tight">Daftarkan Staf Baru</h2>
+            <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-1">Username akan menjadi identitas login utama staf</p>
         </div>
 
-        <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
-            <input type="email" name="email" value="{{ old('email') }}" required
-                   class="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-[#7d2ae7] focus:border-[#7d2ae7]">
-            @error('email')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-        </div>
+        <form method="POST" action="{{ route('admin.subadmin.store') }}" class="p-8 space-y-8">
+            @csrf
 
-        <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Password *</label>
-            <input type="password" name="password" required
-                   class="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-[#7d2ae7] focus:border-[#7d2ae7]">
-            <p class="text-xs text-gray-500 mt-1">Minimal 6 karakter.</p>
-        </div>
+            <!-- SECTION 1: IDENTITAS LOGIN -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-6 bg-indigo-50/30 rounded-3xl border border-indigo-100/50">
+                <div class="md:col-span-2">
+                    <label class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-indigo-500 mb-2">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                        Username (ID Login Utama) *
+                    </label>
+                    <input type="text" name="username" value="{{ old('username') }}" required
+                           placeholder="Contoh: Hendra"
+                           class="w-full bg-white border border-indigo-200 px-5 py-3 rounded-2xl text-sm font-bold text-slate-700 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition @error('username') border-red-400 @enderror">
+                    @error('username')<p class="text-red-500 text-[10px] font-bold mt-1 uppercase tracking-tighter">{{ $message }}</p>@enderror
+                </div>
 
-        <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">No. Telp</label>
-            <input type="text" name="no_telp" value="{{ old('no_telp') }}"
-                   class="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-[#7d2ae7] focus:border-[#7d2ae7]">
-        </div>
+                <div>
+                    <label class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">
+                        <svg class="w-3.5 h-3.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                        Password Staf *
+                    </label>
+                    <input type="password" name="password" required
+                           class="w-full bg-white border border-slate-200 px-5 py-3 rounded-2xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:outline-none transition">
+                </div>
 
-        <div class="mb-6">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Status *</label>
-            <select name="status" class="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-[#7d2ae7] focus:border-[#7d2ae7]">
-                <option value="aktif" {{ old('status') === 'aktif' ? 'selected' : '' }}>Aktif</option>
-                <option value="nonaktif" {{ old('status') === 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
-            </select>
-        </div>
+                <div>
+                    <label class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">
+                        <svg class="w-3.5 h-3.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Status Akun *
+                    </label>
+                    <select name="status" class="w-full bg-white border border-slate-200 px-5 py-3 rounded-2xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:outline-none transition">
+                        <option value="aktif">Aktif (Dapat Login)</option>
+                        <option value="nonaktif">Nonaktif (Blokir Akses)</option>
+                    </select>
+                </div>
+            </div>
 
-        <div class="flex gap-3 pt-2">
-            <a href="{{ route('admin.subadmin.index') }}"
-               class="border px-6 py-2.5 rounded-lg hover:bg-gray-50 text-sm">
-                Batal
-            </a>
-            <button type="submit"
-                    class="flex-1 bg-[#7d2ae7] text-white py-2.5 rounded-lg hover:opacity-90 transition text-sm font-bold">
-                Simpan Subadmin
-            </button>
-        </div>
-    </form>
+            <!-- SECTION 2: KONTAK & INFORMASI -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <label class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">
+                        <svg class="w-3.5 h-3.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                        Nomor WhatsApp / Telp
+                    </label>
+                    <input type="text" name="no_telp" value="{{ old('no_telp') }}" required
+                           placeholder="Contoh: 081234567890"
+                           class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-2xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:outline-none transition">
+                </div>
+
+                <div>
+                    <label class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">
+                        <svg class="w-3.5 h-3.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        Email Cadangan *
+                    </label>
+                    <input type="email" name="email" value="{{ old('email') }}" required
+                           placeholder="staff@veritas.com"
+                           class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-2xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:outline-none transition @error('email') border-red-400 @enderror">
+                    @error('email')<p class="text-red-500 text-[10px] font-bold mt-1 uppercase tracking-tighter">{{ $message }}</p>@enderror
+                </div>
+            </div>
+
+            <div class="flex flex-wrap gap-4 pt-8 border-t border-slate-50">
+                <a href="{{ route('admin.subadmin.index') }}" class="px-8 py-4 text-sm font-black text-slate-400 hover:text-slate-600 transition">Batal</a>
+                <button type="submit" class="flex-1 bg-slate-900 text-white py-4 rounded-2xl text-sm font-black hover:bg-slate-800 transition shadow-lg shadow-slate-200 flex items-center justify-center gap-2 group">
+                    <svg class="w-5 h-5 text-cyan-400 group-hover:scale-110 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+                    Daftarkan Akun Staf
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 
 @endsection

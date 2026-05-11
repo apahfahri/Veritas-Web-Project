@@ -8,8 +8,8 @@
 
         {{-- ── HEADER ──────────────────────────────────────────────── --}}
         <div class="text-center mb-10">
-            <h1 class="text-3xl font-bold text-[#7d2ae7] mb-2">Cek Status Pendaftaran</h1>
-            <p class="text-gray-500">Masukkan Email atau Nomor WhatsApp Anda untuk melihat progres pendaftaran pelatihan.</p>
+            <h1 class="text-3xl font-bold text-[#1E6B3D] mb-2">Cek Status Pendaftaran</h1>
+            <p class="text-gray-500">Masukkan Email atau Nomor WhatsApp Anda untuk melihat progres pendaftaran layanan kami.</p>
         </div>
 
         {{-- ── FORM SEARCH ─────────────────────────────────────────── --}}
@@ -26,10 +26,10 @@
                         <input type="text" name="identifier" 
                                value="{{ $identifier ?? old('identifier') }}"
                                placeholder="Email atau No. WhatsApp" 
-                               class="w-full border border-gray-300 rounded-xl pl-12 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] transition"
+                               class="w-full border border-gray-300 rounded-xl pl-12 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] transition"
                                required>
                     </div>
-                    <button type="submit" class="bg-[#7d2ae7] hover:bg-[#008f8f] text-white font-semibold px-8 py-3 rounded-xl transition shadow-sm active:scale-95">
+                    <button type="submit" class="bg-[#1E6B3D] hover:bg-[#3CDA7D] text-white font-semibold px-8 py-3 rounded-xl transition shadow-sm active:scale-95">
                         Cek Status
                     </button>
                 </div>
@@ -50,7 +50,7 @@
             @else
                 <div class="space-y-6">
                     <h2 class="text-xl font-semibold text-gray-800 flex items-center gap-2">
-                        <span>📋</span> Hasil Pencarian untuk: <span class="text-[#7d2ae7]">{{ $identifier }}</span>
+                        <span>📋</span> Hasil Pencarian untuk: <span class="text-[#1E6B3D]">{{ $identifier }}</span>
                     </h2>
 
                     @foreach($pendaftarans as $item)
@@ -58,7 +58,7 @@
                             <div class="p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
                                 <div class="flex-1">
                                     <div class="flex items-center gap-3 mb-2">
-                                        <span class="bg-[#7d2ae7]/10 text-[#7d2ae7] text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">
+                                        <span class="bg-[#1E6B3D]/10 text-[#1E6B3D] text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">
                                             {{ $item->layanan->kategori->nama ?? 'Pelatihan K3' }}
                                         </span>
                                         <span class="text-gray-400 text-sm">•</span>
@@ -74,7 +74,7 @@
                                         @endif
                                         @if($item->mode_pertemuan)
                                             <span class="text-gray-400 text-sm">•</span>
-                                            <span class="bg-[#7d2ae7]/10 text-[#7d2ae7] text-[10px] font-bold px-1.5 py-0.5 rounded uppercase">{{ $item->mode_pertemuan }}</span>
+                                            <span class="bg-[#1E6B3D]/10 text-[#1E6B3D] text-[10px] font-bold px-1.5 py-0.5 rounded uppercase">{{ $item->mode_pertemuan }}</span>
                                         @endif
                                     </div>
                                     <h3 class="text-xl font-bold text-gray-800 mb-1">{{ $item->layanan->materi }}</h3>
@@ -134,7 +134,7 @@
 
                                 <div class="flex md:flex-col gap-3">
                                     @if($item->status_progres === 'selesai' && $item->sertifikat)
-                                        <a href="#" class="inline-flex items-center justify-center gap-2 bg-[#7d2ae7] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 transition shadow-sm">
+                                        <a href="#" class="inline-flex items-center justify-center gap-2 bg-[#1E6B3D] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 transition shadow-sm">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                             </svg>
@@ -142,7 +142,7 @@
                                         </a>
                                     @endif
                                     
-                                    <a href="https://wa.me/628123456789?text=Halo%20Admin%2C%20saya%20ingin%20menanyakan%20status%20pendaftaran%20pelatihan%20{{ urlencode($item->layanan->materi) }}%20atas%20nama%20{{ urlencode($item->user->nama) }}" 
+                                    <a href="https://wa.me/628123456789?text=Halo%20Admin%2C%20saya%20ingin%20menanyakan%20status%20pendaftaran%20layanan%20{{ urlencode($item->layanan->materi) }}%20atas%20nama%20{{ urlencode($item->user->nama) }}" 
                                        target="_blank"
                                        class="inline-flex items-center justify-center gap-2 bg-green-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-green-600 transition shadow-sm">
                                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -187,7 +187,7 @@
             Pendaftaran {{ session('success_type') }} Anda telah kami terima. Tim kami akan segera menghubungi Anda.
         </p>
 
-        <button onclick="closeModal()" class="w-full bg-[#7d2ae7] hover:bg-[#008f8f] text-white font-bold py-3 rounded-xl shadow-lg transition-all active:scale-95">
+        <button onclick="closeModal()" class="w-full bg-[#1E6B3D] hover:bg-[#3CDA7D] text-white font-bold py-3 rounded-xl shadow-lg transition-all active:scale-95">
             Lihat Status Saya
         </button>
     </div>

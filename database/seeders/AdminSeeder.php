@@ -26,6 +26,7 @@ class AdminSeeder extends Seeder
             'no_telp' => '081234567891',
             'role' => 'subadmin',
             'status' => 'aktif',
+            'cabang' => 'Bandung',
         ]);
         
         Admin::create([
@@ -35,6 +36,7 @@ class AdminSeeder extends Seeder
             'no_telp' => '081234567892',
             'role' => 'subadmin',
             'status' => 'aktif',
+            'cabang' => 'Jakarta',
         ]);
     }
 }

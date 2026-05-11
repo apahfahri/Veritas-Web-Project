@@ -38,7 +38,7 @@ class SubadminController extends Controller
             'username' => 'required|string|max:255|unique:admin,username',
             'email'    => 'required|email|unique:admin,email',
             'password' => 'required|min:6',
-            'no_telp'  => 'nullable|string|max:20',
+            'no_telp'  => 'required|string|max:20',
             'status'   => 'required|in:aktif,nonaktif',
         ]);
 
@@ -69,7 +69,7 @@ class SubadminController extends Controller
             'username' => 'required|string|max:255|unique:admin,username,' . $id . ',id_admin',
             'email'    => 'required|email|unique:admin,email,' . $id . ',id_admin',
             'password' => 'nullable|min:6',
-            'no_telp'  => 'nullable|string|max:20',
+            'no_telp'  => 'required|string|max:20',
             'status'   => 'required|in:aktif,nonaktif',
         ]);
 

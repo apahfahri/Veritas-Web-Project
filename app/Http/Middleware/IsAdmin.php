@@ -13,8 +13,8 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!Auth::check() || !Auth::user()->isAdmin()) {
-            abort(403, 'Akses ditolak. Halaman ini khusus untuk Admin.');
+        if (!Auth::check() || !Auth::user()->isSuperAdmin()) {
+            abort(403, 'Akses ditolak. Halaman ini khusus untuk Superadmin.');
         }
 
         return $next($request);

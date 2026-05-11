@@ -7,11 +7,11 @@
     <!-- BREADCRUMB -->
     <div class="bg-white border-b">
         <div class="max-w-7xl mx-auto px-6 py-4 text-sm">
-            <a href="{{ route('home') }}" class="text-gray-500 hover:text-[#7d2ae7]">Home</a>
+            <a href="{{ route('home') }}" class="text-gray-500 hover:text-[#1E6B3D]">Home</a>
             <span class="mx-2 text-gray-400">/</span>
-            <a href="{{ route('training.list') }}" class="text-gray-500 hover:text-[#7d2ae7]">Pelatihan</a>
+            <a href="{{ route('training.list') }}" class="text-gray-500 hover:text-[#1E6B3D]">Pelatihan</a>
             <span class="mx-2 text-gray-400">/</span>
-            <span class="text-[#7d2ae7] font-medium">{{ $pelatihan->materi }}</span>
+            <span class="text-[#1E6B3D] font-medium">{{ $pelatihan->materi }}</span>
         </div>
     </div>
 
@@ -28,15 +28,15 @@
                 <!-- HEADER CARD -->
                 <div class="bg-white p-8 rounded-xl shadow">
                     <div class="flex gap-3 mb-4">
-                        <span class="bg-[#7d2ae7] text-white text-xs px-3 py-1 rounded">
+                        <span class="bg-[#1E6B3D] text-white text-xs px-3 py-1 rounded">
                             {{ $pelatihan->kategori?->nama ?? 'Pelatihan K3' }}
                         </span>
-                        <span class="border text-xs px-3 py-1 rounded {{ $pelatihan->jenis_pertemuan === 'online' ? 'border-[#7d2ae7] text-[#7d2ae7]' : 'border-orange-400 text-orange-500' }}">
+                        <span class="border text-xs px-3 py-1 rounded {{ $pelatihan->jenis_pertemuan === 'online' ? 'border-[#1E6B3D] text-[#1E6B3D]' : 'border-orange-400 text-orange-500' }}">
                             {{ ucfirst($pelatihan->jenis_pertemuan) }}
                         </span>
                     </div>
 
-                    <h1 class="text-3xl font-bold text-[#7d2ae7] mb-2">{{ $pelatihan->nama }}</h1>
+                    <h1 class="text-3xl font-bold text-[#1E6B3D] mb-2">{{ $pelatihan->nama }}</h1>
                     <div class="text-2xl font-bold text-gray-800 mb-4">Rp {{ number_format($pelatihan->harga, 0, ',', '.') }}</div>
 
                     <!-- INFO GRID -->
@@ -64,14 +64,14 @@
                     <!-- DESCRIPTION -->
                     @if($pelatihan->deskripsi)
                     <div class="mb-6">
-                        <h2 class="text-xl font-semibold text-[#7d2ae7] mb-3">Deskripsi Pelatihan</h2>
+                        <h2 class="text-xl font-semibold text-[#1E6B3D] mb-3">Deskripsi Pelatihan</h2>
                         <p class="text-gray-600 leading-relaxed">{{ $pelatihan->deskripsi }}</p>
                     </div>
                     @endif
 
                     <!-- SCHEDULE -->
                     <div>
-                        <h2 class="text-xl font-semibold text-[#7d2ae7] mb-4">Jadwal</h2>
+                        <h2 class="text-xl font-semibold text-[#1E6B3D] mb-4">Jadwal</h2>
                         <div class="border rounded-lg p-4 space-y-2 text-sm">
                             @if($pelatihan->tanggal_pertemuan)
                             <div>📅 {{ $pelatihan->tanggal_pertemuan->format('l, d F Y') }}</div>
@@ -95,11 +95,11 @@
                     <!-- PEMATERI -->
                     @if($pelatihan->pemateri && $pelatihan->pemateri->count() > 0)
                     <div class="mt-8">
-                        <h2 class="text-xl font-semibold text-[#7d2ae7] mb-4">Pemateri</h2>
+                        <h2 class="text-xl font-semibold text-[#1E6B3D] mb-4">Pemateri</h2>
                         <div class="grid gap-4">
                             @foreach($pelatihan->pemateri as $pemateri)
                             <div class="border border-gray-200 rounded-lg p-4 flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-full bg-[#00A8A8]/10 text-[#00A8A8] flex items-center justify-center font-bold text-xl shrink-0">
+                                <div class="w-12 h-12 rounded-full bg-[#1E6B3D]/10 text-[#1E6B3D] flex items-center justify-center font-bold text-xl shrink-0">
                                     {{ strtoupper(substr($pemateri->nama_lengkap, 0, 1)) }}
                                 </div>
                                 <div>
@@ -122,7 +122,7 @@
                 <div class="bg-white p-6 rounded-xl shadow sticky top-4">
                     <div class="mb-4">
                         <div class="text-sm text-gray-500">Layanan</div>
-                        <div class="text-xl font-bold text-[#7d2ae7] mb-1">{{ $pelatihan->kategori?->nama }}</div>
+                        <div class="text-xl font-bold text-[#1E6B3D] mb-1">{{ $pelatihan->kategori?->nama }}</div>
                         <div class="text-2xl font-extrabold text-gray-800">Rp {{ number_format($pelatihan->harga, 0, ',', '.') }}</div>
                     </div>
 
@@ -130,18 +130,18 @@
 
                     <ul class="space-y-2 text-sm mb-6">
                         <li>✔ Sertifikat resmi terakreditasi</li>
-                        <li>✔ Materi lengkap & terstruktur</li>
+                        <li>✔ Materi lengkap & terstructured</li>
                         <li>✔ Instruktur berpengalaman</li>
                         <li>✔ Berlaku seumur hidup</li>
                     </ul>
 
                     <a href="{{ route('training.register', $pelatihan->id_layanan) }}"
-                       class="block w-full text-center bg-[#7d2ae7] text-white py-3 rounded-lg font-semibold hover:opacity-90 transition">
+                       class="block w-full text-center bg-[#1E6B3D] text-white py-3 rounded-lg font-semibold hover:opacity-90 transition">
                         Daftar Sekarang
                     </a>
 
                     <div class="mt-4 text-center text-sm">
-                        <a href="{{ route('consultation') }}" class="text-[#7d2ae7] hover:underline">
+                        <a href="{{ route('consultation') }}" class="text-[#1E6B3D] hover:underline">
                             Butuh konsultasi dulu?
                         </a>
                     </div>
@@ -149,12 +149,12 @@
 
                 @if(!$related->isEmpty())
                 <div class="bg-white p-6 rounded-xl shadow">
-                    <h3 class="font-semibold text-[#7d2ae7] mb-4">Pelatihan Lainnya</h3>
+                    <h3 class="font-semibold text-[#1E6B3D] mb-4">Pelatihan Lainnya</h3>
                     <div class="space-y-3">
                         @foreach($related as $rel)
                         <a href="{{ route('training.detail', $rel->id_layanan) }}"
-                           class="block p-3 border rounded hover:border-[#7d2ae7] transition text-sm">
-                            <div class="font-medium text-[#7d2ae7]">{{ $rel->materi }}</div>
+                           class="block p-3 border rounded hover:border-[#1E6B3D] transition text-sm">
+                            <div class="font-medium text-[#1E6B3D]">{{ $rel->materi }}</div>
                             <div class="text-gray-500 text-xs">{{ ucfirst($rel->jenis_pertemuan) }}</div>
                         </a>
                         @endforeach

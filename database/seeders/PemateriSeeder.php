@@ -11,21 +11,23 @@ class PemateriSeeder extends Seeder
     {
         DB::table('pemateri')->insert([
             [
-                'nama_lengkap' => 'Ir. Hendro Supriadi, M.KKK',
-                'email' => 'hendro@veritas.com',
-                'no_hp' => '081234567801',
-                'kompetensi' => 'Ahli K3 Umum Spesialisasi Manufaktur',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'id_pemateri'  => 1,
+                'nama_lengkap' => 'Dr. Budi Santoso', // Sesuaikan dari nama_pemateri ke nama_lengkap
+                'email'        => 'budi@example.com',
+                'no_hp'        => '08123456789',
+                'kompetensi'   => 'Ahli K3 Industri', // Sesuaikan dari bio ke kompetensi
+                'created_at'   => now(),
+                'updated_at'   => now(),
             ],
             [
-                'nama_lengkap' => 'dr. Anita Larasati, Sp.Ok',
-                'email' => 'anita@veritas.com',
-                'no_hp' => '081234567802',
-                'kompetensi' => 'Dokter Kesehatan Kerja',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]
+                'id_pemateri'  => 2,
+                'nama_lengkap' => 'Ir. Siti Aminah',
+                'email'        => 'siti@example.com',
+                'no_hp'        => '08987654321',
+                'kompetensi'   => 'Spesialis Audit ISO',
+                'created_at'   => now(),
+                'updated_at'   => now(),
+            ],
         ]);
     }
 }

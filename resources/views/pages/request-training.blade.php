@@ -8,10 +8,10 @@
         {{-- ── HEADER ──────────────────────────────────────────────── --}}
         <div class="bg-white p-6 rounded-2xl shadow-sm mb-8 border border-gray-100">
             <a href="{{ route('training.list') }}"
-               class="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-[#7d2ae7] mb-4 transition">
+               class="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-[#1E6B3D] mb-4 transition">
                 ← Kembali ke Daftar Pelatihan
             </a>
-            <h1 class="text-2xl font-bold text-[#7d2ae7]">Form Request Pelatihan Perusahaan</h1>
+            <h1 class="text-2xl font-bold text-[#1E6B3D]">Form Request Pelatihan Perusahaan</h1>
             <p class="text-gray-500 mt-1 text-sm">Silakan isi formulir di bawah ini untuk mengajukan permintaan pelatihan khusus bagi instansi/perusahaan Anda.</p>
         </div>
 
@@ -33,7 +33,7 @@
 
             {{-- ── STEP 1 · Data PIC & Perusahaan ────────────────────── --}}
             <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mb-6">
-                <h2 class="text-lg font-semibold text-[#7d2ae7] mb-5">1. Data PIC & Perusahaan</h2>
+                <h2 class="text-lg font-semibold text-[#1E6B3D] mb-5">1. Data PIC & Perusahaan</h2>
 
                 <div class="space-y-4">
                     <div>
@@ -43,7 +43,7 @@
                         <input type="text" name="nama_lengkap" required
                                value="{{ old('nama_lengkap') }}"
                                placeholder="Masukkan nama penanggung jawab"
-                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition">
+                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition">
                     </div>
 
                     <div class="grid md:grid-cols-2 gap-4">
@@ -54,7 +54,7 @@
                             <input type="email" name="email" required
                                    value="{{ old('email') }}"
                                    placeholder="Email aktif perusahaan/PIC"
-                                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition">
+                                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition">
                         </div>
 
                         <div>
@@ -64,7 +64,7 @@
                             <input type="text" name="no_telp" required
                                    value="{{ old('no_telp') }}"
                                    placeholder="Contoh: 08123456789"
-                                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition">
+                                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition">
                         </div>
                     </div>
 
@@ -75,7 +75,7 @@
                         <input type="text" name="nama_perusahaan" required
                                value="{{ old('nama_perusahaan') }}"
                                placeholder="PT / CV / Instansi"
-                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition">
+                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition">
                     </div>
 
                     <div>
@@ -83,7 +83,7 @@
                         <input type="text" name="jabatan"
                                value="{{ old('jabatan') }}"
                                placeholder="Contoh: HRD Manager, Training Officer"
-                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition">
+                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition">
                     </div>
 
                     <div>
@@ -92,7 +92,7 @@
                         </label>
                         <textarea name="alamat_perusahaan" rows="2" required
                                   placeholder="Alamat lengkap kantor / perusahaan"
-                                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition resize-none">{{ old('alamat_perusahaan') }}</textarea>
+                                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition resize-none">{{ old('alamat_perusahaan') }}</textarea>
                     </div>
 
                     <div class="grid md:grid-cols-2 gap-4">
@@ -101,14 +101,14 @@
                             <input type="text" name="sektor_industri"
                                    value="{{ old('sektor_industri') }}"
                                    placeholder="Contoh: Manufaktur, Jasa, dll."
-                                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition">
+                                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Jumlah Karyawan (Opsional)</label>
                             <input type="number" name="jumlah_karyawan" min="1"
                                    value="{{ old('jumlah_karyawan') }}"
                                    placeholder="Contoh: 50"
-                                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition">
+                                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition">
                         </div>
                     </div>
                 </div>
@@ -116,7 +116,7 @@
 
             {{-- ── STEP 2 · Detail Request Pelatihan ────────────────── --}}
             <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mb-6">
-                <h2 class="text-lg font-semibold text-[#7d2ae7] mb-5">2. Detail Request Pelatihan</h2>
+                <h2 class="text-lg font-semibold text-[#1E6B3D] mb-5">2. Detail Request Pelatihan</h2>
 
                 <div class="space-y-4">
                     <div>
@@ -126,21 +126,21 @@
                         <input type="text" name="topik_pelatihan" required
                                value="{{ old('topik_pelatihan') }}"
                                placeholder="Contoh: Ahli K3 Umum, K3 Ketinggian, dll."
-                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition">
+                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition">
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Estimasi Tanggal Pelaksanaan (Opsional)</label>
                         <input type="date" name="tanggal_harapan"
                                value="{{ old('tanggal_harapan') }}"
-                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition">
+                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition">
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Pesan / Persyaratan Tambahan (Opsional)</label>
                         <textarea name="pesan_tambahan" rows="4"
                                   placeholder="Sebutkan kebutuhan khusus, lokasi pelatihan, atau pertanyaan lainnya..."
-                                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#7d2ae7] focus:border-transparent transition resize-none">{{ old('pesan_tambahan') }}</textarea>
+                                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition resize-none">{{ old('pesan_tambahan') }}</textarea>
                     </div>
                 </div>
             </div>
@@ -148,11 +148,11 @@
             {{-- ── TOMBOL SUBMIT ───────────────────────────────────── --}}
             <div class="flex items-center justify-between gap-4">
                 <a href="{{ route('training.list') }}"
-                   class="text-sm text-gray-500 hover:text-[#7d2ae7] transition">
+                   class="text-sm text-gray-500 hover:text-[#1E6B3D] transition">
                     ← Batalkan
                 </a>
                 <button type="submit"
-                        class="bg-[#7d2ae7] hover:bg-[#008f8f] text-white font-semibold px-8 py-3 rounded-xl transition-all shadow-sm hover:shadow-md active:scale-95">
+                        class="bg-[#1E6B3D] hover:bg-[#3CDA7D] text-white font-semibold px-8 py-3 rounded-xl transition-all shadow-sm hover:shadow-md active:scale-95">
                     Kirim Permintaan →
                 </button>
             </div>
