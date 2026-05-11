@@ -44,7 +44,7 @@ class PendaftaranAdminController extends Controller
     }
     public function index(Request $request)
     {
-        $query = Pendaftaran::with(['user', 'layanan'])->latest();
+        $query = Pendaftaran::with(['user', 'layanan.kategori'])->latest();
 
         if ($request->filled('status')) {
             $query->where('status_progres', $request->status);
@@ -53,7 +53,7 @@ class PendaftaranAdminController extends Controller
             $query->where('status_bayar', $request->bayar);
         }
 
-        $pendaftarans = $query->paginate(15);
+        $pendaftarans = $query->paginate(5);
 
         return view('admin.pendaftaran.index', compact('pendaftarans'));
     }
@@ -69,8 +69,8 @@ class PendaftaranAdminController extends Controller
         $pendaftaran = Pendaftaran::findOrFail($id);
 
         $request->validate([
-            'status_progres' => 'required|in:menunggu,diproses,selesai,dibatalkan',
-            'status_bayar'   => 'required|in:belum_bayar,menunggu_konfirmasi,lunas',
+            'status_progres' => 'required|in:menunggu_pembayaran,diproses,selesai,dibatalkan',
+            'status_bayar'   => 'required|in:belum_lunas,lunas',
         ]);
 
         $pendaftaran->update($request->only('status_progres', 'status_bayar'));

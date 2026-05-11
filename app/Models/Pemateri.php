@@ -18,7 +18,6 @@ class Pemateri extends Model
         'no_hp',
         'kompetensi',
         'foto',
-        'bio',
     ];
 
     public function layanan()
