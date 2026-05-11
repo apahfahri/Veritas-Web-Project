@@ -80,7 +80,7 @@
                 <svg class="w-6 h-6 lg:w-7 lg:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
             </div>
             <div class="min-w-0">
-                <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest truncate">Petugas Aktif</p>
+                <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest truncate">Pemateri Aktif</p>
                 <h3 class="text-xl lg:text-2xl font-black text-blue-600 tracking-tight mt-0.5">{{ number_format($stats['petugas']) }}</h3>
             </div>
         </div>
@@ -127,96 +127,41 @@
     </div>
 </div>
 
-<!-- QUICK ACCESS SECTION (Excluded from Export) -->
-<div class="mt-12">
-    <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6 ml-1">Akses Cepat Pengelolaan</h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-        
-        <!-- Button 1: Kelola Pendaftaran -->
-        <a href="{{ route('admin.pendaftaran.index') }}" class="group bg-slate-900 p-6 rounded-[2rem] shadow-xl shadow-slate-200 hover:scale-[1.03] transition-all duration-300 flex flex-col gap-4">
-            <div class="w-11 h-11 bg-white/10 rounded-2xl flex items-center justify-center text-cyan-400 group-hover:scale-110 transition duration-300">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-            </div>
-            <div>
-                <h4 class="text-white font-black text-[11px] uppercase tracking-widest">Kelola Pendaftaran</h4>
-                <p class="text-[9px] text-slate-500 font-bold uppercase tracking-widest mt-1">Pantau aktivitas pendaftar</p>
-            </div>
-        </a>
-
-        <!-- Button 2: Tambah Pelatihan -->
-        <a href="{{ route('admin.pelatihan.create') }}" class="group bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 hover:scale-[1.03] hover:shadow-lg transition-all duration-300 flex flex-col gap-4">
-            <div class="w-11 h-11 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600 group-hover:scale-110 transition duration-300">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-            </div>
-            <div>
-                <h4 class="text-slate-900 font-black text-[11px] uppercase tracking-widest">Tambah Pelatihan</h4>
-                <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-1">Buat jadwal layanan baru</p>
-            </div>
-        </a>
-
-        <!-- Button 3: Manajemen Sertifikat -->
-        <a href="{{ route('admin.sertifikat.index') }}" class="group bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 hover:scale-[1.03] hover:shadow-lg transition-all duration-300 flex flex-col gap-4">
-            <div class="w-11 h-11 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-600 group-hover:scale-110 transition duration-300">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138z"></path></svg>
-            </div>
-            <div>
-                <h4 class="text-slate-900 font-black text-[11px] uppercase tracking-widest">Manajemen Sertifikat</h4>
-                <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-1">Kelola kelulusan peserta</p>
-            </div>
-        </a>
-
-        <!-- Button 4: Manajemen Petugas -->
-        <a href="{{ route('admin.petugas.index') }}" class="group bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 hover:scale-[1.03] hover:shadow-lg transition-all duration-300 flex flex-col gap-4">
-            <div class="w-11 h-11 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 group-hover:scale-110 transition duration-300">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-            </div>
-            <div>
-                <h4 class="text-slate-900 font-black text-[11px] uppercase tracking-widest">Manajemen Pemaateri</h4>
-                <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-1">Kelola data pemateri</p>
-            </div>
-        </a>
-    </div>
-</div>
-
 <!-- LATEST ACTIVITIES (Excluded from Export) -->
 <div class="mt-12 bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden no-export">
-    <div class="p-8 border-b border-slate-50 flex justify-between items-center bg-slate-50/30">
-        <h3 class="text-[10px] font-black text-slate-900 uppercase tracking-[0.2em]">Aktivitas Terkini</h3>
-        <a href="{{ route('admin.pendaftaran.index') }}" class="text-[9px] font-black uppercase tracking-widest text-indigo-600 hover:text-indigo-700 transition">Lihat Seluruh Aktivitas →</a>
+    <div class="px-8 py-6 border-b border-slate-100 flex justify-between items-center">
+        <h3 class="text-[13px] font-black text-slate-900">Aktivitas Terkini</h3>
+        <a href="{{ route('admin.pendaftaran.index') }}" class="text-[11px] font-black text-indigo-600 hover:text-indigo-700 transition">Lihat Seluruh Aktivitas →</a>
     </div>
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
-            <thead class="bg-slate-50/50">
-                <tr>
-                    <th class="p-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Peserta</th>
-                    <th class="p-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Program</th>
-                    <th class="p-6 text-[9px] font-black uppercase tracking-widest text-slate-400 text-center">Status</th>
+            <thead>
+                <tr class="bg-slate-100/50 border-b-2 border-slate-100">
+                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Nama Peserta</th>
+                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Kategori Layanan</th>
+                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Tgl Daftar</th>
+                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50 text-center">Status</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-50">
                 @forelse($pendaftaranTerbaru as $p)
-                <tr class="hover:bg-slate-50/50 transition duration-200">
+                <tr class="hover:bg-slate-50/50 transition-colors group">
                     <td class="p-6">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-[10px] font-black shadow-sm shrink-0">
-                                {{ strtoupper(substr($p->user?->nama ?? 'U', 0, 1)) }}
-                            </div>
-                            <div class="min-w-0">
-                                <p class="text-xs font-black text-slate-900 truncate">{{ $p->user?->nama ?? 'Unknown' }}</p>
-                                <p class="text-[8px] text-slate-400 font-bold uppercase tracking-tighter">{{ $p->tanggal_daftar ? $p->tanggal_daftar->format('d/m/Y') : '-' }}</p>
-                            </div>
-                        </div>
+                        <span class="text-[12px] font-medium text-slate-900 group-hover:text-indigo-600 transition">{{ $p->user?->nama ?? 'Unknown' }}</span>
                     </td>
                     <td class="p-6">
-                        <p class="text-[10px] font-black text-slate-600 uppercase tracking-tight truncate max-w-[200px]">{{ $p->layanan?->nama ?? ($p->layanan?->materi ?? '-') }}</p>
+                        <span class="text-[12px] font-medium text-slate-900 truncate max-w-[200px] block">{{ $p->layanan?->kategori?->nama ?? ($p->layanan?->materi ?? '-') }}</span>
+                    </td>
+                    <td class="p-6 whitespace-nowrap">
+                        <span class="text-[12px] font-medium text-slate-900">{{ $p->tanggal_daftar ? $p->tanggal_daftar->format('d M Y') : '-' }}</span>
                     </td>
                     <td class="p-6 text-center">
                         @php $c = match($p->status_progres) { 'selesai' => 'text-emerald-500', 'diproses' => 'text-blue-500', 'menunggu_pembayaran' => 'text-amber-500', default => 'text-slate-400' }; @endphp
-                        <span class="text-[8px] font-black uppercase tracking-widest {{ $c }}">{{ str_replace('_', ' ', $p->status_progres) }}</span>
+                        <span class="text-[12px] font-medium {{ $c }}">{{ str_replace('_', ' ', $p->status_progres) }}</span>
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="3" class="p-12 text-center text-[10px] font-black text-slate-300 uppercase tracking-widest">Belum ada aktivitas baru</td></tr>
+                <tr><td colspan="4" class="p-12 text-center text-[12px] font-medium text-slate-400">Belum ada aktivitas baru</td></tr>
                 @endforelse
             </tbody>
         </table>

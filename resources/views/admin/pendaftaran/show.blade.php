@@ -79,7 +79,7 @@
             </button>
         </form>
 
-        @if($pendaftaran->status_progres === 'selesai' && !$pendaftaran->sertifikat)
+        @if($pendaftaran->status_progres === 'selesai' && $pendaftaran->status_bayar === 'lunas' && !$pendaftaran->sertifikat)
         <div class="mt-4 pt-4 border-t">
             <a href="{{ route('admin.sertifikat.create', $pendaftaran->id_pendaftaran) }}"
                class="block w-full text-center bg-[#7d2ae7] text-white py-2.5 rounded-lg hover:opacity-90 text-sm">

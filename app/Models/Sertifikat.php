@@ -20,7 +20,8 @@ class Sertifikat extends Model
         'id_pendaftaran',
         'nama_lengkap',
         'tanggal_terbit',
-        'file',
+        'file_pdf',
+        'penerbit',
     ];
 
     protected $casts = [
@@ -51,9 +52,9 @@ class Sertifikat extends Model
     |--------------------------------------------------------------------------
     */
 
-    /** Ambil URL file sertifikat */
-    public function getFileUrlAttribute(): ?string
+    /** Ambil URL file PDF sertifikat */
+    public function getPdfUrlAttribute(): ?string
     {
-        return $this->file ? asset('storage/' . $this->file) : null;
+        return $this->file_pdf ? asset('storage/' . $this->file_pdf) : null;
     }
 }
