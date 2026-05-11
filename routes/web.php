@@ -105,9 +105,13 @@ Route::middleware(['auth', 'is.admin'])->prefix('admin')->name('admin.')->group(
     Route::put('/pendaftaran/{id}',    [PendaftaranAdminController::class, 'update'])->name('pendaftaran.update');
 
     // Sertifikat management
-    Route::get('/sertifikat',                          [SertifikatAdminController::class, 'index'])->name('sertifikat.index');
-    Route::get('/sertifikat/create/{pendaftaran_id}',  [SertifikatAdminController::class, 'create'])->name('sertifikat.create');
-    Route::post('/sertifikat',                         [SertifikatAdminController::class, 'store'])->name('sertifikat.store');
+    Route::get('/sertifikat',                            [SertifikatAdminController::class, 'index'])->name('sertifikat.index');
+    Route::get('/sertifikat/create/{id_pendaftaran}',    [SertifikatAdminController::class, 'create'])->name('sertifikat.create');
+    Route::post('/sertifikat',                           [SertifikatAdminController::class, 'store'])->name('sertifikat.store');
+    Route::get('/sertifikat/{no_sertifikat}',            [SertifikatAdminController::class, 'show'])->name('sertifikat.show');
+    Route::get('/sertifikat/{no_sertifikat}/edit',       [SertifikatAdminController::class, 'edit'])->name('sertifikat.edit');
+    Route::put('/sertifikat/{no_sertifikat}',            [SertifikatAdminController::class, 'update'])->name('sertifikat.update');
+    Route::delete('/sertifikat/{no_sertifikat}',         [SertifikatAdminController::class, 'destroy'])->name('sertifikat.destroy');
 
     // Subadmin management (Superadmin only)
     Route::resource('subadmin', \App\Http\Controllers\Admin\SubadminController::class)->except(['show']);

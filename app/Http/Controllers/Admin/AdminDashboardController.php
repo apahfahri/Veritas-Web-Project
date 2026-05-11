@@ -31,9 +31,9 @@ class AdminDashboardController extends Controller
             'selesai'     => Pendaftaran::where('status_progres', 'selesai')->count(),
         ];
 
-        $pendaftaranTerbaru = Pendaftaran::with(['user', 'layanan'])
+        $pendaftaranTerbaru = Pendaftaran::with(['user', 'layanan.kategori'])
             ->latest()
-            ->take(8)
+            ->take(3)
             ->get();
 
         // Multi-Series Chart Data (Pelatihan, Konsultasi, Audit)
