@@ -53,7 +53,7 @@
                 <!-- Lokasi -->
                 <div class="md:col-span-2">
                     <label class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block mb-2">Lokasi / Ruangan</label>
-                    <input type="text" name="lokasi" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm font-bold focus:ring-2 focus:ring-cyan-500 transition outline-none" placeholder="Contoh: Ruang Aula Cabang / Zoom Link" required>
+                    <input type="text" name="lokasi" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm font-bold focus:ring-2 focus:ring-cyan-500 transition outline-none" placeholder="Contoh: Hotel Aston Pasteur / Zoom Link" required>
                 </div>
             </div>
 

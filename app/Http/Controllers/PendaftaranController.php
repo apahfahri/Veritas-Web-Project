@@ -127,8 +127,8 @@ class PendaftaranController extends Controller
                 'rencana_tanggal_mulai'   => $request->rencana_tanggal_mulai,
                 'rencana_tanggal_selesai' => $request->rencana_tanggal_selesai,
                 'mode_pertemuan'          => $request->mode_pertemuan,
-                'status_progres'          => 'menunggu_pembayaran',
-                'status_bayar'            => 'belum_lunas',
+                'status_progres'          => 'menunggu',
+                'status_bayar'            => 'belum_bayar',
             ]);
 
             // Ambil nama kategori untuk feedback yang lebih spesifik

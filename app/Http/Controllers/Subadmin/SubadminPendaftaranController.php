@@ -47,6 +47,12 @@ class SubadminPendaftaranController extends Controller
     public function update(Request $request, $id)
     {
         $pendaftaran = Pendaftaran::findOrFail($id);
+        
+        // Prevent finishing if not paid
+        if ($request->status_progres == 'selesai' && $request->status_bayar != 'lunas') {
+            return redirect()->back()->with('error', 'Pendaftaran tidak dapat diselesaikan karena status pembayaran belum LUNAS.');
+        }
+
         $oldStatus = $pendaftaran->status_progres;
 
         $request->validate([
@@ -116,5 +122,32 @@ class SubadminPendaftaranController extends Controller
 
         return redirect()->route('subadmin.pendaftaran.show', ['id' => $id, 'context' => $request->query('context')])
             ->with('success', 'Catatan internal admin berhasil diperbarui.');
+    }
+
+    public function uploadPaymentProof(Request $request, $id)
+    {
+        $pendaftaran = Pendaftaran::findOrFail($id);
+
+        $request->validate([
+            'bukti_bayar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        if ($request->hasFile('bukti_bayar')) {
+            $file = $request->file('bukti_bayar');
+            $filename = 'bukti_' . $id . '_' . time() . '.' . $file->getClientOriginalExtension();
+            
+            // Ensure directory exists
+            if (!file_exists(public_path('uploads/pembayaran'))) {
+                mkdir(public_path('uploads/pembayaran'), 0777, true);
+            }
+            
+            $file->move(public_path('uploads/pembayaran'), $filename);
+            
+            $pendaftaran->update([
+                'bukti_bayar' => $filename
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Bukti pembayaran berhasil diunggah.');
     }
 }

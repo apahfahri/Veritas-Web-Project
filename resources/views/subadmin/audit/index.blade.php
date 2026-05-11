@@ -30,9 +30,14 @@
                     </td>
                     <td class="p-4 text-sm font-medium text-slate-600">{{ $a->materi }}</td>
                     <td class="p-4 text-right">
-                        <a href="{{ route('subadmin.audit.show', $a->id_layanan) }}" class="bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-black uppercase tracking-[0.1em] px-4 py-2 rounded-lg shadow-sm transition">
-                            Kelola Audit
-                        </a>
+                        <div class="flex items-center justify-end gap-3">
+                            @if($a->pending_count > 0)
+                                <span class="bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full animate-pulse shadow-sm shadow-red-500/40">{{ $a->pending_count }}</span>
+                            @endif
+                            <a href="{{ route('subadmin.audit.show', $a->id_layanan) }}" class="bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-black uppercase tracking-[0.1em] px-4 py-2 rounded-lg shadow-sm transition">
+                                Kelola Audit
+                            </a>
+                        </div>
                     </td>
                 </tr>
                 @empty

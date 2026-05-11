@@ -7,7 +7,7 @@
 <div class="bg-white rounded-3xl border border-slate-100 p-8 shadow-sm select-none">
     <div class="mb-8">
         <h3 class="text-lg font-black text-slate-900 tracking-tight">Perusahaan & Mitra</h3>
-        <p class="text-xs text-slate-500 mt-0.5">Daftar perusahaan yang memiliki peserta terdaftar di cabang Anda.</p>
+        <p class="text-xs text-slate-500 mt-0.5">Daftar perusahaan yang memiliki peserta terdaftar.</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -43,7 +43,7 @@
         @empty
         <div class="col-span-full py-20 text-center opacity-30">
             <svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-            <p class="text-sm font-bold uppercase tracking-widest">Tidak ada mitra korporat di cabang ini</p>
+            <p class="text-sm font-bold uppercase tracking-widest">Tidak ada mitra korporat untuk saat ini</p>
         </div>
         @endforelse
     </div>

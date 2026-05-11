@@ -24,6 +24,9 @@ class SubadminPelatihanController extends Controller
         // Filter by Pelatihan (ID 1)
         $pelatihans = Layanan::where('id_kategori', 1)
             ->with(['kategori', 'pemateri'])
+            ->withCount(['pendaftaran as pending_count' => function ($query) {
+                $query->whereNotIn('status_progres', ['selesai', 'dibatalkan']);
+            }])
             ->latest()
             ->paginate(15);
         return view('subadmin.pelatihan.index', compact('pelatihans'));

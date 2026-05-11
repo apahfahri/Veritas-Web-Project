@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('page-title', 'Tambah Admin Cabang')
+@section('page-title', 'Tambah Admin Subadmin')
 
 @section('content')
 

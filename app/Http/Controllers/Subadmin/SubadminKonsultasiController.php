@@ -24,6 +24,9 @@ class SubadminKonsultasiController extends Controller
         // Filter by Konsultasi (ID 2)
         $konsultasis = Layanan::where('id_kategori', 2)
             ->with(['kategori', 'pemateri'])
+            ->withCount(['pendaftaran as pending_count' => function ($query) {
+                $query->whereNotIn('status_progres', ['selesai', 'dibatalkan']);
+            }])
             ->latest()
             ->paginate(15);
         return view('subadmin.konsultasi.index', compact('konsultasis'));

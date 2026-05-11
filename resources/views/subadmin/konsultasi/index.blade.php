@@ -38,9 +38,14 @@
                         @endif
                     </td>
                     <td class="p-4 text-right">
-                        <a href="{{ route('subadmin.konsultasi.show', $k->id_layanan) }}" class="bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-black uppercase tracking-[0.1em] px-4 py-2 rounded-lg shadow-sm transition">
-                            Kelola Order
-                        </a>
+                        <div class="flex items-center justify-end gap-3">
+                            @if($k->pending_count > 0)
+                                <span class="bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full animate-pulse shadow-sm shadow-red-500/40">{{ $k->pending_count }}</span>
+                            @endif
+                            <a href="{{ route('subadmin.konsultasi.show', $k->id_layanan) }}" class="bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-black uppercase tracking-[0.1em] px-4 py-2 rounded-lg shadow-sm transition">
+                                Kelola Order
+                            </a>
+                        </div>
                     </td>
                 </tr>
                 @empty

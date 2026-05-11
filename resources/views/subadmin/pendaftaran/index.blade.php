@@ -45,14 +45,16 @@
                         {{ $p->tanggal_daftar ? $p->tanggal_daftar->format('d M Y') : '-' }}
                     </td>
                     <td class="p-4 text-sm font-semibold">
-                        @if($p->status_progres == 'menunggu_pembayaran')
-                            <span class="text-xs bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full font-bold">Menunggu Bayar</span>
+                        @if($p->status_progres == 'menunggu')
+                            <span class="text-[10px] bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full font-black uppercase tracking-widest whitespace-nowrap">Menunggu Konfirmasi</span>
+                        @elseif($p->status_progres == 'menunggu_pembayaran')
+                            <span class="text-[10px] bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full font-black uppercase tracking-widest whitespace-nowrap">Menunggu Bayar</span>
                         @elseif($p->status_progres == 'diproses')
-                            <span class="text-xs bg-blue-100 text-blue-800 px-2.5 py-1 rounded-full font-bold">Diproses</span>
+                            <span class="text-[10px] bg-blue-100 text-blue-800 px-2.5 py-1 rounded-full font-black uppercase tracking-widest whitespace-nowrap">Diproses</span>
                         @elseif($p->status_progres == 'selesai')
-                            <span class="text-xs bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full font-bold">Selesai</span>
+                            <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full font-black uppercase tracking-widest whitespace-nowrap">Selesai</span>
                         @else
-                            <span class="text-xs bg-red-100 text-red-800 px-2.5 py-1 rounded-full font-bold">{{ ucfirst($p->status_progres) }}</span>
+                            <span class="text-[10px] bg-red-100 text-red-800 px-2.5 py-1 rounded-full font-black uppercase tracking-widest whitespace-nowrap">{{ strtoupper($p->status_progres) }}</span>
                         @endif
                     </td>
                     <td class="p-4 text-sm font-medium flex items-center gap-2">

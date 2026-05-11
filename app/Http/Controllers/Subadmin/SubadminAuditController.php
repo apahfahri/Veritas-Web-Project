@@ -24,6 +24,9 @@ class SubadminAuditController extends Controller
         // Filter by Audit (ID 3)
         $audits = Layanan::where('id_kategori', 3)
             ->with(['kategori', 'pemateri'])
+            ->withCount(['pendaftaran as pending_count' => function ($query) {
+                $query->whereNotIn('status_progres', ['selesai', 'dibatalkan']);
+            }])
             ->latest()
             ->paginate(15);
         return view('subadmin.audit.index', compact('audits'));
