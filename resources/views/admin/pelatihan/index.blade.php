@@ -21,13 +21,15 @@
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
             <thead>
-                <tr class="bg-slate-50/50">
-                    <th class="p-6 text-[10px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-50">Kategori & Program</th>
-                    <th class="p-6 text-[10px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-50">Materi / Detail</th>
-                    <th class="p-6 text-[10px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-50 text-center">Mode</th>
-                    <th class="p-6 text-[10px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-50">Rentang Waktu</th>
-                    <th class="p-6 text-[10px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-50">Biaya Investasi</th>
-                    <th class="p-6 text-[10px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-50 text-center">Aksi</th>
+                <tr class="bg-slate-100/50 border-b-2 border-slate-100">
+                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Kategori Layanan</th>
+                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Nama Layanan</th>
+                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Materi</th>
+                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50 min-w-[240px]">Pemateri</th>
+                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50 text-center">Mode</th>
+                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Rentang Waktu</th>
+                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Biaya Investasi</th>
+                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50 text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-50">
@@ -35,17 +37,26 @@
                 <tr class="hover:bg-slate-50/50 transition-colors group">
                     <td class="p-6">
                         <div class="flex flex-col">
-                            <span class="text-[10px] font-black text-indigo-500 uppercase tracking-tighter mb-1">{{ $l->kategori?->nama ?? 'TANPA KATEGORI' }}</span>
-                            <span class="text-sm font-black text-slate-900 group-hover:text-indigo-600 transition">{{ $l->nama }}</span>
-                            <div class="flex flex-wrap gap-1 mt-2">
-                                @foreach($l->pemateri as $p)
-                                    <span class="bg-slate-100 text-slate-500 px-2 py-0.5 rounded-lg text-[9px] font-bold uppercase tracking-tight">{{ $p->nama_lengkap }}</span>
-                                @endforeach
-                            </div>
+                            <span class="text-[12px] font-medium text-slate-900">{{ $l->kategori?->nama ?? 'Tanpa Kategori' }}</span>
                         </div>
                     </td>
                     <td class="p-6">
-                        <p class="text-xs text-slate-500 font-bold leading-relaxed max-w-[200px] truncate">{{ $l->materi }}</p>
+                        <div class="flex flex-col">
+                            <span class="text-[12px] font-medium text-slate-900">{{ $l->nama }}</span>                            
+                        </div>
+                    </td>
+                    <td class="p-6">
+                        <p class="text-[12px] text-slate-900 font-medium leading-relaxed max-w-[200px] truncate">{{ $l->materi }}</p>
+                    </td>
+                    <td class="p-6 min-w-[240px]">
+                        <div class="flex flex-col gap-1">
+                            @foreach($l->pemateri as $p)
+                                <div class="flex items-center gap-1.5 text-[12px] font-medium text-slate-900">
+                                    <span>{{ $loop->iteration }}.</span>
+                                    <span>{{ $p->nama_lengkap }}</span>
+                                </div>
+                            @endforeach
+                        </div>
                     </td>
                     <td class="p-6 text-center">
                         <span class="inline-flex px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest {{ $l->jenis_pertemuan === 'online' ? 'bg-cyan-50 text-cyan-600 border border-cyan-100' : 'bg-amber-50 text-amber-600 border border-amber-100' }}">
@@ -54,18 +65,18 @@
                     </td>
                     <td class="p-6">
                         <div class="flex flex-col gap-1">
-                            <div class="flex items-center gap-2 text-xs font-black text-slate-700">
+                            <div class="flex items-center gap-2 text-[12px] font-medium text-slate-900">
                                 <svg class="w-3.5 h-3.5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v12a2 2 0 002 2z"></path></svg>
                                 {{ $l->tgl_mulai ? $l->tgl_mulai->format('d/m/Y') : '-' }}
                             </div>
-                            <div class="flex items-center gap-2 text-xs font-bold text-slate-400">
+                            <div class="flex items-center gap-2 text-[11px] font-medium text-slate-400">
                                 <span class="w-3.5 h-px bg-slate-200"></span>
                                 {{ $l->tgl_selesai ? $l->tgl_selesai->format('d/m/Y') : '-' }}
                             </div>
                         </div>
                     </td>
                     <td class="p-6">
-                        <span class="text-sm font-black text-slate-900">IDR {{ number_format($l->harga, 0, ',', '.') }}</span>
+                        <span class="text-[12px] font-medium text-slate-900">IDR {{ number_format($l->harga, 0, ',', '.') }}</span>
                     </td>
                     <td class="p-6">
                         <div class="flex items-center justify-center gap-2">

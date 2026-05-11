@@ -64,34 +64,29 @@
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
             <thead>
-                <tr class="bg-slate-50/30">
-                    <th class="p-6 text-[10px] font-black uppercase tracking-widest text-slate-400">Informasi Pendaftar</th>
-                    <th class="p-6 text-[10px] font-black uppercase tracking-widest text-slate-400">Program Layanan</th>
-                    <th class="p-6 text-[10px] font-black uppercase tracking-widest text-slate-400">Tgl Daftar</th>
-                    <th class="p-6 text-[10px] font-black uppercase tracking-widest text-slate-400 text-center">Progres</th>
-                    <th class="p-6 text-[10px] font-black uppercase tracking-widest text-slate-400 text-center">Pembayaran</th>
-                    <th class="p-6 text-[10px] font-black uppercase tracking-widest text-slate-400 text-center">Aksi</th>
+                <tr class="bg-slate-100/50 border-b-2 border-slate-100">
+                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Nama Pendaftar</th>
+                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Kategori Layanan</th>
+                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Tgl Daftar</th>
+                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50 text-center">Progres</th>
+                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50 text-center">Pembayaran</th>
+                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50 text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-50">
                 @forelse($pendaftarans as $p)
                 <tr class="hover:bg-slate-50/50 transition-colors group">
                     <td class="p-6">
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xs font-black shadow-sm">
-                                {{ strtoupper(substr($p->user?->nama, 0, 1)) }}
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="text-sm font-black text-slate-900 group-hover:text-indigo-600 transition">{{ $p->user?->nama }}</span>
-                                <span class="text-[10px] font-bold text-slate-400 lowercase">{{ $p->user?->email }}</span>
-                            </div>
+                        <div class="flex flex-col">
+                            <span class="text-[12px] font-medium text-slate-900 group-hover:text-indigo-600 transition">{{ $p->user?->nama }}</span>
+                            <span class="text-[11px] font-medium text-slate-400">{{ $p->user?->email }}</span>
                         </div>
                     </td>
                     <td class="p-6">
-                        <span class="text-xs font-bold text-slate-600 leading-relaxed">{{ $p->layanan?->materi ?? '-' }}</span>
+                        <span class="text-[12px] font-medium text-slate-900 leading-relaxed">{{ $p->layanan?->kategori?->nama ?? '-' }}</span>
                     </td>
                     <td class="p-6 whitespace-nowrap">
-                        <span class="text-xs font-black text-slate-400 uppercase tracking-widest">{{ $p->tanggal_daftar ? $p->tanggal_daftar->format('d M Y') : '-' }}</span>
+                        <span class="text-[12px] font-medium text-slate-900">{{ $p->tanggal_daftar ? $p->tanggal_daftar->format('d M Y') : '-' }}</span>
                     </td>
                     <td class="p-6 text-center">
                         @php 
@@ -124,7 +119,7 @@
                                class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-indigo-600 hover:text-indigo-600 hover:shadow-lg hover:shadow-indigo-50 transition shadow-sm group/btn">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                             </a>
-                            @if($p->status_progres === 'selesai' && !$p->sertifikat)
+                            @if($p->status_progres === 'selesai' && $p->status_bayar === 'lunas' && !$p->sertifikat)
                             <a href="{{ route('admin.sertifikat.create', $p->id_pendaftaran) }}"
                                title="Terbitkan Sertifikat"
                                class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-amber-500 hover:text-amber-500 hover:shadow-lg hover:shadow-amber-50 transition shadow-sm">
@@ -151,8 +146,41 @@
     </div>
     
     @if($pendaftarans->hasPages())
-    <div class="p-8 border-t border-slate-50 bg-slate-50/30">
-        {{ $pendaftarans->links() }}
+    <div class="px-8 py-5 border-t border-slate-100 bg-slate-50/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+        {{-- Info teks kiri --}}
+        <p class="text-[12px] font-medium text-slate-500">
+            Menampilkan
+            <span class="font-black text-slate-800">{{ $pendaftarans->firstItem() }}–{{ $pendaftarans->lastItem() }}</span>
+            dari
+            <span class="font-black text-slate-800">{{ $pendaftarans->total() }}</span>
+            pendaftar
+        </p>
+
+        {{-- Tombol navigasi kanan --}}
+        <div class="flex items-center gap-1">
+            {{-- Previous --}}
+            @if($pendaftarans->onFirstPage())
+                <span class="px-3 py-1.5 text-[11px] font-black text-slate-300 border border-slate-100 rounded-xl cursor-not-allowed bg-white">‹</span>
+            @else
+                <a href="{{ $pendaftarans->previousPageUrl() }}" class="px-3 py-1.5 text-[11px] font-black text-slate-500 border border-slate-200 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition bg-white">‹</a>
+            @endif
+
+            {{-- Nomor halaman --}}
+            @for($i = 1; $i <= $pendaftarans->lastPage(); $i++)
+                @if($i == $pendaftarans->currentPage())
+                    <span class="px-3 py-1.5 text-[11px] font-black text-white bg-slate-900 rounded-xl">{{ $i }}</span>
+                @else
+                    <a href="{{ $pendaftarans->url($i) }}" class="px-3 py-1.5 text-[11px] font-black text-slate-500 border border-slate-200 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition bg-white">{{ $i }}</a>
+                @endif
+            @endfor
+
+            {{-- Next --}}
+            @if($pendaftarans->hasMorePages())
+                <a href="{{ $pendaftarans->nextPageUrl() }}" class="px-3 py-1.5 text-[11px] font-black text-slate-500 border border-slate-200 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition bg-white">›</a>
+            @else
+                <span class="px-3 py-1.5 text-[11px] font-black text-slate-300 border border-slate-100 rounded-xl cursor-not-allowed bg-white">›</span>
+            @endif
+        </div>
     </div>
     @endif
 </div>

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Pemateri;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PemateriController extends Controller
 {
@@ -26,9 +28,19 @@ class PemateriController extends Controller
             'kompetensi'   => 'nullable|string',
             'no_hp'        => 'nullable|string|max:20',
             'email'        => 'nullable|email|max:255',
+            'foto'         => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        Pemateri::create($request->all());
+        $data = $request->all();
+
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $filename = Str::slug($request->nama_lengkap) . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('pemateri', $filename, 'public');
+            $data['foto'] = $path;
+        }
+
+        Pemateri::create($data);
 
         return redirect()->route('admin.petugas.index')
             ->with('success', 'Pemateri berhasil ditambahkan.');
@@ -49,9 +61,24 @@ class PemateriController extends Controller
             'kompetensi'   => 'nullable|string',
             'no_hp'        => 'nullable|string|max:20',
             'email'        => 'nullable|email|max:255',
+            'foto'         => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $pemateri->update($request->all());
+        $data = $request->all();
+
+        if ($request->hasFile('foto')) {
+            // Hapus foto lama
+            if ($pemateri->foto) {
+                Storage::disk('public')->delete($pemateri->foto);
+            }
+
+            $file = $request->file('foto');
+            $filename = Str::slug($request->nama_lengkap) . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('pemateri', $filename, 'public');
+            $data['foto'] = $path;
+        }
+
+        $pemateri->update($data);
 
         return redirect()->route('admin.petugas.index')
             ->with('success', 'Pemateri berhasil diperbarui.');
@@ -60,6 +87,12 @@ class PemateriController extends Controller
     public function destroy($id)
     {
         $pemateri = Pemateri::findOrFail($id);
+        
+        // Hapus foto jika ada
+        if ($pemateri->foto) {
+            Storage::disk('public')->delete($pemateri->foto);
+        }
+
         $pemateri->layanan()->detach();
         $pemateri->delete();
 
