@@ -1,14 +1,14 @@
 @extends('layouts.subadmin')
 
 @section('title', 'Daftar Klien')
-@section('page-title', 'Daftar Klien Cabang')
+@section('page-title', 'Daftar Klien')
 
 @section('content')
 <div class="bg-white rounded-3xl border border-slate-100 p-8 shadow-sm select-none">
     <div class="flex flex-col md:flex-row justify-between gap-4 mb-6">
         <div>
             <h3 class="text-lg font-black text-slate-900 tracking-tight">Klien Terdaftar</h3>
-            <p class="text-xs text-slate-500 mt-0.5">Kelola data klien yang berafiliasi dengan cabang Anda.</p>
+            <p class="text-xs text-slate-500 mt-0.5">Kelola data klien.</p>
         </div>
         <a href="{{ route('subadmin.klien.create') }}" class="w-fit bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white font-extrabold text-sm px-6 py-3.5 rounded-xl shadow-lg transition">
             + Tambah Klien
@@ -46,7 +46,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="p-4 text-center text-sm font-medium text-slate-500">Tidak ada data klien di cabang ini.</td>
+                    <td colspan="5" class="p-4 text-center text-sm font-medium text-slate-500">Tidak ada data klien untuk saat ini.</td>
                 </tr>
                 @endforelse
             </tbody>

@@ -54,14 +54,15 @@
                     <td class="px-6 py-5 text-center">
                         @php
                             $statusMap = [
-                                'menunggu' => ['bg-slate-100 text-slate-500', 'Menunggu'],
-                                'diproses' => ['bg-amber-50 text-amber-600', 'Diproses'],
-                                'selesai' => ['bg-emerald-50 text-emerald-600', 'Selesai'],
-                                'dibatalkan' => ['bg-red-50 text-red-600', 'Dibatalkan'],
+                                'menunggu' => ['bg-slate-100 text-slate-500', 'Menunggu Konfirmasi'],
+                                'menunggu_pembayaran' => ['bg-amber-100 text-amber-800', 'Menunggu Bayar'],
+                                'diproses' => ['bg-blue-100 text-blue-800', 'Diproses'],
+                                'selesai' => ['bg-emerald-100 text-emerald-800', 'Selesai'],
+                                'dibatalkan' => ['bg-red-100 text-red-800', 'Dibatalkan'],
                             ];
                             $status = $statusMap[strtolower($p->status_progres)] ?? $statusMap['menunggu'];
                         @endphp
-                        <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest {{ $status[0] }}">
+                        <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest whitespace-nowrap {{ $status[0] }}">
                             {{ $status[1] }}
                         </span>
                     </td>

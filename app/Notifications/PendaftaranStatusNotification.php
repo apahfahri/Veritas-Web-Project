@@ -43,14 +43,32 @@ class PendaftaranStatusNotification extends Notification
         $apiKey = config('services.whatsapp.api_key', 'YOUR_API_KEY_HERE');
         $url = config('services.whatsapp.url', 'https://api.fonnte.com/send');
 
-        $statusLabel = str_replace('_', ' ', strtoupper($this->status));
         $namaLayanan = $this->pendaftaran->layanan?->nama ?? 'Layanan';
         $namaPeserta = $this->pendaftaran->user?->nama ?? 'Peserta';
 
-        $message = "Halo *{$namaPeserta}*,\n\n";
-        $message .= "Update status untuk pendaftaran Anda pada layanan *{$namaLayanan}*:\n";
-        $message .= "Status saat ini: *{$statusLabel}*\n\n";
-        $message .= "Silakan cek detail pendaftaran Anda di dashboard. Terima kasih.";
+        if ($this->status == 'menunggu_pembayaran') {
+            $message = "Halo *{$namaPeserta}*,\n\n";
+            $message .= "Pendaftaran Anda pada layanan *{$namaLayanan}* telah kami terima. Untuk melanjutkan proses, silakan melakukan pembayaran ke:\n\n";
+            $message .= "🏦 *Bank Mandiri*\n";
+            $message .= "No. Rek: *1310018861111*\n";
+            $message .= "A/N: *PT Katiga Veritas Indonesia*\n\n";
+            $message .= "Mohon kirimkan bukti transfer jika sudah membayar. Terima kasih!";
+        } elseif ($this->status == 'diproses') {
+            $message = "Halo *{$namaPeserta}*,\n\n";
+            $message .= "Pendaftaran Anda pada layanan *{$namaLayanan}* saat ini sedang *DIPROSES*. Kami akan segera menghubungi Anda kembali untuk langkah selanjutnya. Terima kasih.";
+        } elseif ($this->status == 'selesai') {
+            $message = "Halo *{$namaPeserta}*,\n\n";
+            $message .= "Selamat! Pendaftaran Anda pada layanan *{$namaLayanan}* telah *SELESAI*. Terima kasih telah mempercayakan Katiga Veritas. Semoga sukses selalu!";
+        } elseif ($this->status == 'dibatalkan') {
+            $message = "Halo *{$namaPeserta}*,\n\n";
+            $message .= "Pendaftaran Anda pada layanan *{$namaLayanan}* telah *DIBATALKAN*. Hubungi kami jika ada pertanyaan. Terima kasih.";
+        } else {
+            $statusLabel = str_replace('_', ' ', strtoupper($this->status));
+            $message = "Halo *{$namaPeserta}*,\n\n";
+            $message .= "Update status pendaftaran *{$namaLayanan}*:\n";
+            $message .= "Status: *{$statusLabel}*\n\n";
+            $message .= "Terima kasih.";
+        }
 
         return Http::withHeaders([
             'Authorization' => $apiKey

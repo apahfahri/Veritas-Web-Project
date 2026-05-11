@@ -27,6 +27,7 @@ class Pendaftaran extends Model
         'mode_pertemuan',
         'status_progres',
         'status_bayar',
+        'bukti_bayar',
         'cabang',
         'last_reminder_details',
         'last_reminder_sent_at',
