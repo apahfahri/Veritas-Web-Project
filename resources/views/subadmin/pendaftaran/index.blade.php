@@ -29,6 +29,7 @@
                     <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider">Klien</th>
                     <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider">Tanggal Daftar</th>
                     <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider">Status Progres</th>
+                    <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider">Status Bayar</th>
                     <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider">Aksi</th>
                 </tr>
             </thead>
@@ -57,10 +58,27 @@
                             <span class="text-[10px] bg-red-100 text-red-800 px-2.5 py-1 rounded-full font-black uppercase tracking-widest whitespace-nowrap">{{ strtoupper($p->status_progres) }}</span>
                         @endif
                     </td>
+                    <td class="p-4 text-sm font-semibold">
+                        @if($p->status_bayar == 'belum_bayar')
+                            <span class="text-[10px] bg-rose-100 text-rose-800 px-2.5 py-1 rounded-full font-black uppercase tracking-widest whitespace-nowrap">Belum Bayar</span>
+                        @elseif($p->status_bayar == 'dp')
+                            <span class="text-[10px] bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full font-black uppercase tracking-widest whitespace-nowrap">DP</span>
+                        @elseif($p->status_bayar == 'lunas')
+                            <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full font-black uppercase tracking-widest whitespace-nowrap">Lunas</span>
+                        @else
+                            <span class="text-[10px] bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full font-black uppercase tracking-widest whitespace-nowrap">{{ strtoupper($p->status_bayar) }}</span>
+                        @endif
+                    </td>
                     <td class="p-4 text-sm font-medium flex items-center gap-2">
-                        <a href="{{ route('subadmin.pendaftaran.show', $p->id_pendaftaran) }}" class="bg-cyan-50 hover:bg-cyan-100 text-cyan-600 px-3.5 py-1.5 rounded-xl text-xs font-black transition">
-                            Detail
-                        </a>
+                        @if($p->status_bayar == 'belum_bayar')
+                            <a href="{{ route('subadmin.pendaftaran.show', $p->id_pendaftaran) }}" class="bg-amber-50 hover:bg-amber-100 text-amber-700 px-3.5 py-1.5 rounded-xl text-xs font-black transition">
+                                Verifikasi
+                            </a>
+                        @else
+                            <a href="{{ route('subadmin.pendaftaran.show', $p->id_pendaftaran) }}" class="bg-cyan-50 hover:bg-cyan-100 text-cyan-600 px-3.5 py-1.5 rounded-xl text-xs font-black transition">
+                                Detail
+                            </a>
+                        @endif
                         <form action="{{ route('subadmin.pendaftaran.destroy', $p->id_pendaftaran) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pendaftaran ini?')">
                             @csrf
                             @method('DELETE')
@@ -70,7 +88,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="p-4 text-center text-sm font-medium text-slate-500">Tidak ada data pendaftaran.</td>
+                    <td colspan="7" class="p-4 text-center text-sm font-medium text-slate-500">Tidak ada data pendaftaran.</td>
                 </tr>
                 @endforelse
             </tbody>
