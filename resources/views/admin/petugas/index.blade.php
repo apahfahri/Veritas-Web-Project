@@ -24,7 +24,7 @@
                 <tr class="bg-slate-100/50 border-b-2 border-slate-100">
                     <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Nama & Identitas</th>
                     <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Kontak Detail</th>
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Kompetensi Utama</th>
+                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Kompetensi & Portofolio (Bio)</th>
                     <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50 text-center">Aksi</th>
                 </tr>
             </thead>
@@ -61,8 +61,20 @@
                             </div>
                         </div>
                     </td>
-                    <td class="p-6">
-                        <p class="text-[12px] font-medium text-slate-900 leading-relaxed max-w-xs truncate">{{ $p->kompetensi ?? '-' }}</p>
+                    <td class="p-6 max-w-xs">
+                        {{-- Kompetensi --}}
+                        @if($p->kompetensi)
+                            <p class="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-1">{{ $p->kompetensi }}</p>
+                        @endif
+
+                        {{-- Portofolio (Bio) --}}
+                        @if($p->bio)
+                            <p class="text-[12px] font-bold text-slate-700 leading-relaxed line-clamp-3 mt-1" style="white-space: pre-line;">{!! nl2br(e(str_replace('\n', "\n", $p->bio))) !!}</p>
+                        @else
+                            <span class="inline-block text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-0.5 rounded border border-slate-100 mt-1">
+                                Belum ada portofolio terdaftar
+                            </span>
+                        @endif
                     </td>
                     <td class="p-6 text-center">
                         <div class="flex items-center justify-center gap-2">

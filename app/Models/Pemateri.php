@@ -17,6 +17,7 @@ class Pemateri extends Model
         'email',
         'no_hp',
         'kompetensi',
+        'bio',
         'foto',
     ];
 
