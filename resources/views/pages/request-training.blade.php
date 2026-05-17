@@ -95,21 +95,12 @@
                                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition resize-none">{{ old('alamat_perusahaan') }}</textarea>
                     </div>
 
-                    <div class="grid md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Sektor Industri (Opsional)</label>
-                            <input type="text" name="sektor_industri"
-                                   value="{{ old('sektor_industri') }}"
-                                   placeholder="Contoh: Manufaktur, Jasa, dll."
-                                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Jumlah Karyawan (Opsional)</label>
-                            <input type="number" name="jumlah_karyawan" min="1"
-                                   value="{{ old('jumlah_karyawan') }}"
-                                   placeholder="Contoh: 50"
-                                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition">
-                        </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Sektor Industri (Opsional)</label>
+                        <input type="text" name="sektor_industri"
+                               value="{{ old('sektor_industri') }}"
+                               placeholder="Contoh: Manufaktur, Jasa, dll."
+                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition">
                     </div>
                 </div>
             </div>
@@ -123,17 +114,32 @@
                         <label class="block text-sm font-medium text-gray-700 mb-1">
                             Topik Pelatihan yang Diinginkan <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="topik_pelatihan" required
-                               value="{{ old('topik_pelatihan') }}"
-                               placeholder="Contoh: Ahli K3 Umum, K3 Ketinggian, dll."
-                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition">
+                        <select name="topik_pelatihan" required
+                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition bg-white">
+                            <option value="" disabled {{ old('topik_pelatihan') ? '' : 'selected' }}>Pilih topik pelatihan</option>
+                            @foreach($jenisLayanan as $jenis)
+                                <option value="{{ $jenis->nama }}" {{ old('topik_pelatihan') == $jenis->nama ? 'selected' : '' }}>
+                                    {{ $jenis->nama }}
+                                </option>
+                            @endforeach
+                            <option value="Lainnya" {{ old('topik_pelatihan') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                        </select>
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Estimasi Tanggal Pelaksanaan (Opsional)</label>
-                        <input type="date" name="tanggal_harapan"
-                               value="{{ old('tanggal_harapan') }}"
-                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition">
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Estimasi Tanggal Pelaksanaan (Opsional)</label>
+                            <input type="date" name="tanggal_harapan"
+                                   value="{{ old('tanggal_harapan') }}"
+                                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Jumlah Peserta (Opsional)</label>
+                            <input type="number" name="jumlah_peserta" min="1"
+                                   value="{{ old('jumlah_peserta') }}"
+                                   placeholder="Berapa orang peserta"
+                                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition">
+                        </div>
                     </div>
 
                     <div>
