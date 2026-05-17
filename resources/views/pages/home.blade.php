@@ -209,20 +209,74 @@
 
         <div id="experts-container" class="flex gap-6 overflow-x-auto pb-8 snap-x no-scrollbar scroll-smooth">
             @forelse($pemateris as $expert)
-                <div class="min-w-[170px] md:min-w-[220px] snap-center group">
-                    <div class="relative overflow-hidden rounded-[2rem] mb-6">
-                        <img src="{{ $expert->foto ?? 'https://via.placeholder.com/300x400?text=No+Photo' }}" 
-                             alt="{{ $expert->nama_lengkap }}" 
-                             class="w-full aspect-[3/4] object-cover group-hover:scale-110 transition-transform duration-500">
-                        @if($expert->bio)
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#1E6B3D]/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                            <p class="text-white text-xs leading-relaxed">{{ $expert->bio }}</p>
+                @php
+                    $fotoUrl        = $expert->foto
+                        ? (str_starts_with($expert->foto, 'http') ? $expert->foto : asset('storage/' . $expert->foto))
+                        : 'https://ui-avatars.com/api/?name=' . urlencode($expert->nama_lengkap) . '&background=1E6B3D&color=fff&size=300';
+                @endphp
+
+                {{--
+                  TWO-LAYER STRUCTURE:
+                  .ec-wrapper  → outer column container (flex-col, NO overflow:hidden)
+                    .ec-row    → inner row (flex-row, overflow:hidden, width TRANSITIONS on hover)
+                      .ec-photo-wrap  → 160px fixed, 3:4
+                      .ec-panel       → flex:1, revealed as row expands
+                    .ec-meta   → always visible below, never clipped
+                --}}
+                <div class="ec-wrapper snap-center">
+
+                    {{-- The row that expands horizontally on hover --}}
+                    <div class="ec-row">
+
+                        {{-- Photo: 160px wide, 3:4 portrait --}}
+                        <div class="ec-photo-wrap">
+                            <img src="{{ $fotoUrl }}"
+                                 alt="{{ $expert->nama_lengkap }}"
+                                 class="ec-photo">
+                            <div class="ec-photo-overlay"></div>
                         </div>
-                        @endif
+
+                        {{-- Info panel (initially hidden by overflow:hidden on parent) --}}
+                        <div class="ec-panel">
+                                <div class="ec-panel-inner">
+
+                                <p class="ec-panel-name">{{ $expert->nama_lengkap }}</p>
+                                @if($expert->kompetensi)
+                                    <p class="ec-panel-komp">{{ $expert->kompetensi }}</p>
+                                @endif
+                                <div class="ec-divider"></div>
+                                <p class="ec-label">Portofolio</p>
+
+                                @if($expert->bio)
+                                    <p class="ec-bio" style="white-space: pre-line;">{!! nl2br(e(str_replace('\n', "\n", $expert->bio))) !!}</p>
+                                @else
+                                    <p class="ec-empty">Belum ada portofolio terdaftar.</p>
+                                @endif
+
+                            </div>
+                        </div>
+
+                    </div>{{-- /.ec-row --}}
+
+                    {{-- Name & kompetensi: OUTSIDE ec-row, never clipped --}}
+                    <div class="ec-meta">
+                        <h4 class="ec-name" style="
+                            @php
+                                $len = strlen($expert->nama_lengkap);
+                                if ($len > 27) {
+                                    echo 'font-size: 9.2px;';
+                                } elseif ($len > 21) {
+                                    echo 'font-size: 10.5px;';
+                                } elseif ($len > 16) {
+                                    echo 'font-size: 12px;';
+                                }
+                            @endphp
+                        ">{{ $expert->nama_lengkap }}</h4>
+                        <p class="ec-komp">{{ $expert->kompetensi }}</p>
                     </div>
-                    <h4 class="text-lg font-bold text-gray-900 leading-tight mb-1">{{ $expert->nama_lengkap }}</h4>
-                    <p class="text-[#1E6B3D] font-semibold text-[11px] uppercase tracking-wider">{{ $expert->kompetensi }}</p>
-                </div>
+
+                </div>{{-- /.ec-wrapper --}}
+
             @empty
                 <div class="w-full text-center py-10 text-gray-400">
                     Belum ada data pemateri.
@@ -245,10 +299,155 @@
 </script>
 
 <style>
+    /* ── Scrollbar ── */
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .clip-path-divider {
-        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 0);
+    .clip-path-divider { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 0); }
+
+    /* ──────────────────────────────────────────
+       EXPERT CARD — two-layer hover-expand design
+       ec-wrapper (flex-col, no overflow)
+         ec-row    (flex-row, overflow:hidden, width transitions)
+           ec-photo-wrap | ec-panel
+         ec-meta   (always below, never clipped)
+    ────────────────────────────────────────── */
+
+    /* Outer wrapper: column, no overflow so meta text always visible */
+    .ec-wrapper {
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+        scroll-snap-align: start;
+    }
+
+    /* Inner row: THIS transitions width on hover */
+    .ec-row {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        width: 160px;
+        overflow: hidden;
+        border-radius: 1.5rem;
+        background: #fff;
+        box-shadow: 0 2px 14px rgba(0,0,0,0.08);
+        transition: width 0.45s cubic-bezier(0.4,0,0.2,1),
+                    box-shadow 0.45s ease;
+    }
+    .ec-wrapper:hover .ec-row {
+        width: 440px;
+        box-shadow: 0 8px 40px rgba(30,107,61,0.18);
+    }
+
+    /* Photo: fixed 160px, 3:4 ratio */
+    .ec-photo-wrap {
+        position: relative;
+        width: 160px;
+        flex-shrink: 0;
+        aspect-ratio: 3 / 4;
+        overflow: hidden;
+        border-radius: 1.5rem 0 0 1.5rem;
+    }
+    .ec-photo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top center;
+        display: block;
+        transition: transform 0.45s ease;
+    }
+    .ec-wrapper:hover .ec-photo { transform: scale(1.05); }
+    .ec-photo-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(30,107,61,0.3) 0%, transparent 55%);
+        pointer-events: none;
+    }
+
+    /* Panel: fills remaining space, fades in on hover */
+    .ec-panel {
+        flex: 1 1 0;
+        min-width: 0;
+        display: flex;
+        align-items: flex-start;
+        background: #fff;
+        border-left: 1px solid #f0fdf4;
+        opacity: 0;
+        transition: opacity 0.3s ease 0.18s;
+    }
+    .ec-wrapper:hover .ec-panel { opacity: 1; }
+    .ec-panel-inner {
+        width: 278px;
+        padding: 1.1rem 1rem 1.1rem 0.85rem;
+        overflow-y: auto;
+        max-height: calc(160px * 4 / 3);
+        scrollbar-width: thin;
+        scrollbar-color: #d1fae5 transparent;
+    }
+    .ec-panel-inner::-webkit-scrollbar { width: 3px; }
+    .ec-panel-inner::-webkit-scrollbar-thumb { background: #6ee7b7; border-radius: 99px; }
+
+    /* Panel typography */
+    .ec-panel-name {
+        font-size: 13px; font-weight: 800; color: #111827;
+        line-height: 1.3; margin-bottom: 2px;
+    }
+    .ec-panel-komp {
+        font-size: 9px; font-weight: 700; color: #1E6B3D;
+        text-transform: uppercase; letter-spacing: 0.1em;
+    }
+    .ec-divider {
+        height: 1px;
+        background: linear-gradient(to right, #d1fae5, transparent);
+        margin: 0.55rem 0;
+    }
+    .ec-label {
+        font-size: 8.5px; font-weight: 800; text-transform: uppercase;
+        letter-spacing: 0.15em; color: #1E6B3D;
+        margin-bottom: 0.25rem; margin-top: 0.35rem;
+    }
+    .ec-bio {
+        font-size: 11px; color: #4b5563; line-height: 1.6; margin-bottom: 0.7rem;
+    }
+    .ec-empty { font-size: 10.5px; color: #9ca3af; font-style: italic; }
+
+    /* Service groups */
+    .ec-svc-group { margin-bottom: 0.55rem; }
+    .ec-badge {
+        display: inline-flex; align-items: center; gap: 3px;
+        font-size: 8.5px; font-weight: 800; text-transform: uppercase;
+        letter-spacing: 0.08em; padding: 2px 7px; border-radius: 99px;
+        margin-bottom: 0.2rem;
+    }
+    .ec-badge-audit  { background: #fef3c7; color: #92400e; }
+    .ec-badge-latih  { background: #dcfce7; color: #166534; }
+    .ec-badge-kon    { background: #dbeafe; color: #1e40af; }
+    .ec-svc-item {
+        font-size: 10.5px; color: #374151;
+        padding: 1px 0 1px 9px;
+        border-left: 2px solid #d1fae5;
+        margin-bottom: 2px; line-height: 1.4;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        max-width: 260px;
+    }
+    .ec-svc-more { font-size: 9.5px; color: #9ca3af; padding-left: 9px; font-style: italic; }
+
+    /* Meta below card */
+    .ec-meta { padding: 0.6rem 0.15rem 0; max-width: 160px; }
+    .ec-name {
+        font-size: 14px; font-weight: 800; color: #111827;
+        line-height: 1.25; margin-bottom: 1px;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .ec-komp {
+        font-size: 9.5px; font-weight: 700; color: #1E6B3D;
+        text-transform: uppercase; letter-spacing: 0.1em;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    /* Mobile */
+    @media (max-width: 640px) {
+        .ec-wrapper:hover .ec-row { width: 300px; }
+        .ec-panel-inner { width: 138px; padding: 0.85rem 0.65rem; }
     }
 </style>
 
