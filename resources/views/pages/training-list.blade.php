@@ -76,8 +76,15 @@
                         <p class="text-sm text-gray-600 mb-4 line-clamp-2">{{ $pelatihan->deskripsi ?? 'Pelatihan K3 profesional bersertifikat nasional.' }}</p>
 
                         <div class="space-y-1 text-sm text-gray-600 mb-4">
-                            @if($pelatihan->tanggal_pertemuan)
-                            <div>📅 {{ $pelatihan->tanggal_pertemuan->format('d M Y') }}</div>
+                            @if($pelatihan->tgl_mulai)
+                            <div>
+                                📅 {{ $pelatihan->tgl_mulai->format('d M Y') }}
+                                @if($pelatihan->tgl_selesai && $pelatihan->tgl_selesai != $pelatihan->tgl_mulai)
+                                    - {{ $pelatihan->tgl_selesai->format('d M Y') }}
+                                @endif
+                            </div>
+                            @elseif($pelatihan->tanggal_usul)
+                            <div>📅 {{ $pelatihan->tanggal_usul->format('d M Y') }}</div>
                             @endif
                             @if($pelatihan->jam_pertemuan)
                             <div>⏰ {{ substr($pelatihan->jam_pertemuan, 0, 5) }} WIB</div>

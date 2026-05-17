@@ -17,14 +17,14 @@ class Pelatihan extends Model
         'materi',
         'jenis_pertemuan',
         'jam_pertemuan',
-        'tanggal_pertemuan',
+        'tanggal_usul',
         'lokasi',
         'kapasitas',
         'deskripsi',
     ];
 
     protected $casts = [
-        'tanggal_pertemuan' => 'date',
+        'tanggal_usul' => 'date',
     ];
 
     /*

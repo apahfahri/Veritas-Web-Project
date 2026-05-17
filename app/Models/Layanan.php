@@ -17,7 +17,7 @@ class Layanan extends Model
         'nama',
         'materi',
         'jenis_pertemuan',
-        'tanggal_pertemuan',
+        'tanggal_usul',
         'tgl_mulai',
         'tgl_selesai',
         'jam_pertemuan',
@@ -28,7 +28,7 @@ class Layanan extends Model
     ];
 
     protected $casts = [
-        'tanggal_pertemuan' => 'date',
+        'tanggal_usul' => 'date',
         'tgl_mulai'         => 'date',
         'tgl_selesai'       => 'date',
     ];

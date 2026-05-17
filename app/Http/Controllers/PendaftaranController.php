@@ -73,7 +73,7 @@ class PendaftaranController extends Controller
                     'nama'              => $topik . ' - ' . $request->nama_lengkap,
                     'materi'            => $topik,
                     'jenis_pertemuan'   => $request->mode_pertemuan ?? 'offline',
-                    'tanggal_pertemuan' => $request->rencana_tanggal_mulai,
+                    'tanggal_usul' => $request->rencana_tanggal_mulai,
                     'jam_pertemuan'     => '08:00:00',
                     'deskripsi'         => 'Permintaan ' . $namaKategori . ' dari ' . ($request->nama_perusahaan ?? $request->nama_lengkap),
                     'harga'             => 0,
@@ -146,6 +146,7 @@ class PendaftaranController extends Controller
 
         // Trigger PendaftaranInvoiceMail dynamically via SMTP
         $invoiceSent = false;
+        $emailError = null;
         try {
             if ($result && isset($result['pendaftaran'], $result['user'])) {
                 Mail::to($result['user']->email)->send(new PendaftaranInvoiceMail(
@@ -156,7 +157,8 @@ class PendaftaranController extends Controller
                 $invoiceSent = true;
             }
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Error sending pendaftaran invoice email: ' . $e->getMessage());
+            $emailError = $e->getMessage();
+            \Illuminate\Support\Facades\Log::error('Error sending pendaftaran invoice email: ' . $emailError);
         }
 
         $successCategory = session()->get('temp_success_category', 'layanan');
@@ -164,6 +166,7 @@ class PendaftaranController extends Controller
         return redirect()->route('training.status', ['identifier' => $request->email])
             ->with('registration_success', true)
             ->with('invoice_email_sent', $invoiceSent)
+            ->with('email_error', $emailError)
             ->with('success_type', $successCategory);
     }
 

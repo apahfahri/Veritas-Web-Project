@@ -14,7 +14,7 @@
             <h1 class="text-2xl font-bold text-[#1E6B3D]">Form Pendaftaran Pelatihan</h1>
             <p class="text-gray-500 mt-1 text-sm">{{ $pelatihan->kategori->nama ?? $pelatihan->materi }}</p>
             <p class="text-gray-400 text-xs mt-1">
-                📅 {{ \Carbon\Carbon::parse($pelatihan->tanggal_pertemuan)->translatedFormat('d F Y') }}
+                📅 {{ \Carbon\Carbon::parse($pelatihan->tanggal_usul)->translatedFormat('d F Y') }}
                 @if($pelatihan->lokasi) &nbsp;|&nbsp; 📍 {{ $pelatihan->lokasi }} @endif
             </p>
         </div>
@@ -107,7 +107,7 @@
                     <div class="flex justify-between">
                         <span class="text-gray-500">Tanggal</span>
                         <span class="font-medium text-[#1E6B3D]">
-                            {{ \Carbon\Carbon::parse($pelatihan->tanggal_pertemuan)->translatedFormat('d F Y') }}
+                            {{ \Carbon\Carbon::parse($pelatihan->tanggal_usul)->translatedFormat('d F Y') }}
                         </span>
                     </div>
                     @if($pelatihan->lokasi)
@@ -121,8 +121,8 @@
                         <span class="font-medium text-[#1E6B3D] capitalize">{{ $pelatihan->jenis_pertemuan }}</span>
                     </div>
                     <div class="border-t border-gray-200 pt-3 flex justify-between">
-                        <span class="text-gray-500">Status Bayar</span>
-                        <span class="text-yellow-600 font-medium">Belum Bayar</span>
+                        <span class="text-gray-500">Total Bayar</span>
+                        <span class="text-[#0891b2] font-bold">Rp {{ number_format($pelatihan->harga ?? 0, 0, ',', '.') }}</span>
                     </div>
                 </div>
 

@@ -11,7 +11,7 @@ class PelatihanController extends Controller
     {
         $query = Layanan::with('kategori')->whereHas('kategori', function ($q) {
             $q->where('nama', 'like', '%Pelatihan%');
-        })->orderBy('tanggal_pertemuan');
+        })->orderBy('tanggal_usul');
 
         if ($request->filled('jenis')) {
             $query->where('jenis_pertemuan', $request->jenis);
