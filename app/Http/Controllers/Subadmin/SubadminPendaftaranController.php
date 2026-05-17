@@ -25,7 +25,18 @@ class SubadminPendaftaranController extends Controller
 
     public function index(Request $request)
     {
-        $query = Pendaftaran::with(['user', 'layanan'])->latest();
+        $cabang = Auth::user()->cabang;
+        $query = Pendaftaran::with(['user', 'layanan']);
+
+        if ($cabang) {
+            $query->where(function($q) use ($cabang) {
+                $q->where('cabang', $cabang)
+                  ->orWhereNull('cabang')
+                  ->orWhere('cabang', '');
+            });
+        }
+
+        $query->latest();
 
         if ($request->filled('status')) {
             $query->where('status_progres', $request->status);
@@ -38,15 +49,42 @@ class SubadminPendaftaranController extends Controller
 
     public function show($id)
     {
-        $pendaftaran = Pendaftaran::with(['user', 'layanan', 'sertifikat'])
-            ->findOrFail($id);
+        $cabang = Auth::user()->cabang;
+        $query = Pendaftaran::with(['user', 'layanan', 'sertifikat']);
+
+        if ($cabang) {
+            $query->where(function($q) use ($cabang) {
+                $q->where('cabang', $cabang)
+                  ->orWhereNull('cabang')
+                  ->orWhere('cabang', '');
+            });
+        }
+
+        $pendaftaran = $query->findOrFail($id);
 
         return view('subadmin.pendaftaran.show', compact('pendaftaran'));
     }
 
     public function update(Request $request, $id)
     {
-        $pendaftaran = Pendaftaran::findOrFail($id);
+        $cabang = Auth::user()->cabang;
+        $query = Pendaftaran::query();
+
+        if ($cabang) {
+            $query->where(function($q) use ($cabang) {
+                $q->where('cabang', $cabang)
+                  ->orWhereNull('cabang')
+                  ->orWhere('cabang', '');
+            });
+        }
+
+        $pendaftaran = $query->findOrFail($id);
+
+        // Auto-assign branch to this subadmin if it was unassigned
+        if (empty($pendaftaran->cabang) && $cabang) {
+            $pendaftaran->cabang = $cabang;
+            $pendaftaran->save();
+        }
         
         // Prevent finishing if not paid
         if ($request->status_progres == 'selesai' && $request->status_bayar != 'lunas') {
@@ -96,11 +134,20 @@ class SubadminPendaftaranController extends Controller
         return Excel::download(new PendaftaranExport($filters), 'laporan-pendaftaran-' . now()->format('Ymd') . '.xlsx');
     }
 
-
-
     public function destroy($id)
     {
-        $pendaftaran = Pendaftaran::findOrFail($id);
+        $cabang = Auth::user()->cabang;
+        $query = Pendaftaran::query();
+
+        if ($cabang) {
+            $query->where(function($q) use ($cabang) {
+                $q->where('cabang', $cabang)
+                  ->orWhereNull('cabang')
+                  ->orWhere('cabang', '');
+            });
+        }
+
+        $pendaftaran = $query->findOrFail($id);
         $pendaftaran->delete();
 
         return redirect()->route('subadmin.pendaftaran.index')
@@ -109,7 +156,24 @@ class SubadminPendaftaranController extends Controller
 
     public function updateNote(Request $request, $id)
     {
-        $pendaftaran = Pendaftaran::findOrFail($id);
+        $cabang = Auth::user()->cabang;
+        $query = Pendaftaran::query();
+
+        if ($cabang) {
+            $query->where(function($q) use ($cabang) {
+                $q->where('cabang', $cabang)
+                  ->orWhereNull('cabang')
+                  ->orWhere('cabang', '');
+            });
+        }
+
+        $pendaftaran = $query->findOrFail($id);
+
+        // Auto-assign branch to this subadmin if it was unassigned
+        if (empty($pendaftaran->cabang) && $cabang) {
+            $pendaftaran->cabang = $cabang;
+            $pendaftaran->save();
+        }
 
         $request->validate([
             'admin_note' => 'required|string',
@@ -126,7 +190,24 @@ class SubadminPendaftaranController extends Controller
 
     public function uploadPaymentProof(Request $request, $id)
     {
-        $pendaftaran = Pendaftaran::findOrFail($id);
+        $cabang = Auth::user()->cabang;
+        $query = Pendaftaran::query();
+
+        if ($cabang) {
+            $query->where(function($q) use ($cabang) {
+                $q->where('cabang', $cabang)
+                  ->orWhereNull('cabang')
+                  ->orWhere('cabang', '');
+            });
+        }
+
+        $pendaftaran = $query->findOrFail($id);
+
+        // Auto-assign branch to this subadmin if it was unassigned
+        if (empty($pendaftaran->cabang) && $cabang) {
+            $pendaftaran->cabang = $cabang;
+            $pendaftaran->save();
+        }
 
         $request->validate([
             'bukti_bayar' => 'required|image|mimes:jpeg,png,jpg|max:2048',

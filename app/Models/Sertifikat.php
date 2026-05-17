@@ -22,10 +22,12 @@ class Sertifikat extends Model
         'tanggal_terbit',
         'file_pdf',
         'penerbit',
+        'masa_berlaku',
     ];
 
     protected $casts = [
         'tanggal_terbit' => 'date',
+        'masa_berlaku'   => 'date',
     ];
 
     /*
