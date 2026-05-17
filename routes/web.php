@@ -14,6 +14,9 @@ use App\Http\Controllers\Admin\PemateriController;
 use App\Http\Controllers\Admin\LayananAdminController;
 use App\Http\Controllers\Admin\PendaftaranAdminController;
 use App\Http\Controllers\Admin\SertifikatAdminController;
+use App\Http\Controllers\Admin\KlienMitraController;
+use App\Http\Controllers\Admin\RiwayatPendaftaranController;
+use App\Http\Controllers\Admin\LaporanMonitoringController;
 use App\Http\Controllers\RequestPelatihanController;
 
 
@@ -103,6 +106,7 @@ Route::middleware(['auth', 'is.admin'])->prefix('admin')->name('admin.')->group(
     Route::get('/pendaftaran/export/pdf',   [PendaftaranAdminController::class, 'exportPDF'])->name('pendaftaran.export-pdf');
     Route::get('/pendaftaran/{id}',    [PendaftaranAdminController::class, 'show'])->name('pendaftaran.show');
     Route::put('/pendaftaran/{id}',    [PendaftaranAdminController::class, 'update'])->name('pendaftaran.update');
+    Route::get('/riwayat-pendaftaran', [RiwayatPendaftaranController::class, 'index'])->name('riwayat.index');
 
     // Sertifikat management
     Route::get('/sertifikat',                            [SertifikatAdminController::class, 'index'])->name('sertifikat.index');
@@ -112,9 +116,13 @@ Route::middleware(['auth', 'is.admin'])->prefix('admin')->name('admin.')->group(
     Route::get('/sertifikat/{no_sertifikat}/edit',       [SertifikatAdminController::class, 'edit'])->name('sertifikat.edit');
     Route::put('/sertifikat/{no_sertifikat}',            [SertifikatAdminController::class, 'update'])->name('sertifikat.update');
     Route::delete('/sertifikat/{no_sertifikat}',         [SertifikatAdminController::class, 'destroy'])->name('sertifikat.destroy');
+    Route::get('/laporan-monitoring',                    [LaporanMonitoringController::class, 'index'])->name('laporan.index');
 
     // Subadmin management (Superadmin only)
     Route::resource('subadmin', \App\Http\Controllers\Admin\SubadminController::class)->except(['show']);
+
+    // Klien & Mitra (Perusahaan B2B)
+    Route::resource('mitra', KlienMitraController::class)->except(['show']);
 
     // Kategori & Jenis Layanan management
     Route::get('/kategori', [\App\Http\Controllers\Admin\KategoriLayananController::class, 'index'])->name('kategori.index');
