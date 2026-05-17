@@ -13,6 +13,7 @@ class RequestPelatihan extends Model
     protected $primaryKey = 'id_request';
 
     protected $fillable = [
+        'id_perusahaan',
         'nama_lengkap',
         'email',
         'no_telp',
@@ -26,4 +27,13 @@ class RequestPelatihan extends Model
         'pesan_tambahan',
         'status',
     ];
+
+    protected $casts = [
+        'tanggal_harapan' => 'date',
+    ];
+
+    public function perusahaan()
+    {
+        return $this->belongsTo(Perusahaan::class, 'id_perusahaan', 'id_perusahaan');
+    }
 }

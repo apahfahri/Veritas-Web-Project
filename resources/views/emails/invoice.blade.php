@@ -17,9 +17,8 @@
             max-width: 600px;
             margin: 0 auto;
             background: #ffffff;
-            border-radius: 16px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
         .header {
             background-color: #0f172a;
@@ -146,11 +145,6 @@
             border-radius: 10px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            box-shadow: 0 4px 6px -1px rgb(34 197 94 / 0.2);
-            transition: background-color 0.2s;
-        }
-        .btn-whatsapp:hover {
-            background-color: #16a34a;
         }
         .option-divider {
             margin: 15px 0;
@@ -217,12 +211,25 @@
                 </tr>
                 <tr>
                     <td class="label">Program / Layanan</td>
-                    <td class="value">{{ $layanan->nama ?? 'Layanan' }}</td>
+                    <td class="value">{{ $layanan->nama ?? ($layanan->materi ?? 'Layanan Veritas') }}</td>
                 </tr>
+                @if($pendaftaran->rencana_tanggal_mulai)
                 <tr>
-                    <td class="label">Cabang Pendaftaran</td>
-                    <td class="value">{{ $pendaftaran->cabang ?? '-' }}</td>
+                    <td class="label">Rencana Tanggal</td>
+                    <td class="value">
+                        {{ $pendaftaran->rencana_tanggal_mulai->format('d M Y') }}
+                        @if($pendaftaran->rencana_tanggal_selesai && $pendaftaran->rencana_tanggal_selesai != $pendaftaran->rencana_tanggal_mulai)
+                            s/d {{ $pendaftaran->rencana_tanggal_selesai->format('d M Y') }}
+                        @endif
+                    </td>
                 </tr>
+                @endif
+                @if($pendaftaran->mode_pertemuan)
+                <tr>
+                    <td class="label">Mode Pertemuan</td>
+                    <td class="value">{{ ucfirst($pendaftaran->mode_pertemuan) }}</td>
+                </tr>
+                @endif
                 <tr>
                     <td class="label">Tanggal Transaksi</td>
                     <td class="value">{{ $pendaftaran->created_at ? $pendaftaran->created_at->format('d M Y - H:i') : now()->format('d M Y') }} WIB</td>
@@ -250,6 +257,12 @@
             <div class="section-title">Konfirmasi Pembayaran</div>
             <div class="cta-section">
                 <p>Untuk melanjutkan ke tahap berikutnya, silakan lakukan pembayaran dan konfirmasikan bukti transfer Anda melalui salah satu cara di bawah ini:</p>
+                
+                <div style="background-color: #fffbeb; border-left: 3px solid #fbbf24; padding: 12px; margin-bottom: 20px; text-align: left; border-radius: 4px;">
+                    <p style="margin: 0; font-size: 13px; color: #b45309;">
+                        <strong>Informasi Penting:</strong> Proses konfirmasi pembayaran dilakukan pada jam kerja operasional kami. Jika konfirmasi pembayaran dilakukan di luar jam kerja, maka akan diproses pada jam kerja berikutnya.
+                    </p>
+                </div>
                 
                 <!-- Option 1: WhatsApp -->
                 @php

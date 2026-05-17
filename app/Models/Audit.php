@@ -16,12 +16,12 @@ class Audit extends Model
         'petugas_id',
         'lingkup',
         'jam_pertemuan',
-        'tanggal_pertemuan',
+        'tanggal_usul',
         'deskripsi',
     ];
 
     protected $casts = [
-        'tanggal_pertemuan' => 'date',
+        'tanggal_usul' => 'date',
     ];
 
     /*

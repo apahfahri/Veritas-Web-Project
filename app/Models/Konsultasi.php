@@ -16,12 +16,12 @@ class Konsultasi extends Model
         'petugas_id',
         'jenis_pertemuan',
         'jam_pertemuan',
-        'tanggal_pertemuan',
+        'tanggal_usul',
         'topik',
     ];
 
     protected $casts = [
-        'tanggal_pertemuan' => 'date',
+        'tanggal_usul' => 'date',
     ];
 
     /*

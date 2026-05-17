@@ -31,7 +31,7 @@ class LayananAdminController extends Controller
             'materi'            => 'required|string|max:255',
             'jenis_pertemuan'   => 'required|in:online,offline',
             'jam_pertemuan'     => 'nullable',
-            'tanggal_pertemuan' => 'nullable|date',
+            'tanggal_usul' => 'nullable|date',
             'tgl_mulai'         => 'nullable|date',
             'tgl_selesai'       => 'nullable|date',
             'lokasi'            => 'nullable|string|max:255',
@@ -44,7 +44,7 @@ class LayananAdminController extends Controller
 
         $layanan = Layanan::create($request->only([
             'id_kategori', 'nama', 'materi', 'jenis_pertemuan', 'jam_pertemuan', 
-            'tanggal_pertemuan', 'tgl_mulai', 'tgl_selesai', 'lokasi', 'kapasitas', 'harga', 'deskripsi'
+            'tanggal_usul', 'tgl_mulai', 'tgl_selesai', 'lokasi', 'kapasitas', 'harga', 'deskripsi'
         ]));
 
         if ($request->has('pemateri_ids')) {
@@ -73,7 +73,7 @@ class LayananAdminController extends Controller
             'materi'            => 'required|string|max:255',
             'jenis_pertemuan'   => 'required|in:online,offline',
             'jam_pertemuan'     => 'nullable',
-            'tanggal_pertemuan' => 'nullable|date',
+            'tanggal_usul' => 'nullable|date',
             'tgl_mulai'         => 'nullable|date',
             'tgl_selesai'       => 'nullable|date',
             'lokasi'            => 'nullable|string|max:255',
@@ -86,7 +86,7 @@ class LayananAdminController extends Controller
 
         $layanan->update($request->only([
             'id_kategori', 'nama', 'materi', 'jenis_pertemuan', 'jam_pertemuan', 
-            'tanggal_pertemuan', 'tgl_mulai', 'tgl_selesai', 'lokasi', 'kapasitas', 'harga', 'deskripsi'
+            'tanggal_usul', 'tgl_mulai', 'tgl_selesai', 'lokasi', 'kapasitas', 'harga', 'deskripsi'
         ]));
 
         if ($request->has('pemateri_ids')) {

@@ -18,9 +18,16 @@
                     <span class="text-2xl mt-0.5">✉️</span>
                     <div>
                         <h4 class="font-bold text-lg text-blue-900">Pendaftaran Berhasil!</h4>
-                        <p class="text-sm text-blue-700 mt-1">
-                            Invoice resmi dan rincian instruksi pembayaran telah otomatis dikirimkan ke email Anda (silakan cek inbox/spam). Anda juga dapat melakukan konfirmasi pembayaran dengan membalas email tersebut atau menghubungi kami via WhatsApp melalui tombol di samping.
-                        </p>
+                        @if(session('invoice_email_sent') === false)
+                            <p class="text-sm text-red-600 mt-1 font-semibold">
+                                Pendaftaran berhasil dicatat, namun sistem gagal mengirimkan invoice otomatis ke email Anda (Error: {{ session('email_error') ?? 'Gangguan server email' }}).
+                                Silakan hubungi kami via WhatsApp untuk mendapatkan invoice secara manual.
+                            </p>
+                        @else
+                            <p class="text-sm text-blue-700 mt-1">
+                                Invoice resmi dan rincian instruksi pembayaran telah otomatis dikirimkan ke email Anda beserta lampiran PDF (silakan cek inbox/spam). Anda juga dapat melakukan konfirmasi pembayaran dengan membalas email tersebut atau menghubungi kami via WhatsApp melalui tombol di samping.
+                            </p>
+                        @endif
                     </div>
                 </div>
                 @php
@@ -219,9 +226,15 @@
         </div>
 
         <h2 class="text-2xl font-bold text-gray-800 mb-2">Pendaftaran Berhasil!</h2>
-        <p class="text-gray-500 text-sm mb-8">
-            Invoice resmi telah dikirimkan ke email Anda. Silakan periksa kotak masuk atau folder spam Anda untuk instruksi pembayaran.
-        </p>
+        @if(session('invoice_email_sent') === false)
+            <p class="text-red-500 text-sm mb-8 font-semibold">
+                Sistem gagal mengirimkan email invoice (Error: {{ session('email_error') ?? 'Server SMTP gagal' }}). Silakan kontak admin via WhatsApp untuk mendapatkan invoice manual.
+            </p>
+        @else
+            <p class="text-gray-500 text-sm mb-8">
+                Invoice resmi dalam bentuk PDF telah dikirimkan ke email Anda. Silakan periksa kotak masuk atau folder spam Anda untuk instruksi pembayaran.
+            </p>
+        @endif
 
         <button onclick="closeModal()" class="w-full bg-[#1E6B3D] hover:bg-[#3CDA7D] text-white font-bold py-3 rounded-xl shadow-lg transition-all active:scale-95">
             Lihat Status Saya

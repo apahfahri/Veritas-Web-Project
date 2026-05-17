@@ -51,10 +51,10 @@
                             <div class="text-gray-500">Mode</div>
                             <div class="font-semibold">{{ ucfirst($pelatihan->jenis_pertemuan) }}</div>
                         </div>
-                        @if($pelatihan->tanggal_pertemuan)
+                        @if($pelatihan->tanggal_usul)
                         <div>
                             <div class="text-gray-500">Tanggal</div>
-                            <div class="font-semibold">{{ $pelatihan->tanggal_pertemuan->format('d M Y') }}</div>
+                            <div class="font-semibold">{{ $pelatihan->tanggal_usul->format('d M Y') }}</div>
                         </div>
                         @endif
                     </div>
@@ -73,8 +73,8 @@
                     <div>
                         <h2 class="text-xl font-semibold text-[#1E6B3D] mb-4">Jadwal</h2>
                         <div class="border rounded-lg p-4 space-y-2 text-sm">
-                            @if($pelatihan->tanggal_pertemuan)
-                            <div>📅 {{ $pelatihan->tanggal_pertemuan->format('l, d F Y') }}</div>
+                            @if($pelatihan->tanggal_usul)
+                            <div>📅 {{ $pelatihan->tanggal_usul->format('l, d F Y') }}</div>
                             @endif
                             @if($pelatihan->jam_pertemuan)
                             <div>⏰ {{ substr($pelatihan->jam_pertemuan, 0, 5) }} WIB</div>
