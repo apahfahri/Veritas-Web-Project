@@ -93,6 +93,7 @@
                     <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Kategori Layanan</th>
                     <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50 text-center">Penerbit</th>
                     <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50 text-center">Tgl Terbit</th>
+                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50 text-center">Masa Berlaku</th>
                     <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50 text-center">Aksi</th>
                 </tr>
             </thead>
@@ -113,6 +114,9 @@
                     </td>
                     <td class="p-6 text-center whitespace-nowrap">
                         <span class="text-[12px] font-medium text-slate-900">{{ $s->tanggal_terbit ? $s->tanggal_terbit->format('d M Y') : '-' }}</span>
+                    </td>
+                    <td class="p-6 text-center whitespace-nowrap">
+                        <span class="text-[12px] font-medium text-slate-900">{{ $s->masa_berlaku ? $s->masa_berlaku->format('d M Y') : '-' }}</span>
                     </td>
                     <td class="p-6 text-center">
                         <div class="flex items-center justify-center gap-2">

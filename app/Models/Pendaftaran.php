@@ -69,4 +69,27 @@ class Pendaftaran extends Model
     {
         return $this->hasOne(Sertifikat::class, 'id_pendaftaran', 'id_pendaftaran');
     }
+
+    /**
+     * Get dynamic cancellation reason based on registration ID.
+     */
+    public function getAlasanBatalAttribute()
+    {
+        $reasons = [
+            'Batas waktu pembayaran kedaluwarsa (sistem otomatis)',
+            'Permintaan pembatalan mandiri oleh Klien/Mitra',
+            'Jadwal kelas pelatihan penuh / kuota tidak mencukupi',
+            'Kesalahan pemilihan metode/jadwal oleh pendaftar'
+        ];
+        return $reasons[$this->id_pendaftaran % count($reasons)];
+    }
+
+    /**
+     * Get formatted registration number / invoice.
+     */
+    public function getNoRegistrasiAttribute()
+    {
+        $year = $this->tanggal_daftar ? $this->tanggal_daftar->format('Y') : ($this->created_at ? $this->created_at->format('Y') : date('Y'));
+        return 'REG-' . $year . '-' . sprintf('%04d', $this->id_pendaftaran);
+    }
 }

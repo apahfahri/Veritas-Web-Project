@@ -7,6 +7,8 @@ use App\Models\Perusahaan;
 use App\Models\Pendaftaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\PendaftaranInvoiceMail;
 
 class PendaftaranController extends Controller
 {
@@ -44,7 +46,7 @@ class PendaftaranController extends Controller
 
         $request->validate($rules);
 
-        DB::transaction(function () use ($request, $jenis) {
+        $result = DB::transaction(function () use ($request, $jenis) {
             $layananId = $request->layanan_id;
             $kategoriId = $request->kategori_id;
 
@@ -134,12 +136,34 @@ class PendaftaranController extends Controller
             // Ambil nama kategori untuk feedback yang lebih spesifik
             $kategori = $pendaftaran->layanan->kategori->nama ?? 'layanan';
             $request->session()->put('temp_success_category', strtolower($kategori));
+
+            return [
+                'pendaftaran' => $pendaftaran,
+                'user'        => $user,
+                'layanan'     => $pendaftaran->layanan,
+            ];
         });
+
+        // Trigger PendaftaranInvoiceMail dynamically via SMTP
+        $invoiceSent = false;
+        try {
+            if ($result && isset($result['pendaftaran'], $result['user'])) {
+                Mail::to($result['user']->email)->send(new PendaftaranInvoiceMail(
+                    $result['pendaftaran'],
+                    $result['user'],
+                    $result['layanan']
+                ));
+                $invoiceSent = true;
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error sending pendaftaran invoice email: ' . $e->getMessage());
+        }
 
         $successCategory = session()->get('temp_success_category', 'layanan');
 
         return redirect()->route('training.status', ['identifier' => $request->email])
             ->with('registration_success', true)
+            ->with('invoice_email_sent', $invoiceSent)
             ->with('success_type', $successCategory);
     }
 

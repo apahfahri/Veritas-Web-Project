@@ -50,8 +50,9 @@ class SertifikatAdminController extends Controller
             'no_sertifikat'  => 'required|string|unique:sertifikat,no_sertifikat',
             'nama_lengkap'   => 'required|string|max:255',
             'tanggal_terbit' => 'required|date',
-            'penerbit'       => 'required|string|max:255',
-            'file_pdf'       => 'required|file|mimes:pdf|max:5120', // 5MB
+            'penerbit'          => 'required|string|max:255',
+            'masa_berlaku'      => 'nullable|date',
+            'file_pdf'          => 'required|file|mimes:pdf|max:5120', // 5MB
         ]);
 
         $exists = Sertifikat::where('id_pendaftaran', $request->id_pendaftaran)->exists();
@@ -69,8 +70,9 @@ class SertifikatAdminController extends Controller
             'id_pendaftaran' => $request->id_pendaftaran,
             'nama_lengkap'   => $request->nama_lengkap,
             'tanggal_terbit' => $request->tanggal_terbit,
-            'penerbit'       => $request->penerbit,
-            'file_pdf'       => $path,
+            'penerbit'          => $request->penerbit,
+            'masa_berlaku'      => $request->masa_berlaku,
+            'file_pdf'          => $path,
         ]);
 
         return redirect()->route('admin.sertifikat.index')
@@ -102,8 +104,9 @@ class SertifikatAdminController extends Controller
             'no_sertifikat'  => 'required|string|unique:sertifikat,no_sertifikat,' . $no_sertifikat . ',no_sertifikat',
             'nama_lengkap'   => 'required|string|max:255',
             'tanggal_terbit' => 'required|date',
-            'penerbit'       => 'required|string|max:255',
-            'file_pdf'       => 'nullable|file|mimes:pdf|max:5120',
+            'penerbit'          => 'required|string|max:255',
+            'masa_berlaku'      => 'nullable|date',
+            'file_pdf'          => 'nullable|file|mimes:pdf|max:5120',
         ]);
 
         DB::transaction(function () use ($request, $sertifikat, $no_sertifikat) {
@@ -114,7 +117,8 @@ class SertifikatAdminController extends Controller
                 'no_sertifikat'  => $newNo,
                 'nama_lengkap'   => $request->nama_lengkap,
                 'tanggal_terbit' => $request->tanggal_terbit,
-                'penerbit'       => $request->penerbit,
+                'penerbit'          => $request->penerbit,
+                'masa_berlaku'      => $request->masa_berlaku,
             ];
 
             if ($request->hasFile('file_pdf')) {

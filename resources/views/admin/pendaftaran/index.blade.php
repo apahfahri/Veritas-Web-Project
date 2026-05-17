@@ -14,8 +14,6 @@
                 <option value="">Semua Status</option>
                 <option value="menunggu_pembayaran" {{ request('status') === 'menunggu_pembayaran' ? 'selected' : '' }}>Menunggu Bayar</option>
                 <option value="diproses"             {{ request('status') === 'diproses'             ? 'selected' : '' }}>Diproses</option>
-                <option value="selesai"              {{ request('status') === 'selesai'              ? 'selected' : '' }}>Selesai</option>
-                <option value="dibatalkan"           {{ request('status') === 'dibatalkan'           ? 'selected' : '' }}>Dibatalkan</option>
             </select>
         </div>
         <div>

@@ -16,6 +16,8 @@ class KlienPerusahaan extends Model
         'id_user',
         'id_perusahaan',
         'jabatan',
+        'nama_cp',
+        'no_hp_cp',
     ];
 
     /*
@@ -34,5 +36,19 @@ class KlienPerusahaan extends Model
     public function perusahaan()
     {
         return $this->belongsTo(Perusahaan::class, 'id_perusahaan', 'id_perusahaan');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | HELPER
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Ambil nama CP aktif: dari relasi User (jika terdaftar), atau nama_cp manual.
+     */
+    public function getNamaCpAktifAttribute(): string
+    {
+        return $this->user?->nama ?? $this->nama_cp ?? '—';
     }
 }
