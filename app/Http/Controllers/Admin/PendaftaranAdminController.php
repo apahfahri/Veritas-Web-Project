@@ -44,7 +44,9 @@ class PendaftaranAdminController extends Controller
     }
     public function index(Request $request)
     {
-        $query = Pendaftaran::with(['user', 'layanan.kategori'])->latest();
+        $query = Pendaftaran::with(['user', 'layanan.kategori'])
+            ->whereNotIn('status_progres', ['selesai', 'dibatalkan'])
+            ->latest();
 
         if ($request->filled('status')) {
             $query->where('status_progres', $request->status);

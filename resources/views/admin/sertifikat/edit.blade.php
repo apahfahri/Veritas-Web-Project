@@ -92,6 +92,14 @@
                                    class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-2xl text-sm font-bold text-slate-700 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition @error('tanggal_terbit') border-red-400 @enderror">
                             @error('tanggal_terbit')<p class="text-red-500 text-[10px] font-bold mt-1 uppercase tracking-tighter">{{ $message }}</p>@enderror
                         </div>
+
+                        <div>
+                            <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Masa Berlaku (Opsional)</label>
+                            <input type="date" name="masa_berlaku"
+                                   value="{{ old('masa_berlaku', $sertifikat->masa_berlaku ? $sertifikat->masa_berlaku->format('Y-m-d') : '') }}"
+                                   class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-2xl text-sm font-bold text-slate-700 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition @error('masa_berlaku') border-red-400 @enderror">
+                            @error('masa_berlaku')<p class="text-red-500 text-[10px] font-bold mt-1 uppercase tracking-tighter">{{ $message }}</p>@enderror
+                        </div>
                     </div>
 
                     <div>
