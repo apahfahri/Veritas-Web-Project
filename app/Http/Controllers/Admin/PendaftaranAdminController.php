@@ -23,7 +23,7 @@ class PendaftaranAdminController extends Controller
 
     public function exportPDF(Request $request)
     {
-        $query = Pendaftaran::with(['user', 'layanan'])->latest();
+        $query = Pendaftaran::with(['user', 'jadwal.jenis'])->latest();
 
         if ($request->filled('year')) {
             $query->whereYear('tanggal_daftar', $request->year);
@@ -44,7 +44,7 @@ class PendaftaranAdminController extends Controller
     }
     public function index(Request $request)
     {
-        $query = Pendaftaran::with(['user', 'layanan.kategori'])
+        $query = Pendaftaran::with(['user', 'jadwal.jenis', 'jadwal.kategori'])
             ->whereNotIn('status_progres', ['selesai', 'dibatalkan'])
             ->latest();
 
@@ -62,7 +62,7 @@ class PendaftaranAdminController extends Controller
 
     public function show($id)
     {
-        $pendaftaran = Pendaftaran::with(['user', 'layanan', 'sertifikat'])->findOrFail($id);
+        $pendaftaran = Pendaftaran::with(['user', 'jadwal.jenis', 'jadwal.kategori', 'sertifikat'])->findOrFail($id);
         return view('admin.pendaftaran.show', compact('pendaftaran'));
     }
 

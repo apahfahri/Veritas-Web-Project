@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Jadwal;
 use App\Models\Perusahaan;
 use App\Models\Pendaftaran;
+use App\Models\KategoriLayanan;
+use App\Models\JenisLayanan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -16,91 +19,85 @@ class PendaftaranController extends Controller
     {
         $jenis = $request->input('jenis_klien'); // 'individu' | 'perusahaan'
 
-        // ── Validasi umum ──────────────────────────────────────────────────
         $rules = [
-            'layanan_id'     => 'nullable|exists:layanan,id_layanan',
+            'jadwal_id'      => 'nullable|exists:jadwal,id_jadwal',
             'kategori_id'    => 'nullable|exists:kategori_layanan,id_kategori',
+            'jenis_id'       => 'nullable|exists:jenis_layanan,id_jenis',
             'jenis_klien'    => 'required|in:individu,perusahaan',
             'nama_lengkap'   => 'required|string|max:255',
             'email'          => 'required|email|max:255',
-            'no_telp'                => 'required|string|max:20',
-            'pendidikan'             => 'nullable|string|max:100',
-            'tanggal_usul'           => 'nullable|date|after_or_equal:today',
-            'lokasi'                 => 'nullable|string|max:255',
-            'mode_pertemuan'         => 'nullable|in:online,offline',
+            'no_telp'        => 'required|string|max:20',
+            'pendidikan'     => 'nullable|string|max:100',
+            'tanggal_usul'   => 'nullable|date|after_or_equal:today',
+            'lokasi'         => 'nullable|string|max:255',
+            'mode_pertemuan' => 'nullable|in:online,offline,hybrid',
         ];
 
-        // Salah satu harus ada: layanan_id atau kategori_id
-        if (!$request->layanan_id && !$request->kategori_id) {
-            return back()->withErrors(['layanan_id' => 'Pilih layanan atau kategori yang valid.'])->withInput();
+        if (!$request->jadwal_id && !$request->kategori_id) {
+            return back()->withErrors(['jadwal_id' => 'Pilih jadwal atau layanan yang valid.'])->withInput();
         }
 
-        // ── Validasi khusus per jenis ──────────────────────────────────────
         if ($jenis === 'perusahaan') {
-            $rules['nama_perusahaan']  = 'required|string|max:255';
-            $rules['alamat_perusahaan']= 'required|string';
-            $rules['sektor_industri']  = 'nullable|string|max:100';
-            $rules['jumlah_karyawan']  = 'nullable|integer|min:1';
-            $rules['jabatan']          = 'nullable|string|max:255';
+            $rules['nama_perusahaan']   = 'required|string|max:255';
+            $rules['alamat_perusahaan'] = 'required|string';
+            $rules['sektor_industri']   = 'nullable|string|max:100';
+            $rules['jumlah_karyawan']   = 'nullable|integer|min:1';
+            $rules['jabatan']           = 'nullable|string|max:255';
         }
 
         $request->validate($rules);
 
         $result = DB::transaction(function () use ($request, $jenis) {
-            $layananId = $request->layanan_id;
-            $kategoriId = $request->kategori_id;
+            $jadwalId = $request->jadwal_id;
 
-            // Jika layanan_id tidak ada tapi kategori_id ada, kita gunakan kategori_id
-            if (!$layananId && $kategoriId) {
-                $kategori = \App\Models\KategoriLayanan::find($kategoriId);
-            } else {
-                $kategori = \App\Models\KategoriLayanan::find(\App\Models\Layanan::find($layananId)?->id_kategori);
-            }
+            // Jika tidak ada jadwal_id spesifik (misal dari halaman konsultasi/audit),
+            // buat jadwal baru bespoke untuk pendaftaran ini
+            if (!$jadwalId) {
+                $kategori = KategoriLayanan::find($request->kategori_id);
+                $jenisObj = JenisLayanan::find($request->jenis_id);
 
-            $namaKategori = $kategori ? $kategori->nama : '';
-
-            // Jika mendaftar dari halaman konsultasi/audit, kita buat layanan baru yang spesifik 
-            // agar pendaftaran ini memiliki nama layanan sesuai jenisnya.
-            if ($kategori && (str_contains(strtolower($namaKategori), 'konsultasi') || str_contains(strtolower($namaKategori), 'audit'))) {
-                // Gabungkan topik + catatan jika memilih "Lainnya"
-                $topik = $request->topik_layanan ?? $namaKategori;
+                $topik = $request->topik_layanan ?? ($jenisObj?->nama ?? ($kategori?->nama ?? 'Layanan'));
                 if ($topik === 'Lainnya' && $request->catatan) {
                     $topik = 'Lainnya (' . trim($request->catatan) . ')';
                 }
 
-                $layananBespoke = \App\Models\Layanan::create([
-                    'id_kategori'       => $kategori->id_kategori,
-                    'nama'              => $topik . ' - ' . $request->nama_lengkap,
-                    'materi'            => $topik,
-                    'jenis_pertemuan'   => $request->mode_pertemuan ?? 'offline',
-                    'tanggal_usul'      => $request->tanggal_usul,
-                    'jam_pertemuan'     => '08:00:00',
-                    'lokasi'            => $request->mode_pertemuan === 'offline' ? $request->lokasi : null,
-                    'deskripsi'         => 'Permintaan ' . $namaKategori . ' dari ' . ($request->nama_perusahaan ?? $request->nama_lengkap),
-                    'harga'             => 0,
-                    'kapasitas'         => 1,
+                // Cari atau buat jenis_layanan berspoke
+                $jenisBespoke = $jenisObj ?? JenisLayanan::firstOrCreate(
+                    ['id_kategori' => $kategori?->id_kategori, 'nama' => $topik],
+                    ['kode_jenis' => null]
+                );
+
+                $jadwalBespoke = Jadwal::create([
+                    'id_kategori'    => $kategori?->id_kategori,
+                    'id_jenis'       => $jenisBespoke->id_jenis,
+                    'jenis_pertemuan'=> $request->mode_pertemuan ?? 'offline',
+                    'tanggal_usul'   => $request->tanggal_usul,
+                    'lokasi'         => $request->mode_pertemuan === 'offline' ? $request->lokasi : null,
+                    'harga'          => 0,
+                    'kapasitas'      => 1,
+                    'deskripsi'      => 'Permintaan dari ' . ($request->nama_perusahaan ?? $request->nama_lengkap),
                 ]);
-                $layananId = $layananBespoke->id_layanan;
+                $jadwalId = $jadwalBespoke->id_jadwal;
             }
 
-            // ── Cari/Buat User ─────────────────────────────────────────────
+            // Cari/Buat User
             $user = User::where('email', $request->email)->first();
             if (!$user) {
                 $user = User::create([
-                    'nama' => $request->nama_lengkap,
-                    'email' => $request->email,
-                    'no_telp' => $request->no_telp,
+                    'nama'       => $request->nama_lengkap,
+                    'email'      => $request->email,
+                    'no_telp'    => $request->no_telp,
                     'pendidikan' => $request->pendidikan,
                 ]);
             } else {
                 $user->update([
-                    'nama' => $request->nama_lengkap,
-                    'no_telp' => $request->no_telp,
+                    'nama'       => $request->nama_lengkap,
+                    'no_telp'    => $request->no_telp,
                     'pendidikan' => $request->pendidikan,
                 ]);
             }
 
-            // ── Simpan/update profil perusahaan ────────────────────────────
+            $idPerusahaan = null;
             if ($jenis === 'perusahaan') {
                 $perusahaan = Perusahaan::firstOrCreate(
                     ['nama' => $request->nama_perusahaan],
@@ -110,8 +107,6 @@ class PendaftaranController extends Controller
                         'jumlah_karyawan' => $request->jumlah_karyawan,
                     ]
                 );
-
-                // Pastikan ID perusahaan tidak null (terutama jika baru dibuat)
                 $idPerusahaan = $perusahaan->id_perusahaan;
 
                 \App\Models\KlienPerusahaan::updateOrCreate(
@@ -120,12 +115,11 @@ class PendaftaranController extends Controller
                 );
             }
 
-            // ── Buat record pendaftaran ────────────────────────────────────
             $pendaftaran = Pendaftaran::create([
-                'id_layanan'              => $layananId,
+                'id_jadwal'               => $jadwalId,
                 'id_user'                 => $user->id_user,
-                'id_perusahaan'           => ($jenis === 'perusahaan') ? $idPerusahaan : null,
-                'is_utusan_perusahaan'    => ($jenis === 'perusahaan') ? 1 : 0,
+                'id_perusahaan'           => $idPerusahaan,
+                'is_utusan_perusahaan'    => $jenis === 'perusahaan' ? 1 : 0,
                 'tanggal_daftar'          => now(),
                 'rencana_tanggal_mulai'   => $request->tanggal_usul,
                 'rencana_tanggal_selesai' => $request->tanggal_usul,
@@ -134,55 +128,47 @@ class PendaftaranController extends Controller
                 'status_bayar'            => 'belum_bayar',
             ]);
 
-            // Ambil nama kategori untuk feedback yang lebih spesifik
-            $kategori = $pendaftaran->layanan->kategori->nama ?? 'layanan';
-            $request->session()->put('temp_success_category', strtolower($kategori));
+            $jadwalData = $pendaftaran->jadwal()->with(['kategori', 'jenis'])->first();
 
             return [
                 'pendaftaran' => $pendaftaran,
                 'user'        => $user,
-                'layanan'     => $pendaftaran->layanan,
+                'jadwal'      => $jadwalData,
             ];
         });
 
-        // Trigger PendaftaranInvoiceMail dynamically via SMTP
+        // Kirim invoice email
         $invoiceSent = false;
-        $emailError = null;
+        $emailError  = null;
         try {
             if ($result && isset($result['pendaftaran'], $result['user'])) {
                 Mail::to($result['user']->email)->send(new PendaftaranInvoiceMail(
                     $result['pendaftaran'],
                     $result['user'],
-                    $result['layanan']
+                    $result['jadwal']
                 ));
                 $invoiceSent = true;
             }
         } catch (\Exception $e) {
             $emailError = $e->getMessage();
-            \Illuminate\Support\Facades\Log::error('Error sending pendaftaran invoice email: ' . $emailError);
+            \Illuminate\Support\Facades\Log::error('Error sending invoice: ' . $emailError);
         }
-
-        $successCategory = session()->get('temp_success_category', 'layanan');
 
         return redirect()->route('training.status', ['identifier' => $request->email])
             ->with('registration_success', true)
             ->with('invoice_email_sent', $invoiceSent)
-            ->with('email_error', $emailError)
-            ->with('success_type', $successCategory);
+            ->with('email_error', $emailError);
     }
 
     public function statusForm(Request $request)
     {
-        $identifier = $request->query('identifier');
+        $identifier   = $request->query('identifier');
         $pendaftarans = null;
 
         if ($identifier) {
-            $user = User::where('email', $identifier)
-                ->orWhere('no_telp', $identifier)
-                ->first();
-
+            $user = User::where('email', $identifier)->orWhere('no_telp', $identifier)->first();
             if ($user) {
-                $pendaftarans = Pendaftaran::with('layanan')
+                $pendaftarans = Pendaftaran::with(['jadwal.jenis', 'jadwal.kategori', 'sertifikat'])
                     ->where('id_user', $user->id_user)
                     ->latest()
                     ->get();
@@ -194,27 +180,22 @@ class PendaftaranController extends Controller
 
     public function checkStatus(Request $request)
     {
-        $request->validate([
-            'identifier' => 'required|string',
-        ]);
+        $request->validate(['identifier' => 'required|string']);
 
-        $identifier = $request->identifier;
-
-        // Cari user berdasarkan email atau nomor telepon
-        $user = User::where('email', $identifier)
-            ->orWhere('no_telp', $identifier)
+        $user = User::where('email', $request->identifier)
+            ->orWhere('no_telp', $request->identifier)
             ->first();
 
         if (!$user) {
-            return back()->withErrors(['identifier' => 'Data pendaftaran tidak ditemukan untuk email/nomor telepon tersebut.'])
-                         ->withInput();
+            return back()->withErrors(['identifier' => 'Data tidak ditemukan.'])->withInput();
         }
 
-        $pendaftarans = Pendaftaran::with('layanan')
+        $pendaftarans = Pendaftaran::with(['jadwal.jenis', 'jadwal.kategori', 'sertifikat'])
             ->where('id_user', $user->id_user)
             ->latest()
             ->get();
 
+        $identifier = $request->identifier;
         return view('pages.training-status', compact('pendaftarans', 'identifier'));
     }
 }

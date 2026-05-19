@@ -3,24 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Models\Jadwal;
+use App\Models\KategoriLayanan;
 use Illuminate\Http\Request;
 
-class PelatihanController extends Controller
+/**
+ * Controller untuk halaman publik daftar & detail jadwal layanan (Pelatihan, Konsultasi, Audit)
+ */
+class JadwalPublikController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Jadwal::with(['kategori', 'jenis'])->whereHas('kategori', function ($q) {
-            $q->where('nama', 'like', '%Pelatihan%');
-        })->orderBy('tgl_mulai');
+        $query = Jadwal::with(['kategori', 'jenis', 'pemateri'])
+            ->whereHas('kategori', function ($q) {
+                $q->where('nama', 'like', '%Pelatihan%');
+            })
+            ->orderBy('tgl_mulai');
 
         if ($request->filled('jenis')) {
             $query->where('jenis_pertemuan', $request->jenis);
         }
+
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->whereHas('jenis', function ($j) use ($search) {
-                    $j->where('nama', 'like', "%{$search}%");
+                $q->whereHas('jenis', function ($qJ) use ($search) {
+                    $qJ->where('nama', 'like', "%{$search}%");
                 })->orWhere('deskripsi', 'like', "%{$search}%");
             });
         }
@@ -31,15 +38,13 @@ class PelatihanController extends Controller
 
     public function show($id)
     {
-        $jadwal = Jadwal::with(['kategori', 'pemateri', 'jenis'])->findOrFail($id);
-        
-        // Count pendaftaran to get sisa kursi (Hanya hitung yang terkonfirmasi & lunas)
+        $jadwal = Jadwal::with(['kategori', 'jenis', 'pemateri'])->findOrFail($id);
         $sisaKursi = $jadwal->sisa_kursi;
-        
-        $related = Jadwal::with(['kategori', 'jenis'])->whereHas('kategori', function ($q) {
+
+        $related = Jadwal::whereHas('kategori', function ($q) {
             $q->where('nama', 'like', '%Pelatihan%');
         })->where('id_jadwal', '!=', $id)->take(3)->get();
-        
+
         return view('pages.training-detail', compact('jadwal', 'sisaKursi', 'related'));
     }
 

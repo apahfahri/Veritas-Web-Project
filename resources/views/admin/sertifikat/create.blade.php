@@ -27,7 +27,7 @@
                     
                     <div>
                         <p class="text-[10px] font-black text-indigo-500 uppercase tracking-tighter">Program Pelatihan</p>
-                        <p class="text-sm font-black text-slate-900 leading-tight">{{ $pendaftaran->layanan?->nama }}</p>
+                        <p class="text-sm font-black text-slate-900 leading-tight">{{ $pendaftaran->jadwal?->jenis?->nama ?? ($pendaftaran->jadwal?->kategori?->nama ?? '—') }}</p>
                     </div>
                     
                     <div>

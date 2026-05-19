@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
 
+/**
+ * Model Jadwal — menggantikan tabel `layanan` sebelumnya.
+ * Setiap baris merepresentasikan satu sesi/jadwal pelaksanaan program layanan.
+ */
 class Jadwal extends Model
 {
     use HasFactory;
@@ -15,38 +17,70 @@ class Jadwal extends Model
     protected $primaryKey = 'id_jadwal';
 
     protected $fillable = [
-        'id_layanan',
-        'tanggal',
-        'jam_mulai',
-        'jam_selesai',
+        'id_kategori',
+        'id_jenis',
+        'kode_jadwal',
+        'jenis_pertemuan',
+        'tanggal_usul',
+        'tgl_mulai',
+        'tgl_selesai',
+        'jam_pertemuan',
         'lokasi',
-        'kuota',
-        'cabang',
-        'status',
+        'kapasitas',
+        'harga',
+        'deskripsi',
     ];
 
-    /**
-     * Scope a query to only include records from the subadmin's branch.
-     */
-    protected static function booted()
+    protected $casts = [
+        'tanggal_usul' => 'date',
+        'tgl_mulai'    => 'date',
+        'tgl_selesai'  => 'date',
+    ];
+
+    /* ─── RELASI ─────────────────────────────────────────────── */
+
+    public function kategori()
     {
-        static::addGlobalScope('cabang', function (Builder $builder) {
-            if (Auth::check() && Auth::user()->isSubadmin()) {
-                $cabang = Auth::user()->admin?->cabang;
-                if ($cabang) {
-                    $builder->where('jadwal.cabang', $cabang);
-                }
-            }
-        });
+        return $this->belongsTo(KategoriLayanan::class, 'id_kategori', 'id_kategori');
     }
 
-    public function layanan()
+    public function jenis()
     {
-        return $this->belongsTo(Layanan::class, 'id_layanan', 'id_layanan');
+        return $this->belongsTo(JenisLayanan::class, 'id_jenis', 'id_jenis');
+    }
+
+    public function pemateri()
+    {
+        return $this->belongsToMany(Pemateri::class, 'jadwal_pemateri', 'id_jadwal', 'id_pemateri');
     }
 
     public function pendaftarans()
     {
         return $this->hasMany(Pendaftaran::class, 'id_jadwal', 'id_jadwal');
+    }
+
+    /* ─── HELPERS ────────────────────────────────────────────── */
+
+    /**
+     * Mendapatkan nama program dari relasi jenis layanan.
+     */
+    public function getNamaProgramAttribute(): string
+    {
+        return $this->jenis?->nama ?? '—';
+    }
+
+    /**
+     * Hitung sisa kursi berdasarkan pendaftaran yang terkonfirmasi & lunas.
+     */
+    public function getSisaKursiAttribute(): ?int
+    {
+        if (!$this->kapasitas) return null;
+
+        $terdaftar = $this->pendaftarans()
+            ->whereIn('status_progres', ['diproses', 'selesai'])
+            ->where('status_bayar', 'lunas')
+            ->count();
+
+        return max(0, $this->kapasitas - $terdaftar);
     }
 }

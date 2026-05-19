@@ -21,7 +21,7 @@ class PendaftaranExport implements FromQuery, WithHeadings, WithMapping, ShouldA
 
     public function query()
     {
-        $query = Pendaftaran::query()->with(['user', 'layanan']);
+        $query = Pendaftaran::query()->with(['user', 'jadwal.jenis']);
 
         if (!empty($this->filters['year'])) {
             $query->whereYear('tanggal_daftar', $this->filters['year']);
@@ -52,7 +52,7 @@ class PendaftaranExport implements FromQuery, WithHeadings, WithMapping, ShouldA
         return [
             $pendaftaran->id_pendaftaran,
             $pendaftaran->user?->nama,
-            $pendaftaran->layanan?->nama,
+            $pendaftaran->jadwal?->jenis?->nama ?? ($pendaftaran->jadwal?->kategori?->nama ?? '-'),
             $pendaftaran->tanggal_daftar ? $pendaftaran->tanggal_daftar->format('d/m/Y') : '-',
             strtoupper(str_replace('_', ' ', $pendaftaran->status_progres)),
             strtoupper(str_replace('_', ' ', $pendaftaran->status_bayar)),

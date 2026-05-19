@@ -150,7 +150,7 @@
                         <span class="text-[12px] font-medium text-slate-900 group-hover:text-indigo-600 transition">{{ $p->user?->nama ?? 'Unknown' }}</span>
                     </td>
                     <td class="p-6">
-                        <span class="text-[12px] font-medium text-slate-900 truncate max-w-[200px] block">{{ $p->layanan?->kategori?->nama ?? ($p->layanan?->materi ?? '-') }}</span>
+                        <span class="text-[12px] font-medium text-slate-900 truncate max-w-[200px] block">{{ $p->jadwal?->jenis?->nama ?? ($p->jadwal?->kategori?->nama ?? '-') }}</span>
                     </td>
                     <td class="p-6 whitespace-nowrap">
                         <span class="text-[12px] font-medium text-slate-900">{{ $p->tanggal_daftar ? $p->tanggal_daftar->format('d M Y') : '-' }}</span>

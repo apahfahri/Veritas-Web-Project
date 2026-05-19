@@ -33,7 +33,7 @@
                 </div>
                 <div>
                     <dt class="text-gray-500">Layanan</dt>
-                    <dd class="font-semibold">{{ $pendaftaran->layanan?->materi ?? '-' }}</dd>
+                    <dd class="font-semibold">{{ $pendaftaran->jadwal?->jenis?->nama ?? '-' }}</dd>
                 </div>
 
             </dl>

@@ -10,15 +10,13 @@ class CreatePendaftaranTable extends Migration
     {
         Schema::create('pendaftaran', function (Blueprint $table) {
             $table->id('id_pendaftaran');
-            $table->unsignedBigInteger('id_layanan');
             $table->unsignedBigInteger('id_admin')->nullable();
             $table->unsignedBigInteger('id_user');
             $table->date('tanggal_daftar');
-            $table->string('status_progres')->nullable();
-            $table->string('status_bayar')->nullable();
+            $table->string('status_progres')->default('menunggu')->nullable();
+            $table->string('status_bayar')->default('belum_bayar')->nullable();
             $table->timestamps();
 
-            $table->foreign('id_layanan')->references('id_layanan')->on('layanan')->onDelete('cascade');
             $table->foreign('id_admin')->references('id_admin')->on('admin')->onDelete('set null');
             $table->foreign('id_user')->references('id_user')->on('users')->onDelete('cascade');
         });

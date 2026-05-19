@@ -33,7 +33,7 @@ class SubadminSertifikatController extends Controller
 
     public function create($pendaftaran_id)
     {
-        $pendaftaran = Pendaftaran::with(['user', 'layanan'])->findOrFail($pendaftaran_id);
+        $pendaftaran = Pendaftaran::with(['user', 'jadwal.jenis', 'jadwal.kategori'])->findOrFail($pendaftaran_id);
 
         // Alur Sertifikat: "Sertifikat hanya boleh diterbitkan jika status pendaftaran sudah 'Completed' atau 'Lulus'."
         $allowedStatuses = ['selesai', 'lulus', 'completed'];

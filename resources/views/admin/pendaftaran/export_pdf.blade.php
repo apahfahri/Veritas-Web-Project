@@ -45,7 +45,7 @@
                     <strong>{{ $p->user?->nama }}</strong><br>
                     {{ $p->user?->email }}
                 </td>
-                <td>{{ $p->layanan?->nama ?? ($p->layanan?->materi ?? '-') }}</td>
+                <td>{{ $p->jadwal?->jenis?->nama ?? ($p->jadwal?->kategori?->nama ?? '-') }}</td>
                 <td>{{ $p->tanggal_daftar ? $p->tanggal_daftar->format('d/m/Y') : '-' }}</td>
                 <td>
                     <span class="badge {{ $p->status_progres == 'selesai' ? 'badge-success' : ($p->status_progres == 'diproses' ? 'badge-info' : 'badge-warning') }}">

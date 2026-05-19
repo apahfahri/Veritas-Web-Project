@@ -15,10 +15,16 @@ class JenisLayanan extends Model
     protected $fillable = [
         'id_kategori',
         'nama',
+        'kode_jenis',
     ];
 
     public function kategori()
     {
         return $this->belongsTo(KategoriLayanan::class, 'id_kategori', 'id_kategori');
+    }
+
+    public function jadwals()
+    {
+        return $this->hasMany(Jadwal::class, 'id_jenis', 'id_jenis');
     }
 }
