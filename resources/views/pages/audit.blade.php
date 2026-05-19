@@ -64,12 +64,8 @@
                     @csrf
                     @php 
                         $kategoriAudit = \App\Models\KategoriLayanan::where('nama', 'like', '%Audit%')->first();
-                        $layananAudit = \App\Models\Layanan::where('id_kategori', $kategoriAudit?->id_kategori)->first();
-                        
-                        $layananId = $layananAudit ? $layananAudit->id_layanan : null;
                     @endphp
                     
-                    <input type="hidden" name="layanan_id" value="{{ $layananId }}">
                     <input type="hidden" name="kategori_id" value="{{ $kategoriAudit?->id_kategori }}">
                     <input type="hidden" name="jenis_klien" value="perusahaan">
 

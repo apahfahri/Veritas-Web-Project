@@ -53,18 +53,9 @@
                     @csrf
                     @php 
                         $kategoriKonsultasi = \App\Models\KategoriLayanan::where('nama', 'like', '%Konsultasi%')->first();
-                        $layananKonsultasi = \App\Models\Layanan::where('id_kategori', $kategoriKonsultasi?->id_kategori)->first()
-                                            ?? \App\Models\Layanan::whereHas('kategori', function($q) {
-                                                $q->where('nama', 'like', '%Konsultasi%');
-                                            })->first()
-                                            ?? null
-;
-                        
-                        $layananId = $layananKonsultasi ? $layananKonsultasi->id_layanan : null;
                         $jenisKlien = old('jenis_klien', 'individu');
                     @endphp
                     
-                    <input type="hidden" name="layanan_id" value="{{ $layananId }}">
                     <input type="hidden" name="kategori_id" value="{{ $kategoriKonsultasi?->id_kategori }}">
                     <input type="hidden" name="jenis_klien" id="hidden_jenis_klien" value="{{ $jenisKlien }}">
 
