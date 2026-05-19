@@ -12,7 +12,7 @@ class PemateriController extends Controller
 {
     public function index()
     {
-        $pemateris = Pemateri::with('layanan.kategori')->latest()->paginate(10);
+        $pemateris = Pemateri::with(['jadwals.jenis', 'jadwals.kategori'])->latest()->paginate(10);
         return view('admin.petugas.index', compact('pemateris'));
     }
 
@@ -27,7 +27,7 @@ class PemateriController extends Controller
             'nama_lengkap' => 'required|string|max:255',
             'kompetensi'   => 'nullable|string',
             'bio'          => 'nullable|string',
-            'no_hp'        => 'nullable|string|max:20',
+            'no_telp'      => 'nullable|string|max:20',
             'email'        => 'nullable|email|max:255',
             'foto'         => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
@@ -61,7 +61,7 @@ class PemateriController extends Controller
             'nama_lengkap' => 'required|string|max:255',
             'kompetensi'   => 'nullable|string',
             'bio'          => 'nullable|string',
-            'no_hp'        => 'nullable|string|max:20',
+            'no_telp'      => 'nullable|string|max:20',
             'email'        => 'nullable|email|max:255',
             'foto'         => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
@@ -95,7 +95,7 @@ class PemateriController extends Controller
             Storage::disk('public')->delete($pemateri->foto);
         }
 
-        $pemateri->layanan()->detach();
+        $pemateri->jadwals()->detach();
         $pemateri->delete();
 
         return redirect()->route('admin.petugas.index')

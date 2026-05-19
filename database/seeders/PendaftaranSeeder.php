@@ -11,7 +11,8 @@ class PendaftaranSeeder extends Seeder
     {
         DB::table('pendaftaran')->insert([
             [
-                'id_layanan' => 1,
+                'id_jadwal' => 1,
+                'nomor_pendaftaran' => 'PLT-AK3U-OFF-19052026-0001',
                 'id_admin' => 2, // admin bandung
                 'id_user' => 1,
                 'tanggal_daftar' => now()->subDays(5)->toDateString(),
@@ -23,7 +24,8 @@ class PendaftaranSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'id_layanan' => 2,
+                'id_jadwal' => 2,
+                'nomor_pendaftaran' => 'PLT-ASMK3-OFF-19052026-0002',
                 'id_admin' => 3, // admin jakarta
                 'id_user' => 2,
                 'tanggal_daftar' => now()->subDays(2)->toDateString(),

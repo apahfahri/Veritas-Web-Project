@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Subadmin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pendaftaran;
-use App\Models\Layanan;
+use App\Models\Jadwal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\PendaftaranStatusNotification;
@@ -26,7 +26,7 @@ class SubadminPendaftaranController extends Controller
     public function index(Request $request)
     {
         $cabang = Auth::user()->cabang;
-        $query = Pendaftaran::with(['user', 'layanan']);
+        $query = Pendaftaran::with(['user', 'jadwal.jenis', 'jadwal.kategori']);
 
         if ($cabang) {
             $query->where(function($q) use ($cabang) {
@@ -51,8 +51,8 @@ class SubadminPendaftaranController extends Controller
                             ->orWhere('email', 'LIKE', "%{$search}%")
                             ->orWhere('no_telp', 'LIKE', "%{$search}%");
                   })
-                  ->orWhereHas('layanan', function($qLayanan) use ($search) {
-                      $qLayanan->where('materi', 'LIKE', "%{$search}%");
+                  ->orWhereHas('jadwal.jenis', function($qJenis) use ($search) {
+                      $qJenis->where('nama', 'LIKE', "%{$search}%");
                   });
             });
         }
@@ -65,7 +65,7 @@ class SubadminPendaftaranController extends Controller
     public function show($id)
     {
         $cabang = Auth::user()->cabang;
-        $query = Pendaftaran::with(['user', 'layanan', 'sertifikat']);
+        $query = Pendaftaran::with(['user', 'jadwal.jenis', 'sertifikat']);
 
         if ($cabang) {
             $query->where(function($q) use ($cabang) {

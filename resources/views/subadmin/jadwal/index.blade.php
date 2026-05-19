@@ -1,103 +1,143 @@
 @extends('layouts.subadmin')
-
-@section('title', 'Jadwal Pelatihan')
-@section('page-title', 'Manajemen Jadwal Pelatihan')
+@section('title', 'Jadwal Layanan')
+@section('page-title', 'Jadwal Layanan')
+@section('page-subtitle', 'Kelola jadwal program Pelatihan, Konsultasi, dan Audit')
 
 @section('content')
-<div class="flex justify-between items-center mb-8">
-    <div>
-        <p class="text-sm text-slate-500 font-medium">Kelola waktu dan lokasi pelaksanaan pelatihan.</p>
+
+@if(session('success'))
+<div class="mb-5 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl px-5 py-3.5 flex items-center gap-3 text-sm font-bold">
+    <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+    {{ session('success') }}
+</div>
+@endif
+
+<form method="GET" class="flex flex-wrap gap-3 mb-6 items-end">
+    <div class="flex-1 min-w-[200px]">
+        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama program..."
+               class="w-full bg-white border border-slate-200 px-4 py-2.5 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
     </div>
-    <a href="{{ route('subadmin.jadwal.create') }}" class="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white font-extrabold text-sm px-6 py-3.5 rounded-xl shadow-lg shadow-cyan-600/20 transition flex items-center gap-2">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-        Buat Jadwal Baru
+    <select name="kategori" class="bg-white border border-slate-200 px-4 py-2.5 rounded-xl text-sm font-bold focus:outline-none focus:border-indigo-500">
+        <option value="">Semua Kategori</option>
+        @foreach($kategoris as $k)
+        <option value="{{ $k->id_kategori }}" {{ request('kategori') == $k->id_kategori ? 'selected' : '' }}>{{ $k->nama }}</option>
+        @endforeach
+    </select>
+    <select name="jenis_pertemuan" class="bg-white border border-slate-200 px-4 py-2.5 rounded-xl text-sm font-bold focus:outline-none focus:border-indigo-500">
+        <option value="">Semua Mode</option>
+        <option value="online"  {{ request('jenis_pertemuan') == 'online'  ? 'selected' : '' }}>Online</option>
+        <option value="offline" {{ request('jenis_pertemuan') == 'offline' ? 'selected' : '' }}>Offline</option>
+        <option value="hybrid"  {{ request('jenis_pertemuan') == 'hybrid'  ? 'selected' : '' }}>Hybrid</option>
+    </select>
+    <button type="submit" class="px-5 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-black hover:bg-slate-800 transition">Filter</button>
+    <a href="{{ route('subadmin.jadwal.index') }}" class="px-4 py-2.5 text-slate-400 hover:text-slate-700 text-sm font-bold transition">Reset</a>
+    <a href="{{ route('subadmin.jadwal.create') }}"
+       class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-black hover:bg-indigo-700 transition flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+        Tambah Jadwal
     </a>
-</div>
+</form>
 
-<div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden select-none">
-    <table class="w-full text-left border-collapse">
-        <thead>
-            <tr class="bg-slate-50/50 border-b border-slate-100">
-                <th class="px-6 py-5 text-xs font-extrabold text-slate-500 uppercase tracking-wider">Layanan / Materi</th>
-                <th class="px-6 py-5 text-xs font-extrabold text-slate-500 uppercase tracking-wider">Waktu Pelaksanaan</th>
-                <th class="px-6 py-5 text-xs font-extrabold text-slate-500 uppercase tracking-wider">Lokasi</th>
-                <th class="px-6 py-5 text-xs font-extrabold text-slate-500 uppercase tracking-wider">Kuota</th>
-                <th class="px-6 py-5 text-xs font-extrabold text-slate-500 uppercase tracking-wider text-center">Status</th>
-                <th class="px-6 py-5 text-xs font-extrabold text-slate-500 uppercase tracking-wider text-right">Aksi</th>
-            </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-50">
-            @forelse($jadwals as $j)
-            <tr class="hover:bg-slate-50/50 transition group">
-                <td class="px-6 py-5">
-                    <div class="flex flex-col">
-                        <span class="text-sm font-bold text-slate-900">{{ $j->layanan?->nama ?? 'Layanan' }}</span>
-                        <span class="text-[11px] text-slate-500 mt-0.5">{{ $j->layanan?->materi }}</span>
-                    </div>
-                </td>
-                <td class="px-6 py-5">
-                    <div class="flex flex-col">
-                        <span class="text-sm font-bold text-slate-900">{{ \Carbon\Carbon::parse($j->tanggal)->format('d M Y') }}</span>
-                        <span class="text-[11px] text-slate-500 mt-0.5">{{ $j->jam_mulai }} - {{ $j->jam_selesai }}</span>
-                    </div>
-                </td>
-                <td class="px-6 py-5">
-                    <span class="text-sm font-medium text-slate-700">{{ $j->lokasi }}</span>
-                </td>
-                <td class="px-6 py-5">
-                    <div class="flex items-center gap-2">
-                        <div class="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                            @php $percent = ($j->pendaftarans_count ?? 0) / ($j->kuota ?: 1) * 100; @endphp
-                            <div class="h-full bg-cyan-500 rounded-full" style="width: {{ $percent }}%"></div>
+<div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="bg-slate-50 border-b border-slate-100">
+                <tr>
+                    <th class="px-5 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">Program</th>
+                    <th class="px-5 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">Mode</th>
+                    <th class="px-5 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">Tanggal</th>
+                    <th class="px-5 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">Kapasitas</th>
+                    <th class="px-5 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">Pemateri</th>
+                    <th class="px-5 py-4 text-center text-[10px] font-black uppercase tracking-widest text-slate-400">Menunggu</th>
+                    <th class="px-5 py-4 text-center text-[10px] font-black uppercase tracking-widest text-slate-400">Aksi</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+                @forelse($jadwals as $j)
+                <tr class="hover:bg-slate-50/50 transition">
+                    <td class="px-5 py-4">
+                        <div class="flex items-center gap-1.5 mb-1">
+                            <span class="text-[9px] font-black bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded tracking-wider">{{ $j->kategori?->kode_kategori }}</span>
+                            @if($j->jenis?->kode_jenis)
+                            <span class="text-[9px] font-black bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded border border-indigo-100 tracking-wider">{{ $j->jenis->kode_jenis }}</span>
+                            @endif
                         </div>
-                        <span class="text-xs font-bold text-slate-600">{{ $j->pendaftarans_count ?? 0 }}/{{ $j->kuota }}</span>
-                    </div>
-                </td>
-                <td class="px-6 py-5 text-center">
-                    @php
-                        $statusColors = [
-                            'aktif' => 'bg-emerald-50 text-emerald-600 border-emerald-100',
-                            'penuh' => 'bg-amber-50 text-amber-600 border-amber-100',
-                            'selesai' => 'bg-slate-50 text-slate-600 border-slate-100',
-                            'batal' => 'bg-red-50 text-red-600 border-red-100',
-                        ];
-                        $color = $statusColors[strtolower($j->status)] ?? $statusColors['aktif'];
-                    @endphp
-                    <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border {{ $color }}">
-                        {{ $j->status }}
-                    </span>
-                </td>
-                <td class="px-6 py-5 text-right">
-                    <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition">
-                        <a href="{{ route('subadmin.jadwal.edit', $j->id_jadwal) }}" class="p-2 bg-white border border-slate-200 rounded-xl text-slate-600 hover:text-cyan-600 hover:border-cyan-200 transition shadow-sm">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                        </a>
-                        <form action="{{ route('subadmin.jadwal.destroy', $j->id_jadwal) }}" method="POST" onsubmit="return confirm('Hapus jadwal ini?')">
-                            @csrf @method('DELETE')
-                            <button type="submit" class="p-2 bg-white border border-slate-200 rounded-xl text-slate-600 hover:text-red-600 hover:border-red-200 transition shadow-sm">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                            </button>
-                        </form>
-                    </div>
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="6" class="px-6 py-20 text-center">
-                    <div class="flex flex-col items-center justify-center opacity-40">
-                        <svg class="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v12a2 2 0 002 2z"></path></svg>
-                        <p class="text-lg font-bold">Belum Ada Jadwal</p>
-                        <p class="text-sm">Silakan buat jadwal pelatihan pertama Anda.</p>
-                    </div>
-                </td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
-</div>
-
-<div class="mt-6">
-    {{ $jadwals->links() }}
+                        <p class="text-sm font-black text-slate-900">{{ $j->jenis?->nama ?? '—' }}</p>
+                        @if($j->lokasi)<p class="text-[10px] text-slate-400 mt-0.5">{{ $j->lokasi }}</p>@endif
+                    </td>
+                    <td class="px-5 py-4">
+                        <span class="inline-flex px-2 py-1 rounded-full text-[9px] font-black uppercase tracking-widest
+                            {{ $j->jenis_pertemuan === 'online' ? 'bg-cyan-50 text-cyan-700' : ($j->jenis_pertemuan === 'hybrid' ? 'bg-purple-50 text-purple-700' : 'bg-amber-50 text-amber-700') }}">
+                            {{ $j->jenis_pertemuan }}
+                        </span>
+                    </td>
+                    <td class="px-5 py-4">
+                        <p class="text-sm font-bold text-slate-700">{{ $j->tgl_mulai?->format('d M Y') ?? '—' }}</p>
+                        @if($j->tgl_selesai && $j->tgl_selesai->ne($j->tgl_mulai))
+                        <p class="text-[10px] text-slate-400">s.d. {{ $j->tgl_selesai->format('d M Y') }}</p>
+                        @endif
+                    </td>
+                    <td class="px-5 py-4">
+                        @if($j->kapasitas)
+                        <p class="text-sm font-black text-slate-900">{{ $j->sisa_kursi }}/{{ $j->kapasitas }}</p>
+                        <p class="text-[9px] text-slate-400 font-bold uppercase">sisa kursi</p>
+                        @else
+                        <span class="text-slate-300 font-bold">∞</span>
+                        @endif
+                    </td>
+                    <td class="px-5 py-4">
+                        @forelse($j->pemateri as $pm)
+                        <span class="inline-block text-[10px] font-bold bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded mr-1 mb-1">{{ $pm->nama_lengkap }}</span>
+                        @empty
+                        <span class="text-[10px] text-slate-300 font-bold">—</span>
+                        @endforelse
+                    </td>
+                    <td class="px-5 py-4 text-center">
+                        @if($j->pending_count > 0)
+                        <span class="inline-flex items-center justify-center bg-amber-100 text-amber-700 text-xs font-black w-7 h-7 rounded-lg">{{ $j->pending_count }}</span>
+                        @else
+                        <span class="text-slate-300 font-bold">0</span>
+                        @endif
+                    </td>
+                    <td class="px-5 py-4">
+                        <div class="flex items-center justify-center gap-1.5">
+                            <a href="{{ route('subadmin.jadwal.show', $j->id_jadwal) }}"
+                               class="w-8 h-8 flex items-center justify-center rounded-xl border border-slate-200 text-slate-400 hover:border-indigo-500 hover:text-indigo-600 transition">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            </a>
+                            <a href="{{ route('subadmin.jadwal.edit', $j->id_jadwal) }}"
+                               class="w-8 h-8 flex items-center justify-center rounded-xl border border-slate-200 text-slate-400 hover:border-amber-500 hover:text-amber-600 transition">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                            </a>
+                            <form method="POST" action="{{ route('subadmin.jadwal.destroy', $j->id_jadwal) }}" class="delete-form" data-name="{{ $j->jenis?->nama }}">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="w-8 h-8 flex items-center justify-center rounded-xl border border-slate-200 text-slate-400 hover:border-red-500 hover:text-red-500 transition">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                <tr><td colspan="7" class="px-5 py-16 text-center">
+                    <p class="text-sm font-black text-slate-300 uppercase tracking-widest">Belum ada jadwal tersedia</p>
+                </td></tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+    @if($jadwals->hasPages())
+    <div class="p-4 border-t border-slate-50">{{ $jadwals->links() }}</div>
+    @endif
 </div>
 @endsection
 
+@push('scripts')
+<script>
+document.querySelectorAll('.delete-form').forEach(form => {
+    form.addEventListener('submit', e => {
+        if (!confirm(`Hapus jadwal "${form.dataset.name}"?`)) e.preventDefault();
+    });
+});
+</script>
+@endpush

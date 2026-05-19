@@ -1,7 +1,7 @@
 @extends('layouts.subadmin')
 
 @section('title', 'Detail & Konfirmasi Pendaftaran')
-@section('page-title', 'Konfirmasi Pendaftaran #' . $pendaftaran->id_pendaftaran)
+@section('page-title', 'Pendaftaran ' . ($pendaftaran->nomor_pendaftaran ?? '#' . $pendaftaran->id_pendaftaran))
 
 @section('content')
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 select-none">
@@ -32,7 +32,7 @@
                 </div>
                 <div class="md:col-span-2 pt-4 border-t border-slate-50">
                     <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Layanan Yang Dipesan</span>
-                    <p class="text-base font-black text-cyan-700 mt-1">{{ $pendaftaran->layanan?->nama }}</p>
+                    <p class="text-base font-black text-cyan-700 mt-1">{{ $pendaftaran->jadwal?->jenis?->nama }}</p>
                     <p class="text-xs text-slate-500 font-medium mt-0.5">Daftar pada: {{ $pendaftaran->tanggal_daftar ? $pendaftaran->tanggal_daftar->format('d M Y') : '-' }}</p>
                 </div>
             </div>
@@ -292,16 +292,16 @@
                     <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Rincian Layanan</p>
                     <div class="flex justify-between items-center bg-slate-50 p-5 rounded-2xl border border-slate-100">
                         <div>
-                            <p class="text-sm font-black text-slate-900 mb-1">{{ $pendaftaran->layanan?->nama }}</p>
-                            <p class="text-[10px] font-bold text-cyan-600 uppercase tracking-[0.2em]">{{ $pendaftaran->layanan?->materi }}</p>
+                            <p class="text-sm font-black text-slate-900 mb-1">{{ $pendaftaran->jadwal?->jenis?->nama }}</p>
+                            <p class="text-[10px] font-bold text-cyan-600 uppercase tracking-[0.2em]">{{ $pendaftaran->jadwal?->kategori?->nama }}</p>
                         </div>
-                        <p class="text-sm font-black text-slate-900">Rp {{ number_format($pendaftaran->layanan?->harga ?? 0, 0, ',', '.') }}</p>
+                        <p class="text-sm font-black text-slate-900">Rp {{ number_format($pendaftaran->jadwal?->harga ?? 0, 0, ',', '.') }}</p>
                     </div>
                 </div>
 
                 <div class="flex justify-between items-center mb-10 px-4">
                     <p class="text-lg font-black text-slate-900 uppercase tracking-tighter">Total Pembayaran</p>
-                    <p class="text-3xl font-black text-cyan-700 tracking-tighter">Rp {{ number_format($pendaftaran->layanan?->harga ?? 0, 0, ',', '.') }}</p>
+                    <p class="text-3xl font-black text-cyan-700 tracking-tighter">Rp {{ number_format($pendaftaran->jadwal?->harga ?? 0, 0, ',', '.') }}</p>
                 </div>
 
                 <div class="bg-amber-50 border border-amber-100 p-5 rounded-2xl mb-12">

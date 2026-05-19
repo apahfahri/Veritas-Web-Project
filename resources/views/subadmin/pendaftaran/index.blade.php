@@ -47,8 +47,8 @@
             <tbody class="divide-y divide-slate-50">
                 @forelse($pendaftarans as $p)
                 <tr class="hover:bg-slate-50/60 transition">
-                    <td class="p-4 text-sm font-bold text-slate-900">#{{ $p->id_pendaftaran }}</td>
-                    <td class="p-4 text-sm font-bold text-slate-800">{{ $p->layanan?->materi }}</td>
+                    <td class="p-4 text-[11px] font-black tracking-widest text-slate-900">{{ $p->nomor_pendaftaran ?? 'ID-'.$p->id_pendaftaran }}</td>
+                    <td class="p-4 text-sm font-bold text-slate-800">{{ $p->jadwal?->jenis?->nama ?? '—' }}</td>
                     <td class="p-4 text-sm font-medium text-slate-600">
                         {{ $p->user?->nama }}<br>
                         <span class="text-xs text-slate-400">{{ $p->user?->email }}</span>

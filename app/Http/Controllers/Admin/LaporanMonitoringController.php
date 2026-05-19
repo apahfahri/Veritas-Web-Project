@@ -18,7 +18,7 @@ class LaporanMonitoringController extends Controller
         $endDate = $request->input('end_date');
 
         // Base query pendaftaran
-        $query = Pendaftaran::with(['user', 'layanan.kategori', 'perusahaan']);
+        $query = Pendaftaran::with(['user', 'jadwal.jenis', 'jadwal.kategori', 'perusahaan']);
 
         if ($startDate) {
             $query->whereDate('created_at', '>=', $startDate);
@@ -36,18 +36,18 @@ class LaporanMonitoringController extends Controller
             // A. LAPORAN KEUANGAN & PENDAPATAN
             // 1. Total Omset Masuk: SUM pendaftaran selesai
             $omsetQuery = Pendaftaran::where('status_progres', 'selesai')
-                ->join('layanan', 'pendaftaran.id_layanan', '=', 'layanan.id_layanan');
+                ->join('jadwal', 'pendaftaran.id_jadwal', '=', 'jadwal.id_jadwal');
             if ($startDate) $omsetQuery->whereDate('pendaftaran.created_at', '>=', $startDate);
             if ($endDate) $omsetQuery->whereDate('pendaftaran.created_at', '<=', $endDate);
-            $data['total_omset'] = $omsetQuery->sum('layanan.harga');
+            $data['total_omset'] = $omsetQuery->sum('jadwal.harga');
 
             // 2. Total Piutang Berjalan: SUM pendaftaran menunggu pembayaran / diproses dan belum lunas
             $piutangQuery = Pendaftaran::whereIn('status_progres', ['menunggu_pembayaran', 'diproses'])
                 ->where('status_bayar', 'belum_lunas')
-                ->join('layanan', 'pendaftaran.id_layanan', '=', 'layanan.id_layanan');
+                ->join('jadwal', 'pendaftaran.id_jadwal', '=', 'jadwal.id_jadwal');
             if ($startDate) $piutangQuery->whereDate('pendaftaran.created_at', '>=', $startDate);
             if ($endDate) $piutangQuery->whereDate('pendaftaran.created_at', '<=', $endDate);
-            $data['total_piutang'] = $piutangQuery->sum('layanan.harga');
+            $data['total_piutang'] = $piutangQuery->sum('jadwal.harga');
 
             // 3. Grafik Bar Bulanan tren uang masuk (Tahun ini)
             $monthlyOmset = [];
@@ -56,8 +56,8 @@ class LaporanMonitoringController extends Controller
                 $monthlyQuery = Pendaftaran::where('status_progres', 'selesai')
                     ->whereMonth('pendaftaran.created_at', $m)
                     ->whereYear('pendaftaran.created_at', date('Y'))
-                    ->join('layanan', 'pendaftaran.id_layanan', '=', 'layanan.id_layanan');
-                $monthlyOmset[] = (int)$monthlyQuery->sum('layanan.harga');
+                    ->join('jadwal', 'pendaftaran.id_jadwal', '=', 'jadwal.id_jadwal');
+                $monthlyOmset[] = (int)$monthlyQuery->sum('jadwal.harga');
             }
             $data['chart_labels'] = $months;
             $data['chart_series'] = $monthlyOmset;
@@ -79,10 +79,11 @@ class LaporanMonitoringController extends Controller
 
         } elseif ($type === 'products') {
             // C. LAPORAN EVALUASI PRODUK (Produk Terlaris)
-            $productQuery = Pendaftaran::join('layanan', 'pendaftaran.id_layanan', '=', 'layanan.id_layanan')
-                ->join('kategori_layanan', 'layanan.id_kategori', '=', 'kategori_layanan.id_kategori')
-                ->selectRaw('layanan.nama as nama_layanan, kategori_layanan.nama as nama_kategori, count(pendaftaran.id_pendaftaran) as qty, sum(layanan.harga) as revenue')
-                ->groupBy('layanan.nama', 'kategori_layanan.nama')
+            $productQuery = Pendaftaran::join('jadwal', 'pendaftaran.id_jadwal', '=', 'jadwal.id_jadwal')
+                ->join('jenis_layanan', 'jadwal.id_jenis', '=', 'jenis_layanan.id_jenis')
+                ->join('kategori_layanan', 'jadwal.id_kategori', '=', 'kategori_layanan.id_kategori')
+                ->selectRaw('jenis_layanan.nama as nama_layanan, kategori_layanan.nama as nama_kategori, count(pendaftaran.id_pendaftaran) as qty, sum(jadwal.harga) as revenue')
+                ->groupBy('jenis_layanan.nama', 'kategori_layanan.nama')
                 ->orderBy('qty', 'desc');
 
             if ($startDate) $productQuery->whereDate('pendaftaran.created_at', '>=', $startDate);

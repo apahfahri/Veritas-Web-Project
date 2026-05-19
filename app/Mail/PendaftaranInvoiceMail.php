@@ -4,7 +4,7 @@ namespace App\Mail;
 
 use App\Models\Pendaftaran;
 use App\Models\User;
-use App\Models\Layanan;
+use App\Models\Jadwal;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -22,13 +22,13 @@ class PendaftaranInvoiceMail extends Mailable
     /**
      * @param  Pendaftaran  $pendaftaran
      * @param  User         $user
-     * @param  Layanan|null $layanan
+     * @param  Jadwal|null  $jadwal
      */
-    public function __construct(Pendaftaran $pendaftaran, User $user, ?Layanan $layanan = null)
+    public function __construct(Pendaftaran $pendaftaran, User $user, ?Jadwal $jadwal = null)
     {
         $this->pendaftaran = $pendaftaran;
         $this->user        = $user;
-        $this->layanan     = $layanan ?? $pendaftaran->layanan;
+        $this->layanan     = $jadwal ?? $pendaftaran->jadwal;
     }
 
     /**

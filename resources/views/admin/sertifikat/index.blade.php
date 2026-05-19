@@ -40,7 +40,7 @@
                                     </div>
                                 </td>
                                 <td class="p-5">
-                                    <div class="text-xs font-bold text-slate-500 leading-relaxed max-w-[250px] truncate">{{ $p->layanan?->nama }}</div>
+                                    <div class="text-xs font-bold text-slate-500 leading-relaxed max-w-[250px] truncate">{{ $p->jadwal?->jenis?->nama ?? ($p->jadwal?->kategori?->nama ?? '—') }}</div>
                                 </td>
                                 <td class="p-5 text-center">
                                     <span class="px-3 py-1 bg-emerald-50 text-emerald-600 text-[9px] font-black uppercase rounded-lg border border-emerald-100">Lunas & Selesai</span>
@@ -107,7 +107,7 @@
                         <span class="text-[12px] font-medium text-slate-900">{{ $s->nama_lengkap }}</span>
                     </td>
                     <td class="p-6">
-                        <span class="text-[12px] font-medium text-slate-900">{{ $s->pendaftaran?->layanan?->kategori?->nama ?? '-' }}</span>
+                        <span class="text-[12px] font-medium text-slate-900">{{ $s->pendaftaran?->jadwal?->kategori?->nama ?? '-' }}</span>
                     </td>
                     <td class="p-6 text-center">
                         <span class="text-[12px] font-medium text-slate-900">{{ $s->penerbit ?? '-' }}</span>

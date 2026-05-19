@@ -61,10 +61,10 @@
 
         <!-- RESULT COUNT -->
         <div class="mb-6 text-sm text-slate-500">
-            Menampilkan <strong class="text-slate-800 font-bold">{{ $pelatihans->count() }}</strong> program pelatihan
+            Menampilkan <strong class="text-slate-800 font-bold">{{ $jadwals->count() }}</strong> program pelatihan
         </div>
 
-        @if($pelatihans->isEmpty())
+        @if($jadwals->isEmpty())
             <div class="text-center py-20 bg-white border border-slate-100 rounded-2xl shadow-sm">
                 <div class="text-5xl mb-4">📭</div>
                 <h3 class="text-lg font-bold text-slate-600">Tidak ada pelatihan ditemukan</h3>
@@ -72,7 +72,7 @@
             </div>
         @else
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                @foreach($pelatihans as $pelatihan)
+                @foreach($jadwals as $pelatihan)
                 <div class="flex flex-col bg-white rounded-2xl border border-slate-100 shadow-[0_4px_25px_-5px_rgba(0,0,0,0.03)] overflow-hidden group hover:shadow-[0_15px_35px_-8px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300">
                     <!-- Premium Decorative Header -->
                     <div class="relative aspect-video overflow-hidden bg-gradient-to-br from-emerald-800 via-[#1E6B3D] to-[#3CDA7D] flex items-center justify-center shrink-0">
@@ -96,8 +96,8 @@
                                 </span>
                             </div>
 
-                            <h3 class="text-lg font-bold text-slate-800 line-clamp-1 group-hover:text-[#1E6B3D] transition-colors mb-2" title="{{ $pelatihan->nama }}">
-                                {{ $pelatihan->nama }}
+                            <h3 class="text-lg font-bold text-slate-800 line-clamp-1 group-hover:text-[#1E6B3D] transition-colors mb-2" title="{{ $pelatihan->jenis?->nama }}">
+                                {{ $pelatihan->jenis?->nama }}
                             </h3>
                             
                             <div class="flex items-baseline gap-1.5 mb-3">
@@ -154,7 +154,7 @@
                                 @endif
                             </div>
 
-                            <a href="{{ route('training.detail', $pelatihan->id_layanan) }}"
+                            <a href="{{ route('training.detail', $pelatihan->id_jadwal) }}"
                                class="block w-full text-center bg-[#1E6B3D] text-white text-sm font-bold py-3 rounded-xl hover:bg-[#24824A] active:scale-[0.98] transition-all shadow-[0_4px_12px_-3px_rgba(30,107,61,0.2)] hover:shadow-[0_6px_20px_-3px_rgba(30,107,61,0.3)]">
                                 Lihat Detail & Daftar
                             </a>

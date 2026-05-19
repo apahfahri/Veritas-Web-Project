@@ -81,7 +81,7 @@
                         </div>
                     </td>
                     <td class="p-6">
-                        <span class="text-[12px] font-medium text-slate-900 leading-relaxed">{{ $p->layanan?->kategori?->nama ?? '-' }}</span>
+                        <span class="text-[12px] font-medium text-slate-900 leading-relaxed">{{ $p->jadwal?->jenis?->nama ?? ($p->jadwal?->kategori?->nama ?? '-') }}</span>
                     </td>
                     <td class="p-6 whitespace-nowrap">
                         <span class="text-[12px] font-medium text-slate-900">{{ $p->tanggal_daftar ? $p->tanggal_daftar->format('d M Y') : '-' }}</span>

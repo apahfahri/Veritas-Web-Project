@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $pelatihan->materi . ' — PT Katiga Veritas Indonesia')
+@section('title', ($jadwal->jenis?->nama ?? 'Detail Pelatihan') . ' — PT Katiga Veritas Indonesia')
 @section('content')
 
 <div class="min-h-screen bg-[#F5F7FA]">
@@ -11,7 +11,7 @@
             <span class="mx-2 text-gray-400">/</span>
             <a href="{{ route('training.list') }}" class="text-gray-500 hover:text-[#1E6B3D]">Pelatihan</a>
             <span class="mx-2 text-gray-400">/</span>
-            <span class="text-[#1E6B3D] font-medium">{{ $pelatihan->materi }}</span>
+            <span class="text-[#1E6B3D] font-medium">{{ $jadwal->jenis?->nama }}</span>
         </div>
     </div>
 
@@ -29,32 +29,32 @@
                 <div class="bg-white p-8 rounded-xl shadow">
                     <div class="flex gap-3 mb-4">
                         <span class="bg-[#1E6B3D] text-white text-xs px-3 py-1 rounded">
-                            {{ $pelatihan->kategori?->nama ?? 'Pelatihan K3' }}
+                            {{ $jadwal->kategori?->nama ?? 'Pelatihan K3' }}
                         </span>
-                        <span class="border text-xs px-3 py-1 rounded {{ $pelatihan->jenis_pertemuan === 'online' ? 'border-[#1E6B3D] text-[#1E6B3D]' : 'border-orange-400 text-orange-500' }}">
-                            {{ ucfirst($pelatihan->jenis_pertemuan) }}
+                        <span class="border text-xs px-3 py-1 rounded {{ $jadwal->jenis_pertemuan === 'online' ? 'border-[#1E6B3D] text-[#1E6B3D]' : 'border-orange-400 text-orange-500' }}">
+                            {{ ucfirst($jadwal->jenis_pertemuan) }}
                         </span>
                     </div>
 
-                    <h1 class="text-3xl font-bold text-[#1E6B3D] mb-2">{{ $pelatihan->nama }}</h1>
-                    <div class="text-2xl font-bold text-gray-800 mb-4">Rp {{ number_format($pelatihan->harga, 0, ',', '.') }}</div>
+                    <h1 class="text-3xl font-bold text-[#1E6B3D] mb-2">{{ $jadwal->jenis?->nama }}</h1>
+                    <div class="text-2xl font-bold text-gray-800 mb-4">Rp {{ number_format($jadwal->harga, 0, ',', '.') }}</div>
 
                     <!-- INFO GRID -->
                     <div class="grid sm:grid-cols-3 gap-4 mb-6 text-sm bg-[#F5F7FA] p-4 rounded-lg">
-                        @if($pelatihan->kapasitas)
+                        @if($jadwal->kapasitas)
                         <div>
                             <div class="text-gray-500">Kapasitas</div>
-                            <div class="font-semibold">{{ $sisaKursi }} kursi</div>
+                            <div class="font-semibold">{{ $sisaKursi }} / {{ $jadwal->kapasitas }} kursi</div>
                         </div>
                         @endif
                         <div>
                             <div class="text-gray-500">Mode</div>
-                            <div class="font-semibold">{{ ucfirst($pelatihan->jenis_pertemuan) }}</div>
+                            <div class="font-semibold">{{ ucfirst($jadwal->jenis_pertemuan) }}</div>
                         </div>
-                        @if($pelatihan->tanggal_usul)
+                        @if($jadwal->tgl_mulai)
                         <div>
-                            <div class="text-gray-500">Tanggal</div>
-                            <div class="font-semibold">{{ $pelatihan->tanggal_usul->format('d M Y') }}</div>
+                            <div class="text-gray-500">Tanggal Mulai</div>
+                            <div class="font-semibold">{{ $jadwal->tgl_mulai->format('d M Y') }}</div>
                         </div>
                         @endif
                     </div>
@@ -62,10 +62,10 @@
                     <hr class="my-6">
 
                     <!-- DESCRIPTION -->
-                    @if($pelatihan->deskripsi)
+                    @if($jadwal->deskripsi)
                     <div class="mb-6">
                         <h2 class="text-xl font-semibold text-[#1E6B3D] mb-3">Deskripsi Pelatihan</h2>
-                        <p class="text-gray-600 leading-relaxed">{{ $pelatihan->deskripsi }}</p>
+                        <p class="text-gray-600 leading-relaxed">{{ $jadwal->deskripsi }}</p>
                     </div>
                     @endif
 
@@ -73,18 +73,20 @@
                     <div>
                         <h2 class="text-xl font-semibold text-[#1E6B3D] mb-4">Jadwal</h2>
                         <div class="border rounded-lg p-4 space-y-2 text-sm">
-                            @if($pelatihan->tanggal_usul)
-                            <div>📅 {{ $pelatihan->tanggal_usul->format('l, d F Y') }}</div>
+                            @if($jadwal->tgl_mulai)
+                            <div>📅 {{ $jadwal->tgl_mulai->format('l, d F Y') }} @if($jadwal->tgl_selesai) - {{ $jadwal->tgl_selesai->format('l, d F Y') }} @endif</div>
+                            @elseif($jadwal->tanggal_usul)
+                            <div>📅 {{ $jadwal->tanggal_usul->format('l, d F Y') }}</div>
                             @endif
-                            @if($pelatihan->jam_pertemuan)
-                            <div>⏰ {{ substr($pelatihan->jam_pertemuan, 0, 5) }} WIB</div>
+                            @if($jadwal->jam_pertemuan)
+                            <div>⏰ {{ substr($jadwal->jam_pertemuan, 0, 5) }} WIB</div>
                             @endif
-                            @if($pelatihan->lokasi)
-                            <div>📍 {{ $pelatihan->lokasi }}</div>
+                            @if($jadwal->lokasi)
+                            <div>📍 {{ $jadwal->lokasi }}</div>
                             @else
                             <div>📍 Online (Zoom / Google Meet)</div>
                             @endif
-                            @if($pelatihan->kapasitas)
+                            @if($jadwal->kapasitas)
                             <div class="{{ $sisaKursi > 5 ? 'text-green-600' : 'text-orange-500' }} font-medium">
                                 {{ $sisaKursi }} kursi tersedia
                             </div>
@@ -93,11 +95,11 @@
                     </div>
 
                     <!-- PEMATERI -->
-                    @if($pelatihan->pemateri && $pelatihan->pemateri->count() > 0)
+                    @if($jadwal->pemateri && $jadwal->pemateri->count() > 0)
                     <div class="mt-8">
                         <h2 class="text-xl font-semibold text-[#1E6B3D] mb-4">Pemateri</h2>
                         <div class="grid gap-4">
-                            @foreach($pelatihan->pemateri as $pemateri)
+                            @foreach($jadwal->pemateri as $pemateri)
                             <div class="border border-gray-200 rounded-lg p-4 flex items-center gap-4">
                                 <div class="w-12 h-12 rounded-full bg-[#1E6B3D]/10 text-[#1E6B3D] flex items-center justify-center font-bold text-xl shrink-0">
                                     {{ strtoupper(substr($pemateri->nama_lengkap, 0, 1)) }}
@@ -122,8 +124,8 @@
                 <div class="bg-white p-6 rounded-xl shadow sticky top-4">
                     <div class="mb-4">
                         <div class="text-sm text-gray-500">Layanan</div>
-                        <div class="text-xl font-bold text-[#1E6B3D] mb-1">{{ $pelatihan->kategori?->nama }}</div>
-                        <div class="text-2xl font-extrabold text-gray-800">Rp {{ number_format($pelatihan->harga, 0, ',', '.') }}</div>
+                        <div class="text-xl font-bold text-[#1E6B3D] mb-1">{{ $jadwal->kategori?->nama }}</div>
+                        <div class="text-2xl font-extrabold text-gray-800">Rp {{ number_format($jadwal->harga, 0, ',', '.') }}</div>
                     </div>
 
                     <hr class="my-4">
@@ -135,7 +137,7 @@
                         <li>✔ Berlaku seumur hidup</li>
                     </ul>
 
-                    <a href="{{ route('training.register', $pelatihan->id_layanan) }}"
+                    <a href="{{ route('training.register', $jadwal->id_jadwal) }}"
                        class="block w-full text-center bg-[#1E6B3D] text-white py-3 rounded-lg font-semibold hover:opacity-90 transition">
                         Daftar Sekarang
                     </a>
@@ -152,9 +154,9 @@
                     <h3 class="font-semibold text-[#1E6B3D] mb-4">Pelatihan Lainnya</h3>
                     <div class="space-y-3">
                         @foreach($related as $rel)
-                        <a href="{{ route('training.detail', $rel->id_layanan) }}"
+                        <a href="{{ route('training.detail', $rel->id_jadwal) }}"
                            class="block p-3 border rounded hover:border-[#1E6B3D] transition text-sm">
-                            <div class="font-medium text-[#1E6B3D]">{{ $rel->materi }}</div>
+                            <div class="font-medium text-[#1E6B3D]">{{ $rel->jenis?->nama }}</div>
                             <div class="text-gray-500 text-xs">{{ ucfirst($rel->jenis_pertemuan) }}</div>
                         </a>
                         @endforeach

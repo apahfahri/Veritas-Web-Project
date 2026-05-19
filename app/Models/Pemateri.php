@@ -15,14 +15,14 @@ class Pemateri extends Model
     protected $fillable = [
         'nama_lengkap',
         'email',
-        'no_hp',
+        'no_telp',
         'kompetensi',
-        'bio',
         'foto',
+        'bio',
     ];
 
-    public function layanan()
+    public function jadwals()
     {
-        return $this->belongsToMany(Layanan::class, 'layanan_pemateri', 'id_pemateri', 'id_layanan');
+        return $this->belongsToMany(Jadwal::class, 'jadwal_pemateri', 'id_pemateri', 'id_jadwal');
     }
 }

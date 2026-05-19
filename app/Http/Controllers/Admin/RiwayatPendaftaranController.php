@@ -13,7 +13,7 @@ class RiwayatPendaftaranController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Pendaftaran::with(['user', 'layanan.kategori', 'perusahaan', 'sertifikat'])
+        $query = Pendaftaran::with(['user', 'jadwal.jenis', 'jadwal.kategori', 'perusahaan', 'sertifikat'])
             ->latest('id_pendaftaran');
 
         // 1. FILTER PROGRESS STATUS (Selesai & Dibatalkan)

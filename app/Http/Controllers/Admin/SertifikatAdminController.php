@@ -15,10 +15,10 @@ class SertifikatAdminController extends Controller
 {
     public function index()
     {
-        $sertifikats = Sertifikat::with(['pendaftaran.user', 'pendaftaran.layanan'])->latest()->paginate(5);
+        $sertifikats = Sertifikat::with(['pendaftaran.user', 'pendaftaran.jadwal.jenis', 'pendaftaran.jadwal.kategori'])->latest()->paginate(5);
         
         // Hanya pendaftaran Selesai & Lunas yang belum punya sertifikat
-        $pendaftaranTersedia = Pendaftaran::with(['user', 'layanan'])
+        $pendaftaranTersedia = Pendaftaran::with(['user', 'jadwal.jenis', 'jadwal.kategori'])
             ->where('status_progres', 'selesai')
             ->where('status_bayar', 'lunas')
             ->whereDoesntHave('sertifikat')
@@ -30,7 +30,7 @@ class SertifikatAdminController extends Controller
 
     public function create($id_pendaftaran)
     {
-        $pendaftaran = Pendaftaran::with(['user', 'layanan'])
+        $pendaftaran = Pendaftaran::with(['user', 'jadwal.jenis', 'jadwal.kategori'])
             ->where('status_progres', 'selesai')
             ->where('status_bayar', 'lunas')
             ->findOrFail($id_pendaftaran);

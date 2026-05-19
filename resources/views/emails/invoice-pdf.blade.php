@@ -181,7 +181,7 @@
             </tr>
             <tr>
                 <td class="lbl">Program / Layanan</td>
-                <td class="val">{{ $layanan->nama ?? ($layanan->materi ?? 'Layanan Veritas') }}</td>
+                <td class="val">{{ $layanan->jenis?->nama ?? ($layanan->nama ?? ($layanan->materi ?? 'Layanan Veritas')) }}</td>
             </tr>
             <tr>
                 <td class="lbl">Tanggal Pendaftaran</td>

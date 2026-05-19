@@ -107,10 +107,10 @@
                         @endif
                     </td>
                     <td class="p-6">
-                        <span class="text-[12px] font-bold text-slate-700 leading-relaxed">{{ $r->layanan?->nama ?? $r->layanan?->materi ?? '—' }}</span>
+                        <span class="text-[12px] font-bold text-slate-700 leading-relaxed">{{ $r->jadwal?->jenis?->nama ?? ($r->jadwal?->kategori?->nama ?? '—') }}</span>
                     </td>
                     <td class="p-6">
-                        <span class="text-[12px] font-black text-slate-950">Rp. {{ number_format($r->layanan?->harga ?? 0, 0, ',', '.') }}</span>
+                        <span class="text-[12px] font-black text-slate-950">Rp. {{ number_format($r->jadwal?->harga ?? 0, 0, ',', '.') }}</span>
                     </td>
                     <td class="p-6 text-center">
                         @if($r->status_progres === 'selesai')
@@ -127,7 +127,7 @@
                     <td class="p-6">
                         <div class="flex items-center justify-center gap-2">
                             <!-- Tombol Lihat Detail -->
-                            <button onclick="openDetailModal({{ json_encode($r) }}, {{ json_encode($r->user) }}, {{ json_encode($r->layanan) }}, {{ json_encode($r->perusahaan) }}, {{ json_encode($r->sertifikat) }})"
+                            <button onclick="openDetailModal({{ json_encode($r) }}, {{ json_encode($r->user) }}, {{ json_encode($r->jadwal) }}, {{ json_encode($r->perusahaan) }}, {{ json_encode($r->sertifikat) }})"
                                     class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-indigo-600 hover:text-indigo-600 hover:shadow-lg hover:shadow-indigo-50 transition shadow-sm group/btn" 
                                     title="Lihat Detail Riwayat">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
@@ -337,7 +337,7 @@
 
         // 3. Left Section: Registration details
         document.getElementById('modal_tgl_daftar').textContent = pendaftaran.tanggal_daftar ? new Date(pendaftaran.tanggal_daftar).toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric'}) : '—';
-        document.getElementById('modal_layanan_k3').textContent = layanan ? (layanan.nama || layanan.materi || '—') : '—';
+        document.getElementById('modal_layanan_k3').textContent = layanan && layanan.jenis ? (layanan.jenis.nama || '—') : '—';
         document.getElementById('modal_tipe_layanan').textContent = pendaftaran.mode_pertemuan ? pendaftaran.mode_pertemuan.toUpperCase() : '—';
         document.getElementById('modal_cabang').textContent = pendaftaran.cabang || '—';
         

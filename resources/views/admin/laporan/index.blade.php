@@ -205,7 +205,7 @@
                                 </div>
                             @endif
                         </td>
-                        <td class="p-6 text-[12px] font-black text-slate-900">Rp. {{ number_format($r->layanan?->harga ?? 0, 0, ',', '.') }}</td>
+                        <td class="p-6 text-[12px] font-black text-slate-900">Rp. {{ number_format($r->jadwal?->harga ?? 0, 0, ',', '.') }}</td>
                         <td class="p-6 text-center">
                             @if($r->status_bayar === 'lunas')
                                 <span class="px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest bg-emerald-50 text-emerald-600 border border-emerald-100">Lunas</span>
@@ -311,7 +311,7 @@
                                 <span class="inline-flex px-2.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider bg-slate-100 text-slate-500 border border-slate-200">Individu / Mandiri</span>
                             @endif
                         </td>
-                        <td class="p-6 text-[12px] font-bold text-slate-700 leading-relaxed">{{ $r->layanan?->nama ?? $r->layanan?->materi ?? '—' }}</td>
+                        <td class="p-6 text-[12px] font-bold text-slate-700 leading-relaxed">{{ $r->jadwal?->jenis?->nama ?? ($r->jadwal?->kategori?->nama ?? '—') }}</td>
                         <td class="p-6 text-center">
                             @php 
                                 $c = match($r->status_progres) { 

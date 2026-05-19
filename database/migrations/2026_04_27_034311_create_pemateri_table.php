@@ -11,8 +11,8 @@ class CreatePemateriTable extends Migration
         Schema::create('pemateri', function (Blueprint $table) {
             $table->id('id_pemateri');
             $table->string('nama_lengkap');
-            $table->string('email')->nullable();
-            $table->string('no_hp')->nullable();
+            $table->string('email')->nullable()->unique();
+            $table->string('no_telp')->nullable();
             $table->string('kompetensi')->nullable();
             $table->timestamps();
         });

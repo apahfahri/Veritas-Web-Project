@@ -6,11 +6,6 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     *
-     * @return void
-     */
     public function run()
     {
         $this->call([
@@ -18,12 +13,10 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             PerusahaanSeeder::class,
             KlienPerusahaanSeeder::class,
-            KategoriLayananSeeder::class,
-            LayananSeeder::class,
             PemateriSeeder::class,
-            LayananPemateriSeeder::class,
-            PendaftaranSeeder::class,
-            SertifikatSeeder::class,
+            KategoriLayananSeeder::class,  // Isi kategori, jenis, dan kode_jenis
+            JadwalSeeder::class,          // Jalankan setelah kategori/jenis selesai
+            PendaftaranSeeder::class,   // Jalankan setelah jadwal selesai
             KlienIndividuSeeder::class,
         ]);
     }

@@ -28,7 +28,7 @@
                 <tr class="hover:bg-slate-50/60 transition">
                     <td class="p-4 text-sm font-bold text-slate-900">{{ $s->no_sertifikat }}</td>
                     <td class="p-4 text-sm font-bold text-slate-800">{{ $s->nama_lengkap }}</td>
-                    <td class="p-4 text-sm font-medium text-slate-600">{{ $s->pendaftaran?->layanan?->nama ?? '-' }}</td>
+                    <td class="p-4 text-sm font-medium text-slate-600">{{ $s->pendaftaran?->jadwal?->jenis?->nama ?? ($s->pendaftaran?->jadwal?->kategori?->nama ?? '-') }}</td>
                     <td class="p-4 text-sm font-medium text-slate-600">
                         {{ $s->tanggal_terbit ? $s->tanggal_terbit->format('d M Y') : '-' }}
                     </td>

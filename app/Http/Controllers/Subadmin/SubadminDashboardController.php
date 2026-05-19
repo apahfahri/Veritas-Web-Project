@@ -31,9 +31,9 @@ class SubadminDashboardController extends Controller
         $cabang = Auth::user()->cabang;
         
         // Stats by Category (Pelatihan: 1, Konsultasi: 2, Audit: 3)
-        $stats = Pendaftaran::join('layanan', 'pendaftaran.id_layanan', '=', 'layanan.id_layanan')
-            ->select('layanan.id_kategori', DB::raw('count(*) as total'))
-            ->groupBy('layanan.id_kategori')
+        $stats = Pendaftaran::join('jadwal', 'pendaftaran.id_jadwal', '=', 'jadwal.id_jadwal')
+            ->select('jadwal.id_kategori', DB::raw('count(*) as total'))
+            ->groupBy('jadwal.id_kategori')
             ->pluck('total', 'id_kategori');
 
         $totalPelatihan = $stats[1] ?? 0;
@@ -55,7 +55,7 @@ class SubadminDashboardController extends Controller
                 
                 $data = Pendaftaran::whereYear('tanggal_daftar', $selectedYear)
                     ->whereMonth('tanggal_daftar', $selectedMonth)
-                    ->whereHas('layanan', function($q) use ($catId) { $q->where('id_kategori', $catId); })
+                    ->whereHas('jadwal', function($q) use ($catId) { $q->where('id_kategori', $catId); })
                     ->select(DB::raw('DAY(tanggal_daftar) as label'), DB::raw('count(*) as count'))
                     ->groupBy('label')
                     ->pluck('count', 'label')
@@ -65,7 +65,7 @@ class SubadminDashboardController extends Controller
             } else {
                 $chartLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
                 $data = Pendaftaran::whereYear('tanggal_daftar', $selectedYear)
-                    ->whereHas('layanan', function($q) use ($catId) { $q->where('id_kategori', $catId); })
+                    ->whereHas('jadwal', function($q) use ($catId) { $q->where('id_kategori', $catId); })
                     ->select(DB::raw('MONTH(tanggal_daftar) as label'), DB::raw('count(*) as count'))
                     ->groupBy('label')
                     ->pluck('count', 'label')
@@ -83,7 +83,7 @@ class SubadminDashboardController extends Controller
             ];
         }
 
-        $latestPendaftarans = Pendaftaran::with(['user', 'layanan'])
+        $latestPendaftarans = Pendaftaran::with(['user', 'jadwal.jenis'])
             ->latest()
             ->take(6)
             ->get();

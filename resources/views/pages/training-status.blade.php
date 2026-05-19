@@ -82,7 +82,7 @@
                                 <div class="flex-1">
                                     <div class="flex items-center gap-3 mb-2">
                                         <span class="bg-[#1E6B3D]/10 text-[#1E6B3D] text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">
-                                            {{ $item->layanan->kategori->nama ?? 'Pelatihan K3' }}
+                                            {{ $item->jadwal?->kategori?->nama ?? 'Pelatihan K3' }}
                                         </span>
                                         <span class="text-gray-400 text-sm">•</span>
                                         <span class="text-gray-500 text-sm">Terdaftar: {{ $item->tanggal_daftar->format('d M Y') }}</span>
@@ -100,7 +100,7 @@
                                             <span class="bg-[#1E6B3D]/10 text-[#1E6B3D] text-[10px] font-bold px-1.5 py-0.5 rounded uppercase">{{ $item->mode_pertemuan }}</span>
                                         @endif
                                     </div>
-                                    <h3 class="text-xl font-bold text-gray-800 mb-1">{{ $item->layanan->materi }}</h3>
+                                    <h3 class="text-xl font-bold text-gray-800 mb-1">{{ $item->jadwal?->jenis?->nama }}</h3>
                                     
                                     <div class="flex flex-wrap gap-y-2 gap-x-6 mt-4">
                                         <div class="flex items-center gap-2 text-sm text-gray-600">
@@ -166,10 +166,10 @@
                                     @php
                                         $waNumber = config('app.whatsapp_number', '6281234567890');
                                         if ($item->status_bayar === 'belum_bayar' || $item->status_bayar === 'belum_lunas') {
-                                            $waText = "Halo Veritas, saya ingin konfirmasi pembayaran untuk Invoice #INV-" . $item->id_pendaftaran;
+                                            $waText = "Halo Veritas, saya ingin konfirmasi pembayaran untuk Pendaftaran #" . ($item->nomor_pendaftaran ?? $item->id_pendaftaran);
                                             $btnLabel = "Konfirmasi Bayar";
                                         } else {
-                                            $waText = "Halo Admin, saya ingin menanyakan status pendaftaran layanan " . ($item->layanan->materi ?? 'K3') . " atas nama " . $item->user->nama;
+                                            $waText = "Halo Admin, saya ingin menanyakan status pendaftaran layanan " . ($item->jadwal?->jenis?->nama ?? 'K3') . " atas nama " . $item->user->nama;
                                             $btnLabel = "Tanya Admin";
                                         }
                                         $waUrl = "https://wa.me/" . $waNumber . "?text=" . rawurlencode($waText);

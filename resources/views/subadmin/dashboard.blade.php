@@ -106,7 +106,7 @@
                         </div>
                         <div class="min-w-0 flex-1">
                             <p class="text-sm font-bold text-slate-900 truncate group-hover:text-cyan-600 transition">{{ $p->user?->nama ?? 'User Unknown' }}</p>
-                            <p class="text-[10px] text-slate-400 font-medium truncate uppercase tracking-wider">{{ $p->layanan?->materi ?? 'Layanan' }}</p>
+                            <p class="text-[10px] text-slate-400 font-medium truncate uppercase tracking-wider">{{ $p->jadwal?->jenis?->nama ?? 'Layanan' }}</p>
                         </div>
                     </div>
                     <div class="text-right shrink-0">

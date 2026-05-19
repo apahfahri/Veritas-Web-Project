@@ -9,17 +9,17 @@
 
     <form method="POST" action="{{ route('subadmin.sertifikat.store') }}">
         @csrf
-        <input type="hidden" name="pendaftaran_id" value="{{ $pendaftaran->id }}">
+        <input type="hidden" name="pendaftaran_id" value="{{ $pendaftaran->id_pendaftaran }}">
 
         <div class="space-y-5">
             <div>
                 <label class="text-xs font-extrabold text-slate-600 uppercase tracking-wider block mb-1">Layanan</label>
-                <input type="text" value="{{ $pendaftaran->layanan?->nama }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold outline-none text-slate-500" disabled>
+                <input type="text" value="{{ $pendaftaran->jadwal?->jenis?->nama ?? ($pendaftaran->jadwal?->kategori?->nama ?? '—') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold outline-none text-slate-500" disabled>
             </div>
 
             <div>
                 <label class="text-xs font-extrabold text-slate-600 uppercase tracking-wider block mb-1">Nama Lengkap</label>
-                <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap', $pendaftaran->user?->username) }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-cyan-500 transition font-medium" placeholder="Nama Lengkap Pemegang Sertifikat" required>
+                <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap', $pendaftaran->user?->nama) }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-cyan-500 transition font-medium" placeholder="Nama Lengkap Pemegang Sertifikat" required>
             </div>
 
             <div>

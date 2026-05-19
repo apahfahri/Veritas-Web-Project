@@ -14,8 +14,37 @@ class Pendaftaran extends Model
     protected $table = 'pendaftaran';
     protected $primaryKey = 'id_pendaftaran';
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->nomor_pendaftaran)) {
+                $jadwal = Jadwal::with(['kategori', 'jenis'])->find($model->id_jadwal);
+
+                $kategoriKode = $jadwal?->kategori?->kode_kategori ?? 'XXX';
+                $jenisKode    = $jadwal?->jenis?->kode_jenis ?? ($jadwal?->kode_jadwal ?? 'XXX');
+
+                $mode = match($model->mode_pertemuan) {
+                    'offline' => 'OFF',
+                    'hybrid'  => 'HYB',
+                    default   => 'ON',
+                };
+
+                $date = $model->tanggal_daftar
+                    ? \Carbon\Carbon::parse($model->tanggal_daftar)->format('dmY')
+                    : now()->format('dmY');
+
+                $countToday = static::whereDate('tanggal_daftar', $model->tanggal_daftar ?? now())->count();
+                $seq = str_pad($countToday + 1, 4, '0', STR_PAD_LEFT);
+
+                $model->nomor_pendaftaran = strtoupper("{$kategoriKode}-{$jenisKode}-{$mode}-{$date}-{$seq}");
+            }
+        });
+    }
+
     protected $fillable = [
-        'id_layanan',
+        'nomor_pendaftaran',
         'id_jadwal',
         'id_admin',
         'id_user',
@@ -37,13 +66,11 @@ class Pendaftaran extends Model
         'tanggal_daftar'          => 'date',
         'rencana_tanggal_mulai'   => 'date',
         'rencana_tanggal_selesai' => 'date',
+        'is_utusan_perusahaan'    => 'boolean',
         'last_reminder_sent_at'   => 'datetime',
     ];
 
-    public function layanan()
-    {
-        return $this->belongsTo(Layanan::class, 'id_layanan', 'id_layanan');
-    }
+    /* ─── RELASI ─────────────────────────────────────────────── */
 
     public function jadwal()
     {
@@ -70,26 +97,16 @@ class Pendaftaran extends Model
         return $this->hasOne(Sertifikat::class, 'id_pendaftaran', 'id_pendaftaran');
     }
 
-    /**
-     * Get dynamic cancellation reason based on registration ID.
-     */
-    public function getAlasanBatalAttribute()
+    /* ─── HELPERS ────────────────────────────────────────────── */
+
+    public function getNamaProgramAttribute(): string
     {
-        $reasons = [
-            'Batas waktu pembayaran kedaluwarsa (sistem otomatis)',
-            'Permintaan pembatalan mandiri oleh Klien/Mitra',
-            'Jadwal kelas pelatihan penuh / kuota tidak mencukupi',
-            'Kesalahan pemilihan metode/jadwal oleh pendaftar'
-        ];
-        return $reasons[$this->id_pendaftaran % count($reasons)];
+        return $this->jadwal?->jenis?->nama ?? '—';
     }
 
-    /**
-     * Get formatted registration number / invoice.
-     */
-    public function getNoRegistrasiAttribute()
+    public function getNoRegistrasiAttribute(): string
     {
-        $year = $this->tanggal_daftar ? $this->tanggal_daftar->format('Y') : ($this->created_at ? $this->created_at->format('Y') : date('Y'));
+        $year = $this->tanggal_daftar?->format('Y') ?? ($this->created_at?->format('Y') ?? date('Y'));
         return 'REG-' . $year . '-' . sprintf('%04d', $this->id_pendaftaran);
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Subadmin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Layanan;
+use App\Models\Jadwal;
 use App\Models\Pendaftaran;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,9 +22,9 @@ class SubadminKonsultasiController extends Controller
     public function index()
     {
         // Filter by Konsultasi (ID 2)
-        $konsultasis = Layanan::where('id_kategori', 2)
-            ->with(['kategori', 'pemateri'])
-            ->withCount(['pendaftaran as pending_count' => function ($query) {
+        $konsultasis = Jadwal::where('id_kategori', 2)
+            ->with(['kategori', 'pemateri', 'jenis'])
+            ->withCount(['pendaftarans as pending_count' => function ($query) {
                 $query->whereNotIn('status_progres', ['selesai', 'dibatalkan']);
             }])
             ->latest()
@@ -34,8 +34,8 @@ class SubadminKonsultasiController extends Controller
 
     public function show($id)
     {
-        $konsultasi = Layanan::with(['kategori', 'pemateri'])->findOrFail($id);
-        $pesertas = Pendaftaran::where('id_layanan', $id)
+        $konsultasi = Jadwal::with(['kategori', 'pemateri', 'jenis'])->findOrFail($id);
+        $pesertas = Pendaftaran::where('id_jadwal', $id)
             ->with(['user', 'perusahaan'])
             ->latest()
             ->get();

@@ -29,8 +29,8 @@
         <form method="POST" action="{{ route('admin.pelatihan.update', $layanan->id_layanan) }}" class="p-8 space-y-8">
             @csrf @method('PUT')
 
-            <!-- SECTION 1: KATEGORI & NAMA -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- SECTION 1: KATEGORI, KODE & NAMA -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div>
                     <label class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">
                         <svg class="w-3.5 h-3.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 11h.01M7 15h.01M11 7h.01M11 11h.01M11 15h.01M15 7h.01M15 11h.01M15 15h.01"></path></svg>
@@ -61,6 +61,17 @@
                     <input type="text" name="nama" id="inputNama" value="{{ old('nama', $layanan->nama) }}" required disabled
                            class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-2xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:outline-none disabled:opacity-50 transition @error('nama') border-red-400 @enderror">
                     @error('nama')<p class="text-red-500 text-[10px] font-bold mt-1 uppercase tracking-tighter">{{ $message }}</p>@enderror
+                </div>
+
+                <div>
+                    <label class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">
+                        <svg class="w-3.5 h-3.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                        Kode Singkatan (Opsional)
+                    </label>
+                    <input type="text" name="kode_layanan" value="{{ old('kode_layanan', $layanan->kode_layanan) }}"
+                           placeholder="Contoh: PAK3U" maxlength="10"
+                           class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-2xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:outline-none transition @error('kode_layanan') border-red-400 @enderror">
+                    @error('kode_layanan')<p class="text-red-500 text-[10px] font-bold mt-1 uppercase tracking-tighter">{{ $message }}</p>@enderror
                 </div>
             </div>
 

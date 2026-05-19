@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Subadmin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Layanan;
+use App\Models\Jadwal;
 use App\Models\Pendaftaran;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,9 +22,9 @@ class SubadminAuditController extends Controller
     public function index()
     {
         // Filter by Audit (ID 3)
-        $audits = Layanan::where('id_kategori', 3)
-            ->with(['kategori', 'pemateri'])
-            ->withCount(['pendaftaran as pending_count' => function ($query) {
+        $audits = Jadwal::where('id_kategori', 3)
+            ->with(['kategori', 'pemateri', 'jenis'])
+            ->withCount(['pendaftarans as pending_count' => function ($query) {
                 $query->whereNotIn('status_progres', ['selesai', 'dibatalkan']);
             }])
             ->latest()
@@ -34,8 +34,8 @@ class SubadminAuditController extends Controller
 
     public function show($id)
     {
-        $audit = Layanan::with(['kategori', 'pemateri'])->findOrFail($id);
-        $pesertas = Pendaftaran::where('id_layanan', $id)
+        $audit = Jadwal::with(['kategori', 'pemateri', 'jenis'])->findOrFail($id);
+        $pesertas = Pendaftaran::where('id_jadwal', $id)
             ->with(['user', 'perusahaan'])
             ->latest()
             ->get();

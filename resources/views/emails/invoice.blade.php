@@ -211,7 +211,7 @@
                 </tr>
                 <tr>
                     <td class="label">Program / Layanan</td>
-                    <td class="value">{{ $layanan->nama ?? ($layanan->materi ?? 'Layanan Veritas') }}</td>
+                    <td class="value">{{ $layanan->jenis?->nama ?? ($layanan->nama ?? ($layanan->materi ?? 'Layanan Veritas')) }}</td>
                 </tr>
                 @if($pendaftaran->rencana_tanggal_mulai)
                 <tr>

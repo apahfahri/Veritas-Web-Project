@@ -7,15 +7,19 @@
 
         {{-- ── HEADER ──────────────────────────────────────────────── --}}
         <div class="bg-white p-6 rounded-2xl shadow-sm mb-8 border border-gray-100">
-            <a href="{{ route('training.detail', $pelatihan->id_layanan) }}"
+            <a href="{{ route('training.detail', $jadwal->id_jadwal) }}"
                class="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-[#1E6B3D] mb-4 transition">
                 ← Kembali ke Detail Pelatihan
             </a>
             <h1 class="text-2xl font-bold text-[#1E6B3D]">Form Pendaftaran Pelatihan</h1>
-            <p class="text-gray-500 mt-1 text-sm">{{ $pelatihan->kategori->nama ?? $pelatihan->materi }}</p>
+            <p class="text-gray-500 mt-1 text-sm">{{ $jadwal->jenis?->nama ?? $jadwal->kategori?->nama }}</p>
             <p class="text-gray-400 text-xs mt-1">
-                📅 {{ \Carbon\Carbon::parse($pelatihan->tanggal_usul)->translatedFormat('d F Y') }}
-                @if($pelatihan->lokasi) &nbsp;|&nbsp; 📍 {{ $pelatihan->lokasi }} @endif
+                @if($jadwal->tgl_mulai)
+                    📅 {{ $jadwal->tgl_mulai->translatedFormat('d F Y') }}
+                @elseif($jadwal->tanggal_usul)
+                    📅 {{ $jadwal->tanggal_usul->translatedFormat('d F Y') }}
+                @endif
+                @if($jadwal->lokasi) &nbsp;|&nbsp; 📍 {{ $jadwal->lokasi }} @endif
             </p>
         </div>
 
@@ -36,11 +40,8 @@
             @csrf
 
             {{-- hidden fields --}}
-            <input type="hidden" name="layanan_id"     value="{{ $pelatihan->id_layanan }}">
-
+            <input type="hidden" name="jadwal_id" value="{{ $jadwal->id_jadwal }}">
             <input type="hidden" name="jenis_klien" value="individu">
-
-
 
             {{-- ── STEP 1 · Data Diri & Kontak ────────────────────────── --}}
             <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mb-6">
@@ -91,8 +92,6 @@
                 </div>
             </div>
 
-
-
             {{-- ── STEP 2 · Ringkasan & Submit ────────────────────── --}}
             <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mb-6">
                 <h2 class="text-lg font-semibold text-[#1E6B3D] mb-5">2. Ringkasan Pendaftaran</h2>
@@ -101,28 +100,32 @@
                     <div class="flex justify-between">
                         <span class="text-gray-500">Pelatihan</span>
                         <span class="font-medium text-[#1E6B3D] text-right max-w-[60%]">
-                            {{ $pelatihan->kategori->nama ?? $pelatihan->materi }}
+                            {{ $jadwal->jenis?->nama ?? $jadwal->kategori?->nama }}
                         </span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-500">Tanggal</span>
                         <span class="font-medium text-[#1E6B3D]">
-                            {{ \Carbon\Carbon::parse($pelatihan->tanggal_usul)->translatedFormat('d F Y') }}
+                            @if($jadwal->tgl_mulai)
+                                {{ $jadwal->tgl_mulai->translatedFormat('d F Y') }}
+                            @elseif($jadwal->tanggal_usul)
+                                {{ $jadwal->tanggal_usul->translatedFormat('d F Y') }}
+                            @endif
                         </span>
                     </div>
-                    @if($pelatihan->lokasi)
+                    @if($jadwal->lokasi)
                     <div class="flex justify-between">
                         <span class="text-gray-500">Lokasi</span>
-                        <span class="font-medium text-[#1E6B3D]">{{ $pelatihan->lokasi }}</span>
+                        <span class="font-medium text-[#1E6B3D]">{{ $jadwal->lokasi }}</span>
                     </div>
                     @endif
                     <div class="flex justify-between">
                         <span class="text-gray-500">Jenis Pertemuan</span>
-                        <span class="font-medium text-[#1E6B3D] capitalize">{{ $pelatihan->jenis_pertemuan }}</span>
+                        <span class="font-medium text-[#1E6B3D] capitalize">{{ $jadwal->jenis_pertemuan }}</span>
                     </div>
                     <div class="border-t border-gray-200 pt-3 flex justify-between">
                         <span class="text-gray-500">Total Bayar</span>
-                        <span class="text-[#0891b2] font-bold">Rp {{ number_format($pelatihan->harga ?? 0, 0, ',', '.') }}</span>
+                        <span class="text-[#0891b2] font-bold">Rp {{ number_format($jadwal->harga ?? 0, 0, ',', '.') }}</span>
                     </div>
                 </div>
 
@@ -134,7 +137,7 @@
 
             {{-- ── TOMBOL SUBMIT ───────────────────────────────────── --}}
             <div class="flex items-center justify-between gap-4">
-                <a href="{{ route('training.detail', $pelatihan->id_layanan) }}"
+                <a href="{{ route('training.detail', $jadwal->id_jadwal) }}"
                    class="text-sm text-gray-500 hover:text-[#1E6B3D] transition">
                     ← Batalkan
                 </a>
@@ -148,6 +151,5 @@
 
     </div>
 </div>
-
 
 @endsection

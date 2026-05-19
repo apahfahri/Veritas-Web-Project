@@ -13,6 +13,7 @@ class KategoriLayanan extends Model
     protected $primaryKey = 'id_kategori';
 
     protected $fillable = [
+        'kode_kategori',
         'nama',
         'deskripsi',
     ];
@@ -22,8 +23,8 @@ class KategoriLayanan extends Model
         return $this->hasMany(JenisLayanan::class, 'id_kategori', 'id_kategori');
     }
 
-    public function layanan()
+    public function jadwals()
     {
-        return $this->hasMany(Layanan::class, 'id_kategori', 'id_kategori');
+        return $this->hasMany(Jadwal::class, 'id_kategori', 'id_kategori');
     }
 }
