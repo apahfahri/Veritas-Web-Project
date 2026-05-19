@@ -5,101 +5,157 @@
 <div class="min-h-screen bg-[#F5F7FA]">
 
     <!-- HEADER -->
-    <div class="bg-gradient-to-r from-[#1E6B3D] to-[#3CDA7D] text-white py-8">
-        <div class="max-w-7xl mx-auto px-6">
-            <h1 class="text-3xl font-bold mb-4">Pelatihan K3</h1>
-            <p class="text-base text-gray-200">Pilih program pelatihan K3 yang sesuai dengan kebutuhan Anda</p>
+    <div class="relative overflow-hidden bg-gradient-to-r from-[#1E6B3D] via-[#24824A] to-[#3CDA7D] text-white py-12 shadow-sm">
+        <div class="absolute -right-10 -top-10 w-48 h-48 bg-white/10 rounded-full blur-2xl"></div>
+        <div class="absolute -left-10 -bottom-10 w-72 h-72 bg-[#3CDA7D]/20 rounded-full blur-3xl"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="flex items-center gap-4 mb-3">
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 backdrop-blur-md border border-white/20 text-white shadow-inner text-2xl">
+                    🛡️
+                </div>
+                <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">Pelatihan K3 Veritas</h1>
+            </div>
+            <p class="text-base md:text-lg text-emerald-50 max-w-2xl font-light">Pilih program pelatihan K3 unggulan bersertifikat nasional yang sesuai dengan kompetensi dan kebutuhan industri Anda.</p>
         </div>
     </div>
 
     <div class="max-w-7xl mx-auto px-6 py-8">
 
         <!-- SEARCH + FILTER -->
-        <form method="GET" action="{{ route('training.list') }}" class="bg-white p-6 rounded-xl shadow mb-8">
+        <form method="GET" action="{{ route('training.list') }}" class="bg-white p-5 rounded-2xl border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] mb-8 transition-all hover:shadow-[0_4px_25px_-2px_rgba(0,0,0,0.08)]">
             <div class="grid md:grid-cols-3 gap-4">
                 <div class="md:col-span-2 relative">
-                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">🔍</span>
                     <input type="text" name="search" value="{{ request('search') }}"
-                           placeholder="Cari materi pelatihan..."
-                           class="w-full border rounded pl-10 py-2 focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
+                           placeholder="Cari materi pelatihan K3..."
+                           class="w-full border border-slate-200 rounded-xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-[#1E6B3D] transition-all placeholder-slate-400">
                 </div>
-                <select name="jenis" onchange="this.form.submit()"
-                        class="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
-                    <option value="">Semua Mode</option>
-                    <option value="online"  {{ request('jenis') == 'online'  ? 'selected' : '' }}>Online</option>
-                    <option value="offline" {{ request('jenis') == 'offline' ? 'selected' : '' }}>Offline</option>
-                </select>
+                <div class="relative">
+                    <select name="jenis" onchange="this.form.submit()"
+                            class="w-full appearance-none border border-slate-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-[#1E6B3D] transition-all text-slate-700 cursor-pointer">
+                        <option value="">Semua Mode Pertemuan</option>
+                        <option value="online"  {{ request('jenis') == 'online'  ? 'selected' : '' }}>🌐 Online (Virtual/Zoom)</option>
+                        <option value="offline" {{ request('jenis') == 'offline' ? 'selected' : '' }}>🏢 Offline (Tatap Muka)</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                </div>
             </div>
         </form>
 
         <!-- REQUEST COMPANY TRAINING BANNER -->
-        <div class="bg-gradient-to-r from-orange-400 to-orange-500 rounded-xl shadow p-6 mb-8 text-white flex flex-col md:flex-row items-center justify-between">
-            <div class="mb-4 md:mb-0">
-                <h2 class="text-xl font-bold mb-1">🏢 Butuh Pelatihan Khusus Perusahaan?</h2>
-                <p class="text-sm opacity-90">Kami menyediakan pelatihan in-house yang disesuaikan dengan kebutuhan perusahaan Anda.</p>
+        <div class="relative overflow-hidden bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl shadow-[0_8px_30px_-6px_rgba(245,158,11,0.3)] p-6 md:p-8 mb-8 text-white flex flex-col md:flex-row items-center justify-between transition-transform duration-300 hover:scale-[1.01]">
+            <div class="absolute -right-16 -bottom-16 w-48 h-48 bg-white/10 rounded-full blur-2xl"></div>
+            <div class="mb-4 md:mb-0 relative z-10 max-w-xl text-center md:text-left">
+                <h2 class="text-xl md:text-2xl font-bold mb-2 flex items-center justify-center md:justify-start gap-2">
+                    <span>🏢</span> Butuh Pelatihan Khusus Perusahaan?
+                </h2>
+                <p class="text-sm md:text-base text-amber-50 font-light">Kami menyediakan program pelatihan <strong>In-House / Custom Training</strong> K3 khusus yang dirancang eksklusif untuk memenuhi regulasi dan operasional korporasi Anda.</p>
             </div>
-            <a href="{{ route('request.training.create') }}" class="bg-white text-orange-500 font-semibold px-6 py-2 rounded-lg hover:bg-gray-100 transition whitespace-nowrap shadow-sm">
-                Isi Form Request
+            <a href="{{ route('request.training.create') }}" class="relative z-10 bg-white text-orange-600 font-bold px-6 py-3.5 rounded-xl hover:bg-orange-50 active:scale-95 transition-all whitespace-nowrap shadow-md hover:shadow-lg">
+                Ajukan Request Pelatihan
             </a>
         </div>
+
         <!-- RESULT COUNT -->
-        <div class="mb-6 text-gray-600">
-            Menampilkan <strong>{{ $pelatihans->count() }}</strong> pelatihan
+        <div class="mb-6 text-sm text-slate-500">
+            Menampilkan <strong class="text-slate-800 font-bold">{{ $pelatihans->count() }}</strong> program pelatihan
         </div>
 
         @if($pelatihans->isEmpty())
-            <div class="text-center py-20 bg-white rounded-xl shadow">
+            <div class="text-center py-20 bg-white border border-slate-100 rounded-2xl shadow-sm">
                 <div class="text-5xl mb-4">📭</div>
-                <h3 class="text-xl font-bold text-gray-600">Tidak ada pelatihan ditemukan</h3>
-                <a href="{{ route('training.list') }}" class="mt-4 inline-block text-[#1E6B3D] hover:underline">Reset filter</a>
+                <h3 class="text-lg font-bold text-slate-600">Tidak ada pelatihan ditemukan</h3>
+                <a href="{{ route('training.list') }}" class="mt-4 inline-block text-[#1E6B3D] hover:underline text-sm font-medium">Reset filter pencarian</a>
             </div>
         @else
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($pelatihans as $pelatihan)
-                <div class="bg-white rounded-xl shadow overflow-hidden group hover:shadow-xl transition">
-                    <div class="aspect-video overflow-hidden bg-gradient-to-br from-[#1E6B3D] to-[#3CDA7D] flex items-center justify-center">
-                        <span class="text-6xl">🎓</span>
+                <div class="flex flex-col bg-white rounded-2xl border border-slate-100 shadow-[0_4px_25px_-5px_rgba(0,0,0,0.03)] overflow-hidden group hover:shadow-[0_15px_35px_-8px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300">
+                    <!-- Premium Decorative Header -->
+                    <div class="relative aspect-video overflow-hidden bg-gradient-to-br from-emerald-800 via-[#1E6B3D] to-[#3CDA7D] flex items-center justify-center shrink-0">
+                        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                        <div class="absolute -right-8 -top-8 w-24 h-24 bg-white/10 rounded-full blur-lg group-hover:scale-125 transition-transform duration-500"></div>
+                        
+                        <div class="relative z-10 w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-4xl shadow-inner group-hover:rotate-6 group-hover:scale-110 transition-all duration-500">
+                            🎓
+                        </div>
                     </div>
-                    <div class="p-6">
-                        <!-- BADGE -->
-                        <div class="flex justify-between mb-3">
-                            <span class="bg-[#1E6B3D] text-white text-xs px-2 py-1 rounded">
-                                {{ $pelatihan->kategori?->nama ?? 'Pelatihan K3' }}
-                            </span>
-                            <span class="border text-xs px-2 py-1 rounded {{ $pelatihan->jenis_pertemuan === 'online' ? 'border-[#1E6B3D] text-[#1E6B3D]' : 'border-orange-400 text-orange-500' }}">
-                                {{ ucfirst($pelatihan->jenis_pertemuan) }}
-                            </span>
+                    
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <!-- BADGES -->
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="bg-[#1E6B3D]/10 text-[#1E6B3D] text-[11px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-lg">
+                                    {{ $pelatihan->kategori?->nama ?? 'Pelatihan K3' }}
+                                </span>
+                                <span class="text-[11px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-lg {{ $pelatihan->jenis_pertemuan === 'online' ? 'bg-sky-50 text-sky-600 border border-sky-100' : 'bg-amber-50 text-amber-600 border border-amber-100' }}">
+                                    {{ $pelatihan->jenis_pertemuan === 'online' ? '🌐 Online' : '🏢 Offline' }}
+                                </span>
+                            </div>
+
+                            <h3 class="text-lg font-bold text-slate-800 line-clamp-1 group-hover:text-[#1E6B3D] transition-colors mb-2" title="{{ $pelatihan->nama }}">
+                                {{ $pelatihan->nama }}
+                            </h3>
+                            
+                            <div class="flex items-baseline gap-1.5 mb-3">
+                                <span class="text-sm font-semibold text-slate-400">Rp</span>
+                                <span class="text-2xl font-black text-slate-800 tracking-tight">
+                                    {{ number_format($pelatihan->harga, 0, ',', '.') }}
+                                </span>
+                            </div>
+
+                            <p class="text-xs text-slate-500 leading-relaxed mb-6 line-clamp-2">
+                                {{ $pelatihan->deskripsi ?? 'Program kompetensi K3 standar nasional berkualitas tinggi untuk menjamin profesionalitas kerja Anda.' }}
+                            </p>
                         </div>
 
-                        <h3 class="text-xl font-semibold text-[#1E6B3D] mb-1">{{ $pelatihan->nama }}</h3>
-                        <div class="text-lg font-bold text-gray-800 mb-2">Rp {{ number_format($pelatihan->harga, 0, ',', '.') }}</div>
-                        <p class="text-sm text-gray-600 mb-4 line-clamp-2">{{ $pelatihan->deskripsi ?? 'Pelatihan K3 profesional bersertifikat nasional.' }}</p>
-
-                        <div class="space-y-1 text-sm text-gray-600 mb-4">
-                            @if($pelatihan->tgl_mulai)
-                            <div>
-                                📅 {{ $pelatihan->tgl_mulai->format('d M Y') }}
-                                @if($pelatihan->tgl_selesai && $pelatihan->tgl_selesai != $pelatihan->tgl_mulai)
-                                    - {{ $pelatihan->tgl_selesai->format('d M Y') }}
+                        <div>
+                            <!-- METADATA GRID -->
+                            <div class="border-t border-slate-50 pt-4 pb-5 space-y-2.5 text-xs text-slate-600">
+                                @if($pelatihan->tgl_mulai)
+                                <div class="flex items-center gap-2">
+                                    <span class="text-slate-400">📅</span>
+                                    <span>
+                                        {{ $pelatihan->tgl_mulai->format('d M Y') }}
+                                        @if($pelatihan->tgl_selesai && $pelatihan->tgl_selesai != $pelatihan->tgl_mulai)
+                                            - {{ $pelatihan->tgl_selesai->format('d M Y') }}
+                                        @endif
+                                    </span>
+                                </div>
+                                @elseif($pelatihan->tanggal_usul)
+                                <div class="flex items-center gap-2">
+                                    <span class="text-slate-400">📅</span>
+                                    <span>{{ $pelatihan->tanggal_usul->format('d M Y') }}</span>
+                                </div>
+                                @endif
+                                
+                                @if($pelatihan->jam_pertemuan)
+                                <div class="flex items-center gap-2">
+                                    <span class="text-slate-400">⏰</span>
+                                    <span>{{ substr($pelatihan->jam_pertemuan, 0, 5) }} WIB</span>
+                                </div>
+                                @endif
+                                
+                                @if($pelatihan->lokasi)
+                                <div class="flex items-center gap-2">
+                                    <span class="text-slate-400">📍</span>
+                                    <span class="truncate">{{ $pelatihan->lokasi }}</span>
+                                </div>
+                                @endif
+                                
+                                @if($pelatihan->kapasitas)
+                                <div class="flex items-center gap-2">
+                                    <span class="text-slate-400">👥</span>
+                                    <span>Kapasitas: {{ $pelatihan->kapasitas }} peserta</span>
+                                </div>
                                 @endif
                             </div>
-                            @elseif($pelatihan->tanggal_usul)
-                            <div>📅 {{ $pelatihan->tanggal_usul->format('d M Y') }}</div>
-                            @endif
-                            @if($pelatihan->jam_pertemuan)
-                            <div>⏰ {{ substr($pelatihan->jam_pertemuan, 0, 5) }} WIB</div>
-                            @endif
-                            @if($pelatihan->lokasi)
-                            <div>📍 {{ $pelatihan->lokasi }}</div>
-                            @endif
-                            @if($pelatihan->kapasitas)
-                            <div>👥 Kapasitas: {{ $pelatihan->kapasitas }} peserta</div>
-                            @endif
-                        </div>
 
-                        <div class="border-t pt-4">
                             <a href="{{ route('training.detail', $pelatihan->id_layanan) }}"
-                               class="block w-full text-center bg-[#1E6B3D] text-white py-2 rounded hover:opacity-90 transition">
+                               class="block w-full text-center bg-[#1E6B3D] text-white text-sm font-bold py-3 rounded-xl hover:bg-[#24824A] active:scale-[0.98] transition-all shadow-[0_4px_12px_-3px_rgba(30,107,61,0.2)] hover:shadow-[0_6px_20px_-3px_rgba(30,107,61,0.3)]">
                                 Lihat Detail & Daftar
                             </a>
                         </div>

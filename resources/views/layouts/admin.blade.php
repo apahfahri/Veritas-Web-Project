@@ -28,9 +28,7 @@
         <!-- Logo -->
         <div class="p-6 border-b border-slate-800/80 flex items-center justify-between gap-3 shrink-0">
             <div class="flex items-center gap-3">
-                <div class="w-11 h-11 bg-gradient-to-tr from-cyan-500 to-teal-400 rounded-xl flex items-center justify-center text-slate-900 font-extrabold text-lg shadow-lg shadow-cyan-500/30 shrink-0">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                </div>
+                <img src="{{ asset('images/logo.png') }}" alt="Veritas Logo" class="w-11 h-11 object-contain shrink-0 bg-white rounded-xl shadow-lg shadow-cyan-500/10">
                 <div>
                     <div class="font-extrabold text-base tracking-wide bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent truncate">Katiga Veritas</div>
                     <div class="text-xs text-cyan-400/90 font-medium tracking-wider uppercase truncate">Superadmin Panel</div>

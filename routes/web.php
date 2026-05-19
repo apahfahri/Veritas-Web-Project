@@ -47,6 +47,7 @@ Route::get('/training/{id}/register',  [PelatihanController::class, 'register'])
 
 Route::get('/request-training',      [RequestPelatihanController::class, 'create'])->name('request.training.create');
 Route::post('/request-training',     [RequestPelatihanController::class, 'store'])->name('request.training.store');
+Route::redirect('/request-layanan', '/request-training');
 
 
 /*
