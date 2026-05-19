@@ -42,6 +42,21 @@ class SubadminPendaftaranController extends Controller
             $query->where('status_progres', $request->status);
         }
 
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('id_pendaftaran', 'LIKE', "%{$search}%")
+                  ->orWhereHas('user', function($qUser) use ($search) {
+                      $qUser->where('nama', 'LIKE', "%{$search}%")
+                            ->orWhere('email', 'LIKE', "%{$search}%")
+                            ->orWhere('no_telp', 'LIKE', "%{$search}%");
+                  })
+                  ->orWhereHas('layanan', function($qLayanan) use ($search) {
+                      $qLayanan->where('materi', 'LIKE', "%{$search}%");
+                  });
+            });
+        }
+
         $pendaftarans = $query->paginate(15);
 
         return view('subadmin.pendaftaran.index', compact('pendaftarans'));

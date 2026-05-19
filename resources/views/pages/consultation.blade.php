@@ -5,26 +5,27 @@
 <div class="min-h-screen bg-[#F5F7FA]">
 
     <!-- HEADER -->
-    <div class="bg-gradient-to-r from-[#1E6B3D] to-[#3CDA7D] text-white py-8">
-        <div class="max-w-7xl mx-auto px-6">
-
-            <div class="flex items-center gap-3 mb-4">
-                <div class="text-2xl">💡</div>
-                <h1 class="text-3xl font-bold">Konsultasi K3</h1>
+    <div class="relative overflow-hidden bg-gradient-to-r from-[#1E6B3D] via-[#24824A] to-[#3CDA7D] text-white py-12 shadow-sm">
+        <div class="absolute -right-10 -top-10 w-48 h-48 bg-white/10 rounded-full blur-2xl"></div>
+        <div class="absolute -left-10 -bottom-10 w-72 h-72 bg-[#3CDA7D]/20 rounded-full blur-3xl"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="flex items-center gap-4 mb-3">
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 backdrop-blur-md border border-white/20 text-white shadow-inner text-2xl">
+                    💡
+                </div>
+                <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">Konsultasi K3 Veritas</h1>
             </div>
-
-            <p class="text-gray-200 max-w-2xl">
-                Temukan solusi terbaik untuk kebutuhan sistem manajemen keselamatan dan kesehatan kerja bersama konsultan ahli kami.
-            </p>
+            <p class="text-base md:text-lg text-emerald-50 max-w-2xl font-light">Temukan solusi terbaik untuk kebutuhan sistem manajemen keselamatan dan kesehatan kerja bersama konsultan ahli kami.</p>
         </div>
     </div>
 
-    <div class="max-w-5xl mx-auto px-6 py-8">
+    <div class="max-w-7xl mx-auto px-6 py-8">
 
         <div class="grid lg:grid-cols-3 gap-8">
 
             <!-- FORM -->
-            <div class="lg:col-span-2 bg-white p-8 rounded-xl shadow">
+            <div class="lg:col-span-2 bg-white p-6 md:p-8 rounded-2xl border border-slate-100 shadow-[0_4px_25px_-5px_rgba(0,0,0,0.03)]">
 
                 <h2 class="text-2xl font-semibold text-[#1E6B3D] mb-2">
                     Form Pendaftaran Konsultasi
@@ -92,9 +93,9 @@
                         $jenisLayanan = \App\Models\JenisLayanan::where('id_kategori', $kategoriKonsultasi?->id_kategori)->get();
                     @endphp
                     <div>
-                        <h3 class="font-semibold text-lg mb-4 text-[#1E6B3D]">2. Jenis Konsultasi</h3>
+                        <h3 class="font-bold text-base mb-3 text-[#1E6B3D]">2. Jenis Konsultasi</h3>
                         <select name="topik_layanan" id="topik_layanan" required
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]"
+                                class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-[#1E6B3D] transition-all text-slate-700 cursor-pointer"
                                 onchange="toggleCatatan(this.value)">
                             <option value="">-- Pilih Jenis Konsultasi --</option>
                             @foreach($jenisLayanan as $jenis)
@@ -105,126 +106,127 @@
 
                         {{-- Kolom catatan muncul hanya jika "Lainnya" dipilih --}}
                         <div id="catatan-box" class="{{ old('topik_layanan') == 'Lainnya' ? '' : 'hidden' }} mt-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">
                                 Catatan / Keterangan Konsultasi <span class="text-red-500">*</span>
                             </label>
                             <textarea name="catatan" id="catatan" rows="3"
                                       placeholder="Tuliskan jenis konsultasi atau kebutuhan spesifik Anda di sini..."
-                                      class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] resize-none">{{ old('catatan') }}</textarea>
+                                      class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-[#1E6B3D] transition-all placeholder-slate-400 resize-none">{{ old('catatan') }}</textarea>
                         </div>
                     </div>
 
                     <!-- ── STEP 3 · Data Perusahaan (hanya jika Perusahaan) ── -->
                     <div id="section-perusahaan" class="{{ $jenisKlien === 'perusahaan' ? '' : 'hidden' }}">
-                        <hr class="mb-5">
-                        <h3 class="font-semibold text-lg mb-4 text-[#1E6B3D]">3. Data Perusahaan</h3>
+                        <hr class="border-slate-100 my-5">
+                        <h3 class="font-bold text-base mb-3 text-[#1E6B3D]">3. Data Perusahaan</h3>
                         <div class="space-y-4">
                             <div>
                                 <input type="text" name="nama_perusahaan"
                                        value="{{ old('nama_perusahaan') }}"
                                        placeholder="Nama PT / CV / Instansi *"
-                                       class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
+                                       class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-[#1E6B3D] transition-all placeholder-slate-400">
                             </div>
                             <div>
                                 <input type="text" name="jabatan"
                                        value="{{ old('jabatan') }}"
                                        placeholder="Jabatan di Perusahaan (Opsional)"
-                                       class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
+                                       class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-[#1E6B3D] transition-all placeholder-slate-400">
                             </div>
                             <div>
                                 <textarea name="alamat_perusahaan" rows="2"
                                           placeholder="Alamat Lengkap Perusahaan *"
-                                          class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] resize-none">{{ old('alamat_perusahaan') }}</textarea>
+                                          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-[#1E6B3D] transition-all placeholder-slate-400 resize-none">{{ old('alamat_perusahaan') }}</textarea>
                             </div>
                             <div class="grid md:grid-cols-2 gap-4">
                                 <div>
                                     <input type="text" name="sektor_industri"
                                            value="{{ old('sektor_industri') }}"
                                            placeholder="Sektor Industri (Opsional)"
-                                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
+                                           class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-[#1E6B3D] transition-all placeholder-slate-400">
                                 </div>
                                 <div>
                                     <input type="number" name="jumlah_karyawan" min="1"
                                            value="{{ old('jumlah_karyawan') }}"
                                            placeholder="Jumlah Karyawan (Opsional)"
-                                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
+                                           class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-[#1E6B3D] transition-all placeholder-slate-400">
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <hr>
+                    <hr class="border-slate-100">
 
                     <!-- ── STEP 4 · Data Diri & Kontak ───────────────────── -->
                     <div>
-                        <h3 class="font-semibold text-lg mb-4 text-[#1E6B3D]">4. Data Diri & Kontak</h3>
+                        <h3 class="font-bold text-base mb-3 text-[#1E6B3D]">4. Data Diri & Kontak</h3>
                         <div class="space-y-4">
                             <div>
                                 <input type="text" name="nama_lengkap" required
                                        value="{{ old('nama_lengkap') }}"
                                        placeholder="Nama Lengkap *"
-                                       class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
+                                       class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-[#1E6B3D] transition-all placeholder-slate-400">
                             </div>
                             <div class="grid md:grid-cols-2 gap-4">
                                 <div>
                                     <input type="email" name="email" required
                                            value="{{ old('email') }}"
-                                           placeholder="Email Aktif *"
-                                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
+                                           placeholder="Email PIC / Diri Aktif *"
+                                           class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-[#1E6B3D] transition-all placeholder-slate-400">
                                 </div>
                                 <div>
                                     <input type="text" name="no_telp" required
                                            value="{{ old('no_telp') }}"
                                            placeholder="Nomor HP / WhatsApp *"
-                                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
+                                           class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-[#1E6B3D] transition-all placeholder-slate-400">
                                 </div>
                             </div>
                             <div>
                                 <input type="text" name="pendidikan"
                                        value="{{ old('pendidikan') }}"
                                        placeholder="Pendidikan Terakhir (Opsional)"
-                                       class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
+                                       class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-[#1E6B3D] transition-all placeholder-slate-400">
                             </div>
                         </div>
                     </div>
 
-                    <hr>
+                    <hr class="border-slate-100">
 
                     <!-- ── STEP 5 · Jadwal & Mode ─────────────────────────── -->
                     <div>
-                        <h3 class="font-semibold text-lg mb-4 text-[#1E6B3D]">5. Jadwal & Mode Konsultasi</h3>
+                        <h3 class="font-bold text-base mb-3 text-[#1E6B3D]">5. Jadwal & Mode Konsultasi</h3>
                         <div class="space-y-4">
-                            <div class="grid md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Rencana Tanggal Mulai *</label>
-                                    <input type="date" name="rencana_tanggal_mulai" required
-                                           value="{{ old('rencana_tanggal_mulai') }}"
-                                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Rencana Tanggal Selesai *</label>
-                                    <input type="date" name="rencana_tanggal_selesai" required
-                                           value="{{ old('rencana_tanggal_selesai') }}"
-                                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
-                                </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal Usulan *</label>
+                                <input type="date" name="tanggal_usul" required
+                                       value="{{ old('tanggal_usul') }}"
+                                       class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-[#1E6B3D] transition-all text-slate-700">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Mode Pertemuan *</label>
-                                <select name="mode_pertemuan" required
-                                        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D]">
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Mode Pertemuan *</label>
+                                <select name="mode_pertemuan" id="mode_pertemuan" required
+                                        class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-[#1E6B3D] transition-all text-slate-700 cursor-pointer"
+                                        onchange="toggleLokasi(this.value)">
                                     <option value="online" {{ old('mode_pertemuan') === 'online' ? 'selected' : '' }}>🌐 Online (Zoom/Meet)</option>
                                     <option value="offline" {{ old('mode_pertemuan') === 'offline' ? 'selected' : '' }}>🏢 Offline (Tatap Muka)</option>
                                 </select>
                             </div>
+                            <div id="lokasi-box" class="{{ old('mode_pertemuan') === 'offline' ? '' : 'hidden' }}">
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Lokasi Pertemuan *</label>
+                                <textarea name="lokasi" id="lokasi" rows="2"
+                                          placeholder="Tuliskan lokasi pertemuan..."
+                                          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-[#1E6B3D] transition-all placeholder-slate-400 resize-none">{{ old('lokasi') }}</textarea>
+                            </div>
                         </div>
                     </div>
 
-                    <hr>
+                    <hr class="border-slate-100">
 
                     <!-- ── TOMBOL SUBMIT ───────────────────────────────────── -->
-                    <div class="flex gap-3">
-                        <a href="/" class="border px-4 py-2 rounded flex items-center justify-center hover:bg-gray-50">Batal</a>
-                        <button type="submit" class="flex-1 bg-[#1E6B3D] text-white py-3 rounded-xl hover:bg-[#3CDA7D] font-semibold transition-all shadow-sm">
+                    <div class="flex items-center gap-4 mt-8 pt-4 border-t border-slate-100">
+                        <a href="/" class="border border-slate-200 px-6 py-3 rounded-xl flex items-center justify-center font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-700 transition active:scale-[0.98]">
+                            Batal
+                        </a>
+                        <button type="submit" class="flex-1 bg-[#1E6B3D] text-white py-3 px-6 rounded-xl hover:bg-[#24824A] font-bold transition-all shadow-[0_4px_12px_-3px_rgba(30,107,61,0.2)] hover:shadow-[0_6px_20px_-3px_rgba(30,107,61,0.3)] active:scale-[0.98]">
                             Kirim Permintaan Konsultasi
                         </button>
                     </div>
@@ -237,48 +239,61 @@
             <div class="space-y-6">
 
                 <!-- INFO -->
-                <div class="bg-white p-6 rounded-xl shadow">
-                    <h3 class="font-semibold mb-4 text-[#1E6B3D]">Mengapa Konsultasi Bersama Kami?</h3>
-                    <ul class="space-y-3 text-sm text-gray-600">
-                        <li class="flex gap-2"><span>✅</span> <span>Solusi disesuaikan dengan skala dan jenis industri Anda.</span></li>
-                        <li class="flex gap-2"><span>✅</span> <span>Konsultan berpengalaman lebih dari 10 tahun.</span></li>
-                        <li class="flex gap-2"><span>✅</span> <span>Panduan komprehensif mulai dari perencanaan hingga implementasi.</span></li>
-                        <li class="flex gap-2"><span>✅</span> <span>Membantu persiapan audit sertifikasi (ISO, SMK3).</span></li>
+                <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-[0_4px_25px_-5px_rgba(0,0,0,0.03)]">
+                    <h3 class="font-bold text-slate-800 mb-4 text-base">Mengapa Konsultasi Bersama Kami?</h3>
+                    <ul class="space-y-3.5 text-xs text-slate-600">
+                        <li class="flex items-start gap-2.5">
+                            <span class="text-emerald-500 font-bold shrink-0">✓</span>
+                            <span>Solusi disesuaikan dengan skala dan jenis industri Anda.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <span class="text-emerald-500 font-bold shrink-0">✓</span>
+                            <span>Konsultan berpengalaman lebih dari 10 tahun.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <span class="text-emerald-500 font-bold shrink-0">✓</span>
+                            <span>Panduan komprehensif mulai dari perencanaan hingga implementasi.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <span class="text-emerald-500 font-bold shrink-0">✓</span>
+                            <span>Membantu persiapan audit sertifikasi (ISO, SMK3).</span>
+                        </li>
                     </ul>
                 </div>
 
                 <!-- ALUR -->
-                <div class="bg-[#F5F7FA] p-6 rounded-xl shadow">
-                    <h3 class="font-semibold mb-4 text-[#1E6B3D]">Alur Konsultasi</h3>
-                    <ol class="space-y-4 text-sm text-gray-700 relative border-l-2 border-[#1E6B3D] ml-2 pl-4">
+                <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-[0_4px_25px_-5px_rgba(0,0,0,0.03)]">
+                    <h3 class="font-bold text-slate-800 mb-5 text-base">Alur Konsultasi</h3>
+                    <ol class="space-y-6 text-xs text-slate-700 relative border-l-2 border-slate-100 ml-3 pl-5">
                         <li class="relative">
-                            <span class="absolute -left-[23px] top-0 bg-[#1E6B3D] w-3 h-3 rounded-full"></span>
-                            <strong>1. Pendaftaran</strong><br>
-                            <span class="text-gray-500">Isi formulir pengajuan di samping.</span>
+                            <span class="absolute -left-[27px] top-0.5 bg-[#1E6B3D] text-white flex items-center justify-center w-3 h-3 rounded-full border border-white shadow-sm ring-4 ring-emerald-500/10"></span>
+                            <strong class="text-slate-800 font-semibold block mb-0.5">1. Pendaftaran</strong>
+                            <span class="text-slate-500">Isi formulir pengajuan di samping secara lengkap.</span>
                         </li>
                         <li class="relative">
-                            <span class="absolute -left-[23px] top-0 bg-[#1E6B3D] w-3 h-3 rounded-full"></span>
-                            <strong>2. Diskusi Awal (Gratis)</strong><br>
-                            <span class="text-gray-500">Tim kami akan menghubungi Anda untuk memahami kebutuhan.</span>
+                            <span class="absolute -left-[27px] top-0.5 bg-[#1E6B3D] text-white flex items-center justify-center w-3 h-3 rounded-full border border-white shadow-sm ring-4 ring-emerald-500/10"></span>
+                            <strong class="text-slate-800 font-semibold block mb-0.5">2. Diskusi Awal (Gratis)</strong>
+                            <span class="text-slate-500">Tim kami akan menghubungi Anda untuk memahami kebutuhan.</span>
                         </li>
                         <li class="relative">
-                            <span class="absolute -left-[23px] top-0 bg-[#1E6B3D] w-3 h-3 rounded-full"></span>
-                            <strong>3. Proposal & Perencanaan</strong><br>
-                            <span class="text-gray-500">Kami mengirimkan rincian program dan biaya.</span>
+                            <span class="absolute -left-[27px] top-0.5 bg-[#1E6B3D] text-white flex items-center justify-center w-3 h-3 rounded-full border border-white shadow-sm ring-4 ring-emerald-500/10"></span>
+                            <strong class="text-slate-800 font-semibold block mb-0.5">3. Proposal & Perencanaan</strong>
+                            <span class="text-slate-500">Kami mengirimkan rincian program dan biaya.</span>
                         </li>
                         <li class="relative">
-                            <span class="absolute -left-[23px] top-0 bg-[#1E6B3D] w-3 h-3 rounded-full"></span>
-                            <strong>4. Pelaksanaan</strong><br>
-                            <span class="text-gray-500">Konsultasi dan pendampingan dimulai.</span>
+                            <span class="absolute -left-[27px] top-0.5 bg-[#1E6B3D] text-white flex items-center justify-center w-3 h-3 rounded-full border border-white shadow-sm ring-4 ring-emerald-500/10"></span>
+                            <strong class="text-slate-800 font-semibold block mb-0.5">4. Pelaksanaan</strong>
+                            <span class="text-slate-500">Konsultasi dan pendampingan dimulai sesuai jadwal.</span>
                         </li>
                     </ol>
                 </div>
 
                 <!-- CTA -->
-                <div class="bg-gradient-to-br from-[#1E6B3D] to-[#3CDA7D] text-white p-6 rounded-xl">
-                    <h3 class="font-semibold mb-2">Butuh Bantuan Langsung?</h3>
-                    <p class="text-sm mb-4">Chat dengan tim layanan pelanggan kami via WhatsApp</p>
-                    <a href="https://wa.me/6281234567890" target="_blank" class="bg-white text-[#25D366] font-medium px-4 py-2 rounded flex items-center justify-center gap-2 hover:bg-gray-50 transition">
+                <div class="relative overflow-hidden bg-gradient-to-br from-[#1E6B3D] via-[#24824A] to-[#3CDA7D] text-white p-6 rounded-2xl shadow-[0_8px_30px_-6px_rgba(30,107,61,0.2)]">
+                    <div class="absolute -right-10 -bottom-10 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
+                    <h3 class="font-bold text-base mb-2 relative z-10">Butuh Bantuan Langsung?</h3>
+                    <p class="text-xs text-emerald-50 mb-5 relative z-10 leading-relaxed">Hubungi customer service kami jika Anda memerlukan bantuan dalam pengisian form ini.</p>
+                    <a href="https://wa.me/6281234567890" target="_blank" class="relative z-10 w-full bg-white text-[#1E6B3D] font-bold px-4 py-3 rounded-xl flex items-center justify-center gap-2 hover:bg-slate-50 active:scale-[0.98] transition-all shadow-sm">
                         <span>💬</span> Chat WhatsApp
                     </a>
                 </div>
@@ -321,6 +336,21 @@
         }
     }
 
+    window.toggleLokasi = function(val) {
+        const box    = document.getElementById('lokasi-box');
+        const lokasi = document.getElementById('lokasi');
+        if (!box || !lokasi) return;
+
+        if (val === 'offline') {
+            box.classList.remove('hidden');
+            lokasi.required = true;
+        } else {
+            box.classList.add('hidden');
+            lokasi.required = false;
+            lokasi.value = '';
+        }
+    }
+
     window.switchJenis = function(val) {
         hiddenJenis.value = val;
         
@@ -353,6 +383,11 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         switchJenis(hiddenJenis.value || 'individu');
+        
+        const modePertemuan = document.getElementById('mode_pertemuan');
+        if (modePertemuan) {
+            toggleLokasi(modePertemuan.value);
+        }
 
         if (form) {
             form.addEventListener('submit', function () {

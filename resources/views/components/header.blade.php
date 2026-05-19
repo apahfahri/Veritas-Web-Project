@@ -4,9 +4,7 @@
 
             <!-- Logo -->
             <a href="/" class="flex items-center gap-3">
-                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#1E6B3D] to-[#3CDA7D] text-white shadow-sm text-xl">
-                    🛡️
-                </div>
+                <img src="{{ asset('images/logo.png') }}" alt="Veritas Logo" class="h-10 w-10 object-contain rounded-xl shadow-sm bg-white">
                 <div class="hidden sm:block">
                     <div class="font-bold text-base text-[#1E6B3D]">
                         PT Katiga Veritas

@@ -18,6 +18,7 @@
 
     @include('components.footer')
     @include('components.success-modal')
+    @include('components.loading-overlay')
 
 </body>
 </html>
