@@ -26,6 +26,9 @@ class SubadminJadwalController extends Controller
     public function index(Request $request)
     {
         $query = Jadwal::with(['kategori', 'jenis', 'pemateri'])
+            ->whereHas('kategori', function($q) {
+                $q->where('nama', 'like', '%Pelatihan%');
+            })
             ->withCount(['pendaftarans as pending_count' => function ($q) {
                 $q->where('status_progres', 'menunggu');
             }]);
@@ -60,7 +63,7 @@ class SubadminJadwalController extends Controller
         }
 
         $jadwals   = $query->latest()->paginate(15)->appends($request->all());
-        $kategoris = KategoriLayanan::all();
+        $kategoris = KategoriLayanan::where('nama', 'like', '%Pelatihan%')->get();
 
         return view('subadmin.jadwal.index', compact('jadwals', 'kategoris', 'filter'));
     }
@@ -78,7 +81,7 @@ class SubadminJadwalController extends Controller
 
     public function create()
     {
-        $kategoris = KategoriLayanan::with('jenis')->get();
+        $kategoris = KategoriLayanan::where('nama', 'not like', '%Pelatihan%')->with('jenis')->get();
         $pemateris = Pemateri::orderBy('nama_lengkap')->get();
         return view('subadmin.jadwal.create', compact('kategoris', 'pemateris'));
     }
@@ -118,7 +121,8 @@ class SubadminJadwalController extends Controller
     public function edit($id)
     {
         $jadwal    = Jadwal::with('pemateri')->findOrFail($id);
-        $kategoris = KategoriLayanan::with('jenis')->get();
+        if (str_contains(strtolower($jadwal->kategori->nama ?? ''), 'pelatihan')) abort(403, 'Anda tidak dapat mengedit jadwal pelatihan.');
+        $kategoris = KategoriLayanan::where('nama', 'not like', '%Pelatihan%')->with('jenis')->get();
         $pemateris = Pemateri::orderBy('nama_lengkap')->get();
         return view('subadmin.jadwal.edit', compact('jadwal', 'kategoris', 'pemateris'));
     }
@@ -126,6 +130,7 @@ class SubadminJadwalController extends Controller
     public function update(Request $request, $id)
     {
         $jadwal = Jadwal::findOrFail($id);
+        if (str_contains(strtolower($jadwal->kategori->nama ?? ''), 'pelatihan')) abort(403, 'Anda tidak dapat mengedit jadwal pelatihan.');
 
         $request->validate([
             'id_kategori'    => 'required|exists:kategori_layanan,id_kategori',
@@ -162,6 +167,7 @@ class SubadminJadwalController extends Controller
     public function destroy($id)
     {
         $jadwal = Jadwal::findOrFail($id);
+        if (str_contains(strtolower($jadwal->kategori->nama ?? ''), 'pelatihan')) abort(403, 'Anda tidak dapat menghapus jadwal pelatihan.');
         $jadwal->pemateri()->detach();
         $jadwal->delete();
 

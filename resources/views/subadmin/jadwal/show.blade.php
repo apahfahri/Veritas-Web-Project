@@ -61,10 +61,6 @@
                 </div>
                 @endif
             </div>
-            <div class="px-6 pb-5 flex gap-2">
-                <a href="{{ route('subadmin.jadwal.edit', $jadwal->id_jadwal) }}"
-                   class="flex-1 text-center bg-slate-900 text-white py-2.5 rounded-xl text-xs font-black hover:bg-slate-800 transition">Edit Jadwal</a>
-            </div>
         </div>
 
         {{-- Pemateri --}}
