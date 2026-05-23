@@ -13,6 +13,7 @@
 @endif
 
 <form method="GET" class="flex flex-wrap gap-3 mb-6 items-end">
+    <input type="hidden" name="filter" value="{{ request('filter', 'akan_datang') }}">
     <div class="flex-1 min-w-[200px]">
         <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama program..."
                class="w-full bg-white border border-slate-200 px-4 py-2.5 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
@@ -37,6 +38,12 @@
         Tambah Jadwal
     </a>
 </form>
+
+<div class="mb-4 bg-white p-1.5 rounded-2xl shadow-sm border border-slate-100 inline-flex gap-1">
+    <a href="{{ route('subadmin.jadwal.index', array_merge(request()->except(['page', 'filter']), ['filter' => 'akan_datang'])) }}" class="px-4 py-2 rounded-xl text-sm font-bold transition-all {{ (!isset($filter) || $filter === 'akan_datang') ? 'bg-slate-900 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">Akan Datang</a>
+    <a href="{{ route('subadmin.jadwal.index', array_merge(request()->except(['page', 'filter']), ['filter' => 'riwayat'])) }}" class="px-4 py-2 rounded-xl text-sm font-bold transition-all {{ (isset($filter) && $filter === 'riwayat') ? 'bg-slate-900 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">Riwayat</a>
+    <a href="{{ route('subadmin.jadwal.index', array_merge(request()->except(['page', 'filter']), ['filter' => 'semua'])) }}" class="px-4 py-2 rounded-xl text-sm font-bold transition-all {{ (isset($filter) && $filter === 'semua') ? 'bg-slate-900 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">Semua</a>
+</div>
 
 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
     <div class="overflow-x-auto">
@@ -76,6 +83,33 @@
                         @if($j->tgl_selesai && $j->tgl_selesai->ne($j->tgl_mulai))
                         <p class="text-[10px] text-slate-400">s.d. {{ $j->tgl_selesai->format('d M Y') }}</p>
                         @endif
+                        
+                        @php
+                            $isPast = false;
+                            $isOngoing = false;
+                            $now = now()->startOfDay();
+                            $mulai = $j->tgl_mulai ? $j->tgl_mulai->startOfDay() : null;
+                            $selesai = $j->tgl_selesai ? $j->tgl_selesai->startOfDay() : null;
+                            
+                            if ($mulai) {
+                                if ($selesai) {
+                                    if ($selesai < $now) $isPast = true;
+                                    elseif ($mulai <= $now && $selesai >= $now) $isOngoing = true;
+                                } else {
+                                    if ($mulai < $now) $isPast = true;
+                                    elseif ($mulai == $now) $isOngoing = true;
+                                }
+                            }
+                        @endphp
+                        <div class="mt-2">
+                            @if($isPast)
+                                <span class="inline-flex bg-slate-100 text-slate-500 text-[8px] font-black px-1.5 py-0.5 rounded tracking-widest">SELESAI</span>
+                            @elseif($isOngoing)
+                                <span class="inline-flex bg-emerald-100 text-emerald-700 text-[8px] font-black px-1.5 py-0.5 rounded tracking-widest">BERJALAN</span>
+                            @else
+                                <span class="inline-flex bg-indigo-100 text-indigo-700 text-[8px] font-black px-1.5 py-0.5 rounded tracking-widest">AKAN DATANG</span>
+                            @endif
+                        </div>
                     </td>
                     <td class="px-5 py-4">
                         @if($j->kapasitas)
