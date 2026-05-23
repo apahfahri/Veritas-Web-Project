@@ -41,10 +41,28 @@ class SubadminJadwalController extends Controller
             $query->whereHas('jenis', fn($q) => $q->where('nama', 'like', "%{$search}%"));
         }
 
-        $jadwals   = $query->latest()->paginate(15);
+        $filter = $request->input('filter', 'akan_datang');
+
+        if ($filter === 'akan_datang') {
+            $query->where(function ($q) {
+                $q->whereDate('tgl_mulai', '>=', now())
+                  ->orWhereDate('tgl_selesai', '>=', now())
+                  ->orWhereNull('tgl_mulai');
+            });
+        } elseif ($filter === 'riwayat') {
+            $query->where(function ($q) {
+                $q->whereDate('tgl_mulai', '<', now())
+                  ->where(function ($sub) {
+                      $sub->whereDate('tgl_selesai', '<', now())
+                          ->orWhereNull('tgl_selesai');
+                  });
+            });
+        }
+
+        $jadwals   = $query->latest()->paginate(15)->appends($request->all());
         $kategoris = KategoriLayanan::all();
 
-        return view('subadmin.jadwal.index', compact('jadwals', 'kategoris'));
+        return view('subadmin.jadwal.index', compact('jadwals', 'kategoris', 'filter'));
     }
 
     public function show($id)

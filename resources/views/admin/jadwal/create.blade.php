@@ -28,8 +28,8 @@
         <form method="POST" action="{{ route('admin.jadwal.store') }}" class="p-8 space-y-8">
             @csrf
 
-            {{-- Kategori, Jenis Program, Kode --}}
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {{-- Kategori, Jenis Program --}}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Kategori Layanan *</label>
                     <select name="id_kategori" id="selectKategori" required onchange="loadJenis()"
@@ -53,13 +53,6 @@
                         <option value="">-- Pilih Kategori dulu --</option>
                     </select>
                     @error('id_jenis')<p class="text-red-500 text-[10px] font-bold mt-1">{{ $message }}</p>@enderror
-                </div>
-
-                <div>
-                    <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Kode Jadwal <span class="normal-case text-slate-300">(opsional)</span></label>
-                    <input type="text" name="kode_jadwal" value="{{ old('kode_jadwal') }}" maxlength="20"
-                           placeholder="Auto dari kode jenis..."
-                           class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-2xl text-sm font-black uppercase tracking-widest text-slate-700 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:outline-none transition">
                 </div>
             </div>
 

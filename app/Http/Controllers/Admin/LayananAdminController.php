@@ -11,15 +11,35 @@ use Illuminate\Http\Request;
 
 class LayananAdminController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $jadwals = Jadwal::with(['kategori', 'jenis', 'pemateri'])->latest()->paginate(15);
-        return view('admin.jadwal.index', compact('jadwals'));
+        $query = Jadwal::with(['kategori', 'jenis', 'pemateri']);
+        
+        $filter = $request->input('filter', 'akan_datang');
+
+        if ($filter === 'akan_datang') {
+            $query->where(function ($q) {
+                $q->whereDate('tgl_mulai', '>=', now())
+                  ->orWhereDate('tgl_selesai', '>=', now())
+                  ->orWhereNull('tgl_mulai');
+            });
+        } elseif ($filter === 'riwayat') {
+            $query->where(function ($q) {
+                $q->whereDate('tgl_mulai', '<', now())
+                  ->where(function ($sub) {
+                      $sub->whereDate('tgl_selesai', '<', now())
+                          ->orWhereNull('tgl_selesai');
+                  });
+            });
+        }
+
+        $jadwals = $query->latest()->paginate(15)->appends(['filter' => $filter]);
+        return view('admin.jadwal.index', compact('jadwals', 'filter'));
     }
 
     public function create()
     {
-        $kategoris = KategoriLayanan::with('jenis')->get();
+        $kategoris = KategoriLayanan::where('nama', 'like', '%Pelatihan%')->with('jenis')->get();
         $pemateris = Pemateri::orderBy('nama_lengkap')->get();
         return view('admin.jadwal.create', compact('kategoris', 'pemateris'));
     }
@@ -29,7 +49,6 @@ class LayananAdminController extends Controller
         $request->validate([
             'id_kategori'    => 'required|exists:kategori_layanan,id_kategori',
             'id_jenis'       => 'required|exists:jenis_layanan,id_jenis',
-            'kode_jadwal'    => 'nullable|string|max:20',
             'jenis_pertemuan'=> 'required|in:online,offline,hybrid',
             'jam_pertemuan'  => 'nullable',
             'tanggal_usul'   => 'nullable|date',
@@ -43,11 +62,17 @@ class LayananAdminController extends Controller
             'pemateri_ids.*' => 'exists:pemateri,id_pemateri',
         ]);
 
-        $jadwal = Jadwal::create($request->only([
-            'id_kategori', 'id_jenis', 'kode_jadwal', 'jenis_pertemuan',
+        $kategori = KategoriLayanan::findOrFail($request->id_kategori);
+        $jenis = JenisLayanan::findOrFail($request->id_jenis);
+        $urutan = Jadwal::where('id_jenis', $request->id_jenis)->count() + 1;
+        $urutanFormat = str_pad($urutan, 2, '0', STR_PAD_LEFT);
+        $kode_jadwal = "{$kategori->kode_kategori}-{$jenis->kode_jenis}-{$urutanFormat}";
+
+        $jadwal = Jadwal::create(array_merge($request->only([
+            'id_kategori', 'id_jenis', 'jenis_pertemuan',
             'jam_pertemuan', 'tanggal_usul', 'tgl_mulai', 'tgl_selesai',
             'lokasi', 'kapasitas', 'harga', 'deskripsi',
-        ]));
+        ]), ['kode_jadwal' => $kode_jadwal]));
 
         if ($request->filled('pemateri_ids')) {
             $jadwal->pemateri()->sync($request->pemateri_ids);
