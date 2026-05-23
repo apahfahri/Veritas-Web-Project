@@ -98,16 +98,18 @@
                     @if($jadwal->pemateri && $jadwal->pemateri->count() > 0)
                     <div class="mt-8">
                         <h2 class="text-xl font-semibold text-[#1E6B3D] mb-4">Pemateri</h2>
-                        <div class="grid gap-4">
+                        <div class="grid sm:grid-cols-2 gap-4">
                             @foreach($jadwal->pemateri as $pemateri)
-                            <div class="border border-gray-200 rounded-lg p-4 flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-full bg-[#1E6B3D]/10 text-[#1E6B3D] flex items-center justify-center font-bold text-xl shrink-0">
-                                    {{ strtoupper(substr($pemateri->nama_lengkap, 0, 1)) }}
-                                </div>
+                            <div class="border border-gray-200 rounded-lg p-4 flex items-center gap-4 bg-white hover:shadow-md transition">
+                                @if($pemateri->foto)
+                                <img src="{{ asset('storage/' . $pemateri->foto) }}" alt="{{ $pemateri->nama_lengkap }}" class="w-12 h-12 rounded-full object-cover shrink-0 border-2 border-gray-100">
+                                @else
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode($pemateri->nama_lengkap) }}&background=1E6B3D&color=fff" alt="{{ $pemateri->nama_lengkap }}" class="w-12 h-12 rounded-full object-cover shrink-0 border-2 border-gray-100">
+                                @endif
                                 <div>
-                                    <h3 class="font-semibold text-gray-800">{{ $pemateri->nama_lengkap }}</h3>
+                                    <h3 class="font-semibold text-gray-800 line-clamp-1" title="{{ $pemateri->nama_lengkap }}">{{ $pemateri->nama_lengkap }}</h3>
                                     @if($pemateri->kompetensi)
-                                        <p class="text-sm text-gray-500">{{ $pemateri->kompetensi }}</p>
+                                        <p class="text-xs text-gray-500 line-clamp-2 mt-0.5" title="{{ $pemateri->kompetensi }}">{{ $pemateri->kompetensi }}</p>
                                     @endif
                                 </div>
                             </div>

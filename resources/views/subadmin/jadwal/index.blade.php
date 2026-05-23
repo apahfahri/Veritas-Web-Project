@@ -1,7 +1,7 @@
 @extends('layouts.subadmin')
-@section('title', 'Jadwal Layanan')
-@section('page-title', 'Jadwal Layanan')
-@section('page-subtitle', 'Kelola jadwal program Pelatihan, Konsultasi, dan Audit')
+@section('title', 'Jadwal Pelatihan')
+@section('page-title', 'Jadwal Pelatihan')
+@section('page-subtitle', 'Pantau jadwal program Pelatihan')
 
 @section('content')
 
@@ -18,12 +18,7 @@
         <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama program..."
                class="w-full bg-white border border-slate-200 px-4 py-2.5 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
     </div>
-    <select name="kategori" class="bg-white border border-slate-200 px-4 py-2.5 rounded-xl text-sm font-bold focus:outline-none focus:border-indigo-500">
-        <option value="">Semua Kategori</option>
-        @foreach($kategoris as $k)
-        <option value="{{ $k->id_kategori }}" {{ request('kategori') == $k->id_kategori ? 'selected' : '' }}>{{ $k->nama }}</option>
-        @endforeach
-    </select>
+
     <select name="jenis_pertemuan" class="bg-white border border-slate-200 px-4 py-2.5 rounded-xl text-sm font-bold focus:outline-none focus:border-indigo-500">
         <option value="">Semua Mode</option>
         <option value="online"  {{ request('jenis_pertemuan') == 'online'  ? 'selected' : '' }}>Online</option>
@@ -32,11 +27,6 @@
     </select>
     <button type="submit" class="px-5 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-black hover:bg-slate-800 transition">Filter</button>
     <a href="{{ route('subadmin.jadwal.index') }}" class="px-4 py-2.5 text-slate-400 hover:text-slate-700 text-sm font-bold transition">Reset</a>
-    <a href="{{ route('subadmin.jadwal.create') }}"
-       class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-black hover:bg-indigo-700 transition flex items-center gap-2">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-        Tambah Jadwal
-    </a>
 </form>
 
 <div class="mb-4 bg-white p-1.5 rounded-2xl shadow-sm border border-slate-100 inline-flex gap-1">
@@ -83,14 +73,14 @@
                         @if($j->tgl_selesai && $j->tgl_selesai->ne($j->tgl_mulai))
                         <p class="text-[10px] text-slate-400">s.d. {{ $j->tgl_selesai->format('d M Y') }}</p>
                         @endif
-                        
+
                         @php
                             $isPast = false;
                             $isOngoing = false;
                             $now = now()->startOfDay();
                             $mulai = $j->tgl_mulai ? $j->tgl_mulai->startOfDay() : null;
                             $selesai = $j->tgl_selesai ? $j->tgl_selesai->startOfDay() : null;
-                            
+
                             if ($mulai) {
                                 if ($selesai) {
                                     if ($selesai < $now) $isPast = true;
@@ -139,6 +129,8 @@
                                class="w-8 h-8 flex items-center justify-center rounded-xl border border-slate-200 text-slate-400 hover:border-indigo-500 hover:text-indigo-600 transition">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                             </a>
+
+                            @if(!str_contains(strtolower($j->kategori?->nama ?? ''), 'pelatihan'))
                             <a href="{{ route('subadmin.jadwal.edit', $j->id_jadwal) }}"
                                class="w-8 h-8 flex items-center justify-center rounded-xl border border-slate-200 text-slate-400 hover:border-amber-500 hover:text-amber-600 transition">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
@@ -149,6 +141,7 @@
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                 </button>
                             </form>
+                            @endif
                         </div>
                     </td>
                 </tr>
