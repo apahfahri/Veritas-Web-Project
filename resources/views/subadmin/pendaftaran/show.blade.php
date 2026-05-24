@@ -60,6 +60,39 @@
                 </div>
             </div>
 
+            {{-- ALERT: Menunggu Konfirmasi Bukti --}}
+            @if($pendaftaran->status_bayar === 'menunggu_konfirmasi')
+            <div class="mb-6 p-5 bg-amber-50 border border-amber-200 rounded-2xl">
+                <div class="flex items-start gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center shrink-0">
+                        <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-black text-amber-800">Bukti Pembayaran Menunggu Konfirmasi</p>
+                        <p class="text-xs text-amber-700 mt-1">Pelanggan telah mengunggah bukti transfer. Tinjau foto di bawah dan pilih aksi yang sesuai.</p>
+                    </div>
+                </div>
+                <div class="flex gap-3 mt-4">
+                    <form action="{{ route('subadmin.pendaftaran.konfirmasi-bukti', $pendaftaran->id_pendaftaran) }}" method="POST" class="flex-1">
+                        @csrf
+                        <button type="submit" onclick="return confirm('Konfirmasi pembayaran ini sebagai LUNAS? Status akan berubah menjadi Terkonfirmasi.')"
+                                class="w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs px-4 py-3 rounded-xl transition shadow-lg shadow-emerald-600/20">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            Konfirmasi Pembayaran
+                        </button>
+                    </form>
+                    <form action="{{ route('subadmin.pendaftaran.batalkan', $pendaftaran->id_pendaftaran) }}" method="POST" class="flex-1">
+                        @csrf
+                        <button type="submit" onclick="return confirm('Batalkan pendaftaran ini? Tindakan ini akan mengubah status menjadi Dibatalkan.')"
+                                class="w-full flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 font-black text-xs px-4 py-3 rounded-xl transition border border-red-200">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                            Bukti Tidak Valid
+                        </button>
+                    </form>
+                </div>
+            </div>
+            @endif
+
             @if($pendaftaran->bukti_bayar)
                 <div class="mb-6 p-4 bg-slate-50 border border-slate-100 rounded-2xl">
                     <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-3">Bukti Pembayaran Terlampir:</span>

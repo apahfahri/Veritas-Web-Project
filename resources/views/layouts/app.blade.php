@@ -21,5 +21,6 @@
     @include('components.success-modal')
     @include('components.loading-overlay')
 
+    @stack('scripts')
 </body>
 </html>

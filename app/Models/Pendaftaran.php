@@ -23,7 +23,12 @@ class Pendaftaran extends Model
                 $jadwal = Jadwal::with(['kategori', 'jenis'])->find($model->id_jadwal);
 
                 $kategoriKode = $jadwal?->kategori?->kode_kategori ?? 'XXX';
-                $jenisKode    = $jadwal?->jenis?->kode_jenis ?? ($jadwal?->kode_jadwal ?? 'XXX');
+                $jenisKode    = $jadwal?->jenis?->kode_jenis ?? 'XXX';
+
+                // Ambil nomor urut jadwal dari kode_jadwal (misal: PLT-AK3U-02 → 02)
+                $kodeJadwal = $jadwal?->kode_jadwal ?? '';
+                $parts      = array_filter(explode('-', $kodeJadwal));
+                $jadwalSeq  = count($parts) >= 3 ? end($parts) : '00';
 
                 $mode = match($model->mode_pertemuan) {
                     'offline' => 'OFF',
@@ -31,14 +36,13 @@ class Pendaftaran extends Model
                     default   => 'ON',
                 };
 
-                $date = $model->tanggal_daftar
-                    ? \Carbon\Carbon::parse($model->tanggal_daftar)->format('dmY')
-                    : now()->format('dmY');
+                $tglMulai = $jadwal?->tgl_mulai ?? $model->rencana_tanggal_mulai ?? $model->tanggal_daftar ?? now();
+                $date = \Carbon\Carbon::parse($tglMulai)->format('dmY');
 
-                $countToday = static::whereDate('tanggal_daftar', $model->tanggal_daftar ?? now())->count();
-                $seq = str_pad($countToday + 1, 4, '0', STR_PAD_LEFT);
+                $countProgram = static::where('id_jadwal', $model->id_jadwal)->count();
+                $seq = str_pad($countProgram + 1, 4, '0', STR_PAD_LEFT);
 
-                $model->nomor_pendaftaran = strtoupper("{$kategoriKode}-{$jenisKode}-{$mode}-{$date}-{$seq}");
+                $model->nomor_pendaftaran = strtoupper("{$kategoriKode}-{$jenisKode}-{$jadwalSeq}-{$mode}-{$date}-{$seq}");
             }
         });
     }

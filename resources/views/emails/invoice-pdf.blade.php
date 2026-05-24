@@ -176,6 +176,10 @@
                 <td class="val">{{ $user->email }}</td>
             </tr>
             <tr>
+                <td class="lbl">No. Pendaftaran</td>
+                <td class="val" style="color: #0891b2; font-weight: bold; letter-spacing: 0.5px;">{{ $pendaftaran->nomor_pendaftaran }}</td>
+            </tr>
+            <tr>
                 <td class="lbl">No. Telepon</td>
                 <td class="val">{{ $user->no_telp ?? '-' }}</td>
             </tr>

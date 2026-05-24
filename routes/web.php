@@ -67,6 +67,8 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Pendaftaran (Public POST)
 Route::post('/pendaftaran', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
+Route::post('/pendaftaran/verifikasi-nomor', [PendaftaranController::class, 'verifikasiNomor'])->name('pendaftaran.verifikasi-nomor');
+Route::post('/pendaftaran/kirim-bukti', [PendaftaranController::class, 'kirimBuktiBayar'])->name('pendaftaran.kirim-bukti');
 
 /*
 |--------------------------------------------------------------------------
@@ -148,6 +150,8 @@ Route::middleware(['auth', 'is.subadmin'])->prefix('subadmin')->name('subadmin.'
     Route::delete('/pendaftaran/{id}',                     [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'destroy'])->name('pendaftaran.destroy');
     Route::post('/pendaftaran/{id}/update-note',           [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'updateNote'])->name('pendaftaran.update-note');
     Route::post('/pendaftaran/{id}/upload-payment-proof',  [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'uploadPaymentProof'])->name('pendaftaran.upload-payment-proof');
+    Route::post('/pendaftaran/{id}/konfirmasi-bukti',      [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'konfirmasiBukti'])->name('pendaftaran.konfirmasi-bukti');
+    Route::post('/pendaftaran/{id}/batalkan',              [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'batalkanPendaftaran'])->name('pendaftaran.batalkan');
     Route::get('/pendaftaran-export/excel',                [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'exportExcel'])->name('pendaftaran.export-excel');
 
     // Jadwal (view & manage)

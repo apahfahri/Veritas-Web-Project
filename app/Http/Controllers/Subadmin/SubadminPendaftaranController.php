@@ -246,4 +246,76 @@ class SubadminPendaftaranController extends Controller
 
         return redirect()->back()->with('success', 'Bukti pembayaran berhasil diunggah.');
     }
+
+    /**
+     * Konfirmasi bukti pembayaran dari pelanggan → lunas + diproses
+     */
+    public function konfirmasiBukti($id)
+    {
+        $pendaftaran = $this->findByBranch($id);
+
+        if (!$pendaftaran->bukti_bayar) {
+            return redirect()->back()->with('error', 'Tidak ada bukti pembayaran yang ditemukan.');
+        }
+
+        $oldStatus = $pendaftaran->status_progres;
+
+        $pendaftaran->update([
+            'status_bayar'   => 'lunas',
+            'status_progres' => 'diproses',
+        ]);
+
+        // Kirim notifikasi ke pelanggan
+        if ($oldStatus !== 'diproses') {
+            $notification = new PendaftaranStatusNotification($pendaftaran, 'diproses');
+            $pendaftaran->user?->notify($notification);
+            if ($pendaftaran->user?->no_telp) {
+                try { $notification->sendWhatsapp($pendaftaran->user->no_telp); } catch (\Exception $e) {}
+            }
+        }
+
+        return redirect()->back()->with('success', 'Pembayaran berhasil dikonfirmasi. Status pendaftaran diperbarui menjadi Terkonfirmasi.');
+    }
+
+    /**
+     * Batalkan pendaftaran dari bukti yang tidak valid
+     */
+    public function batalkanPendaftaran($id)
+    {
+        $pendaftaran = $this->findByBranch($id);
+        $oldStatus   = $pendaftaran->status_progres;
+
+        $pendaftaran->update([
+            'status_progres' => 'dibatalkan',
+        ]);
+
+        if ($oldStatus !== 'dibatalkan') {
+            $notification = new PendaftaranStatusNotification($pendaftaran, 'dibatalkan');
+            $pendaftaran->user?->notify($notification);
+            if ($pendaftaran->user?->no_telp) {
+                try { $notification->sendWhatsapp($pendaftaran->user->no_telp); } catch (\Exception $e) {}
+            }
+        }
+
+        return redirect()->back()->with('success', 'Pendaftaran berhasil dibatalkan.');
+    }
+
+    /**
+     * Helper: find pendaftaran by ID with branch filter
+     */
+    private function findByBranch($id): Pendaftaran
+    {
+        $cabang = Auth::user()->cabang;
+        $query  = Pendaftaran::query();
+
+        if ($cabang) {
+            $query->where(function ($q) use ($cabang) {
+                $q->where('cabang', $cabang)
+                  ->orWhereNull('cabang')
+                  ->orWhere('cabang', '');
+            });
+        }
+
+        return $query->findOrFail($id);
+    }
 }
