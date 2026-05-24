@@ -97,7 +97,7 @@
                             <input type="text" name="no_telp" value="{{ old('no_telp') }}" placeholder="Nomor HP / WhatsApp *" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-[#1E6B3D] transition-all placeholder-slate-400" required>
                         </div>
                         
-                        <input type="text" name="pendidikan" value="{{ old('pendidikan') }}" placeholder="Pendidikan Terakhir (Opsional)" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-[#1E6B3D] transition-all placeholder-slate-400">
+                        <input type="text" name="pendidikan" value="{{ old('pendidikan') }}" placeholder="Pendidikan Terakhir *" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-[#1E6B3D] transition-all placeholder-slate-400" required>
                     </div>
 
                     <hr class="border-slate-100">

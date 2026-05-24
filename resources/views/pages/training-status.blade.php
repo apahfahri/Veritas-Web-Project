@@ -25,13 +25,23 @@
                             </p>
                         @else
                             <p class="text-sm text-blue-700 mt-1">
-                                Invoice resmi dan rincian instruksi pembayaran telah otomatis dikirimkan ke email Anda beserta lampiran PDF (silakan cek inbox/spam). Anda juga dapat melakukan konfirmasi pembayaran dengan membalas email tersebut.
+                                Invoice resmi dan rincian instruksi pembayaran telah otomatis dikirimkan ke email Anda beserta lampiran PDF (silakan cek inbox/spam). Simpan <strong>Nomor Pendaftaran</strong> yang ada di email untuk mengirim bukti pembayaran.
                             </p>
                         @endif
                     </div>
                 </div>
+            </div>
+        @endif
 
-
+        @if(session('bukti_terkirim'))
+            <div class="mb-8 p-6 bg-green-50 border border-green-200 text-green-800 rounded-2xl shadow-sm max-w-2xl mx-auto">
+                <div class="flex items-start gap-3">
+                    <span class="text-2xl mt-0.5">✅</span>
+                    <div>
+                        <h4 class="font-bold text-lg text-green-900">Bukti Pembayaran Terkirim!</h4>
+                        <p class="text-sm text-green-700 mt-1">Bukti pembayaran Anda telah berhasil dikirim. Tim kami akan memverifikasi dalam jam kerja dan status pendaftaran Anda akan segera diperbarui.</p>
+                    </div>
+                </div>
             </div>
         @endif
 
@@ -162,26 +172,34 @@
                                             Unduh Sertifikat
                                         </a>
                                     @endif
-                                    
-                                    @php
-                                        $waNumber = config('app.whatsapp_number', '6281234567890');
-                                        if ($item->status_bayar === 'belum_bayar' || $item->status_bayar === 'belum_lunas') {
-                                            $waText = "Halo Veritas, saya ingin konfirmasi pembayaran untuk Pendaftaran #" . ($item->nomor_pendaftaran ?? $item->id_pendaftaran);
-                                            $btnLabel = "Konfirmasi Bayar";
-                                        } else {
-                                            $waText = "Halo Admin, saya ingin menanyakan status pendaftaran layanan " . ($item->jadwal?->jenis?->nama ?? 'K3') . " atas nama " . $item->user->nama;
-                                            $btnLabel = "Tanya Admin";
-                                        }
-                                        $waUrl = "https://wa.me/" . $waNumber . "?text=" . rawurlencode($waText);
-                                    @endphp
-                                    <a href="{{ $waUrl }}" 
-                                       target="_blank"
-                                       class="inline-flex items-center justify-center gap-2 bg-green-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-green-600 transition shadow-sm">
-                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.938 3.659 1.435 5.63 1.435h.008c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                                        </svg>
-                                        {{ $btnLabel }}
-                                    </a>
+
+                                    @if(in_array($item->status_bayar, ['belum_bayar', 'belum_lunas']))
+                                        {{-- Tombol Kirim Bukti Bayar --}}
+                                        <button type="button" 
+                                            onclick="bukaModalBukti('{{ $item->id_pendaftaran }}', '{{ $identifier }}')"
+                                            class="inline-flex items-center justify-center gap-2 bg-amber-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-amber-600 transition shadow-sm">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                                            </svg>
+                                            Kirim Bukti Bayar
+                                        </button>
+                                    @elseif($item->status_bayar === 'menunggu_konfirmasi')
+                                        <span class="inline-flex items-center justify-center gap-1.5 bg-orange-50 border border-orange-200 text-orange-600 px-5 py-2.5 rounded-xl text-sm font-semibold">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                            Menunggu Verifikasi
+                                        </span>
+                                    @else
+                                        @php
+                                            $waNumber = config('app.whatsapp_number', '6281234567890');
+                                            $waText   = "Halo Admin, saya ingin menanyakan status pendaftaran layanan " . ($item->jadwal?->jenis?->nama ?? 'K3') . " atas nama " . $item->user->nama;
+                                            $waUrl    = "https://wa.me/" . $waNumber . "?text=" . rawurlencode($waText);
+                                        @endphp
+                                        <a href="{{ $waUrl }}" target="_blank"
+                                           class="inline-flex items-center justify-center gap-2 bg-green-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-green-600 transition shadow-sm">
+                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.938 3.659 1.435 5.63 1.435h.008c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                                            Tanya Admin
+                                        </a>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -199,7 +217,202 @@
     </div>
 </div>
 
-{{-- ── SUCCESS MODAL OVERLAY ────────────────────────────────────── --}}
+{{-- ── MODAL KIRIM BUKTI PEMBAYARAN (2-STEP) ─────────────────── --}}
+<div id="modalBukti" class="fixed inset-0 z-[200] hidden overflow-y-auto">
+    <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" onclick="tutupModalBukti()"></div>
+    <div class="relative min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden">
+
+            {{-- STEP 1: Verifikasi Nomor --}}
+            <div id="step1">
+                <div class="p-8">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-800">Kirim Bukti Pembayaran</h3>
+                            <p class="text-xs text-gray-500">Langkah 1 dari 2 — Verifikasi Identitas</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6">
+                        <p class="text-xs text-amber-800 font-medium">Masukkan <strong>Nomor Pendaftaran</strong> yang tercantum di email invoice Anda. Nomor ini berfungsi sebagai verifikasi keamanan.</p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1.5">Nomor Pendaftaran *</label>
+                            <input type="text" id="inputNomor" placeholder="Contoh: PLT-AK3U-02-24052026-0001"
+                                   class="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm font-mono uppercase focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 tracking-wider"
+                                   oninput="this.value = this.value.toUpperCase()">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1.5">Email Pendaftaran *</label>
+                            <input type="email" id="inputEmail" placeholder="Email yang digunakan saat daftar"
+                                   class="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500">
+                        </div>
+
+                        <div id="pesanVerifikasi" class="hidden text-xs font-semibold px-3 py-2 rounded-xl"></div>
+
+                        <div class="flex gap-3 pt-2">
+                            <button type="button" onclick="tutupModalBukti()" class="flex-1 py-3 border border-gray-200 text-gray-500 text-sm font-bold rounded-xl hover:bg-gray-50 transition">Batal</button>
+                            <button type="button" onclick="verifikasiNomor()" id="btnVerifikasi"
+                                    class="flex-1 py-3 bg-amber-500 text-white text-sm font-bold rounded-xl hover:bg-amber-600 transition flex items-center justify-center gap-2">
+                                <span id="btnVerifikasiText">Verifikasi</span>
+                                <svg id="spinnerVerifikasi" class="hidden animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- STEP 2: Upload Bukti --}}
+            <div id="step2" class="hidden">
+                <form action="{{ route('pendaftaran.kirim-bukti') }}" method="POST" enctype="multipart/form-data" class="p-8">
+                    @csrf
+                    <input type="hidden" name="nomor_pendaftaran" id="hiddenNomor">
+                    <input type="hidden" name="email" id="hiddenEmail">
+
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-800">Upload Bukti Transfer</h3>
+                            <p class="text-xs text-gray-500">Langkah 2 dari 2 — Upload Foto</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-green-50 border border-green-200 rounded-2xl p-4 mb-6">
+                        <p class="text-xs text-green-800 font-medium">✅ Nomor pendaftaran terverifikasi. Silakan upload foto bukti transfer bank Anda.</p>
+                        <p id="infoProgram" class="text-xs text-green-700 font-bold mt-1"></p>
+                    </div>
+
+                    <div class="mb-5">
+                        <label class="block text-xs font-bold text-gray-700 mb-2">Foto Bukti Transfer *</label>
+                        <label for="inputBukti" class="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-2xl cursor-pointer hover:border-amber-400 hover:bg-amber-50 transition group">
+                            <svg class="w-8 h-8 text-gray-400 group-hover:text-amber-500 mb-2 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                            <p id="namaFileBukti" class="text-xs text-gray-500 font-semibold group-hover:text-amber-600 transition">Klik untuk pilih foto</p>
+                            <p class="text-[10px] text-gray-400 mt-1">JPEG, PNG, WebP — Maks. 1 MB</p>
+                        </label>
+                        <input type="file" id="inputBukti" name="bukti_bayar" accept="image/jpeg,image/png,image/jpg,image/webp" required class="hidden" onchange="tampilkanNamaFile(this)">
+                    </div>
+
+                    <div class="flex gap-3">
+                        <button type="button" onclick="kembaliStep1()" class="flex-1 py-3 border border-gray-200 text-gray-500 text-sm font-bold rounded-xl hover:bg-gray-50 transition">← Kembali</button>
+                        <button type="submit" class="flex-1 py-3 bg-[#1E6B3D] text-white text-sm font-bold rounded-xl hover:bg-[#3CDA7D] transition">Kirim Bukti</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    const csrfToken = '{{ csrf_token() }}';
+    const verifikasiUrl = '{{ route("pendaftaran.verifikasi-nomor") }}';
+    let currentIdentifier = '';
+
+    function bukaModalBukti(idPendaftaran, identifier) {
+        currentIdentifier = identifier || '';
+        document.getElementById('modalBukti').classList.remove('hidden');
+        document.getElementById('step1').classList.remove('hidden');
+        document.getElementById('step2').classList.add('hidden');
+        document.getElementById('inputNomor').value = '';
+        document.getElementById('inputEmail').value = currentIdentifier.includes('@') ? currentIdentifier : '';
+        document.getElementById('pesanVerifikasi').classList.add('hidden');
+    }
+
+    function tutupModalBukti() {
+        document.getElementById('modalBukti').classList.add('hidden');
+    }
+
+    function verifikasiNomor() {
+        const nomor  = document.getElementById('inputNomor').value.trim();
+        const email  = document.getElementById('inputEmail').value.trim();
+        const pesan  = document.getElementById('pesanVerifikasi');
+        const btn    = document.getElementById('btnVerifikasi');
+        const spinner = document.getElementById('spinnerVerifikasi');
+        const btnText = document.getElementById('btnVerifikasiText');
+
+        if (!nomor || !email) {
+            pesan.className = 'text-xs font-semibold px-3 py-2 rounded-xl bg-red-50 text-red-700 border border-red-200';
+            pesan.textContent = 'Mohon isi Nomor Pendaftaran dan Email terlebih dahulu.';
+            pesan.classList.remove('hidden');
+            return;
+        }
+
+        // Tampilkan loading
+        btn.disabled = true;
+        spinner.classList.remove('hidden');
+        btnText.textContent = 'Memverifikasi...';
+        pesan.classList.add('hidden');
+
+        fetch(verifikasiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({ nomor_pendaftaran: nomor, email: email }),
+        })
+        .then(res => res.json().then(data => ({ ok: res.ok, data })))
+        .then(({ ok, data }) => {
+            btn.disabled = false;
+            spinner.classList.add('hidden');
+            btnText.textContent = 'Verifikasi';
+
+            if (ok && data.valid) {
+                // Berhasil — lanjut ke step 2
+                document.getElementById('hiddenNomor').value = data.nomor_pendaftaran;
+                document.getElementById('hiddenEmail').value  = email;
+                document.getElementById('infoProgram').textContent = 'Program: ' + data.program;
+                document.getElementById('step1').classList.add('hidden');
+                document.getElementById('step2').classList.remove('hidden');
+            } else {
+                pesan.className = 'text-xs font-semibold px-3 py-2 rounded-xl bg-red-50 text-red-700 border border-red-200';
+                pesan.textContent = data.message || 'Nomor pendaftaran tidak valid.';
+                pesan.classList.remove('hidden');
+            }
+        })
+        .catch(() => {
+            btn.disabled = false;
+            spinner.classList.add('hidden');
+            btnText.textContent = 'Verifikasi';
+            pesan.className = 'text-xs font-semibold px-3 py-2 rounded-xl bg-red-50 text-red-700 border border-red-200';
+            pesan.textContent = 'Terjadi kesalahan jaringan, coba lagi.';
+            pesan.classList.remove('hidden');
+        });
+    }
+
+    function kembaliStep1() {
+        document.getElementById('step1').classList.remove('hidden');
+        document.getElementById('step2').classList.add('hidden');
+    }
+
+    function tampilkanNamaFile(input) {
+        const el = document.getElementById('namaFileBukti');
+        if (input.files && input.files[0]) {
+            el.textContent = input.files[0].name;
+            el.classList.add('text-amber-600');
+        }
+    }
+
+    // Tekan Enter di field nomor/email untuk trigger verifikasi
+    document.addEventListener('DOMContentLoaded', () => {
+        ['inputNomor', 'inputEmail'].forEach(id => {
+            document.getElementById(id)?.addEventListener('keydown', e => {
+                if (e.key === 'Enter') { e.preventDefault(); verifikasiNomor(); }
+            });
+        });
+    });
+</script>
+@endpush
+
+{{-- ── SUCCESS MODAL OVERLAY ─────────────────── --}}
 @if(session('registration_success'))
 <div id="success-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-6 bg-black/50 backdrop-blur-sm transition-opacity duration-300">
     <div class="bg-white rounded-3xl p-10 max-w-sm w-full shadow-2xl text-center transform transition-all duration-500 scale-90 opacity-0" id="modal-content">

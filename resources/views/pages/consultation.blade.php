@@ -174,8 +174,8 @@
                             <div>
                                 <input type="text" name="pendidikan"
                                        value="{{ old('pendidikan') }}"
-                                       placeholder="Pendidikan Terakhir (Opsional)"
-                                       class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-[#1E6B3D] transition-all placeholder-slate-400">
+                                       placeholder="Pendidikan Terakhir *"
+                                       class="w-full bg-slate-50 border border-slate-200 rounded-xl px-5 py-3.5 text-sm focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-[#1E6B3D] transition-all placeholder-slate-400" required>
                             </div>
                         </div>
                     </div>

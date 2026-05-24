@@ -27,7 +27,7 @@ class PendaftaranController extends Controller
             'nama_lengkap'   => 'required|string|max:255',
             'email'          => 'required|email|max:255',
             'no_telp'        => 'required|string|max:20',
-            'pendidikan'     => 'nullable|string|max:100',
+            'pendidikan'     => 'required|string|max:100',
             'tanggal_usul'   => 'nullable|date|after_or_equal:today',
             'lokasi'         => 'nullable|string|max:255',
             'mode_pertemuan' => 'nullable|in:online,offline,hybrid',
@@ -124,7 +124,7 @@ class PendaftaranController extends Controller
                 'rencana_tanggal_mulai'   => $request->tanggal_usul,
                 'rencana_tanggal_selesai' => $request->tanggal_usul,
                 'mode_pertemuan'          => $request->mode_pertemuan,
-                'status_progres'          => 'menunggu',
+                'status_progres'          => 'menunggu_pembayaran',
                 'status_bayar'            => 'belum_bayar',
             ]);
 
@@ -197,5 +197,90 @@ class PendaftaranController extends Controller
 
         $identifier = $request->identifier;
         return view('pages.training-status', compact('pendaftarans', 'identifier'));
+    }
+
+    /**
+     * Step 1: Verifikasi nomor pendaftaran (AJAX)
+     * Menerima nomor_pendaftaran + email, mengembalikan JSON valid/invalid
+     */
+    public function verifikasiNomor(Request $request)
+    {
+        $request->validate([
+            'nomor_pendaftaran' => 'required|string',
+            'email'             => 'required|email',
+        ]);
+
+        $pendaftaran = Pendaftaran::where('nomor_pendaftaran', strtoupper(trim($request->nomor_pendaftaran)))
+            ->whereHas('user', fn($q) => $q->where('email', $request->email))
+            ->with(['jadwal.jenis', 'user'])
+            ->first();
+
+        if (!$pendaftaran) {
+            return response()->json([
+                'valid'   => false,
+                'message' => 'Nomor pendaftaran tidak valid atau tidak sesuai dengan email yang terdaftar.',
+            ], 422);
+        }
+
+        if ($pendaftaran->status_bayar === 'lunas') {
+            return response()->json([
+                'valid'   => false,
+                'message' => 'Pembayaran untuk pendaftaran ini sudah dikonfirmasi lunas.',
+            ], 422);
+        }
+
+        if ($pendaftaran->status_bayar === 'menunggu_konfirmasi') {
+            return response()->json([
+                'valid'   => false,
+                'message' => 'Bukti pembayaran sudah dikirim dan sedang menunggu konfirmasi admin.',
+            ], 422);
+        }
+
+        return response()->json([
+            'valid'             => true,
+            'id_pendaftaran'    => $pendaftaran->id_pendaftaran,
+            'program'           => $pendaftaran->jadwal?->jenis?->nama ?? '-',
+            'nomor_pendaftaran' => $pendaftaran->nomor_pendaftaran,
+        ]);
+    }
+
+    /**
+     * Step 2: Upload bukti bayar oleh pelanggan
+     */
+    public function kirimBuktiBayar(Request $request)
+    {
+        $request->validate([
+            'nomor_pendaftaran' => 'required|string',
+            'email'             => 'required|email',
+            'bukti_bayar'       => 'required|image|mimes:jpeg,png,jpg,webp|max:1024',
+        ]);
+
+        $pendaftaran = Pendaftaran::where('nomor_pendaftaran', strtoupper(trim($request->nomor_pendaftaran)))
+            ->whereHas('user', fn($q) => $q->where('email', $request->email))
+            ->first();
+
+        if (!$pendaftaran) {
+            return back()->withErrors(['nomor_pendaftaran' => 'Nomor pendaftaran tidak valid.'])->withInput();
+        }
+
+        if ($request->hasFile('bukti_bayar')) {
+            $file     = $request->file('bukti_bayar');
+            $filename = 'bukti_' . $pendaftaran->id_pendaftaran . '_' . time() . '.' . $file->getClientOriginalExtension();
+
+            if (!file_exists(public_path('uploads/pembayaran'))) {
+                mkdir(public_path('uploads/pembayaran'), 0777, true);
+            }
+
+            $file->move(public_path('uploads/pembayaran'), $filename);
+
+            $pendaftaran->update([
+                'bukti_bayar'    => $filename,
+                'status_bayar'   => 'menunggu_konfirmasi',
+                'status_progres' => 'menunggu',
+            ]);
+        }
+
+        return redirect()->route('training.status', ['identifier' => $request->email])
+            ->with('bukti_terkirim', true);
     }
 }

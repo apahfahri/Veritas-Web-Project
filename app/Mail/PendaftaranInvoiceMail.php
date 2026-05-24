@@ -38,9 +38,9 @@ class PendaftaranInvoiceMail extends Mailable
      */
     public function build()
     {
-        $invNo = $this->pendaftaran->id_pendaftaran;
+        $nomorPendaftaran = $this->pendaftaran->nomor_pendaftaran ?? ('#INV-' . $this->pendaftaran->id_pendaftaran);
 
-        $mail = $this->subject('[Veritas] Invoice Pendaftaran #INV-' . $invNo)
+        $mail = $this->subject('[Veritas] Invoice Pendaftaran ' . $nomorPendaftaran)
                      ->view('emails.invoice');
 
         // Attempt to attach a PDF version of the invoice
@@ -53,7 +53,7 @@ class PendaftaranInvoiceMail extends Mailable
 
             $mail->attachData(
                 $pdf->output(),
-                'Invoice_INV-' . $invNo . '.pdf',
+                'Invoice_' . $nomorPendaftaran . '.pdf',
                 ['mime' => 'application/pdf']
             );
         } catch (\Exception $e) {

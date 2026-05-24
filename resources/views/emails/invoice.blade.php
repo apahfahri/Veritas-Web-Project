@@ -210,6 +210,10 @@
                     <td class="value">{{ $user->email }}</td>
                 </tr>
                 <tr>
+                    <td class="label">No. Pendaftaran</td>
+                    <td class="value" style="color: #0891b2; font-weight: 900; font-size: 13px; letter-spacing: 0.5px;">{{ $pendaftaran->nomor_pendaftaran }}</td>
+                </tr>
+                <tr>
                     <td class="label">Program / Layanan</td>
                     <td class="value">{{ $layanan->jenis?->nama ?? ($layanan->nama ?? ($layanan->materi ?? 'Layanan Veritas')) }}</td>
                 </tr>
@@ -256,30 +260,13 @@
             <!-- CTA Section -->
             <div class="section-title">Konfirmasi Pembayaran</div>
             <div class="cta-section">
-                <p>Untuk melanjutkan ke tahap berikutnya, silakan lakukan pembayaran dan konfirmasikan bukti transfer Anda melalui salah satu cara di bawah ini:</p>
+                <p>Untuk melanjutkan ke tahap berikutnya, silakan lakukan pembayaran dan kirimkan bukti transfer melalui halaman <strong>Cek Status Pendaftaran</strong> kami:</p>
                 
                 <div style="background-color: #fffbeb; border-left: 3px solid #fbbf24; padding: 12px; margin-bottom: 20px; text-align: left; border-radius: 4px;">
                     <p style="margin: 0; font-size: 13px; color: #b45309;">
-                        <strong>Informasi Penting:</strong> Proses konfirmasi pembayaran dilakukan pada jam kerja operasional kami. Jika konfirmasi pembayaran dilakukan di luar jam kerja, maka akan diproses pada jam kerja berikutnya.
+                        <strong>Nomor Pendaftaran Anda:</strong> <span style="font-family: monospace; font-size: 15px; color: #0891b2; font-weight: 900;">{{ $pendaftaran->nomor_pendaftaran }}</span><br>
+                        <span style="font-size: 11px;">Simpan nomor ini untuk mengirim bukti pembayaran di halaman Cek Status.</span>
                     </p>
-                </div>
-                
-                <!-- Option 1: WhatsApp -->
-                @php
-                    $waNumber = config('app.whatsapp_number', '6281234567890');
-                    $waText = "Halo Veritas, Saya ingin konfirmasi pembayaran untuk Invoice #INV-" . $pendaftaran->id_pendaftaran;
-                    $waUrl = "https://wa.me/" . $waNumber . "?text=" . rawurlencode($waText);
-                @endphp
-                <a href="{{ $waUrl }}" target="_blank" class="btn-whatsapp">
-                    Konfirmasi via WhatsApp
-                </a>
-
-                <div class="option-divider">— ATAU —</div>
-
-                <!-- Option 2: Email -->
-                <div class="option-email">
-                    Reply / Balas langsung email ini<br>
-                    <span style="font-size: 12px; color: #64748b; font-weight: 500;">(sambil melampirkan foto/file bukti transfer Anda)</span>
                 </div>
             </div>
         </div>
