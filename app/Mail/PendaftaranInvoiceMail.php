@@ -40,8 +40,14 @@ class PendaftaranInvoiceMail extends Mailable
     {
         $nomorPendaftaran = $this->pendaftaran->nomor_pendaftaran ?? ('#INV-' . $this->pendaftaran->id_pendaftaran);
 
+        $invoiceSettings = \App\Models\InvoiceSetting::getSettings();
+        $activeRekening = $invoiceSettings->getActiveRekening();
+
         $mail = $this->subject('[Veritas] Invoice Pendaftaran ' . $nomorPendaftaran)
-                     ->view('emails.invoice');
+                     ->view('emails.invoice', [
+                         'invoiceSettings' => $invoiceSettings,
+                         'activeRekening' => $activeRekening,
+                     ]);
 
         // Attempt to attach a PDF version of the invoice
         try {
@@ -49,6 +55,8 @@ class PendaftaranInvoiceMail extends Mailable
                 'pendaftaran' => $this->pendaftaran,
                 'user'        => $this->user,
                 'layanan'     => $this->layanan,
+                'invoiceSettings' => $invoiceSettings,
+                'activeRekening' => $activeRekening,
             ])->setPaper('a4', 'portrait');
 
             $mail->attachData(

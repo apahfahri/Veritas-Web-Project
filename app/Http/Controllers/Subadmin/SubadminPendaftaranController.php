@@ -101,9 +101,11 @@ class SubadminPendaftaranController extends Controller
             $pendaftaran->save();
         }
         
-        // Prevent finishing if not paid
+        // Prevent finishing if not paid (except for corporate/in-house requests which can pay at the end)
         if ($request->status_progres == 'selesai' && $request->status_bayar != 'lunas') {
-            return redirect()->back()->with('error', 'Pendaftaran tidak dapat diselesaikan karena status pembayaran belum LUNAS.');
+            if (!$pendaftaran->is_utusan_perusahaan) {
+                return redirect()->back()->with('error', 'Pendaftaran individu tidak dapat diselesaikan karena status pembayaran belum LUNAS. (Hanya perusahaan yang dapat bayar di akhir).');
+            }
         }
 
         $oldStatus = $pendaftaran->status_progres;
@@ -111,11 +113,13 @@ class SubadminPendaftaranController extends Controller
         $request->validate([
             'status_progres'  => 'required|string',
             'status_bayar'    => 'required|string',
+            'jumlah_absen'    => 'nullable|integer|min:0',
         ]);
 
         $pendaftaran->update([
             'status_progres'  => $request->status_progres,
             'status_bayar'    => $request->status_bayar,
+            'jumlah_absen'    => $request->jumlah_absen ?? 0,
         ]);
 
         // Trigger Notification if status changed
@@ -149,10 +153,10 @@ class SubadminPendaftaranController extends Controller
         return Excel::download(new PendaftaranExport($filters), 'laporan-pendaftaran-' . now()->format('Ymd') . '.xlsx');
     }
 
-    public function destroy($id)
+    public function exportPdf(Request $request)
     {
         $cabang = Auth::user()->cabang;
-        $query = Pendaftaran::query();
+        $query = Pendaftaran::with(['user', 'jadwal.jenis', 'jadwal.kategori']);
 
         if ($cabang) {
             $query->where(function($q) use ($cabang) {
@@ -162,11 +166,58 @@ class SubadminPendaftaranController extends Controller
             });
         }
 
-        $pendaftaran = $query->findOrFail($id);
-        $pendaftaran->delete();
+        $query->latest();
 
-        return redirect()->route('subadmin.pendaftaran.index')
-            ->with('success', 'Pendaftaran berhasil dihapus.');
+        if ($request->filled('status')) {
+            $query->where('status_progres', $request->status);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('id_pendaftaran', 'LIKE', "%{$search}%")
+                  ->orWhereHas('user', function($qUser) use ($search) {
+                      $qUser->where('nama', 'LIKE', "%{$search}%")
+                            ->orWhere('email', 'LIKE', "%{$search}%")
+                            ->orWhere('no_telp', 'LIKE', "%{$search}%");
+                  })
+                  ->orWhereHas('jadwal.jenis', function($qJenis) use ($search) {
+                      $qJenis->where('nama', 'LIKE', "%{$search}%");
+                  });
+            });
+        }
+
+        $pendaftarans = $query->get();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('subadmin.pendaftaran.export-pdf', compact('pendaftarans'))
+                ->setPaper('a4', 'landscape');
+
+        return $pdf->download('laporan-pendaftaran-' . now()->format('YmdHis') . '.pdf');
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $cabang = Auth::user()->cabang;
+            $query = Pendaftaran::query();
+
+            if ($cabang) {
+                $query->where(function($q) use ($cabang) {
+                    $q->where('cabang', $cabang)
+                      ->orWhereNull('cabang')
+                      ->orWhere('cabang', '');
+                });
+            }
+
+            $pendaftaran = $query->findOrFail($id);
+            $pendaftaran->delete();
+
+            return redirect()->route('subadmin.pendaftaran.index')
+                ->with('success', 'Pendaftaran berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()->route('subadmin.pendaftaran.index')
+                ->with('error', 'Gagal menghapus pendaftaran: ' . $e->getMessage());
+        }
     }
 
     public function updateNote(Request $request, $id)

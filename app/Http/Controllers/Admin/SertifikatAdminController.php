@@ -39,6 +39,11 @@ class SertifikatAdminController extends Controller
             return redirect()->route('admin.sertifikat.index')
                 ->with('error', 'Sertifikat untuk pendaftaran ini sudah ada.');
         }
+        
+        if ($pendaftaran->jumlah_absen > 1) {
+            return redirect()->route('admin.sertifikat.index')
+                ->with('error', 'Tidak dapat menerbitkan sertifikat: Peserta memiliki jumlah absen lebih dari 1x.');
+        }
 
         return view('admin.sertifikat.create', compact('pendaftaran'));
     }
@@ -54,6 +59,11 @@ class SertifikatAdminController extends Controller
             'masa_berlaku'      => 'nullable|date',
             'file_pdf'          => 'required|file|mimes:pdf|max:5120', // 5MB
         ]);
+        
+        $pendaftaran = Pendaftaran::findOrFail($request->id_pendaftaran);
+        if ($pendaftaran->jumlah_absen > 1) {
+            return redirect()->back()->with('error', 'Tidak dapat menerbitkan sertifikat: Peserta memiliki jumlah absen lebih dari 1x.');
+        }
 
         $exists = Sertifikat::where('id_pendaftaran', $request->id_pendaftaran)->exists();
         if ($exists) {

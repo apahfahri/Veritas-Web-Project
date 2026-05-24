@@ -120,6 +120,20 @@
                 <input type="hidden" name="status_bayar" id="input_status_bayar" value="{{ $pendaftaran->status_bayar }}">
 
                 <div class="space-y-10">
+                    
+                    @if(in_array($pendaftaran->status_progres, ['diproses', 'selesai']))
+                    <div>
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] block mb-2">Jumlah Absen (Hari)</label>
+                        <div class="flex gap-3">
+                            <input type="number" name="jumlah_absen" value="{{ old('jumlah_absen', $pendaftaran->jumlah_absen ?? 0) }}" min="0" class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
+                            <button type="submit" class="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-6 py-3 rounded-xl transition">Simpan</button>
+                        </div>
+                        <p class="text-[10px] text-slate-400 mt-2">Max absen 1x. Jika > 1, sertifikat tidak dapat diterbitkan.</p>
+                    </div>
+                    @else
+                        <input type="hidden" name="jumlah_absen" value="{{ $pendaftaran->jumlah_absen ?? 0 }}">
+                    @endif
+
                     <!-- Progres Layanan Buttons -->
                     <div>
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] block mb-4">Progres Layanan</label>
@@ -306,6 +320,11 @@
                     </div>
                 </div>
 
+                @php
+                    $invoiceSettings = \App\Models\InvoiceSetting::getSettings();
+                    $activeRekening = $invoiceSettings->getActiveRekening();
+                @endphp
+
                 <div class="grid grid-cols-2 gap-12 mb-12">
                     <div>
                         <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Ditagihkan Kepada:</p>
@@ -315,9 +334,9 @@
                     </div>
                     <div>
                         <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Metode Pembayaran:</p>
-                        <p class="text-sm font-black text-slate-900 leading-tight mb-1">Transfer Bank Mandiri</p>
-                        <p class="text-xs font-medium text-slate-500">No. Rek: <span class="font-bold text-slate-800">131-00-1886111-1</span></p>
-                        <p class="text-xs font-medium text-slate-500">a.n PT Katiga Veritas Indonesia</p>
+                        <p class="text-sm font-black text-slate-900 leading-tight mb-1">Transfer {{ $activeRekening['bank'] }}</p>
+                        <p class="text-xs font-medium text-slate-500">No. Rek: <span class="font-bold text-slate-800">{{ $activeRekening['nomor'] }}</span></p>
+                        <p class="text-xs font-medium text-slate-500">a.n {{ $activeRekening['atas_nama'] }}</p>
                     </div>
                 </div>
 
@@ -342,11 +361,15 @@
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
                         Instruksi Verifikasi:
                     </p>
-                    <p class="text-[10px] text-amber-800 leading-relaxed font-bold italic">Mohon sertakan Kode Registrasi (#{{ $pendaftaran->id_pendaftaran }}) pada berita transfer untuk mempercepat proses verifikasi oleh admin kami.</p>
+                    <p class="text-[10px] text-amber-800 leading-relaxed font-bold italic mb-2">Mohon sertakan Kode Registrasi (#{{ $pendaftaran->id_pendaftaran }}) pada berita transfer untuk mempercepat proses verifikasi oleh admin kami.</p>
+                    @if($invoiceSettings->catatan_invoice)
+                        <div class="h-px w-full bg-amber-200/50 my-2"></div>
+                        <p class="text-[10px] text-amber-800 leading-relaxed">{{ $invoiceSettings->catatan_invoice }}</p>
+                    @endif
                 </div>
 
                 <div class="text-center text-[9px] font-black text-slate-300 uppercase tracking-[0.3em]">
-                    PT Katiga Veritas Indonesia &bull; Professional K3 Services &bull; 2026
+                    PT Katiga Veritas Indonesia &bull; Professional K3 Services &bull; {{ date('Y') }}
                 </div>
             </div>
             <div class="p-6 bg-slate-50 border-t border-slate-100 flex gap-4">
@@ -391,6 +414,44 @@
 @push('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
+    // ──── LOADING OVERLAY ────────────────────────────────
+    function showLoading(message = 'Memproses...') {
+        let overlay = document.getElementById('loadingOverlay');
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.id = 'loadingOverlay';
+            overlay.className = 'fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm';
+            overlay.innerHTML = `
+                <div class="bg-white rounded-3xl shadow-2xl p-8 flex flex-col items-center gap-4 max-w-xs w-full mx-4">
+                    <div class="w-12 h-12 rounded-full border-4 border-slate-200 border-t-cyan-600 animate-spin"></div>
+                    <p id="loadingText" class="text-sm font-black text-slate-700 text-center">${message}</p>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Mohon tunggu sebentar</p>
+                </div>`;
+            document.body.appendChild(overlay);
+        } else {
+            document.getElementById('loadingText').textContent = message;
+            overlay.classList.remove('hidden');
+        }
+    }
+
+    function hideLoading() {
+        const overlay = document.getElementById('loadingOverlay');
+        if (overlay) overlay.classList.add('hidden');
+    }
+
+    // Intercept ALL form submissions on the page for loading
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            // Skip hidden forms triggered via JS (they get their own loading)
+            if (form.id === 'statusUpdateForm' || form.id === 'deleteForm') {
+                showLoading('Memproses perubahan...');
+            } else if (!form.classList.contains('hidden')) {
+                showLoading('Mengirim data...');
+            }
+        });
+    });
+
+    // ──── CONFIRMATION MODAL ────────────────────────────
     function confirmCombinedStatus(progresValue, bayarValue, label) {
         const modal = document.getElementById('confirmModal');
         const targetName = document.getElementById('targetStatusName');
@@ -401,14 +462,16 @@
         targetName.innerText = label;
         modal.classList.remove('hidden');
 
-        // Reset icon colors
         iconContainer.className = "w-16 h-16 rounded-2xl bg-cyan-50 flex items-center justify-center mx-auto mb-6";
         icon.className = "w-8 h-8 text-cyan-600";
         icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>';
 
         confirmBtn.onclick = function() {
+            showLoading('Mengubah status ke: ' + label + '...');
             document.getElementById('input_status_progres').value = progresValue;
             document.getElementById('input_status_bayar').value = bayarValue;
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'Memproses...';
             document.getElementById('statusUpdateForm').submit();
         };
     }
@@ -423,13 +486,15 @@
         targetName.innerText = label;
         modal.classList.remove('hidden');
 
-        // Reset icon colors
         iconContainer.className = "w-16 h-16 rounded-2xl bg-cyan-50 flex items-center justify-center mx-auto mb-6";
         icon.className = "w-8 h-8 text-cyan-600";
         icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>';
 
         confirmBtn.onclick = function() {
+            showLoading('Mengubah status...');
             document.getElementById('input_' + field).value = value;
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'Memproses...';
             document.getElementById('statusUpdateForm').submit();
         };
     }
@@ -446,35 +511,31 @@
         message.innerHTML = "Tindakan ini <span class='text-red-600 font-bold uppercase'>permanen</span>. Seluruh data pendaftaran ini akan dihapus dari sistem.";
         modal.classList.remove('hidden');
 
-        // Red theme for delete
         iconContainer.className = "w-16 h-16 rounded-2xl bg-red-50 flex items-center justify-center mx-auto mb-6";
         icon.className = "w-8 h-8 text-red-600";
         icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>';
 
         confirmBtn.onclick = function() {
+            showLoading('Menghapus pendaftaran...');
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'Menghapus...';
             document.getElementById('deleteForm').submit();
         };
     }
 
     function closeConfirmModal() {
         document.getElementById('confirmModal').classList.add('hidden');
+        // Reset confirm button state
+        const btn = document.getElementById('confirmBtnAction');
+        btn.disabled = false;
+        btn.textContent = 'Ya, Proses';
     }
 
-    function showInvoice() {
-        document.getElementById('invoiceModal').classList.remove('hidden');
-    }
-
-    function hideInvoice() {
-        document.getElementById('invoiceModal').classList.add('hidden');
-    }
-
-    function showUploadModal() {
-        document.getElementById('uploadModal').classList.remove('hidden');
-    }
-
-    function hideUploadModal() {
-        document.getElementById('uploadModal').classList.add('hidden');
-    }
+    // ──── MODALS ────────────────────────────────────────
+    function showInvoice() { document.getElementById('invoiceModal').classList.remove('hidden'); }
+    function hideInvoice() { document.getElementById('invoiceModal').classList.add('hidden'); }
+    function showUploadModal() { document.getElementById('uploadModal').classList.remove('hidden'); }
+    function hideUploadModal() { document.getElementById('uploadModal').classList.add('hidden'); }
 
     function updateFileName(input) {
         if (input.files && input.files[0]) {

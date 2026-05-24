@@ -27,14 +27,17 @@ class Jadwal extends Model
         'jam_pertemuan',
         'lokasi',
         'kapasitas',
+        'kuota_minimal',
         'harga',
         'deskripsi',
+        'is_active',
     ];
 
     protected $casts = [
         'tanggal_usul' => 'date',
         'tgl_mulai'    => 'date',
         'tgl_selesai'  => 'date',
+        'is_active'    => 'boolean',
     ];
 
     /* ─── RELASI ─────────────────────────────────────────────── */

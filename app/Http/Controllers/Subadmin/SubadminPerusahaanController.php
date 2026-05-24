@@ -38,7 +38,7 @@ class SubadminPerusahaanController extends Controller
         
         // Peserta dari perusahaan ini di cabang admin
         $pesertas = Pendaftaran::where('id_perusahaan', $id)
-            ->with(['user', 'layanan'])
+            ->with(['user', 'jadwal.jenis', 'jadwal.kategori'])
             ->latest()
             ->get();
 

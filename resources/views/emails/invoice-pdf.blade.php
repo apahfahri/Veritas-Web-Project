@@ -220,10 +220,17 @@
             Silakan lakukan transfer pembayaran penuh sejumlah nominal di atas ke rekening resmi kami:
         </p>
         <div class="bank-box">
-            <div class="bank-name">🏦 Bank Mandiri</div>
-            <div class="acc-number">131-00-1886111-1</div>
-            <div class="acc-holder">A.N. PT Katiga Veritas Indonesia</div>
+            <div class="bank-name">🏦 {{ $activeRekening['bank'] ?? 'Bank Mandiri' }}</div>
+            <div class="acc-number">{{ $activeRekening['nomor'] ?? '131-00-1886111-1' }}</div>
+            <div class="acc-holder">A.N. {{ $activeRekening['atas_nama'] ?? 'PT Katiga Veritas Indonesia' }}</div>
         </div>
+        
+        @if(!empty($invoiceSettings) && $invoiceSettings->catatan_invoice)
+        <div style="margin-top: 15px; padding: 10px; background-color: #f8fafc; border: 1px solid #e2e8f0; font-size: 11px;">
+            <strong>Catatan:</strong><br>
+            {{ $invoiceSettings->catatan_invoice }}
+        </div>
+        @endif
 
     </div>
 

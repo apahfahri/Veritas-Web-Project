@@ -64,6 +64,7 @@ class Pendaftaran extends Model
         'cabang',
         'last_reminder_details',
         'last_reminder_sent_at',
+        'jumlah_absen',
     ];
 
     protected $casts = [

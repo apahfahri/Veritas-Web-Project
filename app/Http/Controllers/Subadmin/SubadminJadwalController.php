@@ -104,11 +104,22 @@ class SubadminJadwalController extends Controller
             'pemateri_ids.*' => 'exists:pemateri,id_pemateri',
         ]);
 
-        $jadwal = Jadwal::create($request->only([
+        // Aturan Bisnis: Ahli K3 Umum 13 hari, lainnya 5 hari (jika tgl_selesai kosong dan tgl_mulai ada)
+        $tgl_selesai = $request->tgl_selesai;
+        if ($request->tgl_mulai && empty($tgl_selesai)) {
+            $jenis = JenisLayanan::find($request->id_jenis);
+            if ($jenis) {
+                $isK3Umum = stripos($jenis->nama, 'Ahli K3 Umum') !== false;
+                $days = $isK3Umum ? 12 : 4; // 13 hari atau 5 hari inklusif
+                $tgl_selesai = \Carbon\Carbon::parse($request->tgl_mulai)->addDays($days)->format('Y-m-d');
+            }
+        }
+
+        $jadwal = Jadwal::create(array_merge($request->only([
             'id_kategori', 'id_jenis', 'kode_jadwal', 'jenis_pertemuan',
-            'tgl_mulai', 'tgl_selesai', 'jam_pertemuan', 'lokasi',
+            'tgl_mulai', 'jam_pertemuan', 'lokasi',
             'kapasitas', 'harga', 'deskripsi',
-        ]));
+        ]), ['tgl_selesai' => $tgl_selesai]));
 
         if ($request->filled('pemateri_ids')) {
             $jadwal->pemateri()->sync($request->pemateri_ids);
@@ -148,11 +159,22 @@ class SubadminJadwalController extends Controller
             'pemateri_ids.*' => 'exists:pemateri,id_pemateri',
         ]);
 
-        $jadwal->update($request->only([
+        // Aturan Bisnis: Ahli K3 Umum 13 hari, lainnya 5 hari (jika tgl_selesai kosong dan tgl_mulai ada)
+        $tgl_selesai = $request->tgl_selesai;
+        if ($request->tgl_mulai && empty($tgl_selesai)) {
+            $jenis = JenisLayanan::find($request->id_jenis);
+            if ($jenis) {
+                $isK3Umum = stripos($jenis->nama, 'Ahli K3 Umum') !== false;
+                $days = $isK3Umum ? 12 : 4; // 13 hari atau 5 hari inklusif
+                $tgl_selesai = \Carbon\Carbon::parse($request->tgl_mulai)->addDays($days)->format('Y-m-d');
+            }
+        }
+
+        $jadwal->update(array_merge($request->only([
             'id_kategori', 'id_jenis', 'kode_jadwal', 'jenis_pertemuan',
-            'tgl_mulai', 'tgl_selesai', 'jam_pertemuan', 'lokasi',
+            'tgl_mulai', 'jam_pertemuan', 'lokasi',
             'kapasitas', 'harga', 'deskripsi',
-        ]));
+        ]), ['tgl_selesai' => $tgl_selesai]));
 
         if ($request->has('pemateri_ids')) {
             $jadwal->pemateri()->sync($request->pemateri_ids);

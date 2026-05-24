@@ -54,8 +54,8 @@
                     </td>
                     <td class="px-6 py-5">
                         <div class="flex flex-col">
-                            <span class="text-sm font-bold text-slate-700">{{ $p->layanan?->nama }}</span>
-                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{{ $p->layanan?->materi }}</span>
+                            <span class="text-sm font-bold text-slate-700">{{ $p->jadwal?->jenis?->nama ?? '—' }}</span>
+                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{{ $p->jadwal?->kategori?->nama ?? '' }}</span>
                         </div>
                     </td>
                     <td class="px-6 py-5 text-center">

@@ -180,12 +180,20 @@ Route::middleware(['auth', 'is.subadmin'])->prefix('subadmin')->name('subadmin.'
     Route::get('/sertifikat',                          [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'index'])->name('sertifikat.index');
     Route::get('/sertifikat/create/{pendaftaran_id}',  [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'create'])->name('sertifikat.create');
     Route::post('/sertifikat',                         [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'store'])->name('sertifikat.store');
+    Route::get('/sertifikat/{no_sertifikat}/show',     [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'show'])->name('sertifikat.show');
     Route::get('/sertifikat/{no_sertifikat}/edit',     [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'edit'])->name('sertifikat.edit');
     Route::put('/sertifikat/{no_sertifikat}',          [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'update'])->name('sertifikat.update');
     Route::delete('/sertifikat/{no_sertifikat}',       [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'destroy'])->name('sertifikat.destroy');
 
     // Pemateri (View Only)
     Route::get('/petugas', [\App\Http\Controllers\Subadmin\SubadminPetugasController::class, 'index'])->name('petugas.index');
+
+    // Kelola Invoice
+    Route::get('/invoice',  [\App\Http\Controllers\Subadmin\SubadminInvoiceController::class, 'index'])->name('invoice.index');
+    Route::put('/invoice',  [\App\Http\Controllers\Subadmin\SubadminInvoiceController::class, 'update'])->name('invoice.update');
+
+    // Pendaftaran PDF Export
+    Route::get('/pendaftaran-export/pdf', [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'exportPdf'])->name('pendaftaran.export-pdf');
 });
 
 /*
