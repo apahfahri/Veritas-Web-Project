@@ -1,10 +1,10 @@
-@extends('layouts.subadmin')
+@extends('layouts.admin')
 @section('title', 'Detail Jadwal')
 @section('page-title', 'Detail Jadwal')
 
 @section('content')
 <div class="mb-6">
-    <a href="{{ route('subadmin.jadwal.index') }}" class="inline-flex items-center gap-2 text-slate-400 hover:text-slate-900 font-bold text-xs uppercase tracking-widest transition">
+    <a href="{{ route('admin.jadwal.index') }}" class="inline-flex items-center gap-2 text-slate-400 hover:text-slate-900 font-bold text-xs uppercase tracking-widest transition">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
         Kembali
     </a>
@@ -81,7 +81,7 @@
                         @endif
                     </div>
                     
-                    <form action="{{ route('subadmin.jadwal.resend', $jadwal->id_jadwal) }}" method="POST" onsubmit="return confirm('Kirim email konfirmasi ke semua peserta terkonfirmasi? Ini akan memakan waktu sejenak.');">
+                    <form action="{{ route('admin.jadwal.resend', $jadwal->id_jadwal) }}" method="POST" onsubmit="return confirm('Kirim email konfirmasi ke semua peserta terkonfirmasi? Ini akan memakan waktu sejenak.');">
                         @csrf
                         <button type="submit" class="w-full bg-slate-900 text-white text-xs font-bold py-2.5 rounded-xl hover:bg-slate-800 transition flex items-center justify-center gap-2">
                             <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
@@ -137,7 +137,7 @@
                             {{ $p->status_progres === 'terkonfirmasi' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : ($p->status_progres === 'dibatalkan' ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-amber-50 text-amber-700 border border-amber-100') }}">
                             {{ str_replace('_', ' ', $p->status_progres) }}
                         </span>
-                        <a href="{{ route('subadmin.pendaftaran.show', $p->id_pendaftaran) }}"
+                        <a href="{{ route('admin.pendaftaran.show', $p->id_pendaftaran) }}"
                            class="text-[10px] font-black text-indigo-600 hover:text-indigo-800 transition">Detail →</a>
                     </div>
                 </div>

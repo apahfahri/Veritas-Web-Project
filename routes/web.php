@@ -92,9 +92,14 @@ Route::middleware(['auth', 'is.admin'])->prefix('admin')->name('admin.')->group(
     Route::get('/jadwal',              [LayananAdminController::class, 'index'])->name('jadwal.index');
     Route::get('/jadwal/create',       [LayananAdminController::class, 'create'])->name('jadwal.create');
     Route::post('/jadwal',             [LayananAdminController::class, 'store'])->name('jadwal.store');
+    Route::get('/jadwal/{id}',         [LayananAdminController::class, 'show'])->name('jadwal.show');
+    Route::post('/jadwal/{id}/resend', [LayananAdminController::class, 'resendReminder'])->name('jadwal.resend');
     Route::get('/jadwal/{id}/edit',    [LayananAdminController::class, 'edit'])->name('jadwal.edit');
     Route::put('/jadwal/{id}',         [LayananAdminController::class, 'update'])->name('jadwal.update');
     Route::delete('/jadwal/{id}',      [LayananAdminController::class, 'destroy'])->name('jadwal.destroy');
+
+    // Materi
+    Route::resource('materi', \App\Http\Controllers\Admin\MateriController::class)->except(['show']);
 
     // Kategori & Jenis Layanan
     Route::get('/kategori',                    [KategoriLayananController::class, 'index'])->name('kategori.index');
@@ -159,6 +164,7 @@ Route::middleware(['auth', 'is.subadmin'])->prefix('subadmin')->name('subadmin.'
     Route::get('/jadwal/create',       [\App\Http\Controllers\Subadmin\SubadminJadwalController::class, 'create'])->name('jadwal.create');
     Route::post('/jadwal',             [\App\Http\Controllers\Subadmin\SubadminJadwalController::class, 'store'])->name('jadwal.store');
     Route::get('/jadwal/{id}',         [\App\Http\Controllers\Subadmin\SubadminJadwalController::class, 'show'])->name('jadwal.show');
+    Route::post('/jadwal/{id}/resend', [\App\Http\Controllers\Subadmin\SubadminJadwalController::class, 'resendReminder'])->name('jadwal.resend');
     Route::get('/jadwal/{id}/edit',    [\App\Http\Controllers\Subadmin\SubadminJadwalController::class, 'edit'])->name('jadwal.edit');
     Route::put('/jadwal/{id}',         [\App\Http\Controllers\Subadmin\SubadminJadwalController::class, 'update'])->name('jadwal.update');
     Route::delete('/jadwal/{id}',      [\App\Http\Controllers\Subadmin\SubadminJadwalController::class, 'destroy'])->name('jadwal.destroy');
@@ -183,6 +189,9 @@ Route::middleware(['auth', 'is.subadmin'])->prefix('subadmin')->name('subadmin.'
     Route::get('/sertifikat/{no_sertifikat}/edit',     [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'edit'])->name('sertifikat.edit');
     Route::put('/sertifikat/{no_sertifikat}',          [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'update'])->name('sertifikat.update');
     Route::delete('/sertifikat/{no_sertifikat}',       [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'destroy'])->name('sertifikat.destroy');
+
+    // Materi
+    Route::resource('materi', \App\Http\Controllers\Subadmin\MateriController::class)->except(['show']);
 
     // Pemateri (View Only)
     Route::get('/petugas', [\App\Http\Controllers\Subadmin\SubadminPetugasController::class, 'index'])->name('petugas.index');

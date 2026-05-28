@@ -25,7 +25,7 @@
             </div>
         </div>
 
-        <form method="POST" action="{{ route('admin.jadwal.store') }}" class="p-8 space-y-8">
+        <form method="POST" action="{{ route('admin.jadwal.store') }}" enctype="multipart/form-data" class="p-8 space-y-8">
             @csrf
 
             {{-- Kategori, Jenis Program --}}
@@ -98,12 +98,18 @@
                 </div>
             </div>
 
-            {{-- Lokasi & Kapasitas --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {{-- Lokasi, Link Meet & Kapasitas --}}
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
                     <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Lokasi / Venue</label>
                     <input type="text" name="lokasi" value="{{ old('lokasi') }}"
                            placeholder="Nama gedung / kota (kosongkan jika online)"
+                           class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-2xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:outline-none transition">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Link Meet Online</label>
+                    <input type="url" name="link_meet" value="{{ old('link_meet') }}"
+                           placeholder="https://zoom.us/j/... (kosongkan jika offline)"
                            class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-2xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:outline-none transition">
                 </div>
                 <div>
@@ -137,6 +143,30 @@
                             @endforelse
                         </div>
                     </div>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Pilih Materi Pendukung <span class="normal-case text-slate-300">(multi-pilih)</span></label>
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 max-h-48 overflow-y-auto space-y-2">
+                        @forelse($materis as $m)
+                        <label class="flex items-center gap-3 cursor-pointer hover:bg-white p-2 rounded-lg transition">
+                            <input type="checkbox" name="materi_ids[]" value="{{ $m->id_materi }}"
+                                   {{ is_array(old('materi_ids')) && in_array($m->id_materi, old('materi_ids')) ? 'checked' : '' }}
+                                   class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500">
+                            <span class="text-sm font-bold text-slate-700">{{ $m->judul }} <span class="text-xs font-normal text-slate-500">({{ Str::limit($m->deskripsi, 30) }})</span></span>
+                        </label>
+                        @empty
+                        <p class="text-sm text-slate-400 p-2">Belum ada master materi. Silakan tambahkan di Kelola Materi.</p>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">File Rundown (Opsional, max 10MB PDF)</label>
+                    <input type="file" name="file_rundown" accept=".pdf"
+                           class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
                 </div>
                 <div>
                     <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Deskripsi</label>

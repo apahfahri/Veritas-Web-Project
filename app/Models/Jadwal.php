@@ -29,6 +29,9 @@ class Jadwal extends Model
         'kapasitas',
         'harga',
         'deskripsi',
+        'file_rundown',
+        'link_meet',
+        'reminder_h3_sent_at',
     ];
 
     protected $casts = [
@@ -57,6 +60,11 @@ class Jadwal extends Model
     public function pendaftarans()
     {
         return $this->hasMany(Pendaftaran::class, 'id_jadwal', 'id_jadwal');
+    }
+
+    public function materi()
+    {
+        return $this->belongsToMany(Materi::class, 'jadwal_materi', 'id_jadwal', 'id_materi');
     }
 
     /* ─── HELPERS ────────────────────────────────────────────── */
