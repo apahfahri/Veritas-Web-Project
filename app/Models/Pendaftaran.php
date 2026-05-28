@@ -42,7 +42,13 @@ class Pendaftaran extends Model
                 $countProgram = static::where('id_jadwal', $model->id_jadwal)->count();
                 $seq = str_pad($countProgram + 1, 4, '0', STR_PAD_LEFT);
 
-                $model->nomor_pendaftaran = strtoupper("{$kategoriKode}-{$jenisKode}-{$jadwalSeq}-{$mode}-{$date}-{$seq}");
+                $chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                $uniqueCode = '';
+                for ($i = 0; $i < 5; $i++) {
+                    $uniqueCode .= $chars[rand(0, strlen($chars) - 1)];
+                }
+
+                $model->nomor_pendaftaran = strtoupper("{$kategoriKode}-{$jenisKode}-{$jadwalSeq}-{$mode}-{$date}-{$seq}-{$uniqueCode}");
             }
         });
     }

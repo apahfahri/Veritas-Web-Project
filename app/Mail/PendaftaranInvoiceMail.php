@@ -40,7 +40,11 @@ class PendaftaranInvoiceMail extends Mailable
     {
         $nomorPendaftaran = $this->pendaftaran->nomor_pendaftaran ?? ('#INV-' . $this->pendaftaran->id_pendaftaran);
 
-        $mail = $this->subject('[Veritas] Invoice Pendaftaran ' . $nomorPendaftaran)
+        $kategoriNama = $this->layanan?->kategori?->nama ?? '';
+        $jenisNama = $this->layanan?->jenis?->nama ?? '';
+        $subject = trim("Invoice Pendaftaran {$kategoriNama} {$jenisNama}");
+
+        $mail = $this->subject($subject)
                      ->view('emails.invoice');
 
         // Attempt to attach a PDF version of the invoice
