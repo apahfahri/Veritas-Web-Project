@@ -17,6 +17,7 @@ class JadwalPublikController extends Controller
             ->whereHas('kategori', function ($q) {
                 $q->where('nama', 'like', '%Pelatihan%');
             })
+            ->whereDate('tgl_mulai', '>', now()->addDays(3))
             ->orderBy('tgl_mulai');
 
         if ($request->filled('jenis')) {
@@ -43,7 +44,10 @@ class JadwalPublikController extends Controller
 
         $related = Jadwal::whereHas('kategori', function ($q) {
             $q->where('nama', 'like', '%Pelatihan%');
-        })->where('id_jadwal', '!=', $id)->take(3)->get();
+        })
+        ->where('id_jadwal', '!=', $id)
+        ->whereDate('tgl_mulai', '>', now()->addDays(3))
+        ->take(3)->get();
 
         return view('pages.training-detail', compact('jadwal', 'sisaKursi', 'related'));
     }
