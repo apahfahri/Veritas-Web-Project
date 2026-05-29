@@ -70,7 +70,7 @@
                             
                             <div class="p-2">
                                 <a href="{{ Auth::user()->isSubadmin() ? route('subadmin.dashboard') : route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-xl transition-all group/item">
-                                    <span class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-xl group-hover/item:bg-[#1E6B3D]/10 group-hover/item:text-[#1E6B3D] transition-all text-lg">📊</span>
+                                    <span class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-xl group-hover/item:bg-[#1E6B3D]/10 group-hover/item:text-[#1E6B3D] transition-all text-lg"><i class="fi fi-rr-chart-histogram"></i></span>
                                     <div class="flex flex-col">
                                         <span class="font-bold">Dashboard Admin</span>
                                         <span class="text-[10px] text-gray-400">Kelola sistem</span>
@@ -82,7 +82,7 @@
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <button type="submit" class="w-full flex items-center gap-3 px-3 py-3 text-sm text-red-600 hover:bg-red-50 rounded-xl transition-all group/item">
-                                        <span class="w-10 h-10 flex items-center justify-center bg-red-50 rounded-xl group-hover/item:bg-red-600 group-hover/item:text-white transition-all text-lg">🚪</span>
+                                        <span class="w-10 h-10 flex items-center justify-center bg-red-50 rounded-xl group-hover/item:bg-red-600 group-hover/item:text-white transition-all text-lg"><i class="fi fi-rr-sign-out-alt"></i></span>
                                         <span class="font-bold">Logout</span>
                                     </button>
                                 </form>

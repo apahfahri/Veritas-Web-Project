@@ -18,7 +18,7 @@ class JadwalSeeder extends Seeder
             return;
         }
 
-        $createJadwal = function($kode_jenis, $data, $pemateriIds) use ($katPelatihan) {
+        $createJadwal = function($kode_jenis, $data, $pemateriIds, $materiIds = []) use ($katPelatihan) {
             $jenis = JenisLayanan::where('kode_jenis', $kode_jenis)->first();
             if (!$jenis) return;
 
@@ -31,6 +31,9 @@ class JadwalSeeder extends Seeder
 
             $j = Jadwal::create($data);
             $j->pemateri()->sync($pemateriIds);
+            if (!empty($materiIds)) {
+                $j->materi()->sync($materiIds);
+            }
         };
 
         // ==========================
@@ -47,7 +50,7 @@ class JadwalSeeder extends Seeder
             'kapasitas' => 30,
             'harga' => 5000000,
             'deskripsi' => 'Pelatihan Ahli K3 Umum (Batch Sebelumnya).',
-        ], [3, 4]);
+        ], [3, 4], [1]);
 
         // 2. Auditor SMK3 (ASMK3) - Selesai
         $createJadwal('ASMK3', [
@@ -56,10 +59,11 @@ class JadwalSeeder extends Seeder
             'tgl_selesai' => now()->subDays(12),
             'jam_pertemuan' => '08:30:00',
             'lokasi' => 'Zoom & Hotel Hilton Jakarta',
+            'link_meet' => 'https://zoom.us/j/1234567890',
             'kapasitas' => 20,
             'harga' => 6500000,
             'deskripsi' => 'Pelatihan Auditor SMK3 (Batch Sebelumnya).',
-        ], [5]);
+        ], [5], [1, 2]);
 
         // 3. Juru Las/Welder (WELD) - Selesai
         $createJadwal('WELD', [
@@ -80,10 +84,11 @@ class JadwalSeeder extends Seeder
             'tgl_selesai' => now()->subDays(8),
             'jam_pertemuan' => '09:00:00',
             'lokasi' => 'Zoom Meeting',
+            'link_meet' => 'https://zoom.us/j/2345678901',
             'kapasitas' => 40,
             'harga' => 3000000,
             'deskripsi' => 'Pelatihan Ahli K3 Lingkungan Kerja (Online).',
-        ], [8, 9]);
+        ], [8, 9], [1]);
 
         // ==========================
         // UPCOMING SCHEDULES (FUTURE)
@@ -99,7 +104,7 @@ class JadwalSeeder extends Seeder
             'kapasitas' => 30,
             'harga' => 5000000,
             'deskripsi' => 'Pelatihan Ahli K3 Umum sertifikasi Kemnaker RI.',
-        ], [1, 10]);
+        ], [1, 10], [1]);
 
         // 6. Auditor SMK3 (ASMK3) - Akan Datang
         $createJadwal('ASMK3', [
@@ -111,7 +116,7 @@ class JadwalSeeder extends Seeder
             'kapasitas' => 20,
             'harga' => 6500000,
             'deskripsi' => 'Pelatihan Auditor SMK3 sertifikasi Kemnaker RI.',
-        ], [2, 5]);
+        ], [2, 5], [2]);
 
         // 7. Tenaga Kerja Bangunan Tinggi (TKBT) - Akan Datang
         $createJadwal('TKBT', [
@@ -123,9 +128,9 @@ class JadwalSeeder extends Seeder
             'kapasitas' => 15,
             'harga' => 3500000,
             'deskripsi' => 'Pelatihan TKBT sertifikasi Kemnaker RI.',
-        ], [1, 3]);
+        ], [1, 3], [3]);
 
-        // 8. Petugas K3 Kimia & Ahli K3 Kimia (AK3KIM) - Akan Datang
+        // 8. Petugas K3 Kimia & Ahli K3 Kimia (AK3KIM) - Akan Datang (Online, link_meet sengaja kosong untuk testing)
         $createJadwal('AK3KIM', [
             'jenis_pertemuan' => 'online',
             'tgl_mulai' => now()->addDays(12),
@@ -135,7 +140,7 @@ class JadwalSeeder extends Seeder
             'kapasitas' => 40,
             'harga' => 4000000,
             'deskripsi' => 'Pelatihan Petugas & Ahli K3 Kimia Kemnaker RI.',
-        ], [6, 2]);
+        ], [6, 2], [1]);
 
         // 9. SIO Operator Angkat Angkut (SIOAA) - Akan Datang
         $createJadwal('SIOAA', [
@@ -156,9 +161,10 @@ class JadwalSeeder extends Seeder
             'tgl_selesai' => now()->addDays(20),
             'jam_pertemuan' => '09:00:00',
             'lokasi' => 'Zoom Meeting',
+            'link_meet' => 'https://zoom.us/j/3456789012',
             'kapasitas' => 50,
             'harga' => 1500000,
             'deskripsi' => 'Pelatihan sertifikasi Petugas P3K & Pemadam Kebakaran.',
-        ], [3, 8]);
+        ], [3, 8], [1]);
     }
 }

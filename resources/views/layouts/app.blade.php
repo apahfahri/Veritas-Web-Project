@@ -7,6 +7,7 @@
     <title>@yield('title', 'PT Katiga Veritas Indonesia')</title>
     <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons/css/all/all.min.css'>
     <script type="module" src="http://localhost:5173/resources/js/app.js"></script>
 </head>
 <body class="min-h-screen flex flex-col font-['Montserrat']">

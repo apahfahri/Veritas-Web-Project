@@ -25,13 +25,13 @@
 
         {{-- FLASH MESSAGES --}}
         @if(session('success'))
-            <div class="mb-6 bg-green-50 border border-green-300 text-green-700 p-4 rounded-lg">
-                ✅ {{ session('success') }}
+            <div class="mb-6 bg-green-50 border border-green-300 text-green-700 p-4 rounded-lg flex items-center gap-2">
+                <i class="fi fi-rr-check-circle text-green-500 text-lg"></i> {{ session('success') }}
             </div>
         @endif
         @if(session('error'))
-            <div class="mb-6 bg-red-50 border border-red-300 text-red-700 p-4 rounded-lg">
-                ❌ {{ session('error') }}
+            <div class="mb-6 bg-red-50 border border-red-300 text-red-700 p-4 rounded-lg flex items-center gap-2">
+                <i class="fi fi-rr-cross-circle text-red-500 text-lg"></i> {{ session('error') }}
             </div>
         @endif
 
@@ -42,28 +42,28 @@
                     <p class="text-sm text-gray-500">Total Pendaftaran</p>
                     <p class="text-3xl font-bold text-[#1E6B3D]">{{ $stats['total'] }}</p>
                 </div>
-                <div class="text-3xl">📋</div>
+                <div class="text-3xl text-[#1E6B3D] flex items-center"><i class="fi fi-rr-clipboard-list"></i></div>
             </div>
             <div class="bg-white p-6 rounded-xl shadow flex justify-between items-center">
                 <div>
                     <p class="text-sm text-gray-500">Menunggu</p>
                     <p class="text-3xl font-bold text-orange-500">{{ $stats['menunggu'] }}</p>
                 </div>
-                <div class="text-3xl">⏳</div>
+                <div class="text-3xl text-orange-500 flex items-center"><i class="fi fi-rr-hourglass-end"></i></div>
             </div>
             <div class="bg-white p-6 rounded-xl shadow flex justify-between items-center">
                 <div>
                     <p class="text-sm text-gray-500">Selesai</p>
                     <p class="text-3xl font-bold text-green-600">{{ $stats['selesai'] }}</p>
                 </div>
-                <div class="text-3xl">✅</div>
+                <div class="text-3xl text-green-600 flex items-center"><i class="fi fi-rr-check-circle"></i></div>
             </div>
             <div class="bg-white p-6 rounded-xl shadow flex justify-between items-center">
                 <div>
                     <p class="text-sm text-gray-500">Sertifikat</p>
                     <p class="text-3xl font-bold text-[#1E6B3D]">{{ $stats['sertifikat'] }}</p>
                 </div>
-                <div class="text-3xl">🏆</div>
+                <div class="text-3xl text-[#1E6B3D] flex items-center"><i class="fi fi-rr-trophy"></i></div>
             </div>
         </div>
 
@@ -79,7 +79,7 @@
 
             @if($pendaftarans->isEmpty())
                 <div class="text-center py-16">
-                    <div class="text-5xl mb-4">📭</div>
+                    <i class="fi fi-rr-box-open text-5xl mb-4 text-slate-300 block"></i>
                     <h3 class="text-xl font-bold text-gray-600">Belum Ada Pendaftaran</h3>
                     <p class="text-gray-500 mb-6">Mulai dengan mendaftar pelatihan K3 pilihan Anda</p>
                     <a href="{{ route('training.list') }}"
@@ -110,14 +110,14 @@
                                         default     => 'bg-orange-100 text-orange-700',
                                     };
                                     $progresLabel = match($p->status_progres) {
-                                        'selesai'   => '✅ Selesai',
-                                        'diproses'  => '🔄 Diproses',
-                                        'dibatalkan'=> '❌ Dibatalkan',
-                                        default     => '⏳ Menunggu',
+                                        'selesai'   => '<i class="fi fi-rr-check-circle mr-1 flex items-center"></i> Selesai',
+                                        'diproses'  => '<i class="fi fi-rr-refresh mr-1 flex items-center animate-spin"></i> Diproses',
+                                        'dibatalkan'=> '<i class="fi fi-rr-cross-circle mr-1 flex items-center"></i> Dibatalkan',
+                                        default     => '<i class="fi fi-rr-time-past mr-1 flex items-center"></i> Menunggu',
                                     };
                                 @endphp
-                                <span class="text-xs px-3 py-1 rounded-full {{ $progresColor }}">
-                                    {{ $progresLabel }}
+                                <span class="text-xs px-3 py-1 rounded-full {{ $progresColor }} flex items-center">
+                                    {!! $progresLabel !!}
                                 </span>
 
                                 {{-- Status Bayar --}}
@@ -128,13 +128,13 @@
                                         default               => 'bg-gray-100 text-gray-600',
                                     };
                                     $bayarLabel = match($p->status_bayar) {
-                                        'lunas'               => '💰 Lunas',
-                                        'menunggu_konfirmasi' => '⏳ Konfirmasi',
-                                        default               => '💳 Belum Bayar',
+                                        'lunas'               => '<i class="fi fi-rr-dollar mr-1 flex items-center"></i> Lunas',
+                                        'menunggu_konfirmasi' => '<i class="fi fi-rr-hourglass mr-1 flex items-center"></i> Konfirmasi',
+                                        default               => '<i class="fi fi-rr-credit-card mr-1 flex items-center"></i> Belum Bayar',
                                     };
                                 @endphp
-                                <span class="text-xs px-3 py-1 rounded-full {{ $bayarColor }}">
-                                    {{ $bayarLabel }}
+                                <span class="text-xs px-3 py-1 rounded-full {{ $bayarColor }} flex items-center">
+                                    {!! $bayarLabel !!}
                                 </span>
                             </div>
                         </div>
@@ -143,8 +143,8 @@
                             {{-- Sertifikat jika ada --}}
                             @if($p->sertifikat)
                                 <a href="{{ route('verification') }}?no={{ $p->sertifikat->no_sertifikat }}"
-                                   class="bg-[#1E6B3D] text-white px-4 py-1.5 rounded text-sm hover:opacity-90">
-                                    🏆 Lihat Sertifikat ({{ $p->sertifikat->no_sertifikat }})
+                                   class="bg-[#1E6B3D] text-white px-4 py-1.5 rounded text-sm hover:opacity-90 flex items-center gap-1.5">
+                                    <i class="fi fi-rr-trophy text-white"></i> Lihat Sertifikat ({{ $p->sertifikat->no_sertifikat }})
                                 </a>
                             @endif
 

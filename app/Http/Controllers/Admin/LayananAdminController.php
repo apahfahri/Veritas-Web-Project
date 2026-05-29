@@ -95,7 +95,6 @@ class LayananAdminController extends Controller
             'id_jenis'       => 'required|exists:jenis_layanan,id_jenis',
             'jenis_pertemuan'=> 'required|in:online,offline,hybrid',
             'jam_pertemuan'  => 'nullable',
-            'tanggal_usul'   => 'nullable|date',
             'tgl_mulai'      => 'nullable|date',
             'tgl_selesai'    => 'nullable|date',
             'lokasi'         => 'nullable|string|max:255',
@@ -118,7 +117,7 @@ class LayananAdminController extends Controller
 
         $data = array_merge($request->only([
             'id_kategori', 'id_jenis', 'jenis_pertemuan',
-            'jam_pertemuan', 'tanggal_usul', 'tgl_mulai', 'tgl_selesai',
+            'jam_pertemuan', 'tgl_mulai', 'tgl_selesai',
             'lokasi', 'kapasitas', 'harga', 'deskripsi', 'link_meet',
         ]), ['kode_jadwal' => $kode_jadwal]);
 
@@ -159,7 +158,6 @@ class LayananAdminController extends Controller
             'kode_jadwal'    => 'nullable|string|max:20',
             'jenis_pertemuan'=> 'required|in:online,offline,hybrid',
             'jam_pertemuan'  => 'nullable',
-            'tanggal_usul'   => 'nullable|date',
             'tgl_mulai'      => 'nullable|date',
             'tgl_selesai'    => 'nullable|date',
             'lokasi'         => 'nullable|string|max:255',
@@ -176,7 +174,7 @@ class LayananAdminController extends Controller
 
         $data = $request->only([
             'id_kategori', 'id_jenis', 'jenis_pertemuan',
-            'jam_pertemuan', 'tanggal_usul', 'tgl_mulai', 'tgl_selesai',
+            'jam_pertemuan', 'tgl_mulai', 'tgl_selesai',
             'lokasi', 'kapasitas', 'harga', 'deskripsi', 'link_meet',
         ]);
 

@@ -67,7 +67,6 @@ class Pendaftaran extends Model
         'status_progres',
         'status_bayar',
         'bukti_bayar',
-        'cabang',
         'last_reminder_details',
         'last_reminder_sent_at',
     ];

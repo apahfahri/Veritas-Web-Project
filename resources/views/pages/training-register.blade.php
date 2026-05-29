@@ -13,13 +13,14 @@
             </a>
             <h1 class="text-2xl font-bold text-[#1E6B3D]">Form Pendaftaran Pelatihan</h1>
             <p class="text-gray-500 mt-1 text-sm">{{ $jadwal->jenis?->nama ?? $jadwal->kategori?->nama }}</p>
-            <p class="text-gray-400 text-xs mt-1">
+            <p class="text-gray-400 text-xs mt-1 flex items-center gap-1.5 flex-wrap">
                 @if($jadwal->tgl_mulai)
-                    📅 {{ $jadwal->tgl_mulai->translatedFormat('d F Y') }}
-                @elseif($jadwal->tanggal_usul)
-                    📅 {{ $jadwal->tanggal_usul->translatedFormat('d F Y') }}
+                    <span class="flex items-center gap-1"><i class="fi fi-rr-calendar"></i> {{ $jadwal->tgl_mulai->translatedFormat('d F Y') }}</span>
                 @endif
-                @if($jadwal->lokasi) &nbsp;|&nbsp; 📍 {{ $jadwal->lokasi }} @endif
+                @if($jadwal->lokasi)
+                    <span class="text-gray-300">|</span>
+                    <span class="flex items-center gap-1"><i class="fi fi-rr-marker"></i> {{ $jadwal->lokasi }}</span>
+                @endif
             </p>
         </div>
 
@@ -108,8 +109,6 @@
                         <span class="font-medium text-[#1E6B3D]">
                             @if($jadwal->tgl_mulai)
                                 {{ $jadwal->tgl_mulai->translatedFormat('d F Y') }}
-                            @elseif($jadwal->tanggal_usul)
-                                {{ $jadwal->tanggal_usul->translatedFormat('d F Y') }}
                             @endif
                         </span>
                     </div>
