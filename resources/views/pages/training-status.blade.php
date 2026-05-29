@@ -15,7 +15,7 @@
         @if(session('registration_success'))
             <div class="mb-8 p-6 bg-blue-50 border border-blue-200 text-blue-800 rounded-2xl shadow-sm animate-fade-in max-w-2xl mx-auto">
                 <div class="flex items-start gap-3">
-                    <span class="text-2xl mt-0.5">✉️</span>
+                    <i class="fi fi-rr-envelope text-blue-500 text-2xl mt-0.5"></i>
                     <div>
                         <h4 class="font-bold text-lg text-blue-900">Pendaftaran Berhasil!</h4>
                         @if(session('invoice_email_sent') === false)
@@ -36,7 +36,7 @@
         @if(session('bukti_terkirim'))
             <div class="mb-8 p-6 bg-green-50 border border-green-200 text-green-800 rounded-2xl shadow-sm max-w-2xl mx-auto">
                 <div class="flex items-start gap-3">
-                    <span class="text-2xl mt-0.5">✅</span>
+                    <i class="fi fi-rr-check-circle text-green-500 text-2xl mt-0.5"></i>
                     <div>
                         <h4 class="font-bold text-lg text-green-900">Bukti Pembayaran Terkirim!</h4>
                         <p class="text-sm text-green-700 mt-1">Bukti pembayaran Anda telah berhasil dikirim. Tim kami akan memverifikasi dalam jam kerja dan status pendaftaran Anda akan segera diperbarui.</p>
@@ -76,17 +76,18 @@
         @if(isset($pendaftarans))
             @if($pendaftarans->isEmpty())
                 <div class="text-center py-12 bg-white rounded-2xl shadow-sm border border-gray-100">
-                    <div class="text-5xl mb-4">🔍</div>
+                    <i class="fi fi-rr-search text-gray-400 text-5xl mb-4 block"></i>
                     <h3 class="text-xl font-bold text-gray-700">Tidak ada pendaftaran ditemukan</h3>
                     <p class="text-gray-500 mt-2">Pastikan Email atau Nomor WhatsApp yang Anda masukkan sudah benar.</p>
                 </div>
             @else
                 <div class="space-y-6">
                     <h2 class="text-xl font-semibold text-gray-800 flex items-center gap-2">
-                        <span>📋</span> Hasil Pencarian untuk: <span class="text-[#1E6B3D]">{{ $identifier }}</span>
+                        <i class="fi fi-rr-clipboard-list text-gray-600 text-xl mr-1"></i> Hasil Pencarian untuk: <span class="text-[#1E6B3D]">{{ $identifier }}</span>
                     </h2>
 
                     @foreach($pendaftarans as $item)
+                        @php $isKonsultasi = ($item->jadwal?->id_kategori == 2); @endphp
                         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition">
                             <div class="p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
                                 <div class="flex-1">
@@ -96,7 +97,7 @@
                                         </span>
                                         <span class="text-gray-400 text-sm">•</span>
                                         <span class="text-gray-500 text-sm">Terdaftar: {{ $item->tanggal_daftar->format('d M Y') }}</span>
-                                        @if($item->rencana_tanggal_mulai)
+                                        @if($item->rencana_tanggal_mulai && !$isKonsultasi)
                                             <span class="text-gray-400 text-sm">•</span>
                                             <span class="text-gray-500 text-sm">
                                                 Jadwal: {{ $item->rencana_tanggal_mulai->format('d M Y') }}
@@ -105,65 +106,146 @@
                                                 @endif
                                             </span>
                                         @endif
-                                        @if($item->mode_pertemuan)
+                                        @if($item->mode_pertemuan && !$isKonsultasi)
                                             <span class="text-gray-400 text-sm">•</span>
                                             <span class="bg-[#1E6B3D]/10 text-[#1E6B3D] text-[10px] font-bold px-1.5 py-0.5 rounded uppercase">{{ $item->mode_pertemuan }}</span>
                                         @endif
                                     </div>
-                                    <h3 class="text-xl font-bold text-gray-800 mb-1">{{ $item->jadwal?->jenis?->nama }}</h3>
-                                    
-                                    <div class="flex flex-wrap gap-y-2 gap-x-6 mt-4">
-                                        <div class="flex items-center gap-2 text-sm text-gray-600">
-                                            <span class="text-gray-400">Status Progres:</span>
-                                            @php
-                                                $statusClasses = [
-                                                    'menunggu' => 'bg-yellow-100 text-yellow-700 border-yellow-200',
-                                                    'diproses' => 'bg-blue-100 text-blue-700 border-blue-200',
-                                                    'selesai' => 'bg-green-100 text-green-700 border-green-200',
-                                                    'dibatalkan' => 'bg-red-100 text-red-700 border-red-200',
-                                                ];
-                                                $statusLabel = [
-                                                    'menunggu' => 'Menunggu Konfirmasi',
-                                                    'diproses' => 'Terkonfirmasi',
-                                                    'selesai' => 'Selesai',
-                                                    'dibatalkan' => 'Dibatalkan',
-                                                ];
-                                                $curStatus = $item->status_progres;
-                                                $class = $statusClasses[$curStatus] ?? 'bg-gray-100 text-gray-700 border-gray-200';
-                                                $label = $statusLabel[$curStatus] ?? ucfirst(str_replace('_', ' ', $curStatus));
-                                            @endphp
-                                            <span class="px-3 py-1 rounded-full border text-xs font-semibold {{ $class }}">
-                                                {{ $label }}
-                                            </span>
-                                        </div>
 
-                                        <div class="flex items-center gap-2 text-sm text-gray-600">
-                                            <span class="text-gray-400">Pembayaran:</span>
-                                            @php
-                                                $payClasses = [
-                                                    'belum_bayar' => 'bg-red-50 text-red-600',
-                                                    'belum_lunas' => 'bg-red-50 text-red-600',
-                                                    'menunggu_konfirmasi' => 'bg-orange-50 text-orange-600',
-                                                    'lunas' => 'bg-green-50 text-green-600',
-                                                ];
-                                                $payLabel = [
-                                                    'belum_bayar' => 'Belum Lunas',
-                                                    'belum_lunas' => 'Belum Lunas',
-                                                    'menunggu_konfirmasi' => 'Menunggu Konfirmasi',
-                                                    'lunas' => 'Lunas',
-                                                ];
-                                                $curPay = $item->status_bayar;
-                                                $pClass = $payClasses[$curPay] ?? 'bg-gray-50 text-gray-600';
-                                                $pLabel = $payLabel[$curPay] ?? ucfirst(str_replace('_', ' ', $curPay));
-                                            @endphp
-                                            <span class="font-bold {{ $pClass }} px-2 py-0.5 rounded">
-                                                {{ $pLabel }}
-                                            </span>
+                                    @if($isKonsultasi)
+                                        @php
+                                            $konsultasiStages = [
+                                                'meninjau'            => ['icon' => '<i class="fi fi-rr-eye"></i>', 'label' => 'Ditinjau',    'desc' => 'Tim kami sedang meninjau pengajuan Anda'],
+                                                'disetujui'           => ['icon' => '<i class="fi fi-rr-check-circle"></i>', 'label' => 'Disetujui',   'desc' => 'Pengajuan disetujui, siap masuk tahap penjadwalan'],
+                                                'dijadwalkan'         => ['icon' => '<i class="fi fi-rr-calendar"></i>', 'label' => 'Penjadwalan', 'desc' => 'Jadwal pertemuan sedang ditentukan oleh tim'],
+                                                'menunggu_pelaksanaan' => ['icon' => '<i class="fi fi-rr-clock"></i>', 'label' => 'Terjadwal',  'desc' => 'Jadwal telah dikonfirmasi, menunggu pelaksanaan konsultasi'],
+                                                'menunggu_pembayaran' => ['icon' => '<i class="fi fi-rr-credit-card"></i>', 'label' => 'Tagihan',     'desc' => 'Sesi konsultasi selesai — silakan selesaikan pembayaran'],
+                                                'selesai'             => ['icon' => '<i class="fi fi-rr-trophy"></i>', 'label' => 'Selesai',     'desc' => 'Seluruh proses pendaftaran berhasil diselesaikan'],
+                                            ];
+                                            $stageKeys  = array_keys($konsultasiStages);
+                                            $curStatus  = $item->status_progres;
+                                            $isCanceled = ($curStatus === 'dibatalkan');
+                                            $currentIdx = array_search($curStatus, $stageKeys);
+                                        @endphp
+
+                                        @if($isCanceled)
+                                            <div class="mt-4 flex items-center gap-3 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+                                                <i class="fi fi-rr-cross-circle text-red-500 text-xl"></i>
+                                                <div>
+                                                    <p class="text-sm font-bold text-red-800">Permintaan Dibatalkan</p>
+                                                    <p class="text-xs text-red-600 mt-0.5">Pengajuan pendaftaran ini telah dibatalkan. Hubungi kami jika ada pertanyaan.</p>
+                                                </div>
+                                            </div>
+                                        @else
+                                            <div class="mt-5 mb-2">
+                                                <div class="flex items-center gap-0 overflow-x-auto pb-1">
+                                                    @foreach($konsultasiStages as $stageKey => $stageInfo)
+                                                        @php
+                                                            $stageIdx = array_search($stageKey, $stageKeys);
+                                                            $isDone   = ($currentIdx !== false && $stageIdx < $currentIdx);
+                                                            $isActive = ($curStatus === $stageKey);
+                                                        @endphp
+                                                        <div class="flex items-center {{ !$loop->last ? 'flex-1' : '' }} shrink-0">
+                                                            <div class="flex flex-col items-center gap-1 min-w-[52px]">
+                                                                <div class="w-9 h-9 rounded-full flex items-center justify-center text-base border-2 transition-all
+                                                                    @if($isDone) bg-emerald-500 border-emerald-500 text-white shadow-sm
+                                                                    @elseif($isActive) bg-[#1E6B3D] border-[#1E6B3D] text-white shadow-md ring-4 ring-[#1E6B3D]/15
+                                                                    @else bg-gray-50 border-gray-200 text-gray-300
+                                                                    @endif">
+                                                                    @if($isDone)<i class="fi fi-rr-check text-xs"></i>@else{!! $stageInfo['icon'] !!}@endif
+                                                                </div>
+                                                                <span class="text-[9px] font-bold text-center leading-tight whitespace-nowrap
+                                                                    @if($isDone) text-emerald-600
+                                                                    @elseif($isActive) text-[#1E6B3D]
+                                                                    @else text-gray-300
+                                                                    @endif">{{ $stageInfo['label'] }}</span>
+                                                            </div>
+                                                            @if(!$loop->last)
+                                                                <div class="flex-1 h-0.5 mx-1 rounded-full {{ $stageIdx < $currentIdx ? 'bg-emerald-400' : 'bg-gray-200' }}"></div>
+                                                            @endif
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+
+                                                @if(isset($konsultasiStages[$curStatus]))
+                                                    <div class="mt-3 flex items-start gap-2.5 bg-[#1E6B3D]/5 border border-[#1E6B3D]/15 rounded-xl px-3.5 py-2.5">
+                                                        <span class="text-base mt-0.5 flex items-center text-[#1E6B3D]">{!! $konsultasiStages[$curStatus]['icon'] !!}</span>
+                                                        <div>
+                                                            <p class="text-xs font-bold text-[#1E6B3D]">Tahap Saat Ini: {{ $konsultasiStages[$curStatus]['label'] }}</p>
+                                                            <p class="text-xs text-gray-600 mt-0.5">{{ $konsultasiStages[$curStatus]['desc'] }}</p>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        @endif
+
+                                    {{-- ── PELATIHAN: Status badges seperti semula ─────── --}}
+                                    @else
+                                        <div class="flex flex-wrap gap-y-2 gap-x-6 mt-4">
+                                            <div class="flex items-center gap-2 text-sm text-gray-600">
+                                                <span class="text-gray-400">Status Progres:</span>
+                                                @php
+                                                    $statusClasses = [
+                                                        'menunggu'            => 'bg-yellow-100 text-yellow-700 border-yellow-200',
+                                                        'meninjau'            => 'bg-slate-100 text-slate-700 border-slate-200',
+                                                        'disetujui'           => 'bg-amber-100 text-amber-700 border-amber-200',
+                                                        'dijadwalkan'         => 'bg-indigo-100 text-indigo-700 border-indigo-200',
+                                                        'menunggu_pelaksanaan' => 'bg-blue-100 text-blue-700 border-blue-200',
+                                                        'menunggu_pembayaran' => 'bg-orange-100 text-orange-700 border-orange-200',
+                                                        'pembayaran_ditinjau' => 'bg-purple-100 text-purple-700 border-purple-200',
+                                                        'diproses'            => 'bg-blue-100 text-blue-700 border-blue-200',
+                                                        'selesai'             => 'bg-green-100 text-green-700 border-green-200',
+                                                        'dibatalkan'          => 'bg-red-100 text-red-700 border-red-200',
+                                                    ];
+                                                    $statusLabel = [
+                                                        'menunggu'            => 'Menunggu Konfirmasi',
+                                                        'meninjau'            => 'Menunggu Tinjauan',
+                                                        'disetujui'           => 'Disetujui',
+                                                        'dijadwalkan'         => 'Dijadwalkan',
+                                                        'menunggu_pelaksanaan' => 'Terjadwal',
+                                                        'menunggu_pembayaran' => 'Menunggu Pembayaran',
+                                                        'pembayaran_ditinjau' => 'Bukti Dikirim',
+                                                        'diproses'            => 'Terkonfirmasi',
+                                                        'selesai'             => 'Selesai',
+                                                        'dibatalkan'          => 'Dibatalkan',
+                                                    ];
+                                                    $curStatus = $item->status_progres;
+                                                    $class = $statusClasses[$curStatus] ?? 'bg-gray-100 text-gray-700 border-gray-200';
+                                                    $label = $statusLabel[$curStatus] ?? ucfirst(str_replace('_', ' ', $curStatus));
+                                                @endphp
+                                                <span class="px-3 py-1 rounded-full border text-xs font-semibold {{ $class }}">
+                                                    {{ $label }}
+                                                </span>
+                                            </div>
+                                            <div class="flex items-center gap-2 text-sm text-gray-600">
+                                                <span class="text-gray-400">Pembayaran:</span>
+                                                @php
+                                                    $payClasses = [
+                                                        'belum_bayar'        => 'bg-red-50 text-red-600',
+                                                        'belum_lunas'        => 'bg-red-50 text-red-600',
+                                                        'menunggu_konfirmasi'=> 'bg-orange-50 text-orange-600',
+                                                        'lunas'              => 'bg-green-50 text-green-600',
+                                                    ];
+                                                    $payLabel = [
+                                                        'belum_bayar'        => 'Belum Lunas',
+                                                        'belum_lunas'        => 'Belum Lunas',
+                                                        'menunggu_konfirmasi'=> 'Menunggu Konfirmasi',
+                                                        'lunas'              => 'Lunas',
+                                                    ];
+                                                    $curPay = $item->status_bayar;
+                                                    $pClass = $payClasses[$curPay] ?? 'bg-gray-50 text-gray-600';
+                                                    $pLabel = $payLabel[$curPay] ?? ucfirst(str_replace('_', ' ', $curPay));
+                                                @endphp
+                                                <span class="font-bold {{ $pClass }} px-2 py-0.5 rounded">
+                                                    {{ $pLabel }}
+                                                </span>
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endif
                                 </div>
 
-                                <div class="flex md:flex-col gap-3">
+                                {{-- ── ACTION BUTTONS ──────────────────────────────── --}}
+                                <div class="flex md:flex-col gap-3 shrink-0">
                                     @if($item->status_progres === 'selesai' && $item->sertifikat)
                                         <a href="#" class="inline-flex items-center justify-center gap-2 bg-[#1E6B3D] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 transition shadow-sm">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -171,13 +253,43 @@
                                             </svg>
                                             Unduh Sertifikat
                                         </a>
-                                    @endif
 
-                                    @if(in_array($item->status_bayar, ['belum_bayar', 'belum_lunas']))
-                                        {{-- Tombol Kirim Bukti Bayar --}}
-                                        <button type="button" 
+                                    {{-- ── Konsultasi action buttons ── --}}
+                                    @elseif($isKonsultasi)
+                                        @if($item->status_progres === 'menunggu_pembayaran' && !in_array($item->status_bayar, ['lunas','menunggu_konfirmasi']))
+                                            <button type="button"
+                                                onclick="bukaModalBukti('{{ $item->id_pendaftaran }}', '{{ $identifier }}')"
+                                                class="inline-flex items-center justify-center gap-2 bg-amber-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-amber-600 transition shadow-sm animate-pulse">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                                                Kirim Bukti Bayar
+                                            </button>
+                                        @elseif($item->status_bayar === 'menunggu_konfirmasi')
+                                            <span class="inline-flex items-center justify-center gap-1.5 bg-orange-50 border border-orange-200 text-orange-600 px-4 py-2.5 rounded-xl text-xs font-bold">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                                Bukti Sedang Diverifikasi
+                                            </span>
+                                        @elseif($item->status_bayar === 'lunas')
+                                            <span class="inline-flex items-center justify-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-2.5 rounded-xl text-xs font-bold">
+                                                <i class="fi fi-rr-check-circle text-emerald-600 text-sm"></i> Pembayaran Lunas
+                                            </span>
+                                        @elseif($item->status_progres !== 'dibatalkan')
+                                            @php
+                                                $waNumber = config('app.whatsapp_number', '6281234567890');
+                                                $waText   = "Halo Admin, saya ingin menanyakan status konsultasi atas nama " . $item->user->nama . " (No. " . ($item->nomor_pendaftaran ?? '') . ")";
+                                                $waUrl    = "https://wa.me/" . $waNumber . "?text=" . rawurlencode($waText);
+                                            @endphp
+                                            <a href="{{ $waUrl }}" target="_blank"
+                                               class="inline-flex items-center justify-center gap-2 bg-[#25D366] text-white px-4 py-2.5 rounded-xl text-xs font-semibold hover:bg-green-600 transition shadow-sm">
+                                                <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.938 3.659 1.435 5.63 1.435h.008c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                                                Tanya Admin
+                                            </a>
+                                        @endif
+
+                                    {{-- ── Pelatihan action buttons ── --}}
+                                    @elseif(in_array($item->status_bayar, ['belum_bayar', 'belum_lunas']) || $item->status_progres === 'menunggu_pembayaran')
+                                        <button type="button"
                                             onclick="bukaModalBukti('{{ $item->id_pendaftaran }}', '{{ $identifier }}')"
-                                            class="inline-flex items-center justify-center gap-2 bg-amber-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-amber-600 transition shadow-sm">
+                                            class="inline-flex items-center justify-center gap-2 bg-amber-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-amber-600 transition shadow-sm animate-pulse">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
                                             </svg>

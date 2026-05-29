@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             KlienPerusahaanSeeder::class,
             PemateriSeeder::class,
             KategoriLayananSeeder::class,  // Isi kategori, jenis, dan kode_jenis
+            MateriSeeder::class,          // Jalankan sebelum jadwal agar jadwal bisa melampirkan materi
             JadwalSeeder::class,          // Jalankan setelah kategori/jenis selesai
             PendaftaranSeeder::class,   // Jalankan setelah jadwal selesai
             KlienIndividuSeeder::class,

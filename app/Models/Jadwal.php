@@ -21,7 +21,6 @@ class Jadwal extends Model
         'id_jenis',
         'kode_jadwal',
         'jenis_pertemuan',
-        'tanggal_usul',
         'tgl_mulai',
         'tgl_selesai',
         'jam_pertemuan',
@@ -35,7 +34,6 @@ class Jadwal extends Model
     ];
 
     protected $casts = [
-        'tanggal_usul' => 'date',
         'tgl_mulai'    => 'date',
         'tgl_selesai'  => 'date',
     ];

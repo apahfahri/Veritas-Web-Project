@@ -12,7 +12,7 @@
         <div class="max-w-7xl mx-auto px-6 relative z-10">
             <div class="flex items-center gap-4 mb-3">
                 <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 backdrop-blur-md border border-white/20 text-white shadow-inner text-2xl">
-                    📋
+                    <i class="fi fi-rr-clipboard-list"></i>
                 </div>
                 <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">Audit K3 Veritas</h1>
             </div>
@@ -25,7 +25,7 @@
 
         <!-- ALERT -->
         <div class="mb-8 border border-amber-200 bg-amber-50/60 backdrop-blur-sm text-xs md:text-sm p-4 rounded-xl flex items-center gap-3 text-amber-800 shadow-sm">
-            <span class="text-lg">⚠️</span>
+            <i class="fi fi-rr-warning text-amber-600 text-lg shrink-0 mt-0.5"></i>
             <div>
                 <strong class="font-bold">Penting:</strong> Layanan audit hanya ditujukan untuk entitas perusahaan. 
                 Untuk perorangan/individu, silakan gunakan layanan <a href="/consultation" class="underline font-bold text-amber-900 hover:text-amber-950 transition">Konsultasi K3</a>.
@@ -47,7 +47,10 @@
                 </p>
 
                 @if(session('success'))
-                    <div class="mb-6 bg-green-50 border border-green-300 text-green-700 p-4 rounded-lg">✅ {{ session('success') }}</div>
+                    <div class="mb-6 bg-green-50 border border-green-300 text-green-700 p-4 rounded-lg flex items-center gap-2">
+                        <i class="fi fi-rr-check-circle text-green-500 text-lg"></i>
+                        <span>{{ session('success') }}</span>
+                    </div>
                 @endif
 
                 @if($errors->any())
@@ -118,8 +121,8 @@
                                 <select name="mode_pertemuan" id="mode_pertemuan" required
                                         class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-[#1E6B3D] transition-all text-slate-700 cursor-pointer"
                                         onchange="toggleLokasi(this.value)">
-                                    <option value="offline" {{ old('mode_pertemuan') === 'offline' ? 'selected' : '' }}>🏢 On-Site (Langsung di Lokasi)</option>
-                                    <option value="online" {{ old('mode_pertemuan') === 'online' ? 'selected' : '' }}>🌐 Remote Audit (Online)</option>
+                                    <option value="offline" {{ old('mode_pertemuan') === 'offline' ? 'selected' : '' }}>On-Site (Langsung di Lokasi)</option>
+                                    <option value="online" {{ old('mode_pertemuan') === 'online' ? 'selected' : '' }}>Remote Audit (Online)</option>
                                 </select>
                             </div>
                             
@@ -155,19 +158,19 @@
                     <h3 class="font-bold text-slate-800 mb-4 text-base">Layanan Audit Kami</h3>
                     <ul class="space-y-3.5 text-xs text-slate-600">
                         <li class="flex items-start gap-2.5">
-                            <span class="text-emerald-500 font-bold shrink-0">✓</span>
+                            <span class="text-emerald-500 font-bold shrink-0 flex items-center"><i class="fi fi-rr-check"></i></span>
                             <span>Auditor bersertifikat & teregistrasi resmi.</span>
                         </li>
                         <li class="flex items-start gap-2.5">
-                            <span class="text-emerald-500 font-bold shrink-0">✓</span>
+                            <span class="text-emerald-500 font-bold shrink-0 flex items-center"><i class="fi fi-rr-check"></i></span>
                             <span>Laporan komprehensif & terperinci.</span>
                         </li>
                         <li class="flex items-start gap-2.5">
-                            <span class="text-emerald-500 font-bold shrink-0">✓</span>
+                            <span class="text-emerald-500 font-bold shrink-0 flex items-center"><i class="fi fi-rr-check"></i></span>
                             <span>Rekomendasi perbaikan (Corrective Action) aplikatif.</span>
                         </li>
                         <li class="flex items-start gap-2.5">
-                            <span class="text-emerald-500 font-bold shrink-0">✓</span>
+                            <span class="text-emerald-500 font-bold shrink-0 flex items-center"><i class="fi fi-rr-check"></i></span>
                             <span>Layanan pendampingan & follow-up audit pasca penilaian.</span>
                         </li>
                     </ul>
@@ -216,7 +219,7 @@
                     <h3 class="font-bold text-base mb-2 relative z-10">Butuh Konsultasi Awal?</h3>
                     <p class="text-xs text-emerald-50 mb-5 relative z-10 leading-relaxed">Jika Anda ingin berkonsultasi mengenai persiapan sistem manajemen K3 terlebih dahulu sebelum diaudit, silakan hubungi tim kami.</p>
                     <a href="/consultation" class="relative z-10 w-full bg-white text-[#1E6B3D] font-bold px-4 py-3 rounded-xl flex items-center justify-center gap-2 hover:bg-slate-50 active:scale-[0.98] transition-all shadow-sm">
-                        <span>💬</span> Konsultasi K3
+                        <i class="fi fi-rr-comment-alt text-[#1E6B3D]"></i> Konsultasi K3
                     </a>
                 </div>
 

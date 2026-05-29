@@ -8,7 +8,7 @@
     <div class="bg-gradient-to-r from-[#1E6B3D] to-[#3CDA7D] text-white py-8">
         <div class="max-w-4xl mx-auto px-6">
             <div class="flex items-center gap-3 mb-4">
-                <div class="text-2xl">🛡️</div>
+                <div class="text-2xl"><i class="fi fi-rr-shield-check"></i></div>
                 <h1 class="text-3xl font-bold">Verifikasi Sertifikat</h1>
             </div>
             <p class="text-gray-200 max-w-2xl">
@@ -19,15 +19,15 @@
 
     <div class="max-w-4xl mx-auto px-6 py-8">
 
-        <div class="mb-8 border border-[#1E6B3D] bg-blue-50 p-4 rounded text-sm text-[#1E6B3D]">
-            🔒 Verifikasi sertifikat untuk memastikan keaslian dan mencegah pemalsuan dokumen.
+        <div class="mb-8 border border-[#1E6B3D] bg-blue-50 p-4 rounded text-sm text-[#1E6B3D] flex items-center gap-2">
+            <i class="fi fi-rr-lock"></i> Verifikasi sertifikat untuk memastikan keaslian dan mencegah pemalsuan dokumen.
         </div>
 
         <!-- FORM CARD -->
         <div class="bg-white p-8 rounded-xl shadow">
             <div class="text-center mb-8">
-                <div class="w-20 h-20 bg-[#1E6B3D] rounded-full flex items-center justify-center mx-auto mb-4 text-white text-3xl">
-                    🛡️
+                <div class="w-20 h-20 bg-[#1E6B3D] text-white rounded-full flex items-center justify-center mx-auto mb-4 text-3xl shadow-lg">
+                    <i class="fi fi-rr-shield-check"></i>
                 </div>
                 <h2 class="text-2xl font-semibold text-[#1E6B3D] mb-2">Verifikasi Sertifikat</h2>
                 <p class="text-gray-600">Masukkan nomor sertifikat untuk memeriksa keasliannya</p>
@@ -42,8 +42,8 @@
                 @error('no_sertifikat')
                     <p class="text-red-500 text-sm text-center">{{ $message }}</p>
                 @enderror
-                <button type="submit" class="w-full bg-[#1E6B3D] text-white py-3 rounded font-semibold hover:opacity-90 transition">
-                    🔍 Verifikasi Sertifikat
+                <button type="submit" class="w-full bg-[#1E6B3D] text-white py-3 rounded font-semibold hover:opacity-90 transition flex items-center justify-center gap-2">
+                    <i class="fi fi-rr-search"></i> Verifikasi Sertifikat
                 </button>
             </form>
         </div>
@@ -57,7 +57,7 @@
 
                 <!-- VALID -->
                 <div class="border-2 border-green-500 bg-green-50 p-8 rounded-xl text-center">
-                    <div class="text-5xl mb-4">✅</div>
+                    <i class="fi fi-rr-check-circle text-green-500 text-5xl mb-4 block"></i>
                     <h2 class="text-3xl font-bold text-green-700">Sertifikat Valid</h2>
                     <p class="text-gray-600 mt-2">Sertifikat ini terdaftar dan diakui resmi oleh PT Katiga Veritas Indonesia</p>
                 </div>
@@ -66,7 +66,9 @@
                 <div class="bg-white p-8 rounded-xl shadow">
                     <div class="flex justify-between mb-6">
                         <h3 class="text-xl font-semibold text-[#1E6B3D]">Detail Sertifikat</h3>
-                        <span class="bg-green-600 text-white px-3 py-1 rounded text-sm">✓ Terverifikasi</span>
+                        <span class="bg-green-600 text-white px-3 py-1 rounded text-sm flex items-center gap-1.5">
+                            <i class="fi fi-rr-check"></i> Terverifikasi
+                        </span>
                     </div>
 
                     <div class="grid md:grid-cols-2 gap-8">
@@ -96,7 +98,7 @@
 
                         <div class="flex flex-col items-center justify-center">
                             <div class="w-32 h-32 bg-[#1E6B3D] rounded-xl flex items-center justify-center text-white text-4xl shadow">
-                                🏆
+                                <i class="fi fi-rr-trophy"></i>
                             </div>
                             <p class="text-sm text-gray-500 mt-4 text-center">
                                 Sertifikat Resmi<br>PT Katiga Veritas Indonesia
@@ -104,8 +106,8 @@
                         </div>
                     </div>
 
-                    <div class="mt-8 bg-[#F5F7FA] p-4 rounded text-sm text-gray-600">
-                        🛡️ Sertifikat ini memiliki sistem verifikasi digital. Jika ada keraguan, hubungi kami.
+                    <div class="mt-8 bg-[#F5F7FA] p-4 rounded text-sm text-gray-600 flex items-center gap-2">
+                        <i class="fi fi-rr-shield-check"></i> Sertifikat ini memiliki sistem verifikasi digital. Jika ada keraguan, hubungi kami.
                     </div>
                 </div>
 
@@ -113,7 +115,7 @@
 
                 <!-- TIDAK DITEMUKAN -->
                 <div class="border-2 border-red-400 bg-red-50 p-8 rounded-xl text-center">
-                    <div class="text-5xl mb-4">❌</div>
+                    <i class="fi fi-rr-cross-circle text-red-500 text-5xl mb-4 block"></i>
                     <h2 class="text-3xl font-bold text-red-700">Sertifikat Tidak Ditemukan</h2>
                     <p class="text-gray-600 mt-2">
                         Nomor <strong>{{ old('no_sertifikat') }}</strong> tidak terdaftar dalam sistem kami.

@@ -195,6 +195,16 @@ Route::middleware(['auth', 'is.subadmin'])->prefix('subadmin')->name('subadmin.'
 
     // Pemateri (View Only)
     Route::get('/petugas', [\App\Http\Controllers\Subadmin\SubadminPetugasController::class, 'index'])->name('petugas.index');
+
+    // Konsultasi
+    Route::get('/konsultasi',                          [\App\Http\Controllers\Subadmin\SubadminKonsultasiController::class, 'index'])->name('konsultasi.index');
+    Route::get('/konsultasi/{id}',                     [\App\Http\Controllers\Subadmin\SubadminKonsultasiController::class, 'show'])->name('konsultasi.show');
+    Route::post('/konsultasi/{id}/confirm',            [\App\Http\Controllers\Subadmin\SubadminKonsultasiController::class, 'confirmConsultation'])->name('konsultasi.confirm');
+    Route::post('/konsultasi/{id}/start-scheduling',   [\App\Http\Controllers\Subadmin\SubadminKonsultasiController::class, 'startScheduling'])->name('konsultasi.start-scheduling');
+    Route::post('/konsultasi/{id}/schedule',           [\App\Http\Controllers\Subadmin\SubadminKonsultasiController::class, 'scheduleMeeting'])->name('konsultasi.schedule');
+    Route::post('/konsultasi/{id}/finish',             [\App\Http\Controllers\Subadmin\SubadminKonsultasiController::class, 'finishConsultation'])->name('konsultasi.finish');
+    Route::post('/konsultasi/{id}/confirm-payment',    [\App\Http\Controllers\Subadmin\SubadminKonsultasiController::class, 'confirmPayment'])->name('konsultasi.confirm-payment');
+    Route::post('/konsultasi/{id}/reject-payment',     [\App\Http\Controllers\Subadmin\SubadminKonsultasiController::class, 'rejectPayment'])->name('konsultasi.reject-payment');
 });
 
 /*

@@ -6,8 +6,8 @@
             <!-- COMPANY -->
             <div>
                 <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 bg-[#1E6B3D] rounded-lg flex items-center justify-center text-white">
-                        🛡️
+                    <div class="w-10 h-10 bg-[#1E6B3D] rounded-lg flex items-center justify-center text-white text-2xl">
+                        <i class="fi fi-rr-shield-check"></i>
                     </div>
                     <div>
                         <div class="font-bold">PT Katiga Veritas</div>
@@ -63,24 +63,24 @@
                 <ul class="space-y-3 text-sm opacity-80">
 
                     <li class="flex items-start gap-2">
-                        📍
+                        <i class="fi fi-rr-marker mt-0.5 text-emerald-400"></i>
                         <span>
                             Jl. Profesional No. 123, Jakarta Selatan, DKI Jakarta 12345
                         </span>
                     </li>
 
                     <li class="flex items-center gap-2">
-                        📞
+                        <i class="fi fi-rr-phone-call text-emerald-400"></i>
                         <span>+62 21 1234 5678</span>
                     </li>
 
                     <li class="flex items-center gap-2">
-                        ✉️
+                        <i class="fi fi-rr-envelope text-emerald-400"></i>
                         <span>info@katigaveritas.co.id</span>
                     </li>
 
                     <li class="flex items-center gap-2">
-                        💬
+                        <i class="fi fi-brands-whatsapp text-emerald-400"></i>
                         <a href="https://wa.me/6281234567890" target="_blank"
                            class="hover:underline">
                             WhatsApp: +62 812 3456 7890
@@ -95,15 +95,15 @@
             <div>
                 <h4 class="font-semibold mb-4">Ikuti Kami</h4>
 
-                <div class="flex gap-3">
-                    <a href="https://www.facebook.com/profile.php?id=100012661807050" class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition">
-                        FB
+                <div class="flex gap-3 text-lg">
+                    <a href="https://www.facebook.com/profile.php?id=100012661807050" class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition" title="Facebook">
+                        <i class="fi fi-brands-facebook"></i>
                     </a>
-                    <a href="#" class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition">
-                        IG
+                    <a href="#" class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition" title="Instagram">
+                        <i class="fi fi-brands-instagram"></i>
                     </a>
-                    <a href="#" class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition">
-                        IN
+                    <a href="#" class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition" title="LinkedIn">
+                        <i class="fi fi-brands-linkedin"></i>
                     </a>
                 </div>
 

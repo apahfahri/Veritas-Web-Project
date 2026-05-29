@@ -20,8 +20,8 @@
 
             {{-- HEADER --}}
             <div class="text-center mb-7">
-                <div class="w-16 h-16 bg-[#1E6B3D] rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg">
-                    📧
+                <div class="w-16 h-16 bg-[#1E6B3D] text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg">
+                    <i class="fi fi-rr-envelope"></i>
                 </div>
                 <h1 class="text-2xl font-bold text-[#1E6B3D]">{{ $title }}</h1>
                 <p class="text-sm text-gray-500 mt-2 leading-relaxed">{{ $message }}</p>
@@ -29,14 +29,14 @@
 
             {{-- EMAIL TARGET --}}
             <div class="flex items-center justify-center gap-2 bg-teal-50 border border-teal-200 rounded-xl px-4 py-3 mb-6">
-                <span class="text-lg">📩</span>
+                <span class="text-lg flex items-center text-[#1E6B3D]"><i class="fi fi-rr-paper-plane"></i></span>
                 <span class="text-sm font-medium text-[#1E6B3D]">{{ $email }}</span>
             </div>
 
             {{-- INFO / ERROR --}}
             @if (session('info'))
                 <div class="mb-5 bg-blue-50 border border-blue-200 text-blue-700 rounded-xl px-4 py-3 text-sm flex items-start gap-2">
-                    <span class="shrink-0 mt-0.5">ℹ️</span>
+                    <i class="fi fi-rr-info text-blue-500 text-lg shrink-0 mt-0.5"></i>
                     <span>{{ session('info') }}</span>
                 </div>
             @endif

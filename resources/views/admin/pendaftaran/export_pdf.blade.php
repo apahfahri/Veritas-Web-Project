@@ -29,12 +29,11 @@
         <thead>
             <tr>
                 <th width="5%">No</th>
-                <th width="20%">Pendaftar</th>
-                <th width="25%">Program Layanan</th>
+                <th width="25%">Pendaftar</th>
+                <th width="30%">Program Layanan</th>
                 <th width="15%">Tgl Daftar</th>
                 <th width="15%">Status</th>
                 <th width="10%">Bayar</th>
-                <th width="10%">Cabang</th>
             </tr>
         </thead>
         <tbody>
@@ -57,7 +56,6 @@
                         {{ $p->status_bayar }}
                     </span>
                 </td>
-                <td>{{ strtoupper($p->cabang) }}</td>
             </tr>
             @endforeach
         </tbody>

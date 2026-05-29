@@ -74,17 +74,15 @@
                         <h2 class="text-xl font-semibold text-[#1E6B3D] mb-4">Jadwal</h2>
                         <div class="border rounded-lg p-4 space-y-2 text-sm">
                             @if($jadwal->tgl_mulai)
-                            <div>📅 {{ $jadwal->tgl_mulai->format('l, d F Y') }} @if($jadwal->tgl_selesai) - {{ $jadwal->tgl_selesai->format('l, d F Y') }} @endif</div>
-                            @elseif($jadwal->tanggal_usul)
-                            <div>📅 {{ $jadwal->tanggal_usul->format('l, d F Y') }}</div>
+                            <div class="flex items-center gap-1.5"><i class="fi fi-rr-calendar text-gray-500"></i> <span>{{ $jadwal->tgl_mulai->format('l, d F Y') }} @if($jadwal->tgl_selesai) - {{ $jadwal->tgl_selesai->format('l, d F Y') }} @endif</span></div>
                             @endif
                             @if($jadwal->jam_pertemuan)
-                            <div>⏰ {{ substr($jadwal->jam_pertemuan, 0, 5) }} WIB</div>
+                            <div class="flex items-center gap-1.5"><i class="fi fi-rr-clock text-gray-500"></i> <span>{{ substr($jadwal->jam_pertemuan, 0, 5) }} WIB</span></div>
                             @endif
                             @if($jadwal->lokasi)
-                            <div>📍 {{ $jadwal->lokasi }}</div>
+                            <div class="flex items-center gap-1.5"><i class="fi fi-rr-marker text-gray-500"></i> <span>{{ $jadwal->lokasi }}</span></div>
                             @else
-                            <div>📍 Online (Zoom / Google Meet)</div>
+                            <div class="flex items-center gap-1.5"><i class="fi fi-rr-marker text-gray-500"></i> <span>Online (Zoom / Google Meet)</span></div>
                             @endif
                             @if($jadwal->kapasitas)
                             <div class="{{ $sisaKursi > 5 ? 'text-green-600' : 'text-orange-500' }} font-medium">
@@ -133,10 +131,10 @@
                     <hr class="my-4">
 
                     <ul class="space-y-2 text-sm mb-6">
-                        <li>✔ Sertifikat resmi terakreditasi</li>
-                        <li>✔ Materi lengkap & terstructured</li>
-                        <li>✔ Instruktur berpengalaman</li>
-                        <li>✔ Berlaku seumur hidup</li>
+                        <li class="flex items-center"><i class="fi fi-rr-check text-[#1E6B3D] mr-2 font-bold"></i> Sertifikat resmi terakreditasi</li>
+                        <li class="flex items-center"><i class="fi fi-rr-check text-[#1E6B3D] mr-2 font-bold"></i> Materi lengkap & terstructured</li>
+                        <li class="flex items-center"><i class="fi fi-rr-check text-[#1E6B3D] mr-2 font-bold"></i> Instruktur berpengalaman</li>
+                        <li class="flex items-center"><i class="fi fi-rr-check text-[#1E6B3D] mr-2 font-bold"></i> Berlaku seumur hidup</li>
                     </ul>
 
                     <a href="{{ route('training.register', $jadwal->id_jadwal) }}"

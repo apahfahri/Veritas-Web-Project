@@ -247,7 +247,7 @@
                             <div class="flex justify-between"><span class="text-slate-400 font-bold">Tgl Daftar:</span><span class="font-black text-slate-800" id="modal_tgl_daftar">—</span></div>
                             <div class="flex justify-between"><span class="text-slate-400 font-bold">Layanan K3:</span><span class="font-black text-slate-800" id="modal_layanan_k3">—</span></div>
                             <div class="flex justify-between"><span class="text-slate-400 font-bold">Tipe Layanan:</span><span class="font-black text-slate-800" id="modal_tipe_layanan">—</span></div>
-                            <div class="flex justify-between"><span class="text-slate-400 font-bold">Cabang/Lokasi:</span><span class="font-black text-slate-800" id="modal_cabang">—</span></div>
+                            <div class="flex justify-between"><span class="text-slate-400 font-bold">Lokasi Pertemuan:</span><span class="font-black text-slate-800" id="modal_cabang">—</span></div>
                             <div class="flex justify-between"><span class="text-slate-400 font-bold">Total Biaya:</span><span class="font-black text-emerald-600" id="modal_total_biaya">—</span></div>
                         </div>
                     </div>
@@ -339,7 +339,7 @@
         document.getElementById('modal_tgl_daftar').textContent = pendaftaran.tanggal_daftar ? new Date(pendaftaran.tanggal_daftar).toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric'}) : '—';
         document.getElementById('modal_layanan_k3').textContent = layanan && layanan.jenis ? (layanan.jenis.nama || '—') : '—';
         document.getElementById('modal_tipe_layanan').textContent = pendaftaran.mode_pertemuan ? pendaftaran.mode_pertemuan.toUpperCase() : '—';
-        document.getElementById('modal_cabang').textContent = pendaftaran.cabang || '—';
+        document.getElementById('modal_cabang').textContent = (layanan && layanan.lokasi) ? layanan.lokasi : '—';
         
         const harga = layanan ? parseFloat(layanan.harga ?? 0) : 0;
         document.getElementById('modal_total_biaya').textContent = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(harga);

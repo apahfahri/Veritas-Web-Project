@@ -17,6 +17,11 @@ class PendaftaranController extends Controller
 {
     public function store(Request $request)
     {
+        // Jika kategori_id = 2 (Konsultasi), force jenis_klien ke perusahaan
+        if ($request->input('kategori_id') == 2) {
+            $request->merge(['jenis_klien' => 'perusahaan']);
+        }
+
         $jenis = $request->input('jenis_klien'); // 'individu' | 'perusahaan'
 
         $rules = [
@@ -67,11 +72,36 @@ class PendaftaranController extends Controller
                     ['kode_jenis' => null]
                 );
 
+                // Auto-generate kode_jenis if empty
+                if (empty($jenisBespoke->kode_jenis)) {
+                    $words = explode(' ', preg_replace('/[^a-zA-Z0-9\s]/', '', $jenisBespoke->nama));
+                    $code = '';
+                    if (count($words) > 1) {
+                        foreach ($words as $w) {
+                            $code .= strtoupper(substr($w, 0, 1));
+                        }
+                    } else {
+                        $code = strtoupper(substr($words[0] ?? 'KNS', 0, 4));
+                    }
+                    $code = preg_replace('/[^A-Z0-9]/', '', $code);
+                    if (empty($code)) {
+                        $code = 'KNS';
+                    }
+                    $jenisBespoke->kode_jenis = substr($code, 0, 15);
+                    $jenisBespoke->save();
+                }
+
+                $kategoriKode = $kategori?->kode_kategori ?? 'KST';
+                $jenisKode = $jenisBespoke->kode_jenis;
+                $urutan = Jadwal::where('id_jenis', $jenisBespoke->id_jenis)->count() + 1;
+                $urutanFormat = str_pad($urutan, 2, '0', STR_PAD_LEFT);
+                $kode_jadwal = "{$kategoriKode}-{$jenisKode}-{$urutanFormat}";
+
                 $jadwalBespoke = Jadwal::create([
                     'id_kategori'    => $kategori?->id_kategori,
                     'id_jenis'       => $jenisBespoke->id_jenis,
+                    'kode_jadwal'    => $kode_jadwal,
                     'jenis_pertemuan'=> $request->mode_pertemuan ?? 'offline',
-                    'tanggal_usul'   => $request->tanggal_usul,
                     'lokasi'         => $request->mode_pertemuan === 'offline' ? $request->lokasi : null,
                     'harga'          => 0,
                     'kapasitas'      => 1,
@@ -115,6 +145,14 @@ class PendaftaranController extends Controller
                 );
             }
 
+            $kategoriId = $request->kategori_id;
+            if ($jadwalId && !$kategoriId) {
+                $jTemp = Jadwal::find($jadwalId);
+                $kategoriId = $jTemp?->id_kategori;
+            }
+
+            $statusProgres = ($kategoriId == 2) ? 'meninjau' : 'menunggu_pembayaran';
+
             $pendaftaran = Pendaftaran::create([
                 'id_jadwal'               => $jadwalId,
                 'id_user'                 => $user->id_user,
@@ -124,7 +162,7 @@ class PendaftaranController extends Controller
                 'rencana_tanggal_mulai'   => $request->tanggal_usul,
                 'rencana_tanggal_selesai' => $request->tanggal_usul,
                 'mode_pertemuan'          => $request->mode_pertemuan,
-                'status_progres'          => 'menunggu_pembayaran',
+                'status_progres'          => $statusProgres,
                 'status_bayar'            => 'belum_bayar',
             ]);
 
@@ -137,11 +175,12 @@ class PendaftaranController extends Controller
             ];
         });
 
-        // Kirim invoice email
+        // Kirim invoice email (lewati jika konsultasi)
         $invoiceSent = false;
         $emailError  = null;
         try {
-            if ($result && isset($result['pendaftaran'], $result['user'])) {
+            $isKonsultasi = ($result && isset($result['jadwal']) && $result['jadwal']->id_kategori == 2);
+            if (!$isKonsultasi && $result && isset($result['pendaftaran'], $result['user'])) {
                 Mail::to($result['user']->email)->send(new PendaftaranInvoiceMail(
                     $result['pendaftaran'],
                     $result['user'],
@@ -273,10 +312,11 @@ class PendaftaranController extends Controller
 
             $file->move(public_path('uploads/pembayaran'), $filename);
 
+            $isKonsultasi = ($pendaftaran->jadwal?->id_kategori == 2);
             $pendaftaran->update([
                 'bukti_bayar'    => $filename,
                 'status_bayar'   => 'menunggu_konfirmasi',
-                'status_progres' => 'menunggu',
+                'status_progres' => $isKonsultasi ? 'pembayaran_ditinjau' : 'menunggu',
             ]);
         }
 

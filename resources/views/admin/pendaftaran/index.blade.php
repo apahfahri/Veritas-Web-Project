@@ -12,8 +12,13 @@
             <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 ml-1">Status Progres</label>
             <select name="status" class="w-full bg-slate-50 border border-slate-100 px-5 py-3 rounded-2xl text-sm font-bold text-slate-700 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition">
                 <option value="">Semua Status</option>
-                <option value="menunggu_pembayaran" {{ request('status') === 'menunggu_pembayaran' ? 'selected' : '' }}>Menunggu Bayar</option>
-                <option value="diproses"             {{ request('status') === 'diproses'             ? 'selected' : '' }}>Diproses</option>
+                <option value="meninjau" {{ request('status') === 'meninjau' ? 'selected' : '' }}>Meninjau</option>
+                <option value="disetujui" {{ request('status') === 'disetujui' ? 'selected' : '' }}>Disetujui</option>
+                <option value="dijadwalkan" {{ request('status') === 'dijadwalkan' ? 'selected' : '' }}>Dijadwalkan</option>
+                <option value="menunggu_pelaksanaan" {{ request('status') === 'menunggu_pelaksanaan' ? 'selected' : '' }}>Menunggu Pelaksanaan</option>
+                <option value="menunggu_pembayaran" {{ request('status') === 'menunggu_pembayaran' ? 'selected' : '' }}>Menunggu Pembayaran</option>
+                <option value="pembayaran_ditinjau" {{ request('status') === 'pembayaran_ditinjau' ? 'selected' : '' }}>Pembayaran Ditinjau</option>
+                <option value="diproses" {{ request('status') === 'diproses' ? 'selected' : '' }}>Diproses (Pelatihan)</option>
             </select>
         </div>
         <div>
@@ -93,6 +98,11 @@
                                 'diproses' => 'bg-blue-50 text-blue-600 border-blue-100', 
                                 'dibatalkan' => 'bg-red-50 text-red-600 border-red-100', 
                                 'menunggu_pembayaran' => 'bg-amber-50 text-amber-600 border-amber-100', 
+                                'meninjau' => 'bg-purple-50 text-purple-600 border-purple-100', 
+                                'disetujui' => 'bg-cyan-50 text-cyan-600 border-cyan-100', 
+                                'dijadwalkan' => 'bg-indigo-50 text-indigo-600 border-indigo-100', 
+                                'menunggu_pelaksanaan' => 'bg-emerald-50 text-emerald-600 border-emerald-100', 
+                                'pembayaran_ditinjau' => 'bg-violet-50 text-violet-600 border-violet-100', 
                                 default => 'bg-slate-50 text-slate-600 border-slate-100' 
                             }; 
                         @endphp
