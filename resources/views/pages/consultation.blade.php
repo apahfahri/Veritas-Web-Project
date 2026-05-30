@@ -317,6 +317,16 @@
                                           placeholder="Alamat lengkap tempat pertemuan..."
                                           class="w-full border border-slate-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 transition-all placeholder-slate-400 bg-slate-50/50 resize-none">{{ old('lokasi') }}</textarea>
                             </div>
+
+                            {{-- Catatan Tambahan (Opsional) --}}
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-2">
+                                    Catatan Tambahan (Opsional)
+                                </label>
+                                <textarea name="catatan_tambahan" id="catatan_tambahan" rows="3"
+                                          placeholder="Tuliskan catatan tambahan atau pesan khusus untuk tim kami (opsional)..."
+                                          class="w-full border border-slate-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 transition-all placeholder-slate-400 bg-slate-50/50 resize-none">{{ old('catatan_tambahan') }}</textarea>
+                            </div>
                         </div>
 
                         {{-- Summary Card sebelum submit --}}
@@ -430,7 +440,7 @@
         // If there are old input errors, jump to appropriate step
         @if($errors->any())
             // Try to detect which step has the error
-            const hasStep3Error = @json($errors->has('topik_layanan') || $errors->has('tanggal_usul') || $errors->has('mode_pertemuan') || $errors->has('catatan'));
+            const hasStep3Error = @json($errors->has('topik_layanan') || $errors->has('tanggal_usul') || $errors->has('mode_pertemuan') || $errors->has('catatan') || $errors->has('catatan_tambahan'));
             const hasStep2Error = @json($errors->has('nama_lengkap') || $errors->has('email') || $errors->has('no_telp'));
             if (hasStep3Error) {
                 showStep(3);

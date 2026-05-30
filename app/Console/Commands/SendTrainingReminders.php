@@ -57,7 +57,7 @@ class SendTrainingReminders extends Command
             }
 
             $pendaftarans = Pendaftaran::where('id_jadwal', $jadwal->id_jadwal)
-                ->whereIn('status_progres', ['terkonfirmasi', 'selesai'])
+                ->where('status_progres', 'diproses')
                 ->get();
 
             foreach ($pendaftarans as $pendaftaran) {

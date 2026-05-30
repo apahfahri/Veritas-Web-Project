@@ -6,12 +6,7 @@
 <div class="min-h-screen bg-[#F5F7FA] py-12">
     <div class="max-w-4xl mx-auto px-6">
 
-        {{-- ── HEADER ──────────────────────────────────────────────── --}}
-        <div class="text-center mb-10">
-            <h1 class="text-3xl font-bold text-[#1E6B3D] mb-2">Cek Status Pendaftaran</h1>
-            <p class="text-gray-500">Masukkan Email atau Nomor WhatsApp Anda untuk melihat progres pendaftaran layanan kami.</p>
-        </div>
-
+        {{-- Tampilkan Alerts di Paling Atas (Untuk kedua mode) --}}
         @if(session('registration_success'))
             <div class="mb-8 p-6 bg-blue-50 border border-blue-200 text-blue-800 rounded-2xl shadow-sm animate-fade-in max-w-2xl mx-auto">
                 <div class="flex items-start gap-3">
@@ -49,32 +44,95 @@
             </div>
         @endif
 
-        {{-- ── FORM SEARCH ─────────────────────────────────────────── --}}
-        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mb-8 max-w-2xl mx-auto">
-            <form action="{{ route('training.status.check') }}" method="POST">
-                @csrf
-                <div class="flex flex-col md:flex-row gap-4">
-                    <div class="flex-1 relative">
-                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                            </svg>
-                        </span>
-                        <input type="text" name="identifier" 
-                               value="{{ $identifier ?? old('identifier') }}"
-                               placeholder="Email atau No. WhatsApp" 
-                               class="w-full border border-gray-300 rounded-xl pl-12 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] transition"
-                               required>
+        @if(session('success'))
+            <div class="mb-8 p-6 bg-green-50 border border-green-200 text-green-800 rounded-2xl shadow-sm max-w-2xl mx-auto animate-fade-in">
+                <div class="flex items-start gap-3">
+                    <i class="fi fi-rr-check-circle text-green-500 text-2xl mt-0.5"></i>
+                    <div>
+                        <h4 class="font-bold text-lg text-green-900">Berhasil!</h4>
+                        <p class="text-sm text-green-700 mt-1">{{ session('success') }}</p>
                     </div>
-                    <button type="submit" class="bg-[#1E6B3D] hover:bg-[#3CDA7D] text-white font-semibold px-8 py-3 rounded-xl transition shadow-sm active:scale-95">
-                        Cek Status
-                    </button>
                 </div>
-                @error('identifier')
-                    <p class="text-red-500 text-sm mt-3">{{ $message }}</p>
-                @enderror
-            </form>
-        </div>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="mb-8 p-6 bg-red-50 border border-red-200 text-red-800 rounded-2xl shadow-sm max-w-2xl mx-auto animate-fade-in">
+                <div class="flex items-start gap-3">
+                    <i class="fi fi-rr-cross-circle text-red-500 text-2xl mt-0.5"></i>
+                    <div>
+                        <h4 class="font-bold text-lg text-red-900">Terjadi Kesalahan</h4>
+                        <p class="text-sm text-red-700 mt-1">{{ session('error') }}</p>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        @if(!isset($pendaftarans))
+            {{-- ── 1. TAMPILAN PERTAMA (LANDING CEK STATUS) ─────────────────── --}}
+            <div class="max-w-2xl mx-auto text-center mt-6">
+                <div class="bg-white rounded-3xl border border-gray-100 shadow-xl shadow-gray-200/50 p-10 md:p-12 transition-all duration-300 hover:shadow-2xl">
+                    <!-- Icon Illustration -->
+                    <div class="w-20 h-20 bg-gradient-to-tr from-[#1E6B3D] to-[#3CDA7D] text-white rounded-3xl flex items-center justify-center text-3xl mx-auto mb-8 shadow-lg shadow-[#1E6B3D]/25 transition duration-300 hover:scale-105">
+                        <i class="fi fi-rr-search-alt"></i>
+                    </div>
+                    
+                    <h2 class="text-2xl md:text-3xl font-black text-gray-900 tracking-tight mb-3">Lacak Pendaftaran Anda</h2>
+                    <p class="text-sm text-gray-500 max-w-md mx-auto mb-8 leading-relaxed">
+                        Pantau progres pelatihan, verifikasi pembayaran, jadwal konsultasi, serta unduh sertifikat resmi Anda di satu tempat.
+                    </p>
+
+                    <form action="{{ route('training.status.check') }}" method="POST" class="mb-0">
+                        @csrf
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <div class="flex-1 relative">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                                    <i class="fi fi-rr-envelope text-lg"></i>
+                                </span>
+                                <input type="text" name="identifier" 
+                                       value="{{ old('identifier') }}"
+                                       placeholder="Masukkan Email atau No. WhatsApp Anda" 
+                                       class="w-full border border-gray-200 rounded-xl pl-12 pr-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition shadow-inner bg-slate-50/50"
+                                       required>
+                            </div>
+                            <button type="submit" class="bg-[#1E6B3D] hover:bg-[#3CDA7D] text-white font-bold text-sm px-8 py-3.5 rounded-xl transition shadow-md hover:shadow-lg active:scale-95 whitespace-nowrap">
+                                Cek Status
+                            </button>
+                        </div>
+                        @error('identifier')
+                            <p class="text-red-500 text-xs text-left mt-2 pl-2 font-semibold">⚠️ {{ $message }}</p>
+                        @enderror
+                    </form>
+                </div>
+            </div>
+        @else
+            {{-- ── 2. TAMPILAN RIWAYAT PESANAN (HASIL CEK STATUS) ────────────── --}}
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-8 pb-6 border-b border-gray-200">
+                <div>
+                    <h2 class="text-2xl font-black text-gray-900 tracking-tight">Riwayat Pendaftaran</h2>
+                    <p class="text-xs text-gray-500 mt-1">Ditemukan {{ $pendaftarans->count() }} pemesanan untuk <span class="text-[#1E6B3D] font-bold">{{ $identifier }}</span></p>
+                </div>
+                <!-- Compact Search Form -->
+                <form action="{{ route('training.status.check') }}" method="POST" class="w-full md:w-auto">
+                    @csrf
+                    <div class="flex gap-2">
+                        <div class="relative w-full md:w-64">
+                            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">
+                                <i class="fi fi-rr-search text-sm"></i>
+                            </span>
+                            <input type="text" name="identifier" 
+                                   value="{{ $identifier }}"
+                                   placeholder="Cari email/No. WA lain" 
+                                   class="w-full border border-gray-200 rounded-xl pl-9 pr-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] transition bg-white"
+                                   required>
+                        </div>
+                        <button type="submit" class="bg-[#1E6B3D] hover:bg-[#3CDA7D] text-white font-bold text-xs px-4 py-2 rounded-xl transition shadow-sm active:scale-95 whitespace-nowrap">
+                            Cari
+                        </button>
+                    </div>
+                </form>
+            </div>
+        @endif
 
         {{-- ── RESULT ──────────────────────────────────────────────── --}}
         @if(isset($pendaftarans))
@@ -183,85 +241,73 @@
                                             </div>
                                         @endif
 
-                                    {{-- ── PELATIHAN: Status badges seperti semula ─────── --}}
+                                    {{-- ── PELATIHAN: Stepper progres linear ─────── --}}
                                     @else
-                                        <div class="flex flex-wrap gap-y-2 gap-x-6 mt-4">
-                                            <div class="flex items-center gap-2 text-sm text-gray-600">
-                                                <span class="text-gray-400">Status Progres:</span>
-                                                @php
-                                                    $statusClasses = [
-                                                        'menunggu'            => 'bg-yellow-100 text-yellow-700 border-yellow-200',
-                                                        'meninjau'            => 'bg-slate-100 text-slate-700 border-slate-200',
-                                                        'disetujui'           => 'bg-amber-100 text-amber-700 border-amber-200',
-                                                        'dijadwalkan'         => 'bg-indigo-100 text-indigo-700 border-indigo-200',
-                                                        'menunggu_pelaksanaan' => 'bg-blue-100 text-blue-700 border-blue-200',
-                                                        'menunggu_pembayaran' => 'bg-orange-100 text-orange-700 border-orange-200',
-                                                        'pembayaran_ditinjau' => 'bg-purple-100 text-purple-700 border-purple-200',
-                                                        'diproses'            => 'bg-blue-100 text-blue-700 border-blue-200',
-                                                        'selesai'             => 'bg-green-100 text-green-700 border-green-200',
-                                                        'dibatalkan'          => 'bg-red-100 text-red-700 border-red-200',
-                                                    ];
-                                                    $statusLabel = [
-                                                        'menunggu'            => 'Menunggu Konfirmasi',
-                                                        'meninjau'            => 'Menunggu Tinjauan',
-                                                        'disetujui'           => 'Disetujui',
-                                                        'dijadwalkan'         => 'Dijadwalkan',
-                                                        'menunggu_pelaksanaan' => 'Terjadwal',
-                                                        'menunggu_pembayaran' => 'Menunggu Pembayaran',
-                                                        'pembayaran_ditinjau' => 'Bukti Dikirim',
-                                                        'diproses'            => 'Terkonfirmasi',
-                                                        'selesai'             => 'Selesai',
-                                                        'dibatalkan'          => 'Dibatalkan',
-                                                    ];
-                                                    $curStatus = $item->status_progres;
-                                                    $class = $statusClasses[$curStatus] ?? 'bg-gray-100 text-gray-700 border-gray-200';
-                                                    $label = $statusLabel[$curStatus] ?? ucfirst(str_replace('_', ' ', $curStatus));
-                                                @endphp
-                                                <span class="px-3 py-1 rounded-full border text-xs font-semibold {{ $class }}">
-                                                    {{ $label }}
-                                                </span>
+                                        @php
+                                            $pelatihanStages = [
+                                                'menunggu_pembayaran' => ['icon' => '<i class="fi fi-rr-credit-card"></i>', 'label' => 'Tagihan',     'desc' => 'Menunggu pembayaran — silakan selesaikan pembayaran & kirim bukti bayar'],
+                                                'menunggu'            => ['icon' => '<i class="fi fi-rr-clock"></i>',       'label' => 'Verifikasi',  'desc' => 'Bukti pembayaran telah dikirim — admin sedang memverifikasi'],
+                                                'diproses'            => ['icon' => '<i class="fi fi-rr-checkbox"></i>',    'label' => 'Terkonfirmasi', 'desc' => 'Pendaftaran terkonfirmasi — kelas aktif & siap dilaksanakan sesuai jadwal'],
+                                                'selesai'             => ['icon' => '<i class="fi fi-rr-trophy"></i>',      'label' => 'Selesai',     'desc' => 'Pelatihan selesai — terima kasih telah mengikuti pelatihan kami'],
+                                            ];
+                                            $stageKeys  = array_keys($pelatihanStages);
+                                            $curStatus  = $item->status_progres;
+                                            $isCanceled = ($curStatus === 'dibatalkan');
+                                            $currentIdx = array_search($curStatus, $stageKeys);
+                                        @endphp
+
+                                        @if($isCanceled)
+                                            <div class="mt-4 flex items-center gap-3 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+                                                <i class="fi fi-rr-cross-circle text-red-500 text-xl"></i>
+                                                <div>
+                                                    <p class="text-sm font-bold text-red-800">Pendaftaran Dibatalkan</p>
+                                                    <p class="text-xs text-red-600 mt-0.5">Pendaftaran pelatihan ini telah dibatalkan. Hubungi kami jika ada pertanyaan.</p>
+                                                </div>
                                             </div>
-                                            <div class="flex items-center gap-2 text-sm text-gray-600">
-                                                <span class="text-gray-400">Pembayaran:</span>
-                                                @php
-                                                    $payClasses = [
-                                                        'belum_bayar'        => 'bg-red-50 text-red-600',
-                                                        'belum_lunas'        => 'bg-red-50 text-red-600',
-                                                        'menunggu_konfirmasi'=> 'bg-orange-50 text-orange-600',
-                                                        'lunas'              => 'bg-green-50 text-green-600',
-                                                    ];
-                                                    $payLabel = [
-                                                        'belum_bayar'        => 'Belum Lunas',
-                                                        'belum_lunas'        => 'Belum Lunas',
-                                                        'menunggu_konfirmasi'=> 'Menunggu Konfirmasi',
-                                                        'lunas'              => 'Lunas',
-                                                    ];
-                                                    $curPay = $item->status_bayar;
-                                                    $pClass = $payClasses[$curPay] ?? 'bg-gray-50 text-gray-600';
-                                                    $pLabel = $payLabel[$curPay] ?? ucfirst(str_replace('_', ' ', $curPay));
-                                                @endphp
-                                                <span class="font-bold {{ $pClass }} px-2 py-0.5 rounded">
-                                                    {{ $pLabel }}
-                                                </span>
+                                        @else
+                                            <div class="mt-5 mb-2">
+                                                <div class="flex items-center gap-0 overflow-x-auto pb-1">
+                                                    @foreach($pelatihanStages as $stageKey => $stageInfo)
+                                                        @php
+                                                            $stageIdx = array_search($stageKey, $stageKeys);
+                                                            $isDone   = ($currentIdx !== false && $stageIdx < $currentIdx);
+                                                            $isActive = ($curStatus === $stageKey);
+                                                        @endphp
+                                                        <div class="flex items-center {{ !$loop->last ? 'flex-1' : '' }} shrink-0">
+                                                            <div class="flex flex-col items-center gap-1 min-w-[52px]">
+                                                                <div class="w-9 h-9 rounded-full flex items-center justify-center text-base border-2 transition-all
+                                                                    @if($isDone) bg-emerald-500 border-emerald-500 text-white shadow-sm
+                                                                    @elseif($isActive) bg-[#1E6B3D] border-[#1E6B3D] text-white shadow-md ring-4 ring-[#1E6B3D]/15
+                                                                    @else bg-gray-50 border-gray-200 text-gray-300
+                                                                    @endif">
+                                                                    @if($isDone)<i class="fi fi-rr-check text-xs"></i>@else{!! $stageInfo['icon'] !!}@endif
+                                                                </div>
+                                                                <span class="text-[9px] font-bold text-center leading-tight whitespace-nowrap
+                                                                    @if($isDone) text-emerald-600
+                                                                    @elseif($isActive) text-[#1E6B3D]
+                                                                    @else text-gray-300
+                                                                    @endif">{{ $stageInfo['label'] }}</span>
+                                                            </div>
+                                                            @if(!$loop->last)
+                                                                <div class="flex-1 h-0.5 mx-1 rounded-full {{ $stageIdx < $currentIdx ? 'bg-emerald-400' : 'bg-gray-200' }}"></div>
+                                                            @endif
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+
+                                                @if(isset($pelatihanStages[$curStatus]))
+                                                    <div class="mt-3 flex items-start gap-2.5 bg-[#1E6B3D]/5 border border-[#1E6B3D]/15 rounded-xl px-3.5 py-2.5">
+                                                        <span class="text-base mt-0.5 flex items-center text-[#1E6B3D]">{!! $pelatihanStages[$curStatus]['icon'] !!}</span>
+                                                        <div>
+                                                            <p class="text-xs font-bold text-[#1E6B3D]">Tahap Saat Ini: {{ $pelatihanStages[$curStatus]['label'] }}</p>
+                                                            <p class="text-xs text-gray-600 mt-0.5">{{ $pelatihanStages[$curStatus]['desc'] }}</p>
+                                                        </div>
+                                                    </div>
+                                                @endif
                                             </div>
-                                        </div>
+                                        @endif
                                     @endif
 
-                                    {{-- Tampilkan info rekening & kode transfer jika statusnya menunggu pembayaran --}}
-                                    @if($item->status_progres === 'menunggu_pembayaran' && !in_array($item->status_bayar, ['lunas', 'menunggu_konfirmasi']))
-                                        <div class="mt-4 bg-emerald-50 border border-emerald-100 rounded-2xl p-4 text-emerald-800 max-w-xl animate-fade-in">
-                                            <p class="text-xs font-bold flex items-center gap-1.5 mb-1.5 text-emerald-900">
-                                                <i class="fi fi-rr-info text-emerald-600 text-sm"></i> Petunjuk Pembayaran Transfer Bank
-                                            </p>
-                                            <p class="text-xs leading-relaxed text-emerald-700 font-medium">
-                                                Transfer pembayaran penuh ke rekening <strong>{{ $rekening?->nama_bank ?? 'Bank Mandiri' }} {{ $rekening?->nomor_rekening ?? '131-00-1886111-1' }}</strong> A.N. {{ $rekening?->atas_nama ?? 'PT Katiga Veritas Indonesia' }}.<br>
-                                                <span class="text-amber-800 font-bold">PENTING:</span> Masukkan 5 digit kode transfer unik berikut ke <strong>Berita Transfer / Catatan Transaksi</strong> Anda saat transfer:
-                                            </p>
-                                            <p class="mt-2 font-mono text-sm font-black bg-white border border-emerald-200 rounded-xl px-3 py-1.5 inline-block text-emerald-900 tracking-widest select-all" title="Klik/Ketuk untuk menyalin">
-                                                {{ explode('-', $item->nomor_pendaftaran)[0] }}
-                                            </p>
-                                        </div>
-                                    @endif
                                 </div>
 
                                 {{-- ── ACTION BUTTONS ──────────────────────────────── --}}
@@ -306,31 +352,45 @@
                                         @endif
 
                                     {{-- ── Pelatihan action buttons ── --}}
-                                    @elseif(in_array($item->status_bayar, ['belum_bayar', 'belum_lunas']) || $item->status_progres === 'menunggu_pembayaran')
-                                        <button type="button"
-                                            onclick="bukaModalBukti('{{ $item->id_pendaftaran }}', '{{ $identifier }}')"
-                                            class="inline-flex items-center justify-center gap-2 bg-amber-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-amber-600 transition shadow-sm animate-pulse">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
-                                            </svg>
-                                            Kirim Bukti Bayar
-                                        </button>
-                                    @elseif($item->status_bayar === 'menunggu_konfirmasi')
-                                        <span class="inline-flex items-center justify-center gap-1.5 bg-orange-50 border border-orange-200 text-orange-600 px-5 py-2.5 rounded-xl text-sm font-semibold">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                            Menunggu Verifikasi
-                                        </span>
-                                    @else
-                                        @php
-                                            $waNumber = config('app.whatsapp_number', '6281234567890');
-                                            $waText   = "Halo Admin, saya ingin menanyakan status pendaftaran layanan " . ($item->jadwal?->jenis?->nama ?? 'K3') . " atas nama " . $item->user->nama;
-                                            $waUrl    = "https://wa.me/" . $waNumber . "?text=" . rawurlencode($waText);
-                                        @endphp
-                                        <a href="{{ $waUrl }}" target="_blank"
-                                           class="inline-flex items-center justify-center gap-2 bg-green-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-green-600 transition shadow-sm">
-                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.938 3.659 1.435 5.63 1.435h.008c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                                            Tanya Admin
-                                        </a>
+                                    @elseif($item->status_progres !== 'dibatalkan')
+                                        @if(in_array($item->status_bayar, ['belum_bayar', 'belum_lunas']) || $item->status_progres === 'menunggu_pembayaran')
+                                            <button type="button"
+                                                onclick="bukaModalBukti('{{ $item->id_pendaftaran }}', '{{ $identifier }}')"
+                                                class="inline-flex items-center justify-center gap-2 bg-amber-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-amber-600 transition shadow-sm animate-pulse">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                                                </svg>
+                                                Kirim Bukti Bayar
+                                            </button>
+                                        @elseif($item->status_bayar === 'menunggu_konfirmasi')
+                                            <span class="inline-flex items-center justify-center gap-1.5 bg-orange-50 border border-orange-200 text-orange-600 px-5 py-2.5 rounded-xl text-sm font-semibold">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                                Menunggu Verifikasi
+                                            </span>
+                                        @else
+                                            @php
+                                                $waNumber = config('app.whatsapp_number', '6281234567890');
+                                                $waText   = "Halo Admin, saya ingin menanyakan status pendaftaran layanan " . ($item->jadwal?->jenis?->nama ?? 'K3') . " atas nama " . $item->user->nama;
+                                                $waUrl    = "https://wa.me/" . $waNumber . "?text=" . rawurlencode($waText);
+                                            @endphp
+                                            <a href="{{ $waUrl }}" target="_blank"
+                                               class="inline-flex items-center justify-center gap-2 bg-green-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-green-600 transition shadow-sm">
+                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.938 3.659 1.435 5.63 1.435h.008c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                                                Tanya Admin
+                                            </a>
+                                        @endif
+                                    @endif
+
+                                    {{-- Tombol Batalkan Keikutsertaan --}}
+                                    @if(in_array($item->status_bayar, ['belum_bayar', 'belum_lunas']) && !in_array($item->status_progres, ['dibatalkan', 'selesai']))
+                                        <form action="{{ route('pendaftaran.cancel-user', $item->id_pendaftaran) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan keikutsertaan Anda dalam program ini?')">
+                                            @csrf
+                                            <input type="hidden" name="identifier" value="{{ $identifier }}">
+                                            <button type="submit" class="w-full inline-flex items-center justify-center gap-2 bg-rose-50 border border-rose-200 text-rose-600 px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-rose-100 transition shadow-sm">
+                                                <i class="fi fi-rr-cross-circle text-rose-500 text-xs"></i>
+                                                Batalkan Pendaftaran
+                                            </button>
+                                        </form>
                                     @endif
                                 </div>
                             </div>
@@ -419,16 +479,7 @@
                     <div class="bg-green-50 border border-green-200 rounded-2xl p-4 mb-6">
                         <p class="text-xs text-green-800 font-medium">✅ Nomor pendaftaran terverifikasi. Silakan upload foto bukti transfer bank Anda.</p>
                         <p id="infoProgram" class="text-xs text-green-700 font-bold mt-1 mb-2"></p>
-                        
-                        <!-- Account & Unique Code Instruction -->
-                        <div class="mt-2.5 pt-2.5 border-t border-green-200/50 text-[11px] text-green-800">
-                            <p class="font-bold mb-1">🏦 <span id="infoBankName">Rekening Mandiri</span>: <span id="infoBankAcc">131-00-1886111-1</span></p>
-                            <p class="mb-1">A.N. <span id="infoBankRecipient">PT Katiga Veritas Indonesia</span></p>
-                            <p class="leading-relaxed">
-                                <span class="text-amber-800 font-bold">Catatan Transfer:</span> Pastikan memasukkan 5 digit kode unik berikut pada berita transfer Anda: 
-                                <strong id="infoKodeUnik" class="font-mono text-xs bg-white px-1.5 py-0.5 rounded border border-green-300 font-black"></strong>
-                            </p>
-                        </div>
+
                     </div>
 
                     <div class="mb-5">
@@ -513,25 +564,7 @@
                 document.getElementById('hiddenEmail').value  = email;
                 document.getElementById('infoProgram').textContent = 'Program: ' + data.program;
                 
-                // Set the unique code and bank account info in the modal
-                const uniqueCode = data.nomor_pendaftaran.split('-')[0];
-                const infoKodeEl = document.getElementById('infoKodeUnik');
-                if (infoKodeEl) {
-                    infoKodeEl.textContent = uniqueCode;
-                }
-                
-                const infoBankNameEl = document.getElementById('infoBankName');
-                const infoBankAccEl = document.getElementById('infoBankAcc');
-                const infoBankRecipientEl = document.getElementById('infoBankRecipient');
-                if (infoBankNameEl) {
-                    infoBankNameEl.textContent = 'Rekening ' + (data.bank_name || 'Mandiri');
-                }
-                if (infoBankAccEl) {
-                    infoBankAccEl.textContent = data.bank_account || '131-00-1886111-1';
-                }
-                if (infoBankRecipientEl) {
-                    infoBankRecipientEl.textContent = data.bank_recipient || 'PT Katiga Veritas Indonesia';
-                }
+
                 
                 document.getElementById('step1').classList.add('hidden');
                 document.getElementById('step2').classList.remove('hidden');

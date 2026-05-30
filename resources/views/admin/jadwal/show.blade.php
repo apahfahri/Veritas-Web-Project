@@ -56,6 +56,12 @@
                     <a href="{{ $jadwal->link_meet }}" target="_blank" class="font-black text-indigo-600 hover:text-indigo-800 underline text-right max-w-[160px] truncate" title="{{ $jadwal->link_meet }}">Buka Link</a>
                 </div>
                 @endif
+                @if($jadwal->file_rundown)
+                <div class="flex justify-between text-sm">
+                    <span class="text-slate-500 font-bold">File Rundown</span>
+                    <a href="{{ Storage::url($jadwal->file_rundown) }}" target="_blank" class="font-black text-indigo-600 hover:text-indigo-800 underline text-right max-w-[160px] truncate">Lihat Rundown</a>
+                </div>
+                @endif
                 <div class="flex justify-between text-sm">
                     <span class="text-slate-500 font-bold">Harga</span>
                     <span class="font-black text-slate-900">{{ $jadwal->harga > 0 ? 'Rp '.number_format($jadwal->harga,0,',','.') : 'Gratis' }}</span>
@@ -107,6 +113,28 @@
             </div>
             @empty
             <p class="text-[11px] text-slate-300 font-bold">Belum ada pemateri ditugaskan</p>
+            @endforelse
+        </div>
+
+        {{-- Materi Pendukung --}}
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+            <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Materi Pendukung</p>
+            @forelse($jadwal->materi as $m)
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-9 h-9 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-sm font-black">
+                    <i class="fi fi-rr-file-pdf"></i>
+                </div>
+                <div class="min-w-0 flex-1">
+                    <p class="text-sm font-black text-slate-900 leading-tight truncate" title="{{ $m->judul }}">{{ $m->judul }}</p>
+                    @if($m->file_path)
+                    <a href="{{ Storage::url($m->file_path) }}" target="_blank" class="text-[10px] text-indigo-600 font-bold hover:underline">Download File</a>
+                    @else
+                    <p class="text-[10px] text-slate-400 font-bold">Tidak ada file</p>
+                    @endif
+                </div>
+            </div>
+            @empty
+            <p class="text-[11px] text-slate-300 font-bold">Belum ada materi dipilih</p>
             @endforelse
         </div>
     </div>
