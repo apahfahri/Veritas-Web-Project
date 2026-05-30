@@ -195,6 +195,7 @@ class PendaftaranController extends Controller
 
         return redirect()->route('training.status', ['identifier' => $request->email])
             ->with('registration_success', true)
+            ->with('is_konsultasi', $isKonsultasi)
             ->with('invoice_email_sent', $invoiceSent)
             ->with('email_error', $emailError);
     }
@@ -214,7 +215,8 @@ class PendaftaranController extends Controller
             }
         }
 
-        return view('pages.training-status', compact('pendaftarans', 'identifier'));
+        $rekening = \App\Models\Rekening::where('status_aktif', true)->first();
+        return view('pages.training-status', compact('pendaftarans', 'identifier', 'rekening'));
     }
 
     public function checkStatus(Request $request)
@@ -234,8 +236,9 @@ class PendaftaranController extends Controller
             ->latest()
             ->get();
 
+        $rekening = \App\Models\Rekening::where('status_aktif', true)->first();
         $identifier = $request->identifier;
-        return view('pages.training-status', compact('pendaftarans', 'identifier'));
+        return view('pages.training-status', compact('pendaftarans', 'identifier', 'rekening'));
     }
 
     /**
@@ -275,11 +278,15 @@ class PendaftaranController extends Controller
             ], 422);
         }
 
+        $rekening = \App\Models\Rekening::where('status_aktif', true)->first();
         return response()->json([
             'valid'             => true,
             'id_pendaftaran'    => $pendaftaran->id_pendaftaran,
             'program'           => $pendaftaran->jadwal?->jenis?->nama ?? '-',
             'nomor_pendaftaran' => $pendaftaran->nomor_pendaftaran,
+            'bank_name'         => $rekening?->nama_bank ?? 'Bank Mandiri',
+            'bank_account'      => $rekening?->nomor_rekening ?? '131-00-1886111-1',
+            'bank_recipient'    => $rekening?->atas_nama ?? 'PT Katiga Veritas Indonesia',
         ]);
     }
 

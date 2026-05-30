@@ -131,6 +131,10 @@ Route::middleware(['auth', 'is.admin'])->prefix('admin')->name('admin.')->group(
     // Subadmin management
     Route::resource('subadmin', \App\Http\Controllers\Admin\SubadminController::class)->except(['show']);
 
+    // Rekening management
+    Route::resource('rekening', \App\Http\Controllers\Admin\RekeningController::class)->except(['show']);
+    Route::post('/rekening/{id}/toggle', [\App\Http\Controllers\Admin\RekeningController::class, 'toggleActive'])->name('rekening.toggle');
+
     // Klien & Mitra (Perusahaan B2B)
     Route::resource('mitra', KlienMitraController::class)->except(['show']);
 

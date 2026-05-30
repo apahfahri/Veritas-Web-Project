@@ -18,7 +18,11 @@
                     <i class="fi fi-rr-envelope text-blue-500 text-2xl mt-0.5"></i>
                     <div>
                         <h4 class="font-bold text-lg text-blue-900">Pendaftaran Berhasil!</h4>
-                        @if(session('invoice_email_sent') === false)
+                        @if(session('is_konsultasi'))
+                            <p class="text-sm text-blue-700 mt-1">
+                                Permintaan konsultasi Anda telah berhasil dikirimkan. Tim kami akan segera meninjau detail pengajuan Anda dan menghubungi Anda via Email atau WhatsApp untuk koordinasi jadwal pelaksanaan.
+                            </p>
+                        @elseif(session('invoice_email_sent') === false)
                             <p class="text-sm text-red-600 mt-1 font-semibold">
                                 Pendaftaran berhasil dicatat, namun sistem gagal mengirimkan invoice otomatis ke email Anda (Error: {{ session('email_error') ?? 'Gangguan server email' }}).
                                 Silakan hubungi kami via WhatsApp untuk mendapatkan invoice secara manual.
@@ -242,6 +246,22 @@
                                             </div>
                                         </div>
                                     @endif
+
+                                    {{-- Tampilkan info rekening & kode transfer jika statusnya menunggu pembayaran --}}
+                                    @if($item->status_progres === 'menunggu_pembayaran' && !in_array($item->status_bayar, ['lunas', 'menunggu_konfirmasi']))
+                                        <div class="mt-4 bg-emerald-50 border border-emerald-100 rounded-2xl p-4 text-emerald-800 max-w-xl animate-fade-in">
+                                            <p class="text-xs font-bold flex items-center gap-1.5 mb-1.5 text-emerald-900">
+                                                <i class="fi fi-rr-info text-emerald-600 text-sm"></i> Petunjuk Pembayaran Transfer Bank
+                                            </p>
+                                            <p class="text-xs leading-relaxed text-emerald-700 font-medium">
+                                                Transfer pembayaran penuh ke rekening <strong>{{ $rekening?->nama_bank ?? 'Bank Mandiri' }} {{ $rekening?->nomor_rekening ?? '131-00-1886111-1' }}</strong> A.N. {{ $rekening?->atas_nama ?? 'PT Katiga Veritas Indonesia' }}.<br>
+                                                <span class="text-amber-800 font-bold">PENTING:</span> Masukkan 5 digit kode transfer unik berikut ke <strong>Berita Transfer / Catatan Transaksi</strong> Anda saat transfer:
+                                            </p>
+                                            <p class="mt-2 font-mono text-sm font-black bg-white border border-emerald-200 rounded-xl px-3 py-1.5 inline-block text-emerald-900 tracking-widest select-all" title="Klik/Ketuk untuk menyalin">
+                                                {{ explode('-', $item->nomor_pendaftaran)[0] }}
+                                            </p>
+                                        </div>
+                                    @endif
                                 </div>
 
                                 {{-- ── ACTION BUTTONS ──────────────────────────────── --}}
@@ -398,7 +418,17 @@
 
                     <div class="bg-green-50 border border-green-200 rounded-2xl p-4 mb-6">
                         <p class="text-xs text-green-800 font-medium">✅ Nomor pendaftaran terverifikasi. Silakan upload foto bukti transfer bank Anda.</p>
-                        <p id="infoProgram" class="text-xs text-green-700 font-bold mt-1"></p>
+                        <p id="infoProgram" class="text-xs text-green-700 font-bold mt-1 mb-2"></p>
+                        
+                        <!-- Account & Unique Code Instruction -->
+                        <div class="mt-2.5 pt-2.5 border-t border-green-200/50 text-[11px] text-green-800">
+                            <p class="font-bold mb-1">🏦 <span id="infoBankName">Rekening Mandiri</span>: <span id="infoBankAcc">131-00-1886111-1</span></p>
+                            <p class="mb-1">A.N. <span id="infoBankRecipient">PT Katiga Veritas Indonesia</span></p>
+                            <p class="leading-relaxed">
+                                <span class="text-amber-800 font-bold">Catatan Transfer:</span> Pastikan memasukkan 5 digit kode unik berikut pada berita transfer Anda: 
+                                <strong id="infoKodeUnik" class="font-mono text-xs bg-white px-1.5 py-0.5 rounded border border-green-300 font-black"></strong>
+                            </p>
+                        </div>
                     </div>
 
                     <div class="mb-5">
@@ -482,6 +512,27 @@
                 document.getElementById('hiddenNomor').value = data.nomor_pendaftaran;
                 document.getElementById('hiddenEmail').value  = email;
                 document.getElementById('infoProgram').textContent = 'Program: ' + data.program;
+                
+                // Set the unique code and bank account info in the modal
+                const uniqueCode = data.nomor_pendaftaran.split('-')[0];
+                const infoKodeEl = document.getElementById('infoKodeUnik');
+                if (infoKodeEl) {
+                    infoKodeEl.textContent = uniqueCode;
+                }
+                
+                const infoBankNameEl = document.getElementById('infoBankName');
+                const infoBankAccEl = document.getElementById('infoBankAcc');
+                const infoBankRecipientEl = document.getElementById('infoBankRecipient');
+                if (infoBankNameEl) {
+                    infoBankNameEl.textContent = 'Rekening ' + (data.bank_name || 'Mandiri');
+                }
+                if (infoBankAccEl) {
+                    infoBankAccEl.textContent = data.bank_account || '131-00-1886111-1';
+                }
+                if (infoBankRecipientEl) {
+                    infoBankRecipientEl.textContent = data.bank_recipient || 'PT Katiga Veritas Indonesia';
+                }
+                
                 document.getElementById('step1').classList.add('hidden');
                 document.getElementById('step2').classList.remove('hidden');
             } else {
@@ -539,15 +590,22 @@
             </div>
         </div>
 
-        <h2 class="text-2xl font-bold text-gray-800 mb-2">Pendaftaran Berhasil!</h2>
-        @if(session('invoice_email_sent') === false)
-            <p class="text-red-500 text-sm mb-8 font-semibold">
-                Sistem gagal mengirimkan email invoice (Error: {{ session('email_error') ?? 'Server SMTP gagal' }}). Silakan kontak admin via WhatsApp untuk mendapatkan invoice manual.
+        @if(session('is_konsultasi'))
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Permintaan Dikirim!</h2>
+            <p class="text-gray-500 text-sm mb-8">
+                Permintaan konsultasi Anda berhasil diajukan. Tim kami akan segera meninjau detail dan menghubungi Anda via Email/WhatsApp untuk koordinasi jadwal.
             </p>
         @else
-            <p class="text-gray-500 text-sm mb-8">
-                Invoice resmi dalam bentuk PDF telah dikirimkan ke email Anda. Silakan periksa kotak masuk atau folder spam Anda untuk instruksi pembayaran.
-            </p>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Pendaftaran Berhasil!</h2>
+            @if(session('invoice_email_sent') === false)
+                <p class="text-red-500 text-sm mb-8 font-semibold">
+                    Sistem gagal mengirimkan email invoice (Error: {{ session('email_error') ?? 'Server SMTP gagal' }}). Silakan kontak admin via WhatsApp untuk mendapatkan invoice manual.
+                </p>
+            @else
+                <p class="text-gray-500 text-sm mb-8">
+                    Invoice resmi dalam bentuk PDF telah dikirimkan ke email Anda. Silakan periksa kotak masuk atau folder spam Anda untuk instruksi pembayaran.
+                </p>
+            @endif
         @endif
 
         <button onclick="closeModal()" class="w-full bg-[#1E6B3D] hover:bg-[#3CDA7D] text-white font-bold py-3 rounded-xl shadow-lg transition-all active:scale-95">
