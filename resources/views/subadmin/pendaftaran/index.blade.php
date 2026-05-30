@@ -15,6 +15,7 @@
             </div>
             <select name="status" class="bg-slate-50 border border-slate-200/80 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 outline-none focus:ring-2 focus:ring-cyan-500 transition">
                 <option value="">Semua Status</option>
+                <option value="menunggu_pembayaran" {{ request('status') == 'menunggu_pembayaran' ? 'selected' : '' }}>Menunggu Pembayaran</option>
                 <option value="menunggu" {{ request('status') == 'menunggu' ? 'selected' : '' }}>Menunggu Konfirmasi</option>
                 <option value="diproses" {{ request('status') == 'diproses' ? 'selected' : '' }}>Terkonfirmasi</option>
                 <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
@@ -59,12 +60,14 @@
                     <td class="p-4 text-sm font-semibold">
                         @if($p->status_progres == 'menunggu')
                             <span class="text-[10px] bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full font-black uppercase tracking-widest whitespace-nowrap">Menunggu Konfirmasi</span>
+                        @elseif($p->status_progres == 'menunggu_pembayaran')
+                            <span class="text-[10px] bg-orange-100 text-orange-800 px-2.5 py-1 rounded-full font-black uppercase tracking-widest whitespace-nowrap">Menunggu Pembayaran</span>
                         @elseif($p->status_progres == 'diproses')
                             <span class="text-[10px] bg-blue-100 text-blue-800 px-2.5 py-1 rounded-full font-black uppercase tracking-widest whitespace-nowrap">Terkonfirmasi</span>
                         @elseif($p->status_progres == 'selesai')
                             <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full font-black uppercase tracking-widest whitespace-nowrap">Selesai</span>
                         @else
-                            <span class="text-[10px] bg-red-100 text-red-800 px-2.5 py-1 rounded-full font-black uppercase tracking-widest whitespace-nowrap">{{ strtoupper($p->status_progres) }}</span>
+                            <span class="text-[10px] bg-red-100 text-red-800 px-2.5 py-1 rounded-full font-black uppercase tracking-widest whitespace-nowrap">{{ strtoupper(str_replace('_', ' ', $p->status_progres)) }}</span>
                         @endif
                     </td>
                     <td class="p-4 text-sm font-semibold">

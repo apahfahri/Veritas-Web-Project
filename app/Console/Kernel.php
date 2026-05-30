@@ -17,6 +17,9 @@ class Kernel extends ConsoleKernel
     {
         // Run daily at 08:00
         $schedule->command('email:send-training-reminders')->dailyAt('08:00');
+        
+        // Auto close passed trainings daily at 00:05
+        $schedule->command('pendaftaran:auto-close-trainings')->dailyAt('00:05');
     }
 
     /**

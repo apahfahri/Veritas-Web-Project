@@ -46,6 +46,7 @@ class LayananAdminController extends Controller
     {
         $jadwal   = Jadwal::with(['kategori', 'jenis', 'pemateri'])->findOrFail($id);
         $pesertas = Pendaftaran::where('id_jadwal', $id)
+            ->where('status_progres', '!=', 'dibatalkan')
             ->with(['user', 'perusahaan'])
             ->latest()
             ->get();
@@ -62,7 +63,7 @@ class LayananAdminController extends Controller
         }
 
         $pendaftarans = Pendaftaran::where('id_jadwal', $jadwal->id_jadwal)
-            ->whereIn('status_progres', ['terkonfirmasi', 'selesai'])
+            ->where('status_progres', 'diproses')
             ->get();
 
         $count = 0;

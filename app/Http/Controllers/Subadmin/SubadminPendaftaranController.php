@@ -38,7 +38,8 @@ class SubadminPendaftaranController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
-                $q->where('id_pendaftaran', 'LIKE', "%{$search}%")
+                $q->where('nomor_pendaftaran', 'LIKE', "%{$search}%")
+                  ->orWhere('id_pendaftaran', 'LIKE', "%{$search}%")
                   ->orWhereHas('user', function($qUser) use ($search) {
                       $qUser->where('nama', 'LIKE', "%{$search}%")
                             ->orWhere('email', 'LIKE', "%{$search}%")

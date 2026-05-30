@@ -74,12 +74,12 @@ class SubadminJadwalController extends Controller
 
     public function show($id)
     {
-        $jadwal   = Jadwal::with(['kategori', 'jenis', 'pemateri'])->findOrFail($id);
+        $jadwal   = Jadwal::with(['pemateri', 'materi'])->findOrFail($id);
         $pesertas = Pendaftaran::where('id_jadwal', $id)
-            ->with(['user', 'perusahaan'])
+            ->where('status_progres', '!=', 'dibatalkan')
+            ->with('user')
             ->latest()
             ->get();
-
         return view('subadmin.jadwal.show', compact('jadwal', 'pesertas'));
     }
 
@@ -92,7 +92,7 @@ class SubadminJadwalController extends Controller
         }
 
         $pendaftarans = Pendaftaran::where('id_jadwal', $jadwal->id_jadwal)
-            ->whereIn('status_progres', ['terkonfirmasi', 'selesai'])
+            ->where('status_progres', 'diproses')
             ->get();
 
         $count = 0;
@@ -178,44 +178,22 @@ class SubadminJadwalController extends Controller
         $jadwal = Jadwal::findOrFail($id);
 
         $request->validate([
-            'id_kategori'    => 'required|exists:kategori_layanan,id_kategori',
-            'id_jenis'       => 'required|exists:jenis_layanan,id_jenis',
-            'kode_jadwal'    => 'nullable|string|max:20',
-            'jenis_pertemuan'=> 'required|in:online,offline,hybrid',
-            'tgl_mulai'      => 'nullable|date',
-            'tgl_selesai'    => 'nullable|date',
-            'jam_pertemuan'  => 'nullable',
-            'lokasi'         => 'nullable|string|max:255',
-            'kapasitas'      => 'nullable|integer|min:1',
-            'harga'          => 'required|numeric|min:0',
-            'deskripsi'      => 'nullable|string',
-            'pemateri_ids'   => 'nullable|array',
-            'pemateri_ids.*' => 'exists:pemateri,id_pemateri',
             'materi_ids'     => 'nullable|array',
             'materi_ids.*'   => 'exists:materi,id_materi',
-            'link_meet'      => 'nullable|url|max:255',
             'file_rundown'   => 'nullable|file|mimes:pdf|max:10240',
         ]);
 
-        $data = $request->only([
-            'id_kategori', 'id_jenis', 'kode_jadwal', 'jenis_pertemuan',
-            'tgl_mulai', 'tgl_selesai', 'jam_pertemuan', 'lokasi',
-            'kapasitas', 'harga', 'deskripsi', 'link_meet',
-        ]);
+        $data = [];
 
         if ($request->hasFile('file_rundown')) {
             if ($jadwal->file_rundown) {
-                Storage::disk('public')->delete($jadwal->file_rundown);
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($jadwal->file_rundown);
             }
             $data['file_rundown'] = $request->file('file_rundown')->store('rundown', 'public');
         }
 
-        $jadwal->update($data);
-
-        if ($request->has('pemateri_ids')) {
-            $jadwal->pemateri()->sync($request->pemateri_ids);
-        } else {
-            $jadwal->pemateri()->detach();
+        if (!empty($data)) {
+            $jadwal->update($data);
         }
 
         if ($request->has('materi_ids')) {

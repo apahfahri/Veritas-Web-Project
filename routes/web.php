@@ -69,6 +69,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::post('/pendaftaran', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
 Route::post('/pendaftaran/verifikasi-nomor', [PendaftaranController::class, 'verifikasiNomor'])->name('pendaftaran.verifikasi-nomor');
 Route::post('/pendaftaran/kirim-bukti', [PendaftaranController::class, 'kirimBuktiBayar'])->name('pendaftaran.kirim-bukti');
+Route::post('/pendaftaran/{id}/cancel-user', [PendaftaranController::class, 'cancelByUser'])->name('pendaftaran.cancel-user');
 
 /*
 |--------------------------------------------------------------------------
