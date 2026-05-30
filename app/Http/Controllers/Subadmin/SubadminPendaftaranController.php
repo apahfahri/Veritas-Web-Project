@@ -62,8 +62,9 @@ class SubadminPendaftaranController extends Controller
         })->with(['user', 'jadwal.jenis', 'sertifikat']);
 
         $pendaftaran = $query->findOrFail($id);
+        $rekening = \App\Models\Rekening::where('status_aktif', true)->first();
 
-        return view('subadmin.pendaftaran.show', compact('pendaftaran'));
+        return view('subadmin.pendaftaran.show', compact('pendaftaran', 'rekening'));
     }
 
     public function update(Request $request, $id)

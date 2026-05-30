@@ -47,11 +47,16 @@ class PendaftaranStatusNotification extends Notification
         $namaPeserta = $this->pendaftaran->user?->nama ?? 'Peserta';
 
         if ($this->status == 'menunggu_pembayaran') {
+            $rekening = \App\Models\Rekening::where('status_aktif', true)->first();
+            $bankName = $rekening?->nama_bank ?? 'Bank Mandiri';
+            $bankAccount = $rekening?->nomor_rekening ?? '131-00-1886111-1';
+            $bankRecipient = $rekening?->atas_nama ?? 'PT Katiga Veritas Indonesia';
+
             $message = "Halo *{$namaPeserta}*,\n\n";
             $message .= "Pendaftaran Anda pada layanan *{$namaLayanan}* telah kami terima. Untuk melanjutkan proses, silakan melakukan pembayaran ke:\n\n";
-            $message .= "🏦 *Bank Mandiri*\n";
-            $message .= "No. Rek: *1310018861111*\n";
-            $message .= "A/N: *PT Katiga Veritas Indonesia*\n\n";
+            $message .= "🏦 *{$bankName}*\n";
+            $message .= "No. Rek: *{$bankAccount}*\n";
+            $message .= "A/N: *{$bankRecipient}*\n\n";
             $message .= "Mohon kirimkan bukti transfer jika sudah membayar. Terima kasih!";
         } elseif ($this->status == 'diproses') {
             $message = "Halo *{$namaPeserta}*,\n\n";
@@ -90,6 +95,11 @@ class PendaftaranStatusNotification extends Notification
         $namaPeserta = $this->pendaftaran->user?->nama ?? 'Peserta';
         $nominal = number_format($this->pendaftaran->layanan?->harga ?? 0, 0, ',', '.');
 
+        $rekening = \App\Models\Rekening::where('status_aktif', true)->first();
+        $bankName = $rekening?->nama_bank ?? 'Bank Mandiri';
+        $bankAccount = $rekening?->nomor_rekening ?? '131-00-1886111-1';
+        $bankRecipient = $rekening?->atas_nama ?? 'PT Katiga Veritas Indonesia';
+
         $message = "✅ *KONFIRMASI PENDAFTARAN - KATIGA VERITAS*\n\n";
         $message .= "Halo *{$namaPeserta}*,\n";
         $message .= "Terima kasih telah mendaftar untuk layanan:\n";
@@ -97,9 +107,9 @@ class PendaftaranStatusNotification extends Notification
         $message .= "💵 *DETAIL PEMBAYARAN:*\n";
         $message .= "Total Tagihan: *Rp {$nominal}*\n\n";
         $message .= "Silakan melakukan transfer ke rekening berikut:\n";
-        $message .= "🏦 *Bank Mandiri*\n";
-        $message .= "No. Rek: *1310018861111*\n";
-        $message .= "A/N: *PT Katiga Veritas Indonesia*\n\n";
+        $message .= "🏦 *{$bankName}*\n";
+        $message .= "No. Rek: *{$bankAccount}*\n";
+        $message .= "A/N: *{$bankRecipient}*\n\n";
         $message .= "Setelah melakukan transfer, mohon unggah bukti bayar pada halaman status pendaftaran Anda. Terima kasih.";
 
         return Http::withHeaders([

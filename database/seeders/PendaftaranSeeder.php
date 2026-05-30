@@ -17,7 +17,6 @@ class PendaftaranSeeder extends Seeder
             'tanggal_daftar' => now()->subDays(5)->toDateString(),
             'status_progres' => 'selesai',
             'status_bayar' => 'lunas',
-            'cabang' => 'Bandung',
             'id_perusahaan' => 1, // Link to a company
         ]);
 
@@ -28,7 +27,6 @@ class PendaftaranSeeder extends Seeder
             'tanggal_daftar' => now()->subDays(2)->toDateString(),
             'status_progres' => 'menunggu_pembayaran',
             'status_bayar' => 'belum_lunas',
-            'cabang' => 'Jakarta',
             'id_perusahaan' => 1,
         ]);
     }
