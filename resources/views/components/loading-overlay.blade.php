@@ -47,6 +47,41 @@
 <script>
     let activeFormToSubmit = null;
 
+    // Global helpers to show/hide loading overlay programmatically
+    window.showLoadingOverlay = function(title = 'Memproses...', desc = 'Mohon tunggu sejenak, kami sedang memproses permintaan Anda.') {
+        const overlay = document.getElementById('loading-overlay');
+        const titleEl = document.getElementById('loading-overlay-title');
+        const descEl = document.getElementById('loading-overlay-desc');
+        
+        if (title || desc) {
+            if (titleEl) {
+                titleEl.textContent = title;
+                titleEl.classList.remove('hidden');
+            }
+            if (descEl) {
+                descEl.textContent = desc;
+                descEl.classList.remove('hidden');
+            }
+        } else {
+            // Hide text completely when both are empty
+            if (titleEl) titleEl.classList.add('hidden');
+            if (descEl) descEl.classList.add('hidden');
+        }
+        
+        if (overlay) {
+            overlay.classList.remove('opacity-0', 'pointer-events-none');
+            overlay.classList.add('opacity-100');
+        }
+    };
+
+    window.hideLoadingOverlay = function() {
+        const overlay = document.getElementById('loading-overlay');
+        if (overlay) {
+            overlay.classList.remove('opacity-100');
+            overlay.classList.add('opacity-0', 'pointer-events-none');
+        }
+    };
+
     function showConfirmModal(form) {
         activeFormToSubmit = form;
         
@@ -81,33 +116,96 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
+        // 1. Intercept POST forms for loading triggers
         const forms = document.querySelectorAll('form');
         forms.forEach(form => {
             const action = form.getAttribute('action') || '';
             const method = form.getAttribute('method') || '';
             
-            // Only trigger for POST forms that submit registration/pendaftaran/requests
-            if (method.toUpperCase() === 'POST' && (action.includes('pendaftaran') || action.includes('request'))) {
-                form.addEventListener('submit', function(e) {
-                    // Check if form is valid (native HTML5 validations like required)
-                    if (!form.checkValidity()) {
-                        return;
-                    }
-                    
-                    // Stop default synchronous submission so we can prompt the confirmation modal
-                    e.preventDefault();
-                    
-                    showConfirmModal(form);
-                });
+            if (method.toUpperCase() === 'POST') {
+                // If it is a booking/pendaftaran/request form, intercept with confirmation modal
+                if (action.includes('pendaftaran') || action.includes('request')) {
+                    form.addEventListener('submit', function(e) {
+                        if (!form.checkValidity()) {
+                            return;
+                        }
+                        
+                        e.preventDefault();
+                        showConfirmModal(form);
+                    });
+                } else {
+                    // For ordinary POST forms, show loading overlay directly on submit
+                    form.addEventListener('submit', function(e) {
+                        if (!form.checkValidity()) {
+                            return;
+                        }
+                        
+                        let title = 'Memproses Permintaan Anda...';
+                        let desc = 'Mohon tunggu sejenak, kami sedang memproses data Anda.';
+                        
+                        if (action.includes('login')) {
+                            title = 'Mencoba Masuk...';
+                            desc = 'Mohon tunggu sejenak. Kami sedang memverifikasi kredensial akun Anda.';
+                        } else if (action.includes('register')) {
+                            title = 'Membuat Akun...';
+                            desc = 'Mohon tunggu sejenak. Kami sedang mendaftarkan akun Anda dan menyiapkan sistem.';
+                        } else if (action.includes('otp') || action.includes('verify')) {
+                            title = 'Memverifikasi Kode OTP...';
+                            desc = 'Mohon tunggu sejenak. Kami sedang mencocokkan kode keamanan Anda.';
+                        } else if (action.includes('profile')) {
+                            title = 'Menyimpan Perubahan...';
+                            desc = 'Mohon tunggu sejenak. Kami sedang memperbarui data profil Anda.';
+                        } else if (action.includes('password') || action.includes('reset')) {
+                            title = 'Mengirim Permintaan Sandi...';
+                            desc = 'Mohon tunggu sejenak. Kami sedang menghubungkan ke server email untuk memproses reset sandi.';
+                        } else if (action.includes('logout')) {
+                            title = 'Keluar dari Sistem...';
+                            desc = 'Mohon tunggu sejenak. Sesi Anda sedang dibersihkan secara aman.';
+                        }
+                        
+                        window.showLoadingOverlay(title, desc);
+                    });
+                }
             }
         });
 
-        // Add event listener to confirm submit button
+        // 2. Intercept link clicks for page navigation loading (without text)
+        document.querySelectorAll('a').forEach(link => {
+            const href = link.getAttribute('href');
+            const target = link.getAttribute('target');
+            
+            // Validate that the link is for local page navigation
+            if (href && 
+                !href.startsWith('#') && 
+                !href.startsWith('javascript:') && 
+                !href.startsWith('mailto:') && 
+                !href.startsWith('tel:') && 
+                (!target || target === '_self') &&
+                !link.hasAttribute('download')) {
+                
+                try {
+                    const url = new URL(link.href, window.location.href);
+                    if (url.origin === window.location.origin) {
+                        link.addEventListener('click', function(e) {
+                            // Do not intercept modifier clicks (Ctrl+Click, etc.)
+                            if (e.metaKey || e.ctrlKey || e.shiftKey || (e.button && e.button === 1)) {
+                                return;
+                            }
+                            
+                            // Show loading overlay without text
+                            window.showLoadingOverlay('', '');
+                        });
+                    }
+                } catch(e) {}
+            }
+        });
+
+        // 3. Add event listener to confirm submit button
         const confirmBtn = document.getElementById('confirm-submit-btn');
         if (confirmBtn) {
             confirmBtn.addEventListener('click', function() {
                 if (activeFormToSubmit) {
-                    // 1. Hide confirm modal immediately
+                    // Hide confirm modal immediately
                     const modal = document.getElementById('confirm-modal');
                     const content = document.getElementById('confirm-content');
                     if (modal && content) {
@@ -117,31 +215,35 @@
                         modal.classList.add('opacity-0', 'pointer-events-none');
                     }
                     
-                    // 2. Show loading overlay
-                    const overlay = document.getElementById('loading-overlay');
-                    if (overlay) {
-                        const kategoriInput = activeFormToSubmit.querySelector('input[name="kategori_id"]');
-                        const isConsultation = kategoriInput && kategoriInput.value === '2';
-                        
-                        const titleEl = document.getElementById('loading-overlay-title');
-                        const descEl = document.getElementById('loading-overlay-desc');
-                        
-                        if (isConsultation) {
-                            if (titleEl) titleEl.textContent = 'Mengirim Permintaan Konsultasi...';
-                            if (descEl) descEl.textContent = 'Mohon tunggu sejenak. Kami sedang memproses data pengajuan konsultasi Anda.';
-                        } else {
-                            if (titleEl) titleEl.textContent = 'Memproses Pendaftaran...';
-                            if (descEl) descEl.textContent = 'Mohon tunggu sejenak. Kami sedang memproses pendaftaran, membuat invoice, dan mengirimkan email konfirmasi ke alamat email Anda.';
-                        }
-
-                        overlay.classList.remove('opacity-0', 'pointer-events-none');
-                        overlay.classList.add('opacity-100');
-                    }
+                    // Show loading overlay
+                    const kategoriInput = activeFormToSubmit.querySelector('input[name="kategori_id"]');
+                    const isConsultation = kategoriInput && kategoriInput.value === '2';
+                    const isAudit = kategoriInput && kategoriInput.value === '3';
                     
-                    // 3. Submit form synchronously bypassing this submit listener
+                    let title = 'Memproses Pendaftaran...';
+                    let desc = 'Mohon tunggu sejenak. Kami sedang memproses pendaftaran, membuat invoice, dan mengirimkan email konfirmasi ke alamat email Anda.';
+                    
+                    if (isConsultation) {
+                        title = 'Mengirim Permintaan Konsultasi...';
+                        desc = 'Mohon tunggu sejenak. Kami sedang memproses data pengajuan konsultasi Anda.';
+                    } else if (isAudit) {
+                        title = 'Mengirim Permintaan Audit...';
+                        desc = 'Mohon tunggu sejenak. Kami sedang memproses data pengajuan audit K3 Anda.';
+                    }
+
+                    window.showLoadingOverlay(title, desc);
+                    
+                    // Submit form
                     activeFormToSubmit.submit();
                 }
             });
+        }
+    });
+
+    // Handle back button / cache reload
+    window.addEventListener('pageshow', function(event) {
+        if (event.persisted) {
+            window.hideLoadingOverlay();
         }
     });
 </script>

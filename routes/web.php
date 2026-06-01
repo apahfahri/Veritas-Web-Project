@@ -211,6 +211,29 @@ Route::middleware(['auth', 'is.subadmin'])->prefix('subadmin')->name('subadmin.'
     Route::post('/konsultasi/{id}/finish',             [\App\Http\Controllers\Subadmin\SubadminKonsultasiController::class, 'finishConsultation'])->name('konsultasi.finish');
     Route::post('/konsultasi/{id}/confirm-payment',    [\App\Http\Controllers\Subadmin\SubadminKonsultasiController::class, 'confirmPayment'])->name('konsultasi.confirm-payment');
     Route::post('/konsultasi/{id}/reject-payment',     [\App\Http\Controllers\Subadmin\SubadminKonsultasiController::class, 'rejectPayment'])->name('konsultasi.reject-payment');
+
+    // Audit
+    Route::get('/audit-layanan',                       [\App\Http\Controllers\Subadmin\SubadminAuditController::class, 'index'])->name('audit.index');
+    Route::get('/audit-layanan/{id}',                  [\App\Http\Controllers\Subadmin\SubadminAuditController::class, 'show'])->name('audit.show');
+    Route::post('/audit-layanan/{id}/confirm',         [\App\Http\Controllers\Subadmin\SubadminAuditController::class, 'confirmAudit'])->name('audit.confirm');
+    Route::post('/audit-layanan/{id}/start-scheduling',[\App\Http\Controllers\Subadmin\SubadminAuditController::class, 'startScheduling'])->name('audit.start-scheduling');
+    Route::post('/audit-layanan/{id}/schedule',        [\App\Http\Controllers\Subadmin\SubadminAuditController::class, 'scheduleMeeting'])->name('audit.schedule');
+    Route::post('/audit-layanan/{id}/finish',          [\App\Http\Controllers\Subadmin\SubadminAuditController::class, 'finishAudit'])->name('audit.finish');
+    Route::post('/audit-layanan/{id}/confirm-payment', [\App\Http\Controllers\Subadmin\SubadminAuditController::class, 'confirmPayment'])->name('audit.confirm-payment');
+    Route::post('/audit-layanan/{id}/reject-payment',  [\App\Http\Controllers\Subadmin\SubadminAuditController::class, 'rejectPayment'])->name('audit.reject-payment');
+
+    // Pelatihan Kustom (Bespoke/Request Lifecycle & Review)
+    Route::get('/pelatihan-kustom',                          [\App\Http\Controllers\Subadmin\SubadminPelatihanKustomController::class, 'index'])->name('pelatihan-kustom.index');
+    Route::get('/pelatihan-kustom/{id}',                     [\App\Http\Controllers\Subadmin\SubadminPelatihanKustomController::class, 'show'])->name('pelatihan-kustom.show');
+    Route::post('/pelatihan-kustom/{id}/confirm',            [\App\Http\Controllers\Subadmin\SubadminPelatihanKustomController::class, 'confirmRegistration'])->name('pelatihan-kustom.confirm');
+    Route::post('/pelatihan-kustom/{id}/start-scheduling',   [\App\Http\Controllers\Subadmin\SubadminPelatihanKustomController::class, 'startScheduling'])->name('pelatihan-kustom.start-scheduling');
+    Route::post('/pelatihan-kustom/{id}/schedule',           [\App\Http\Controllers\Subadmin\SubadminPelatihanKustomController::class, 'scheduleMeeting'])->name('pelatihan-kustom.schedule');
+    Route::post('/pelatihan-kustom/{id}/finish',             [\App\Http\Controllers\Subadmin\SubadminPelatihanKustomController::class, 'finishTraining'])->name('pelatihan-kustom.finish');
+    Route::post('/pelatihan-kustom/{id}/confirm-payment',    [\App\Http\Controllers\Subadmin\SubadminPelatihanKustomController::class, 'confirmPayment'])->name('pelatihan-kustom.confirm-payment');
+    Route::post('/pelatihan-kustom/{id}/reject-payment',     [\App\Http\Controllers\Subadmin\SubadminPelatihanKustomController::class, 'rejectPayment'])->name('pelatihan-kustom.reject-payment');
+    Route::post('/pelatihan-kustom/{id}/add-participant',    [\App\Http\Controllers\Subadmin\SubadminPelatihanKustomController::class, 'addParticipant'])->name('pelatihan-kustom.add-participant');
+    Route::post('/pelatihan-kustom/{id}/import-participants',[\App\Http\Controllers\Subadmin\SubadminPelatihanKustomController::class, 'importParticipants'])->name('pelatihan-kustom.import-participants');
+    Route::delete('/pelatihan-kustom/participant/{id}',      [\App\Http\Controllers\Subadmin\SubadminPelatihanKustomController::class, 'removeParticipant'])->name('pelatihan-kustom.remove-participant');
 });
 
 /*

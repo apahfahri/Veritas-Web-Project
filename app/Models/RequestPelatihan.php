@@ -14,6 +14,7 @@ class RequestPelatihan extends Model
 
     protected $fillable = [
         'id_perusahaan',
+        'id_pendaftaran',
         'nama_lengkap',
         'email',
         'no_telp',
@@ -35,5 +36,10 @@ class RequestPelatihan extends Model
     public function perusahaan()
     {
         return $this->belongsTo(Perusahaan::class, 'id_perusahaan', 'id_perusahaan');
+    }
+
+    public function pendaftaran()
+    {
+        return $this->belongsTo(Pendaftaran::class, 'id_pendaftaran', 'id_pendaftaran');
     }
 }

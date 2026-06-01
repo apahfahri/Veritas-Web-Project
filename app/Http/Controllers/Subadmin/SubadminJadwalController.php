@@ -33,6 +33,9 @@ class SubadminJadwalController extends Controller
             ->whereHas('kategori', function($q) {
                 $q->where('nama', 'like', '%Pelatihan%');
             })
+            ->whereDoesntHave('pendaftarans', function ($q) {
+                $q->where('is_kustom', true);
+            })
             ->withCount(['pendaftarans as pending_count' => function ($q) {
                 $q->where('status_progres', 'menunggu');
             }]);

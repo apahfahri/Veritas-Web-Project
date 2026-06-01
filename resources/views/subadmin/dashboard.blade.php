@@ -1,6 +1,6 @@
 @extends('layouts.subadmin')
 @section('title', 'Dashboard Analytics')
-@section('page-title', 'Overview Subadmin ' . strtoupper(Auth::user()->admin?->cabang))
+@section('page-title', 'Overview Subadmin ' . strtoupper(Auth::user()->cabang))
 
 @section('header-actions')
 <button onclick="exportDashboardAsPDF()" id="exportBtn" class="bg-cyan-600 hover:bg-cyan-700 text-white text-[11px] font-black uppercase tracking-wider px-5 py-3 rounded-xl transition-all shadow-lg shadow-cyan-600/20 flex items-center gap-2 group">
