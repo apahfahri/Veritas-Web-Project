@@ -15,6 +15,11 @@
     {{-- Info Jadwal --}}
     <div class="lg:col-span-1 space-y-5">
         <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            @if($jadwal->foto)
+            <div class="w-full h-48 overflow-hidden border-b border-slate-100">
+                <img src="{{ asset('storage/' . $jadwal->foto) }}" alt="{{ $jadwal->jenis?->nama }}" class="w-full h-full object-cover">
+            </div>
+            @endif
             <div class="bg-slate-50/50 px-6 py-5 border-b border-slate-100">
                 <div class="flex items-center gap-2 mb-2">
                     <span class="text-[9px] font-black bg-slate-900 text-cyan-400 px-2 py-1 rounded-lg tracking-widest">{{ $jadwal->kategori?->kode_kategori }}</span>

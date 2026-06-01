@@ -108,6 +108,7 @@ class LayananAdminController extends Controller
             'materi_ids.*'   => 'exists:materi,id_materi',
             'link_meet'      => 'nullable|url|max:255',
             'file_rundown'   => 'nullable|file|mimes:pdf|max:10240',
+            'foto'           => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         $kategori = KategoriLayanan::findOrFail($request->id_kategori);
@@ -124,6 +125,10 @@ class LayananAdminController extends Controller
 
         if ($request->hasFile('file_rundown')) {
             $data['file_rundown'] = $request->file('file_rundown')->store('rundown', 'public');
+        }
+
+        if ($request->hasFile('foto')) {
+            $data['foto'] = $request->file('foto')->store('jadwal', 'public');
         }
 
         $jadwal = Jadwal::create($data);
@@ -171,6 +176,7 @@ class LayananAdminController extends Controller
             'materi_ids.*'   => 'exists:materi,id_materi',
             'link_meet'      => 'nullable|url|max:255',
             'file_rundown'   => 'nullable|file|mimes:pdf|max:10240',
+            'foto'           => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         $data = $request->only([
@@ -184,6 +190,13 @@ class LayananAdminController extends Controller
                 Storage::disk('public')->delete($jadwal->file_rundown);
             }
             $data['file_rundown'] = $request->file('file_rundown')->store('rundown', 'public');
+        }
+
+        if ($request->hasFile('foto')) {
+            if ($jadwal->foto) {
+                Storage::disk('public')->delete($jadwal->foto);
+            }
+            $data['foto'] = $request->file('foto')->store('jadwal', 'public');
         }
 
         $jadwal->update($data);
@@ -209,6 +222,9 @@ class LayananAdminController extends Controller
         $jadwal = Jadwal::findOrFail($id);
         if ($jadwal->file_rundown) {
             Storage::disk('public')->delete($jadwal->file_rundown);
+        }
+        if ($jadwal->foto) {
+            Storage::disk('public')->delete($jadwal->foto);
         }
         $jadwal->pemateri()->detach();
         $jadwal->delete();
