@@ -39,7 +39,7 @@ class LayananAdminController extends Controller
             });
         }
 
-        $jadwals = $query->latest()->paginate(15)->appends(['filter' => $filter]);
+        $jadwals = $query->latest()->paginate(5)->appends(['filter' => $filter]);
         return view('admin.jadwal.index', compact('jadwals', 'filter'));
     }
 

@@ -169,9 +169,56 @@
         </table>
     </div>
 
-    @if($jadwals->hasPages())
-    <div class="p-6 border-t border-slate-50 bg-slate-50/30">
-        {{ $jadwals->links() }}
+    @if($jadwals->count())
+    <div class="px-6 py-4 border-t border-slate-100 bg-slate-50/40 flex items-center justify-between gap-4">
+        {{-- Info halaman --}}
+        <p class="text-[13px] font-bold text-slate-900 tracking-widest whitespace-nowrap">
+            Menampilkan
+            <span class="text-slate-900">{{ $jadwals->firstItem() }}–{{ $jadwals->lastItem() }}</span>
+            dari
+            <span class="text-slate-900">{{ $jadwals->total() }}</span>
+            data
+        </p>
+
+        {{-- Navigasi halaman (hanya jika ada lebih dari 1 halaman) --}}
+        @if($jadwals->hasPages())
+        <div class="flex items-center gap-1">
+            {{-- Prev --}}
+            @if($jadwals->onFirstPage())
+                <span class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-100 text-slate-300 cursor-not-allowed">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                </span>
+            @else
+                <a href="{{ $jadwals->previousPageUrl() }}" class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 hover:border-indigo-500 hover:text-indigo-600 hover:shadow-sm transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                </a>
+            @endif
+
+            {{-- Nomor halaman --}}
+            @foreach($jadwals->getUrlRange(1, $jadwals->lastPage()) as $page => $url)
+                @if($page == $jadwals->currentPage())
+                    <span class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-900 text-white text-[12px] font-black shadow-sm">
+                        {{ $page }}
+                    </span>
+                @else
+                    <a href="{{ $url }}" class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 text-[12px] font-bold hover:border-indigo-500 hover:text-indigo-600 hover:shadow-sm transition">
+                        {{ $page }}
+                    </a>
+                @endif
+            @endforeach
+
+            {{-- Next --}}
+            @if($jadwals->hasMorePages())
+                <a href="{{ $jadwals->nextPageUrl() }}" class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 hover:border-indigo-500 hover:text-indigo-600 hover:shadow-sm transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </a>
+            @else
+                <span class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-100 text-slate-300 cursor-not-allowed">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </span>
+            @endif
+        </div>
+        @endif
     </div>
     @endif
 </div>

@@ -39,7 +39,7 @@
                 <tbody class="text-sm font-medium text-slate-600">
                     @forelse($materis as $m)
                     <tr class="hover:bg-slate-50 transition border-b border-slate-50 last:border-none">
-                        <td class="px-6 py-4">{{ $loop->iteration }}</td>
+                        <td class="px-6 py-4">{{ $materis->firstItem() + $loop->index }}</td>
                         <td class="px-6 py-4 font-bold text-slate-800">{{ $m->judul }}</td>
                         <td class="px-6 py-4 text-xs text-slate-500">{{ Str::limit($m->deskripsi, 50) }}</td>
                         <td class="px-6 py-4">
@@ -62,6 +62,60 @@
                 </tbody>
             </table>
         </div>
+
+        {{-- Pagination --}}
+        @if($materis->count())
+        <div class="mt-6 border-t border-slate-100 pt-4 flex items-center justify-between gap-4">
+            {{-- Info halaman --}}
+            <p class="text-[13px] font-bold text-slate-900 tracking-widest whitespace-nowrap">
+                Menampilkan
+                <span class="text-slate-900">{{ $materis->firstItem() }}–{{ $materis->lastItem() }}</span>
+                dari
+                <span class="text-slate-900">{{ $materis->total() }}</span>
+                data
+            </p>
+
+            {{-- Navigasi halaman (hanya jika ada lebih dari 1 halaman) --}}
+            @if($materis->hasPages())
+            <div class="flex items-center gap-1">
+                {{-- Prev --}}
+                @if($materis->onFirstPage())
+                    <span class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-100 text-slate-300 cursor-not-allowed">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                    </span>
+                @else
+                    <a href="{{ $materis->previousPageUrl() }}" class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 hover:border-indigo-500 hover:text-indigo-600 hover:shadow-sm transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                    </a>
+                @endif
+
+                {{-- Nomor halaman --}}
+                @foreach($materis->getUrlRange(1, $materis->lastPage()) as $page => $url)
+                    @if($page == $materis->currentPage())
+                        <span class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-900 text-white text-[12px] font-black shadow-sm">
+                            {{ $page }}
+                        </span>
+                    @else
+                        <a href="{{ $url }}" class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 text-[12px] font-bold hover:border-indigo-500 hover:text-indigo-600 hover:shadow-sm transition">
+                            {{ $page }}
+                        </a>
+                    @endif
+                @endforeach
+
+                {{-- Next --}}
+                @if($materis->hasMorePages())
+                    <a href="{{ $materis->nextPageUrl() }}" class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 hover:border-indigo-500 hover:text-indigo-600 hover:shadow-sm transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </a>
+                @else
+                    <span class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-100 text-slate-300 cursor-not-allowed">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </span>
+                @endif
+            </div>
+            @endif
+        </div>
+        @endif
     </div>
 </div>
 
