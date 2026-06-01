@@ -18,6 +18,7 @@ class KlienPerusahaan extends Model
         'jabatan',
         'nama_cp',
         'no_hp_cp',
+        'catatan',
     ];
 
     /*
