@@ -44,8 +44,15 @@ class PendaftaranInvoiceMail extends Mailable
         $jenisNama = $this->layanan?->jenis?->nama ?? '';
         $subject = trim("Invoice Pendaftaran {$kategoriNama} {$jenisNama}");
 
+        $rekening = \App\Models\Rekening::where('status_aktif', true)->first();
+
         $mail = $this->subject($subject)
-                     ->view('emails.invoice');
+                     ->view('emails.invoice', [
+                         'pendaftaran' => $this->pendaftaran,
+                         'user'        => $this->user,
+                         'layanan'     => $this->layanan,
+                         'rekening'    => $rekening,
+                     ]);
 
         // Attempt to attach a PDF version of the invoice
         try {
@@ -53,6 +60,7 @@ class PendaftaranInvoiceMail extends Mailable
                 'pendaftaran' => $this->pendaftaran,
                 'user'        => $this->user,
                 'layanan'     => $this->layanan,
+                'rekening'    => $rekening,
             ])->setPaper('a4', 'portrait');
 
             $mail->attachData(

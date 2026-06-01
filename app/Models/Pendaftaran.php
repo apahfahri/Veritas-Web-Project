@@ -48,7 +48,7 @@ class Pendaftaran extends Model
                     $uniqueCode .= $chars[rand(0, strlen($chars) - 1)];
                 }
 
-                $model->nomor_pendaftaran = strtoupper("{$kategoriKode}-{$jenisKode}-{$jadwalSeq}-{$mode}-{$date}-{$seq}-{$uniqueCode}");
+                $model->nomor_pendaftaran = strtoupper("{$uniqueCode}-{$kategoriKode}-{$jenisKode}-{$jadwalSeq}-{$mode}-{$date}-{$seq}");
             }
         });
     }

@@ -69,6 +69,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::post('/pendaftaran', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
 Route::post('/pendaftaran/verifikasi-nomor', [PendaftaranController::class, 'verifikasiNomor'])->name('pendaftaran.verifikasi-nomor');
 Route::post('/pendaftaran/kirim-bukti', [PendaftaranController::class, 'kirimBuktiBayar'])->name('pendaftaran.kirim-bukti');
+Route::post('/pendaftaran/{id}/cancel-user', [PendaftaranController::class, 'cancelByUser'])->name('pendaftaran.cancel-user');
 
 /*
 |--------------------------------------------------------------------------
@@ -130,6 +131,10 @@ Route::middleware(['auth', 'is.admin'])->prefix('admin')->name('admin.')->group(
 
     // Subadmin management
     Route::resource('subadmin', \App\Http\Controllers\Admin\SubadminController::class)->except(['show']);
+
+    // Rekening management
+    Route::resource('rekening', \App\Http\Controllers\Admin\RekeningController::class)->except(['show']);
+    Route::post('/rekening/{id}/toggle', [\App\Http\Controllers\Admin\RekeningController::class, 'toggleActive'])->name('rekening.toggle');
 
     // Klien & Mitra (Perusahaan B2B)
     Route::resource('mitra', KlienMitraController::class)->except(['show']);

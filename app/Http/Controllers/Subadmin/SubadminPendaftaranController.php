@@ -38,7 +38,8 @@ class SubadminPendaftaranController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
-                $q->where('id_pendaftaran', 'LIKE', "%{$search}%")
+                $q->where('nomor_pendaftaran', 'LIKE', "%{$search}%")
+                  ->orWhere('id_pendaftaran', 'LIKE', "%{$search}%")
                   ->orWhereHas('user', function($qUser) use ($search) {
                       $qUser->where('nama', 'LIKE', "%{$search}%")
                             ->orWhere('email', 'LIKE', "%{$search}%")
@@ -62,8 +63,9 @@ class SubadminPendaftaranController extends Controller
         })->with(['user', 'jadwal.jenis', 'sertifikat']);
 
         $pendaftaran = $query->findOrFail($id);
+        $rekening = \App\Models\Rekening::where('status_aktif', true)->first();
 
-        return view('subadmin.pendaftaran.show', compact('pendaftaran'));
+        return view('subadmin.pendaftaran.show', compact('pendaftaran', 'rekening'));
     }
 
     public function update(Request $request, $id)

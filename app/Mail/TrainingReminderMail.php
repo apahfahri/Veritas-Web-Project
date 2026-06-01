@@ -32,7 +32,7 @@ class TrainingReminderMail extends Mailable
 
         $jadwal = $this->pendaftaran->jadwal;
 
-        if ($jadwal->file_rundown) {
+        if ($jadwal->file_rundown && file_exists(storage_path('app/public/' . $jadwal->file_rundown))) {
             $mail->attach(storage_path('app/public/' . $jadwal->file_rundown), [
                 'as' => 'Rundown_Pelatihan.pdf',
                 'mime' => 'application/pdf',
@@ -40,7 +40,7 @@ class TrainingReminderMail extends Mailable
         }
 
         foreach ($jadwal->materi as $index => $materi) {
-            if ($materi->file_path) {
+            if ($materi->file_path && file_exists(storage_path('app/public/' . $materi->file_path))) {
                 $mail->attach(storage_path('app/public/' . $materi->file_path), [
                     'as' => 'Materi_' . ($index + 1) . '_' . str_replace(' ', '_', $materi->judul) . '.pdf',
                     'mime' => 'application/pdf',

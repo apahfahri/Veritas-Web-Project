@@ -22,7 +22,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Kategori *</label>
-                    <select name="id_kategori" id="selectKategori" required onchange="loadJenis()"
+                    <select name="id_kategori" id="selectKategori" required onchange="loadJenis()" disabled
                             class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
                         <option value="">-- Pilih Kategori --</option>
                         @foreach($kategoris as $k)
@@ -36,7 +36,7 @@
                 </div>
                 <div>
                     <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Program *</label>
-                    <select name="id_jenis" id="selectJenis" required
+                    <select name="id_jenis" id="selectJenis" required disabled
                             class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
                         <option value="">-- Pilih Jenis --</option>
                     </select>
@@ -46,7 +46,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
                     <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Mode Pertemuan *</label>
-                    <select name="jenis_pertemuan" required
+                    <select name="jenis_pertemuan" required disabled
                             class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
                         <option value="offline" {{ old('jenis_pertemuan', $jadwal->jenis_pertemuan) == 'offline' ? 'selected' : '' }}>Offline</option>
                         <option value="online"  {{ old('jenis_pertemuan', $jadwal->jenis_pertemuan) == 'online'  ? 'selected' : '' }}>Online</option>
@@ -55,12 +55,12 @@
                 </div>
                 <div>
                     <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Harga (IDR) *</label>
-                    <input type="number" name="harga" value="{{ old('harga', $jadwal->harga) }}" min="0" required
+                    <input type="number" name="harga" value="{{ old('harga', $jadwal->harga) }}" min="0" required disabled
                            class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
                 </div>
                 <div>
                     <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Kapasitas</label>
-                    <input type="number" name="kapasitas" value="{{ old('kapasitas', $jadwal->kapasitas) }}" min="1"
+                    <input type="number" name="kapasitas" value="{{ old('kapasitas', $jadwal->kapasitas) }}" min="1" disabled
                            class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
                 </div>
             </div>
@@ -68,17 +68,17 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
                     <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Tanggal Mulai</label>
-                    <input type="date" name="tgl_mulai" value="{{ old('tgl_mulai', $jadwal->tgl_mulai?->format('Y-m-d')) }}"
+                    <input type="date" name="tgl_mulai" value="{{ old('tgl_mulai', $jadwal->tgl_mulai?->format('Y-m-d')) }}" disabled
                            class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
                 </div>
                 <div>
                     <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Tanggal Selesai</label>
-                    <input type="date" name="tgl_selesai" value="{{ old('tgl_selesai', $jadwal->tgl_selesai?->format('Y-m-d')) }}"
+                    <input type="date" name="tgl_selesai" value="{{ old('tgl_selesai', $jadwal->tgl_selesai?->format('Y-m-d')) }}" disabled
                            class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
                 </div>
                 <div>
                     <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Jam Mulai</label>
-                    <input type="time" name="jam_pertemuan" value="{{ old('jam_pertemuan', $jadwal->jam_pertemuan) }}"
+                    <input type="time" name="jam_pertemuan" value="{{ old('jam_pertemuan', $jadwal->jam_pertemuan) }}" disabled
                            class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
                 </div>
             </div>
@@ -86,12 +86,12 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Lokasi / Venue</label>
-                    <input type="text" name="lokasi" value="{{ old('lokasi', $jadwal->lokasi) }}"
+                    <input type="text" name="lokasi" value="{{ old('lokasi', $jadwal->lokasi) }}" disabled
                            class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
                 </div>
                 <div>
                     <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Link Meet Online</label>
-                    <input type="url" name="link_meet" value="{{ old('link_meet', $jadwal->link_meet) }}" placeholder="https://zoom.us/j/... (opsional)"
+                    <input type="url" name="link_meet" value="{{ old('link_meet', $jadwal->link_meet) }}" placeholder="https://zoom.us/j/... (opsional)" disabled
                            class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
                 </div>
             </div>
@@ -101,9 +101,9 @@
                 <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 max-h-48 overflow-y-auto space-y-2">
                     @foreach($pemateris as $pm)
                     @php $checked = $jadwal->pemateri->contains('id_pemateri', $pm->id_pemateri); @endphp
-                    <label class="flex items-center gap-3 cursor-pointer hover:bg-white p-2 rounded-lg transition">
+                    <label class="flex items-center gap-3 cursor-not-allowed hover:bg-white p-2 rounded-lg transition">
                         <input type="checkbox" name="pemateri_ids[]" value="{{ $pm->id_pemateri }}"
-                               {{ $checked ? 'checked' : '' }}
+                               {{ $checked ? 'checked' : '' }} disabled
                                class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500">
                         <span class="text-sm font-bold text-slate-700">{{ $pm->nama_lengkap }}</span>
                     </label>
@@ -142,7 +142,7 @@
 
             <div>
                 <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Deskripsi</label>
-                <textarea name="deskripsi" rows="3"
+                <textarea name="deskripsi" rows="3" disabled
                           class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">{{ old('deskripsi', $jadwal->deskripsi) }}</textarea>
             </div>
 
@@ -176,7 +176,7 @@ function loadJenis() {
             if (currentJenisId == j.id) opt.selected = true;
             sel.appendChild(opt);
         });
-        sel.disabled = false;
+        sel.disabled = true;
     } else { sel.disabled = true; }
 }
 document.addEventListener('DOMContentLoaded', loadJenis);

@@ -254,12 +254,22 @@
                 Silakan lakukan transfer pembayaran penuh sejumlah nominal di atas ke rekening resmi kami berikut:
             </p>
             <div class="bank-info">
-                <div class="bank-name">🏦 Bank Mandiri</div>
+                <div class="bank-name">🏦 {{ $rekening?->nama_bank ?? 'Bank Mandiri' }}</div>
                 <div style="margin: 8px 0;">
-                    <span style="display: inline-block; font-family: Monaco, Consolas, 'Courier New', monospace; background-color: #e2e8f0; border: 1px dashed #0891b2; padding: 6px 12px; border-radius: 6px; color: #0891b2; font-size: 18px; font-weight: 900; letter-spacing: 1px; user-select: all; -webkit-user-select: all; -moz-user-select: all; -ms-user-select: all; cursor: text;" title="Klik dua kali atau tekan lama untuk menyalin">1310018861111</span>
+                    <span style="display: inline-block; font-family: Monaco, Consolas, 'Courier New', monospace; background-color: #e2e8f0; border: 1px dashed #0891b2; padding: 6px 12px; border-radius: 6px; color: #0891b2; font-size: 18px; font-weight: 900; letter-spacing: 1px; user-select: all; -webkit-user-select: all; -moz-user-select: all; -ms-user-select: all; cursor: text;" title="Klik dua kali atau tekan lama untuk menyalin">{{ str_replace('-', '', $rekening?->nomor_rekening ?? '1310018861111') }}</span>
                     <span style="font-size: 12px; color: #64748b; margin-left: 8px;">(Salin tanpa tanda hubung)</span>
                 </div>
-                <div class="acc-name">A.N. PT Katiga Veritas Indonesia</div>
+                <div class="acc-name" style="margin-bottom: 12px;">A.N. {{ $rekening?->atas_nama ?? 'PT Katiga Veritas Indonesia' }}</div>
+                
+                <!-- Unique Code Instruction -->
+                <div style="background-color: #f0fdf4; border-left: 3px solid #22c55e; padding: 12px; margin-top: 10px; border-radius: 6px; text-align: left;">
+                    <p style="margin: 0; font-size: 13px; color: #15803d; font-weight: bold; line-height: 1.4;">
+                        ⚠️ PENTING: Masukkan 5 digit kode transfer berikut pada <strong>Berita Transfer / Catatan Transaksi</strong> Anda saat melakukan pembayaran untuk memudahkan pelacakan & verifikasi bukti bayar:
+                    </p>
+                    <p style="margin: 6px 0 0 0; font-family: Monaco, Consolas, 'Courier New', monospace; font-size: 20px; color: #166534; font-weight: 900; letter-spacing: 2px;">
+                        {{ explode('-', $pendaftaran->nomor_pendaftaran)[0] }}
+                    </p>
+                </div>
             </div>
 
             <!-- CTA Section -->

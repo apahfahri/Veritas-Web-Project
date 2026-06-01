@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             JadwalSeeder::class,          // Jalankan setelah kategori/jenis selesai
             PendaftaranSeeder::class,   // Jalankan setelah jadwal selesai
             KlienIndividuSeeder::class,
+            RekeningSeeder::class,
         ]);
     }
 }
