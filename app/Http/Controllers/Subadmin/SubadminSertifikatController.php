@@ -25,7 +25,13 @@ class SubadminSertifikatController extends Controller
         // Sertifikat scope managed via Pendaftaran relation or Global Scope if needed
         $sertifikats = Sertifikat::whereHas('pendaftaran', function($q) {
             $cabang = Auth::user()->cabang;
-            if ($cabang) $q->where('cabang', $cabang);
+            if ($cabang) {
+                $q->where(function($sub) use ($cabang) {
+                    $sub->whereHas('user.klien', function($uq) use ($cabang) {
+                        $uq->where('cabang', $cabang);
+                    })->orWhere('is_utusan_perusahaan', true);
+                });
+            }
         })->with('pendaftaran.user')->latest()->paginate(15);
 
         return view('subadmin.sertifikat.index', compact('sertifikats'));
@@ -61,7 +67,8 @@ class SubadminSertifikatController extends Controller
         $pendaftaran = Pendaftaran::findOrFail($request->pendaftaran_id);
 
         // Security check for branch
-        if ($pendaftaran->cabang && $pendaftaran->cabang !== Auth::user()->cabang) {
+        $pendaftaranCabang = $pendaftaran->user?->klien?->cabang;
+        if ($pendaftaranCabang && $pendaftaranCabang !== Auth::user()->cabang) {
             abort(403, 'Anda tidak memiliki akses ke data cabang lain.');
         }
 

@@ -152,10 +152,9 @@ class SubadminPendaftaranController extends Controller
         $pendaftaran = $this->findByBranch($id);
         $cabang = Auth::user()->cabang;
 
-        // Auto-assign branch to this subadmin if it was unassigned
-        if (empty($pendaftaran->cabang) && $cabang) {
-            $pendaftaran->cabang = $cabang;
-            $pendaftaran->save();
+        // Auto-assign branch to this subadmin if it was unassigned or 'pusat'
+        if ($pendaftaran->user?->klien && ($pendaftaran->user->klien->cabang === 'pusat' || empty($pendaftaran->user->klien->cabang)) && $cabang) {
+            $pendaftaran->user->klien->update(['cabang' => $cabang]);
         }
 
         $request->validate([

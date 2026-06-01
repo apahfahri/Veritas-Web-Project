@@ -12,7 +12,7 @@ class PemateriController extends Controller
 {
     public function index()
     {
-        $pemateris = Pemateri::with(['jadwals.jenis', 'jadwals.kategori'])->latest()->paginate(10);
+        $pemateris = Pemateri::with(['jadwals.jenis', 'jadwals.kategori'])->latest()->paginate(5);
         return view('admin.petugas.index', compact('pemateris'));
     }
 

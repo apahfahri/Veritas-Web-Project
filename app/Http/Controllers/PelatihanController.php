@@ -11,7 +11,12 @@ class PelatihanController extends Controller
     {
         $query = Jadwal::with(['kategori', 'jenis'])->whereHas('kategori', function ($q) {
             $q->where('nama', 'like', '%Pelatihan%');
-        })->whereDate('tgl_mulai', '>', now()->addDays(3))->orderBy('tgl_mulai');
+        })
+        ->whereDoesntHave('pendaftarans', function ($q) {
+            $q->where('is_kustom', true);
+        })
+        ->whereDate('tgl_mulai', '>', now()->addDays(3))
+        ->orderBy('tgl_mulai');
 
         if ($request->filled('jenis')) {
             $query->where('jenis_pertemuan', $request->jenis);
@@ -38,7 +43,11 @@ class PelatihanController extends Controller
         
         $related = Jadwal::with(['kategori', 'jenis'])->whereHas('kategori', function ($q) {
             $q->where('nama', 'like', '%Pelatihan%');
-        })->where('id_jadwal', '!=', $id)
+        })
+        ->whereDoesntHave('pendaftarans', function ($q) {
+            $q->where('is_kustom', true);
+        })
+        ->where('id_jadwal', '!=', $id)
         ->whereDate('tgl_mulai', '>', now()->addDays(3))
         ->take(3)->get();
         

@@ -52,7 +52,7 @@ class SubadminKlienController extends Controller
             'no_hp'         => $request->no_hp,
             'id_perusahaan' => $request->id_perusahaan,
             'jabatan'       => $request->jabatan,
-            'cabang'        => Auth::user()->admin?->cabang ?? 'pusat',
+            'cabang'        => Auth::user()->cabang ?? 'pusat',
         ]);
 
         return redirect()->route('subadmin.klien.index')
