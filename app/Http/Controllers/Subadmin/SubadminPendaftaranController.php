@@ -126,17 +126,13 @@ class SubadminPendaftaranController extends Controller
     }
 
     public function exportPdf(Request $request)
-    {
-        $pendaftaran = $this->findByBranch($id);
-        $pendaftaran->delete();
+{
+    $pendaftaran = $this->findByBranch($id);
+    $pendaftaran->delete();
 
-            return redirect()->route('subadmin.pendaftaran.index')
-                ->with('success', 'Pendaftaran berhasil dihapus.');
-        } catch (\Exception $e) {
-            return redirect()->route('subadmin.pendaftaran.index')
-                ->with('error', 'Gagal menghapus pendaftaran: ' . $e->getMessage());
-        }
-    }
+    return redirect()->route('subadmin.pendaftaran.index')
+        ->with('success', 'Pendaftaran berhasil dihapus.');
+}
 
     public function updateNote(Request $request, $id)
     {
