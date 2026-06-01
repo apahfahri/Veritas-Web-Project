@@ -67,6 +67,14 @@
                                   placeholder="Contoh: Ahli K3 Umum, Auditor SMK3, Pengawas Perancah...">{{ old('kompetensi') }}</textarea>
                     </div>
 
+                    <div>
+                        <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Portofolio</label>
+                        <textarea name="bio" rows="4" 
+                                  class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-2xl text-sm font-bold text-slate-700 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition"
+                                  placeholder="Contoh: Pengalaman mengajar K3 Umum, sertifikasi K3, dsb...">{{ old('bio') }}</textarea>
+                        @error('bio')<p class="text-red-500 text-[10px] font-bold mt-1 uppercase tracking-tighter">{{ $message }}</p>@enderror
+                    </div>
+
                     <div class="bg-blue-50/60 border border-blue-100 rounded-2xl p-4">
                         <p class="text-[10px] font-black uppercase tracking-widest text-blue-600 mb-1">💡 Info</p>
                         <p class="text-xs text-blue-700 leading-relaxed">Riwayat layanan pemateri (Audit, Pelatihan, Konsultasi) ditampilkan otomatis dari layanan yang di-assign ke pemateri ini. Atur di menu <strong>Manajemen Layanan</strong>.</p>

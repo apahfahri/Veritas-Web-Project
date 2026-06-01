@@ -75,13 +75,14 @@
                 @foreach($jadwals as $pelatihan)
                 <div class="flex flex-col bg-white rounded-2xl border border-slate-100 shadow-[0_4px_25px_-5px_rgba(0,0,0,0.03)] overflow-hidden group hover:shadow-[0_15px_35px_-8px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300">
                     <!-- Premium Decorative Header -->
-                    <div class="relative aspect-video overflow-hidden bg-gradient-to-br from-emerald-800 via-[#1E6B3D] to-[#3CDA7D] flex items-center justify-center shrink-0">
-                        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
-                        <div class="absolute -right-8 -top-8 w-24 h-24 bg-white/10 rounded-full blur-lg group-hover:scale-125 transition-transform duration-500"></div>
-                        
-                        <div class="relative z-10 w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-4xl shadow-inner group-hover:rotate-6 group-hover:scale-110 transition-all duration-500">
-                            <i class="fi fi-rr-graduation-cap"></i>
-                        </div>
+                    <div class="relative aspect-video overflow-hidden">
+                        @if($pelatihan->foto)
+                            <img src="{{ asset('storage/'.$pelatihan->foto) }}" alt="{{ $pelatihan->jenis?->nama ?? 'Pelatihan' }}" class="object-cover w-full h-full"/>
+                        @else
+                            <div class="bg-gradient-to-br from-emerald-800 via-[#1E6B3D] to-[#3CDA7D] flex items-center justify-center w-full h-full">
+                                <i class="fi fi-rr-graduation-cap text-4xl text-white/70"></i>
+                            </div>
+                        @endif
                     </div>
                     
                     <div class="p-6 flex-1 flex flex-col justify-between">
@@ -111,40 +112,14 @@
                                 </span>
                             </div>
 
-                            <p class="text-xs text-slate-500 leading-relaxed mb-6 line-clamp-2">
+                            <p class="text-xs text-slate-500 leading-relaxed mb-3 line-clamp-2">
                                 {{ $pelatihan->deskripsi ?? 'Program kompetensi K3 standar nasional berkualitas tinggi untuk menjamin profesionalitas kerja Anda.' }}
                             </p>
                         </div>
 
                         <div>
                             <!-- METADATA GRID -->
-                            <div class="border-t border-slate-50 pt-4 pb-5 space-y-2.5 text-xs text-slate-600">
-                                @if($pelatihan->tgl_mulai)
-                                <div class="flex items-center gap-2">
-                                    <i class="fi fi-rr-calendar text-gray-400"></i>
-                                    <span>
-                                        {{ $pelatihan->tgl_mulai->format('d M Y') }}
-                                        @if($pelatihan->tgl_selesai && $pelatihan->tgl_selesai != $pelatihan->tgl_mulai)
-                                            - {{ $pelatihan->tgl_selesai->format('d M Y') }}
-                                        @endif
-                                    </span>
-                                </div>
-                                @endif
-                                
-                                @if($pelatihan->jam_pertemuan)
-                                <div class="flex items-center gap-2">
-                                    <i class="fi fi-rr-clock text-gray-400"></i>
-                                    <span>{{ substr($pelatihan->jam_pertemuan, 0, 5) }} WIB</span>
-                                </div>
-                                @endif
-                                
-                                @if($pelatihan->lokasi)
-                                <div class="flex items-center gap-2">
-                                    <i class="fi fi-rr-marker text-gray-400"></i>
-                                    <span class="truncate">{{ $pelatihan->lokasi }}</span>
-                                </div>
-                                @endif
-                                
+                            <div class="border-t border-slate-50 pt-3 pb-3 space-y-2.5 text-xs text-slate-600">
                                 @if($pelatihan->kapasitas)
                                 <div class="flex items-center gap-2">
                                     <i class="fi fi-rr-users text-gray-400"></i>

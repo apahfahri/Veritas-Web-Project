@@ -29,6 +29,7 @@ class Jadwal extends Model
         'harga',
         'deskripsi',
         'file_rundown',
+        'foto',
         'link_meet',
         'reminder_h3_sent_at',
     ];
