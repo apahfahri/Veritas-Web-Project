@@ -14,7 +14,7 @@
                 <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 backdrop-blur-md border border-white/20 text-white shadow-inner text-2xl">
                     <i class="fi fi-rr-clipboard-list"></i>
                 </div>
-                <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">Audit K3 Veritas</h1>
+                <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight">Audit K3 Veritas</h1>
             </div>
             <p class="text-base md:text-lg text-emerald-50 max-w-2xl font-light">Layanan audit K3 profesional untuk memastikan kesesuaian implementasi sistem K3 di perusahaan Anda.</p>
         </div>
@@ -24,13 +24,13 @@
     <div class="max-w-7xl mx-auto px-6 py-8">
 
         <!-- ALERT -->
-        <div class="mb-8 border border-amber-200 bg-amber-50/60 backdrop-blur-sm text-xs md:text-sm p-4 rounded-xl flex items-center gap-3 text-amber-800 shadow-sm">
+        <!-- <div class="mb-8 border border-amber-200 bg-amber-50/60 backdrop-blur-sm text-xs md:text-sm p-4 rounded-xl flex items-center gap-3 text-amber-800 shadow-sm">
             <i class="fi fi-rr-warning text-amber-600 text-lg shrink-0 mt-0.5"></i>
             <div>
                 <strong class="font-bold">Penting:</strong> Layanan audit hanya ditujukan untuk entitas perusahaan. 
                 Untuk perorangan/individu, silakan gunakan layanan <a href="/consultation" class="underline font-bold text-amber-900 hover:text-amber-950 transition">Konsultasi K3</a>.
             </div>
-        </div>
+        </div> -->
 
 
         <div class="grid lg:grid-cols-3 gap-8">

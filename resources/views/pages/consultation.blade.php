@@ -28,7 +28,7 @@
                     <i class="fi fi-rr-lightbulb text-white text-2xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-tight">Konsultasi K3 Veritas</h1>
+                    <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight">Konsultasi K3 Veritas</h1>
                     <p class="text-emerald-100/80 mt-2 text-base max-w-xl font-light leading-relaxed">
                         Solusi sistem manajemen K3 komprehensif bersama konsultan berpengalaman kami. Khusus untuk badan usaha & perusahaan.
                     </p>
