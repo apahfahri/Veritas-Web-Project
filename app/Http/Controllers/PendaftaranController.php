@@ -213,7 +213,7 @@ class PendaftaranController extends Controller
             \Illuminate\Support\Facades\Log::error('Error sending invoice: ' . $emailError);
         }
 
-        return redirect()->route('training.status', ['identifier' => $request->email])
+        return redirect()->route('training.status', ['identifier' => $result['pendaftaran']->nomor_pendaftaran])
             ->with('registration_success', true)
             ->with('is_konsultasi', $isKonsultasi)
             ->with('is_audit', $isAudit)
@@ -227,13 +227,13 @@ class PendaftaranController extends Controller
         $pendaftarans = null;
 
         if ($identifier) {
-            $user = User::where('email', $identifier)->orWhere('no_telp', $identifier)->first();
-            if ($user) {
-                $this->autoClosePassedPendaftarans($user->id_user);
-                $pendaftarans = Pendaftaran::with(['jadwal.jenis', 'jadwal.kategori', 'sertifikat'])
-                    ->where('id_user', $user->id_user)
-                    ->latest()
-                    ->get();
+            $pendaftaran = Pendaftaran::with(['jadwal.jenis', 'jadwal.kategori', 'sertifikat', 'user'])
+                ->where('nomor_pendaftaran', strtoupper(trim($identifier)))
+                ->first();
+            if ($pendaftaran) {
+                $this->autoClosePassedPendaftarans($pendaftaran->id_user);
+                $pendaftaran = Pendaftaran::with(['jadwal.jenis', 'jadwal.kategori', 'sertifikat', 'user'])->find($pendaftaran->id_pendaftaran);
+                $pendaftarans = collect([$pendaftaran]);
             }
         }
 
@@ -245,21 +245,18 @@ class PendaftaranController extends Controller
     {
         $request->validate(['identifier' => 'required|string']);
 
-        $user = User::where('email', $request->identifier)
-            ->orWhere('no_telp', $request->identifier)
+        $pendaftaran = Pendaftaran::with(['jadwal.jenis', 'jadwal.kategori', 'sertifikat', 'user'])
+            ->where('nomor_pendaftaran', strtoupper(trim($request->identifier)))
             ->first();
 
-        if (!$user) {
-            return back()->withErrors(['identifier' => 'Data tidak ditemukan.'])->withInput();
+        if (!$pendaftaran) {
+            return back()->withErrors(['identifier' => 'Nomor pendaftaran tidak ditemukan.'])->withInput();
         }
 
-        $this->autoClosePassedPendaftarans($user->id_user);
+        $this->autoClosePassedPendaftarans($pendaftaran->id_user);
+        $pendaftaran = Pendaftaran::with(['jadwal.jenis', 'jadwal.kategori', 'sertifikat', 'user'])->find($pendaftaran->id_pendaftaran);
 
-        $pendaftarans = Pendaftaran::with(['jadwal.jenis', 'jadwal.kategori', 'sertifikat'])
-            ->where('id_user', $user->id_user)
-            ->latest()
-            ->get();
-
+        $pendaftarans = collect([$pendaftaran]);
         $rekening = \App\Models\Rekening::where('status_aktif', true)->first();
         $identifier = $request->identifier;
         return view('pages.training-status', compact('pendaftarans', 'identifier', 'rekening'));
@@ -383,7 +380,7 @@ class PendaftaranController extends Controller
             ]);
         }
 
-        return redirect()->route('training.status', ['identifier' => $request->email])
+        return redirect()->route('training.status', ['identifier' => $request->nomor_pendaftaran])
             ->with('bukti_terkirim', true);
     }
 
@@ -397,7 +394,7 @@ class PendaftaranController extends Controller
         ]);
 
         $pendaftaran = Pendaftaran::where('id_pendaftaran', $id)
-            ->whereHas('user', fn($q) => $q->where('email', $request->identifier))
+            ->where('nomor_pendaftaran', $request->identifier)
             ->firstOrFail();
 
         // Pastikan pembayaran belum dilakukan

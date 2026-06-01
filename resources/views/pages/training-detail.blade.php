@@ -141,12 +141,6 @@
                        class="block w-full text-center bg-[#1E6B3D] text-white py-3 rounded-lg font-semibold hover:opacity-90 transition">
                         Daftar Sekarang
                     </a>
-
-                    <div class="mt-4 text-center text-sm">
-                        <a href="{{ route('consultation') }}" class="text-[#1E6B3D] hover:underline">
-                            Butuh konsultasi dulu?
-                        </a>
-                    </div>
                 </div>
 
                 @if(!$related->isEmpty())

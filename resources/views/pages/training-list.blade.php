@@ -111,40 +111,14 @@
                                 </span>
                             </div>
 
-                            <p class="text-xs text-slate-500 leading-relaxed mb-6 line-clamp-2">
+                            <p class="text-xs text-slate-500 leading-relaxed mb-3 line-clamp-2">
                                 {{ $pelatihan->deskripsi ?? 'Program kompetensi K3 standar nasional berkualitas tinggi untuk menjamin profesionalitas kerja Anda.' }}
                             </p>
                         </div>
 
                         <div>
                             <!-- METADATA GRID -->
-                            <div class="border-t border-slate-50 pt-4 pb-5 space-y-2.5 text-xs text-slate-600">
-                                @if($pelatihan->tgl_mulai)
-                                <div class="flex items-center gap-2">
-                                    <i class="fi fi-rr-calendar text-gray-400"></i>
-                                    <span>
-                                        {{ $pelatihan->tgl_mulai->format('d M Y') }}
-                                        @if($pelatihan->tgl_selesai && $pelatihan->tgl_selesai != $pelatihan->tgl_mulai)
-                                            - {{ $pelatihan->tgl_selesai->format('d M Y') }}
-                                        @endif
-                                    </span>
-                                </div>
-                                @endif
-                                
-                                @if($pelatihan->jam_pertemuan)
-                                <div class="flex items-center gap-2">
-                                    <i class="fi fi-rr-clock text-gray-400"></i>
-                                    <span>{{ substr($pelatihan->jam_pertemuan, 0, 5) }} WIB</span>
-                                </div>
-                                @endif
-                                
-                                @if($pelatihan->lokasi)
-                                <div class="flex items-center gap-2">
-                                    <i class="fi fi-rr-marker text-gray-400"></i>
-                                    <span class="truncate">{{ $pelatihan->lokasi }}</span>
-                                </div>
-                                @endif
-                                
+                            <div class="border-t border-slate-50 pt-3 pb-3 space-y-2.5 text-xs text-slate-600">
                                 @if($pelatihan->kapasitas)
                                 <div class="flex items-center gap-2">
                                     <i class="fi fi-rr-users text-gray-400"></i>
