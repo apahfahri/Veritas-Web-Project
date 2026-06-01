@@ -79,7 +79,7 @@
                     
                     <h2 class="text-2xl md:text-3xl font-black text-gray-900 tracking-tight mb-3">Lacak Pendaftaran Anda</h2>
                     <p class="text-sm text-gray-500 max-w-md mx-auto mb-8 leading-relaxed">
-                        Pantau progres pelatihan, verifikasi pembayaran, jadwal konsultasi, serta unduh sertifikat resmi Anda di satu tempat.
+                        Masukkan Nomor Pendaftaran Anda untuk memantau progres pelatihan, verifikasi pembayaran, jadwal konsultasi, serta unduh sertifikat resmi Anda di satu tempat.
                     </p>
 
                     <form action="{{ route('training.status.check') }}" method="POST" class="mb-0">
@@ -87,11 +87,11 @@
                         <div class="flex flex-col sm:flex-row gap-3">
                             <div class="flex-1 relative">
                                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                                    <i class="fi fi-rr-envelope text-lg"></i>
+                                    <i class="fi fi-rr-receipt text-lg"></i>
                                 </span>
                                 <input type="text" name="identifier" 
                                        value="{{ old('identifier') }}"
-                                       placeholder="Masukkan Email atau No. WhatsApp Anda" 
+                                       placeholder="Contoh: PLT-K3U-01-ON-08062026-0001-IJE56" 
                                        class="w-full border border-gray-200 rounded-xl pl-12 pr-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition shadow-inner bg-slate-50/50"
                                        required>
                             </div>
@@ -109,28 +109,11 @@
             {{-- ── 2. TAMPILAN RIWAYAT PESANAN (HASIL CEK STATUS) ────────────── --}}
             <div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-8 pb-6 border-b border-gray-200">
                 <div>
-                    <h2 class="text-2xl font-black text-gray-900 tracking-tight">Riwayat Pendaftaran</h2>
-                    <p class="text-xs text-gray-500 mt-1">Ditemukan {{ $pendaftarans->count() }} pemesanan untuk <span class="text-[#1E6B3D] font-bold">{{ $identifier }}</span></p>
+                    <h2 class="text-2xl font-black text-gray-900 tracking-tight">Detail Pendaftaran</h2>
+                    <p class="text-xs text-gray-500 mt-1">Status pendaftaran untuk nomor: <span class="text-[#1E6B3D] font-bold">{{ $identifier }}</span></p>
                 </div>
                 <!-- Compact Search Form -->
-                <form action="{{ route('training.status.check') }}" method="POST" class="w-full md:w-auto">
-                    @csrf
-                    <div class="flex gap-2">
-                        <div class="relative w-full md:w-64">
-                            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">
-                                <i class="fi fi-rr-search text-sm"></i>
-                            </span>
-                            <input type="text" name="identifier" 
-                                   value="{{ $identifier }}"
-                                   placeholder="Cari email/No. WA lain" 
-                                   class="w-full border border-gray-200 rounded-xl pl-9 pr-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-[#1E6B3D] transition bg-white"
-                                   required>
-                        </div>
-                        <button type="submit" class="bg-[#1E6B3D] hover:bg-[#3CDA7D] text-white font-bold text-xs px-4 py-2 rounded-xl transition shadow-sm active:scale-95 whitespace-nowrap">
-                            Cari
-                        </button>
-                    </div>
-                </form>
+
             </div>
         @endif
 
@@ -140,12 +123,12 @@
                 <div class="text-center py-12 bg-white rounded-2xl shadow-sm border border-gray-100">
                     <i class="fi fi-rr-search text-gray-400 text-5xl mb-4 block"></i>
                     <h3 class="text-xl font-bold text-gray-700">Tidak ada pendaftaran ditemukan</h3>
-                    <p class="text-gray-500 mt-2">Pastikan Email atau Nomor WhatsApp yang Anda masukkan sudah benar.</p>
+                    <p class="text-gray-500 mt-2">Pastikan Nomor Pendaftaran yang Anda masukkan sudah benar.</p>
                 </div>
             @else
                 <div class="space-y-6">
                     <h2 class="text-xl font-semibold text-gray-800 flex items-center gap-2">
-                        <i class="fi fi-rr-clipboard-list text-gray-600 text-xl mr-1"></i> Hasil Pencarian untuk: <span class="text-[#1E6B3D]">{{ $identifier }}</span>
+                        <i class="fi fi-rr-clipboard-list text-gray-600 text-xl mr-1"></i> Nomor Pendaftaran: <span class="text-[#1E6B3D]">{{ $identifier }}</span>
                     </h2>
 
                     @foreach($pendaftarans as $item)
@@ -163,20 +146,11 @@
                                             {{ $item->jadwal?->kategori?->nama ?? 'Pelatihan K3' }}
                                         </span>
                                         <span class="text-gray-400 text-sm">•</span>
-                                        <span class="text-gray-500 text-sm">Terdaftar: {{ $item->tanggal_daftar->format('d M Y') }}</span>
-                                        @if($item->rencana_tanggal_mulai && !$isBespoke)
-                                            <span class="text-gray-400 text-sm">•</span>
-                                            <span class="text-gray-500 text-sm">
-                                                Jadwal: {{ $item->rencana_tanggal_mulai->format('d M Y') }}
-                                                @if($item->rencana_tanggal_selesai && $item->rencana_tanggal_selesai != $item->rencana_tanggal_mulai)
-                                                    s/d {{ $item->rencana_tanggal_selesai->format('d M Y') }}
-                                                @endif
-                                            </span>
-                                        @endif
-                                        @if($item->mode_pertemuan && !$isBespoke)
-                                            <span class="text-gray-400 text-sm">•</span>
-                                            <span class="bg-[#1E6B3D]/10 text-[#1E6B3D] text-[10px] font-bold px-1.5 py-0.5 rounded uppercase">{{ $item->mode_pertemuan }}</span>
-                                        @endif
+                                        <span class="bg-[#1E6B3D]/10 text-[#1E6B3D] text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">
+                                            {{ $item->jadwal?->jenis?->nama ?? 'Pelatihan' }}
+                                        </span>
+                                        <span class="text-gray-400 text-sm">•</span>
+                                        <span class="text-gray-500 text-sm">Pendaftar: <strong class="font-bold">{{ $item->user?->nama ?? '-' }}</strong></span>
                                     </div>
 
                                     @if($isBespoke)
@@ -587,7 +561,7 @@
         document.getElementById('modalBukti').classList.remove('hidden');
         document.getElementById('step1').classList.remove('hidden');
         document.getElementById('step2').classList.add('hidden');
-        document.getElementById('inputNomor').value = '';
+        document.getElementById('inputNomor').value = currentIdentifier.includes('@') ? '' : currentIdentifier;
         document.getElementById('inputEmail').value = currentIdentifier.includes('@') ? currentIdentifier : '';
         document.getElementById('pesanVerifikasi').classList.add('hidden');
     }

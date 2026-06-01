@@ -14,7 +14,7 @@
                 <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 backdrop-blur-md border border-white/20 text-white shadow-inner text-2xl">
                     <i class="fi fi-rr-shield-check"></i>
                 </div>
-                <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">Pelatihan K3 Veritas</h1>
+                <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight">Pelatihan K3 Veritas</h1>
             </div>
             <p class="text-base md:text-lg text-emerald-50 max-w-2xl font-light">Pilih program pelatihan K3 unggulan bersertifikat nasional yang sesuai dengan kompetensi dan kebutuhan industri Anda.</p>
         </div>
@@ -46,15 +46,15 @@
         </form>
 
         <!-- REQUEST COMPANY TRAINING BANNER -->
-        <div class="relative overflow-hidden bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl shadow-[0_8px_30px_-6px_rgba(245,158,11,0.3)] p-6 md:p-8 mb-8 text-white flex flex-col md:flex-row items-center justify-between transition-transform duration-300 hover:scale-[1.01]">
-            <div class="absolute -right-16 -bottom-16 w-48 h-48 bg-white/10 rounded-full blur-2xl"></div>
+        <div class="relative overflow-hidden bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl shadow-[0_8px_30px_-6px_rgba(245,158,11,0.3)] p-4 md:p-6 mb-8 text-white flex flex-col md:flex-row items-center justify-between transition-transform duration-300 hover:scale-[1.01]">
+                        <div class="absolute -right-16 -bottom-16 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
             <div class="mb-4 md:mb-0 relative z-10 max-w-xl text-center md:text-left">
-                <h2 class="text-xl md:text-2xl font-bold mb-2 flex items-center justify-center md:justify-start gap-2">
+                                <h2 class="text-base md:text-lg font-bold mb-2 flex items-center justify-center md:justify-start gap-2">
                     <i class="fi fi-rr-building"></i> Butuh Pelatihan Khusus Perusahaan?
                 </h2>
                 <p class="text-sm md:text-base text-amber-50 font-light">Kami menyediakan program pelatihan <strong>In-House / Custom Training</strong> K3 khusus yang dirancang eksklusif untuk memenuhi regulasi dan operasional korporasi Anda.</p>
             </div>
-            <a href="{{ route('request.training.create') }}" class="relative z-10 bg-white text-orange-600 font-bold px-6 py-3.5 rounded-xl hover:bg-orange-50 active:scale-95 transition-all whitespace-nowrap shadow-md hover:shadow-lg">
+            <a href="{{ route('request.training.create') }}" class="relative z-10 bg-white text-orange-600 font-bold px-5 py-3 rounded-xl hover:bg-orange-50 active:scale-95 transition-all whitespace-nowrap shadow-md hover:shadow-lg">
                 Ajukan Request Pelatihan
             </a>
         </div>
@@ -75,13 +75,14 @@
                 @foreach($jadwals as $pelatihan)
                 <div class="flex flex-col bg-white rounded-2xl border border-slate-100 shadow-[0_4px_25px_-5px_rgba(0,0,0,0.03)] overflow-hidden group hover:shadow-[0_15px_35px_-8px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300">
                     <!-- Premium Decorative Header -->
-                    <div class="relative aspect-video overflow-hidden bg-gradient-to-br from-emerald-800 via-[#1E6B3D] to-[#3CDA7D] flex items-center justify-center shrink-0">
-                        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
-                        <div class="absolute -right-8 -top-8 w-24 h-24 bg-white/10 rounded-full blur-lg group-hover:scale-125 transition-transform duration-500"></div>
-                        
-                        <div class="relative z-10 w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-4xl shadow-inner group-hover:rotate-6 group-hover:scale-110 transition-all duration-500">
-                            <i class="fi fi-rr-graduation-cap"></i>
-                        </div>
+                    <div class="relative aspect-video overflow-hidden">
+                        @if($pelatihan->foto)
+                            <img src="{{ asset('storage/'.$pelatihan->foto) }}" alt="{{ $pelatihan->jenis?->nama ?? 'Pelatihan' }}" class="object-cover w-full h-full"/>
+                        @else
+                            <div class="bg-gradient-to-br from-emerald-800 via-[#1E6B3D] to-[#3CDA7D] flex items-center justify-center w-full h-full">
+                                <i class="fi fi-rr-graduation-cap text-4xl text-white/70"></i>
+                            </div>
+                        @endif
                     </div>
                     
                     <div class="p-6 flex-1 flex flex-col justify-between">
@@ -111,40 +112,14 @@
                                 </span>
                             </div>
 
-                            <p class="text-xs text-slate-500 leading-relaxed mb-6 line-clamp-2">
+                            <p class="text-xs text-slate-500 leading-relaxed mb-3 line-clamp-2">
                                 {{ $pelatihan->deskripsi ?? 'Program kompetensi K3 standar nasional berkualitas tinggi untuk menjamin profesionalitas kerja Anda.' }}
                             </p>
                         </div>
 
                         <div>
                             <!-- METADATA GRID -->
-                            <div class="border-t border-slate-50 pt-4 pb-5 space-y-2.5 text-xs text-slate-600">
-                                @if($pelatihan->tgl_mulai)
-                                <div class="flex items-center gap-2">
-                                    <i class="fi fi-rr-calendar text-gray-400"></i>
-                                    <span>
-                                        {{ $pelatihan->tgl_mulai->format('d M Y') }}
-                                        @if($pelatihan->tgl_selesai && $pelatihan->tgl_selesai != $pelatihan->tgl_mulai)
-                                            - {{ $pelatihan->tgl_selesai->format('d M Y') }}
-                                        @endif
-                                    </span>
-                                </div>
-                                @endif
-                                
-                                @if($pelatihan->jam_pertemuan)
-                                <div class="flex items-center gap-2">
-                                    <i class="fi fi-rr-clock text-gray-400"></i>
-                                    <span>{{ substr($pelatihan->jam_pertemuan, 0, 5) }} WIB</span>
-                                </div>
-                                @endif
-                                
-                                @if($pelatihan->lokasi)
-                                <div class="flex items-center gap-2">
-                                    <i class="fi fi-rr-marker text-gray-400"></i>
-                                    <span class="truncate">{{ $pelatihan->lokasi }}</span>
-                                </div>
-                                @endif
-                                
+                            <div class="border-t border-slate-50 pt-3 pb-3 space-y-2.5 text-xs text-slate-600">
                                 @if($pelatihan->kapasitas)
                                 <div class="flex items-center gap-2">
                                     <i class="fi fi-rr-users text-gray-400"></i>

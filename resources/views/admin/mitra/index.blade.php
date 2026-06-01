@@ -1,6 +1,6 @@
 @extends('layouts.admin')
-@section('title', 'Manajemen Klien & Mitra')
-@section('page-title', 'Manajemen Klien & Mitra')
+@section('title', 'Manajemen Daftar Perusahaan')
+@section('page-title', 'Manajemen Daftar Perusahaan')
 @section('page-subtitle', 'Kelola data kemitraan B2B (Perusahaan)')
 
 @section('content')
@@ -31,7 +31,7 @@
     <a href="{{ route('admin.mitra.create') }}" 
        class="bg-slate-900 text-white px-6 py-3 rounded-2xl hover:bg-slate-800 transition shadow-lg shadow-slate-200 flex items-center gap-2 text-sm font-black group">
         <svg class="w-5 h-5 text-emerald-400 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-        Tambah Klien/Mitra
+        Tambah Perusahaan
     </a>
 </div>
 
@@ -118,18 +118,56 @@
             </tbody>
         </table>
     </div>
-    @if($mitras->hasPages())
-    <div class="px-8 py-5 border-t border-slate-100 bg-slate-50/30 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <p class="text-[12px] font-medium text-slate-500">
+    @if($mitras->count())
+    <div class="px-6 py-4 border-t border-slate-100 bg-slate-50/40 flex items-center justify-between gap-4">
+        {{-- Info halaman --}}
+        <p class="text-[13px] font-bold text-slate-900 tracking-widest whitespace-nowrap">
             Menampilkan
-            <span class="font-black text-slate-800">{{ $mitras->firstItem() }}–{{ $mitras->lastItem() }}</span>
+            <span class="text-slate-900">{{ $mitras->firstItem() }}–{{ $mitras->lastItem() }}</span>
             dari
-            <span class="font-black text-slate-800">{{ $mitras->total() }}</span>
-            mitra perusahaan
+            <span class="text-slate-900">{{ $mitras->total() }}</span>
+            data
         </p>
-        <div>
-            {{ $mitras->links() }}
+
+        {{-- Navigasi halaman (hanya jika ada lebih dari 1 halaman) --}}
+        @if($mitras->hasPages())
+        <div class="flex items-center gap-1">
+            {{-- Prev --}}
+            @if($mitras->onFirstPage())
+                <span class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-100 text-slate-300 cursor-not-allowed">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                </span>
+            @else
+                <a href="{{ $mitras->previousPageUrl() }}" class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 hover:border-indigo-500 hover:text-indigo-600 hover:shadow-sm transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                </a>
+            @endif
+
+            {{-- Nomor halaman --}}
+            @foreach($mitras->getUrlRange(1, $mitras->lastPage()) as $page => $url)
+                @if($page == $mitras->currentPage())
+                    <span class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-900 text-white text-[12px] font-black shadow-sm">
+                        {{ $page }}
+                    </span>
+                @else
+                    <a href="{{ $url }}" class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 text-[12px] font-bold hover:border-indigo-500 hover:text-indigo-600 hover:shadow-sm transition">
+                        {{ $page }}
+                    </a>
+                @endif
+            @endforeach
+
+            {{-- Next --}}
+            @if($mitras->hasMorePages())
+                <a href="{{ $mitras->nextPageUrl() }}" class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 hover:border-indigo-500 hover:text-indigo-600 hover:shadow-sm transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </a>
+            @else
+                <span class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-100 text-slate-300 cursor-not-allowed">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </span>
+            @endif
         </div>
+        @endif
     </div>
     @endif
 </div>
