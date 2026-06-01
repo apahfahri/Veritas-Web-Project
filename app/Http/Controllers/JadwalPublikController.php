@@ -17,6 +17,9 @@ class JadwalPublikController extends Controller
             ->whereHas('kategori', function ($q) {
                 $q->where('nama', 'like', '%Pelatihan%');
             })
+            ->whereDoesntHave('pendaftarans', function ($q) {
+                $q->where('is_kustom', true);
+            })
             ->whereDate('tgl_mulai', '>', now()->addDays(3))
             ->orderBy('tgl_mulai');
 
@@ -44,6 +47,9 @@ class JadwalPublikController extends Controller
 
         $related = Jadwal::whereHas('kategori', function ($q) {
             $q->where('nama', 'like', '%Pelatihan%');
+        })
+        ->whereDoesntHave('pendaftarans', function ($q) {
+            $q->where('is_kustom', true);
         })
         ->where('id_jadwal', '!=', $id)
         ->whereDate('tgl_mulai', '>', now()->addDays(3))

@@ -26,7 +26,13 @@ class SubadminPerusahaanController extends Controller
         $cabang = Auth::user()->cabang;
         
         $perusahaans = Perusahaan::withCount(['pendaftarans' => function($q) use ($cabang) {
-            if ($cabang) $q->where('cabang', $cabang);
+            if ($cabang) {
+                $q->where(function($sub) use ($cabang) {
+                    $sub->whereHas('user.klien', function($uq) use ($cabang) {
+                        $uq->where('cabang', $cabang);
+                    })->orWhere('is_utusan_perusahaan', true);
+                });
+            }
         }])->latest()->paginate(15);
 
         return view('subadmin.perusahaan.index', compact('perusahaans'));

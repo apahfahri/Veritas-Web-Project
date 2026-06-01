@@ -60,6 +60,8 @@ class Pendaftaran extends Model
         'id_user',
         'is_utusan_perusahaan',
         'id_perusahaan',
+        'is_kustom',
+        'catatan_klien',
         'tanggal_daftar',
         'rencana_tanggal_mulai',
         'rencana_tanggal_selesai',
@@ -76,6 +78,7 @@ class Pendaftaran extends Model
         'rencana_tanggal_mulai'   => 'date',
         'rencana_tanggal_selesai' => 'date',
         'is_utusan_perusahaan'    => 'boolean',
+        'is_kustom'               => 'boolean',
         'last_reminder_sent_at'   => 'datetime',
     ];
 
@@ -105,6 +108,8 @@ class Pendaftaran extends Model
     {
         return $this->hasOne(Sertifikat::class, 'id_pendaftaran', 'id_pendaftaran');
     }
+
+
 
     /* ─── HELPERS ────────────────────────────────────────────── */
 

@@ -17,8 +17,8 @@ class PendaftaranController extends Controller
 {
     public function store(Request $request)
     {
-        // Jika kategori_id = 2 (Konsultasi), force jenis_klien ke perusahaan
-        if ($request->input('kategori_id') == 2) {
+        // Jika kategori_id = 2 (Konsultasi) atau 3 (Audit), force jenis_klien ke perusahaan
+        if (in_array($request->input('kategori_id'), [2, 3])) {
             $request->merge(['jenis_klien' => 'perusahaan']);
         }
 
@@ -169,7 +169,7 @@ class PendaftaranController extends Controller
                 $kategoriId = $jTemp?->id_kategori;
             }
 
-            $statusProgres = ($kategoriId == 2) ? 'meninjau' : 'menunggu_pembayaran';
+            $statusProgres = in_array($kategoriId, [2, 3]) ? 'meninjau' : 'menunggu_pembayaran';
 
             $pendaftaran = Pendaftaran::create([
                 'id_jadwal'               => $jadwalId,
@@ -198,7 +198,9 @@ class PendaftaranController extends Controller
         $emailError  = null;
         try {
             $isKonsultasi = ($result && isset($result['jadwal']) && $result['jadwal']->id_kategori == 2);
-            if (!$isKonsultasi && $result && isset($result['pendaftaran'], $result['user'])) {
+            $isAudit = ($result && isset($result['jadwal']) && $result['jadwal']->id_kategori == 3);
+            $isBespokeFlow = ($isKonsultasi || $isAudit);
+            if (!$isBespokeFlow && $result && isset($result['pendaftaran'], $result['user'])) {
                 Mail::to($result['user']->email)->send(new PendaftaranInvoiceMail(
                     $result['pendaftaran'],
                     $result['user'],
@@ -214,6 +216,7 @@ class PendaftaranController extends Controller
         return redirect()->route('training.status', ['identifier' => $request->email])
             ->with('registration_success', true)
             ->with('is_konsultasi', $isKonsultasi)
+            ->with('is_audit', $isAudit)
             ->with('invoice_email_sent', $invoiceSent)
             ->with('email_error', $emailError);
     }
@@ -370,10 +373,13 @@ class PendaftaranController extends Controller
             $file->move(public_path('uploads/pembayaran'), $filename);
 
             $isKonsultasi = ($pendaftaran->jadwal?->id_kategori == 2);
+            $isAudit = ($pendaftaran->jadwal?->id_kategori == 3);
+            $isCustomTraining = $pendaftaran->is_kustom;
+            $isBespokeFlow = ($isKonsultasi || $isAudit || $isCustomTraining);
             $pendaftaran->update([
                 'bukti_bayar'    => $filename,
                 'status_bayar'   => 'menunggu_konfirmasi',
-                'status_progres' => $isKonsultasi ? 'pembayaran_ditinjau' : 'menunggu',
+                'status_progres' => $isBespokeFlow ? 'pembayaran_ditinjau' : 'menunggu',
             ]);
         }
 
