@@ -62,18 +62,25 @@ class PendaftaranAdminController extends Controller
 
     public function show($id)
     {
-        $pendaftaran = Pendaftaran::with(['user', 'jadwal.jenis', 'jadwal.kategori', 'sertifikat'])->findOrFail($id);
+        $pendaftaran = Pendaftaran::with(['user', 'perusahaan', 'jadwal.jenis', 'jadwal.kategori', 'jadwal.pemateri', 'sertifikat'])->findOrFail($id);
         return view('admin.pendaftaran.show', compact('pendaftaran'));
     }
 
     public function update(Request $request, $id)
     {
         $pendaftaran = Pendaftaran::findOrFail($id);
-
-        $request->validate([
-            'status_progres' => 'required|in:menunggu_pembayaran,diproses,selesai,dibatalkan',
-            'status_bayar'   => 'required|in:belum_lunas,lunas',
-        ]);
+        $isConsultation = $pendaftaran->jadwal && $pendaftaran->jadwal->id_kategori == 2;
+        if ($isConsultation) {
+            $request->validate([
+                'status_progres' => 'required|in:meninjau,disetujui,dijadwalkan,menunggu_pelaksanaan,menunggu_pembayaran,pembayaran_ditinjau,selesai,dibatalkan',
+                'status_bayar'   => 'required|in:belum_bayar,menunggu_konfirmasi,lunas',
+            ]);
+        } else {
+            $request->validate([
+                'status_progres' => 'required|in:menunggu_pembayaran,diproses,selesai,dibatalkan',
+                'status_bayar'   => 'required|in:belum_bayar,belum_lunas,dp,lunas,menunggu_konfirmasi',
+            ]);
+        }
 
         $pendaftaran->update($request->only('status_progres', 'status_bayar'));
 

@@ -15,8 +15,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
-        $schedule->command('training:check-schedules')->dailyAt('08:00');
+        // Run daily at 08:00
+        $schedule->command('email:send-training-reminders')->dailyAt('08:00');
+        
+        // Auto close passed trainings daily at 00:05
+        $schedule->command('pendaftaran:auto-close-trainings')->dailyAt('00:05');
     }
 
     /**

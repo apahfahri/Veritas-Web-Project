@@ -50,6 +50,18 @@
                     <span class="text-slate-500 font-bold">Lokasi</span>
                     <span class="font-black text-slate-900 text-right max-w-[160px]">{{ $jadwal->lokasi ?? '—' }}</span>
                 </div>
+                @if($jadwal->link_meet)
+                <div class="flex justify-between text-sm">
+                    <span class="text-slate-500 font-bold">Link Meet</span>
+                    <a href="{{ $jadwal->link_meet }}" target="_blank" class="font-black text-indigo-600 hover:text-indigo-800 underline text-right max-w-[160px] truncate" title="{{ $jadwal->link_meet }}">Buka Link</a>
+                </div>
+                @endif
+                @if($jadwal->file_rundown)
+                <div class="flex justify-between text-sm">
+                    <span class="text-slate-500 font-bold">File Rundown</span>
+                    <a href="{{ Storage::url($jadwal->file_rundown) }}" target="_blank" class="font-black text-indigo-600 hover:text-indigo-800 underline text-right max-w-[160px] truncate">Lihat Rundown</a>
+                </div>
+                @endif
                 <div class="flex justify-between text-sm">
                     <span class="text-slate-500 font-bold">Harga</span>
                     <span class="font-black text-slate-900">{{ $jadwal->harga > 0 ? 'Rp '.number_format($jadwal->harga,0,',','.') : 'Gratis' }}</span>
@@ -60,6 +72,29 @@
                     <span class="font-black text-slate-900">{{ $jadwal->sisa_kursi }} / {{ $jadwal->kapasitas }} <span class="text-slate-400 font-bold text-xs">sisa</span></span>
                 </div>
                 @endif
+                
+                <div class="pt-4 mt-4 border-t border-slate-100 space-y-3">
+                    <div class="flex flex-col gap-1">
+                        <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Status Pengiriman Email</span>
+                        @if($jadwal->reminder_h3_sent_at)
+                            <span class="text-xs font-bold text-emerald-600">
+                                ✓ Terkirim pada {{ \Carbon\Carbon::parse($jadwal->reminder_h3_sent_at)->format('d M Y H:i') }}
+                            </span>
+                        @else
+                            <span class="text-xs font-bold text-amber-600">
+                                ⏳ Belum dikirim
+                            </span>
+                        @endif
+                    </div>
+                    
+                    <form action="{{ route('subadmin.jadwal.resend', $jadwal->id_jadwal) }}" method="POST" onsubmit="return confirm('Kirim email konfirmasi ke semua peserta terkonfirmasi? Ini akan memakan waktu sejenak.');">
+                        @csrf
+                        <button type="submit" class="w-full bg-slate-900 text-white text-xs font-bold py-2.5 rounded-xl hover:bg-slate-800 transition flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                            Kirim (Ulang) Email Konfirmasi
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
 
@@ -78,6 +113,28 @@
             </div>
             @empty
             <p class="text-[11px] text-slate-300 font-bold">Belum ada pemateri ditugaskan</p>
+            @endforelse
+        </div>
+
+        {{-- Materi Pendukung --}}
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+            <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Materi Pendukung</p>
+            @forelse($jadwal->materi as $m)
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-9 h-9 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-sm font-black">
+                    <i class="fi fi-rr-file-pdf"></i>
+                </div>
+                <div class="min-w-0 flex-1">
+                    <p class="text-sm font-black text-slate-900 leading-tight truncate" title="{{ $m->judul }}">{{ $m->judul }}</p>
+                    @if($m->file_path)
+                    <a href="{{ Storage::url($m->file_path) }}" target="_blank" class="text-[10px] text-indigo-600 font-bold hover:underline">Download File</a>
+                    @else
+                    <p class="text-[10px] text-slate-400 font-bold">Tidak ada file</p>
+                    @endif
+                </div>
+            </div>
+            @empty
+            <p class="text-[11px] text-slate-300 font-bold">Belum ada materi dipilih</p>
             @endforelse
         </div>
     </div>

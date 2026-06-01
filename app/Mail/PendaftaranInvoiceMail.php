@@ -43,10 +43,18 @@ class PendaftaranInvoiceMail extends Mailable
         $invoiceSettings = \App\Models\InvoiceSetting::getSettings();
         $activeRekening = $invoiceSettings->getActiveRekening();
 
-        $mail = $this->subject('[Veritas] Invoice Pendaftaran ' . $nomorPendaftaran)
+        $kategoriNama = $this->layanan?->kategori?->nama ?? '';
+        $jenisNama = $this->layanan?->jenis?->nama ?? '';
+        $subject = trim("Invoice Pendaftaran {$kategoriNama} {$jenisNama}");
+
+        $rekening = \App\Models\Rekening::where('status_aktif', true)->first();
+
+        $mail = $this->subject($subject)
                      ->view('emails.invoice', [
-                         'invoiceSettings' => $invoiceSettings,
-                         'activeRekening' => $activeRekening,
+                         'pendaftaran' => $this->pendaftaran,
+                         'user'        => $this->user,
+                         'layanan'     => $this->layanan,
+                         'rekening'    => $rekening,
                      ]);
 
         // Attempt to attach a PDF version of the invoice
@@ -55,8 +63,7 @@ class PendaftaranInvoiceMail extends Mailable
                 'pendaftaran' => $this->pendaftaran,
                 'user'        => $this->user,
                 'layanan'     => $this->layanan,
-                'invoiceSettings' => $invoiceSettings,
-                'activeRekening' => $activeRekening,
+                'rekening'    => $rekening,
             ])->setPaper('a4', 'portrait');
 
             $mail->attachData(

@@ -12,7 +12,7 @@
 
         @if(session('success'))
             <div class="mb-8 bg-green-50 border border-green-200 text-green-700 px-6 py-4 rounded-2xl flex items-center gap-3 shadow-sm animate-fade-in">
-                <span class="text-xl">✅</span>
+                <i class="fi fi-rr-check-circle text-green-500 text-xl shrink-0"></i>
                 <span class="font-medium">{{ session('success') }}</span>
             </div>
         @endif
@@ -35,7 +35,7 @@
             <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="bg-gradient-to-r from-[#1E6B3D] to-[#3CDA7D] px-8 py-6">
                     <h2 class="text-xl font-bold text-white flex items-center gap-3">
-                        <span>👤</span> Informasi Akun
+                        <i class="fi fi-rr-user"></i> Informasi Akun
                     </h2>
                 </div>
                 
@@ -63,7 +63,7 @@
             <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="bg-gray-50 px-8 py-4 border-b border-gray-100">
                     <h2 class="text-lg font-bold text-gray-800 flex items-center gap-3">
-                        <span>🆔</span> Detail Identitas (Individu)
+                        <i class="fi fi-rr-id-card"></i> Detail Identitas (Individu)
                     </h2>
                 </div>
                 
@@ -91,7 +91,7 @@
             <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="bg-gray-50 px-8 py-4 border-b border-gray-100">
                     <h2 class="text-lg font-bold text-gray-800 flex items-center gap-3">
-                        <span>🏢</span> Detail Perusahaan
+                        <i class="fi fi-rr-building"></i> Detail Perusahaan
                     </h2>
                 </div>
                 
@@ -131,7 +131,7 @@
             <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="bg-gray-50 px-8 py-4 border-b border-gray-100">
                     <h2 class="text-lg font-bold text-gray-800 flex items-center gap-3">
-                        <span>🔒</span> Konfirmasi Kata Sandi
+                        <i class="fi fi-rr-lock"></i> Konfirmasi Kata Sandi
                     </h2>
                 </div>
                 

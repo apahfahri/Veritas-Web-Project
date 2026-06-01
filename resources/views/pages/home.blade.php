@@ -26,10 +26,10 @@
 
             <div class="flex flex-wrap gap-4">
                 <a href="/training" class="bg-gradient-to-r from-[#1E6B3D] to-[#3CDA7D] text-white px-8 py-4 rounded-2xl font-bold shadow-lg shadow-[#1E6B3D]/20 hover:scale-105 transition-all flex items-center gap-2">
-                    🎓 Mulai Pelatihan
+                    <i class="fi fi-rr-graduation-cap"></i> Mulai Pelatihan
                 </a>
                 <a href="/consultation" class="bg-white text-gray-700 border-2 border-gray-100 px-8 py-4 rounded-2xl font-bold hover:bg-gray-50 transition-all flex items-center gap-2">
-                    💬 Konsultasi Gratis
+                    <i class="fi fi-rr-comment-alt"></i> Konsultasi Gratis
                 </a>
             </div>
 
@@ -59,7 +59,7 @@
             <!-- Floating Card -->
             <div class="absolute -bottom-6 -left-10 bg-white p-6 rounded-2xl shadow-xl border border-gray-50 animate-bounce-slow">
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-2xl">✅</div>
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-2xl text-green-600"><i class="fi fi-rr-check"></i></div>
                     <div>
                         <div class="font-bold text-gray-900">Sertifikasi Resmi</div>
                         <div class="text-sm text-gray-500">BNSP & Kemnaker</div>
@@ -105,7 +105,7 @@
         <div class="grid md:grid-cols-3 gap-10">
             <!-- Pelatihan -->
             <div class="group bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
-                <div class="w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500">🎓</div>
+                <div class="w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500 text-green-600"><i class="fi fi-rr-graduation-cap"></i></div>
                 <h4 class="text-xl font-bold mb-3 text-gray-900">Pelatihan K3</h4>
                 <p class="text-sm text-gray-500 leading-relaxed mb-6">
                     Sertifikasi resmi BNSP & Kemnaker dengan instruktur praktisi berpengalaman di bidangnya.
@@ -117,7 +117,7 @@
 
             <!-- Konsultasi -->
             <div class="group bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
-                <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500">👥</div>
+                <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500 text-blue-600"><i class="fi fi-rr-users"></i></div>
                 <h4 class="text-xl font-bold mb-3 text-gray-900">Konsultasi</h4>
                 <p class="text-sm text-gray-500 leading-relaxed mb-6">
                     Pendampingan ahli dalam implementasi SMK3, ISO 45001, dan kepatuhan regulasi keselamatan kerja.
@@ -129,7 +129,7 @@
 
             <!-- Audit -->
             <div class="group bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
-                <div class="w-16 h-16 bg-teal-50 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500">📋</div>
+                <div class="w-16 h-16 bg-teal-50 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500 text-teal-600"><i class="fi fi-rr-clipboard-list"></i></div>
                 <h4 class="text-xl font-bold mb-3 text-gray-900">Audit K3</h4>
                 <p class="text-sm text-gray-500 leading-relaxed mb-6">
                     Penilaian independen terhadap efektivitas sistem manajemen keselamatan di lingkungan kerja Anda.
@@ -153,21 +153,21 @@
             
             <div class="space-y-8">
                 <div class="flex gap-6">
-                    <div class="w-14 h-14 shrink-0 bg-white rounded-2xl shadow-sm flex items-center justify-center text-2xl">🛡️</div>
+                    <div class="w-14 h-14 shrink-0 bg-white rounded-2xl shadow-sm flex items-center justify-center text-2xl text-[#1E6B3D]"><i class="fi fi-rr-shield"></i></div>
                     <div>
                         <h5 class="text-xl font-bold mb-1">Integritas & Amanah</h5>
                         <p class="text-gray-500">Kami menjunjung tinggi kejujuran dan transparansi dalam setiap layanan yang kami berikan.</p>
                     </div>
                 </div>
                 <div class="flex gap-6">
-                    <div class="w-14 h-14 shrink-0 bg-white rounded-2xl shadow-sm flex items-center justify-center text-2xl">🏆</div>
+                    <div class="w-14 h-14 shrink-0 bg-white rounded-2xl shadow-sm flex items-center justify-center text-2xl text-amber-500"><i class="fi fi-rr-trophy"></i></div>
                     <div>
                         <h5 class="text-xl font-bold mb-1">Tenaga Ahli Profesional</h5>
                         <p class="text-gray-500">Didukung oleh tim konsultan dan instruktur yang bersertifikat dan praktisi di industri.</p>
                     </div>
                 </div>
                 <div class="flex gap-6">
-                    <div class="w-14 h-14 shrink-0 bg-white rounded-2xl shadow-sm flex items-center justify-center text-2xl">📈</div>
+                    <div class="w-14 h-14 shrink-0 bg-white rounded-2xl shadow-sm flex items-center justify-center text-2xl text-blue-600"><i class="fi fi-rr-chart-trend-up"></i></div>
                     <div>
                         <h5 class="text-xl font-bold mb-1">Prinsip Syariah</h5>
                         <p class="text-gray-500">Satu-satunya penyedia jasa K3 yang mengedepankan nilai-nilai syariah dalam bermuamalah.</p>
@@ -463,7 +463,9 @@
         <div class="grid md:grid-cols-3 gap-8">
             <div class="bg-[#F9FAFB] p-8 rounded-[2rem] relative">
                 <div class="text-[#1E6B3D] text-5xl absolute top-6 right-8 opacity-10 font-serif">"</div>
-                <div class="flex gap-1 text-yellow-400 mb-5">⭐⭐⭐⭐⭐</div>
+                <div class="flex gap-1 text-yellow-400 mb-5">
+                    <i class="fi fi-sr-star"></i><i class="fi fi-sr-star"></i><i class="fi fi-sr-star"></i><i class="fi fi-sr-star"></i><i class="fi fi-sr-star"></i>
+                </div>
                 <p class="text-gray-600 mb-6 leading-relaxed italic text-base">
                     "Instrukturnya sangat kompeten dan materi yang diberikan sangat relevan dengan kebutuhan industri saat ini."
                 </p>
@@ -478,7 +480,9 @@
 
             <div class="bg-[#F9FAFB] p-8 rounded-[2rem] relative">
                 <div class="text-[#1E6B3D] text-5xl absolute top-6 right-8 opacity-10 font-serif">"</div>
-                <div class="flex gap-1 text-yellow-400 mb-5">⭐⭐⭐⭐⭐</div>
+                <div class="flex gap-1 text-yellow-400 mb-5">
+                    <i class="fi fi-sr-star"></i><i class="fi fi-sr-star"></i><i class="fi fi-sr-star"></i><i class="fi fi-sr-star"></i><i class="fi fi-sr-star"></i>
+                </div>
                 <p class="text-gray-600 mb-6 leading-relaxed italic text-base">
                     "Proses pendaftaran mudah dan verifikasi sertifikatnya sangat cepat. Sangat profesional!"
                 </p>
@@ -493,7 +497,9 @@
 
             <div class="bg-[#F9FAFB] p-8 rounded-[2rem] relative">
                 <div class="text-[#1E6B3D] text-5xl absolute top-6 right-8 opacity-10 font-serif">"</div>
-                <div class="flex gap-1 text-yellow-400 mb-5">⭐⭐⭐⭐⭐</div>
+                <div class="flex gap-1 text-yellow-400 mb-5">
+                    <i class="fi fi-sr-star"></i><i class="fi fi-sr-star"></i><i class="fi fi-sr-star"></i><i class="fi fi-sr-star"></i><i class="fi fi-sr-star"></i>
+                </div>
                 <p class="text-gray-600 mb-6 leading-relaxed italic text-base">
                     "Layanan konsultasi SMK3-nya sangat mendalam dan membantu kami meraih sertifikasi dengan lancar."
                 </p>
@@ -526,7 +532,7 @@
                 </p>
                 <div class="flex flex-wrap justify-center gap-4 pt-4">
                     <a href="https://wa.me/6281234567890" target="_blank" class="bg-white text-[#1E6B3D] px-10 py-5 rounded-2xl font-black shadow-xl hover:scale-105 transition-all flex items-center gap-3">
-                        <span class="text-2xl">💬</span> Hubungi via WhatsApp
+                        <i class="fi fi-brands-whatsapp text-2xl text-[#25D366]"></i> Hubungi via WhatsApp
                     </a>
                     <a href="/verification" class="bg-black/20 backdrop-blur-md text-white border border-white/20 px-10 py-5 rounded-2xl font-black hover:bg-black/30 transition-all">
                         Cek Sertifikat

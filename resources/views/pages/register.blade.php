@@ -20,8 +20,8 @@
 
             {{-- HEADER --}}
             <div class="text-center mb-7">
-                <div class="w-16 h-16 bg-[#1E6B3D] rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg">
-                    🛡️
+                <div class="w-16 h-16 bg-[#1E6B3D] text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg">
+                    <i class="fi fi-rr-shield-check"></i>
                 </div>
                 <h1 class="text-2xl font-bold text-[#1E6B3D]">Daftar Akun</h1>
                 <p class="text-sm text-gray-500 mt-1">Buat akun untuk mengakses layanan kami</p>
@@ -66,8 +66,8 @@
                     <button type="button" id="card-individual"
                         onclick="switchType('individual')"
                         class="relative flex flex-col items-center gap-1 border-2 border-[#1E6B3D] bg-teal-50 rounded-xl p-4 text-center cursor-pointer transition-all hover:shadow-md focus:outline-none">
-                        <span class="absolute top-2 right-2 text-[#1E6B3D] text-xs font-bold" id="check-individual">✓</span>
-                        <span class="text-3xl">👤</span>
+                        <span class="absolute top-2 right-2 text-[#1E6B3D] text-xs font-bold" id="check-individual"><i class="fi fi-rr-check"></i></span>
+                        <span class="text-3xl text-emerald-600"><i class="fi fi-rr-user"></i></span>
                         <span class="text-sm font-semibold text-[#1E6B3D]">Individu</span>
                         <span class="text-xs text-gray-400">Perorangan / Personal</span>
                     </button>
@@ -76,8 +76,8 @@
                     <button type="button" id="card-company"
                         onclick="switchType('company')"
                         class="relative flex flex-col items-center gap-1 border-2 border-gray-200 bg-white rounded-xl p-4 text-center cursor-pointer transition-all hover:border-[#1E6B3D] hover:bg-teal-50 hover:shadow-md focus:outline-none">
-                        <span class="absolute top-2 right-2 text-[#1E6B3D] text-xs font-bold hidden" id="check-company">✓</span>
-                        <span class="text-3xl">🏢</span>
+                        <span class="absolute top-2 right-2 text-[#1E6B3D] text-xs font-bold hidden" id="check-company"><i class="fi fi-rr-check"></i></span>
+                        <span class="text-3xl text-emerald-600"><i class="fi fi-rr-building"></i></span>
                         <span class="text-sm font-semibold text-[#1E6B3D]">Perusahaan</span>
                         <span class="text-xs text-gray-400">Badan Usaha / Institusi</span>
                     </button>
@@ -108,7 +108,7 @@
                             NIK <span class="text-red-400">*</span>
                         </label>
                         <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">🪪</span>
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none select-none flex items-center"><i class="fi fi-rr-id-card"></i></span>
                             <input id="nik" type="text" name="nik" value="{{ old('nik') }}"
                                 placeholder="16 digit NIK sesuai KTP" maxlength="16"
                                 class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#1E6B3D] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('nik') ? 'border-red-400' : '' }}">
@@ -121,7 +121,7 @@
                             Username / Nama Lengkap <span class="text-red-400">*</span>
                         </label>
                         <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">👤</span>
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none select-none flex items-center"><i class="fi fi-rr-user"></i></span>
                             <input id="username" type="text" name="username" value="{{ old('username') }}"
                                 placeholder="Nama sesuai KTP"
                                 class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#1E6B3D] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('username') ? 'border-red-400' : '' }}">
@@ -134,7 +134,7 @@
                             Email <span class="text-red-400">*</span>
                         </label>
                         <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">📧</span>
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none select-none flex items-center"><i class="fi fi-rr-envelope"></i></span>
                             <input id="email-ind" type="email" name="email" value="{{ old('email') }}"
                                 placeholder="nama@email.com"
                                 class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#1E6B3D] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('email') ? 'border-red-400' : '' }}">
@@ -147,7 +147,7 @@
                             Nomor HP <span class="text-gray-400 font-normal">(opsional)</span>
                         </label>
                         <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">📱</span>
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none select-none flex items-center"><i class="fi fi-rr-smartphone"></i></span>
                             <input id="phone-ind" type="text" name="phone" value="{{ old('phone') }}"
                                 placeholder="08xxxxxxxxxx"
                                 class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#1E6B3D] focus:ring-2 focus:ring-teal-100 transition">
@@ -167,11 +167,11 @@
                             Password <span class="text-red-400">*</span>
                         </label>
                         <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">🔒</span>
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none select-none flex items-center"><i class="fi fi-rr-lock"></i></span>
                             <input id="password-ind" type="password" name="password"
                                 placeholder="Minimal 8 karakter"
                                 class="w-full border border-gray-300 rounded-lg pl-10 pr-10 py-2.5 text-sm focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('password') ? 'border-red-400' : '' }}">
-                            <button type="button" onclick="togglePassword('password-ind', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none text-sm">👁️</button>
+                            <button type="button" onclick="togglePassword('password-ind', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none flex items-center"><i class="fi fi-rr-eye"></i></button>
                         </div>
                     </div>
 
@@ -181,11 +181,11 @@
                             Konfirmasi Password <span class="text-red-400">*</span>
                         </label>
                         <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">🔒</span>
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none select-none flex items-center"><i class="fi fi-rr-lock"></i></span>
                             <input id="password-confirm-ind" type="password" name="password_confirmation"
                                 placeholder="Ulangi password"
                                 class="w-full border border-gray-300 rounded-lg pl-10 pr-10 py-2.5 text-sm focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition">
-                            <button type="button" onclick="togglePassword('password-confirm-ind', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none text-sm">👁️</button>
+                            <button type="button" onclick="togglePassword('password-confirm-ind', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none flex items-center"><i class="fi fi-rr-eye"></i></button>
                         </div>
                     </div>
 
@@ -209,7 +209,7 @@
                             Nama Perusahaan <span class="text-red-400">*</span>
                         </label>
                         <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">🏢</span>
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none select-none flex items-center"><i class="fi fi-rr-building"></i></span>
                             <input id="company_name" type="text" name="company_name" value="{{ old('company_name') }}"
                                 placeholder="PT. Nama Perusahaan"
                                 class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#1E6B3D] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('company_name') ? 'border-red-400' : '' }}">
@@ -222,7 +222,7 @@
                             Alamat Perusahaan <span class="text-gray-400 font-normal">(opsional)</span>
                         </label>
                         <div class="relative">
-                            <span class="absolute left-3 top-3 text-base pointer-events-none select-none">📍</span>
+                            <span class="absolute left-3 top-3 text-gray-400 pointer-events-none select-none flex items-center"><i class="fi fi-rr-marker"></i></span>
                             <textarea id="alamat" name="alamat" rows="2"
                                 placeholder="Jl. Nama Jalan No. XX, Kota, Provinsi"
                                 class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#1E6B3D] focus:ring-2 focus:ring-teal-100 transition resize-none">{{ old('alamat') }}</textarea>
@@ -235,7 +235,7 @@
                             NPWP Perusahaan <span class="text-gray-400 font-normal">(opsional)</span>
                         </label>
                         <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">📋</span>
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none select-none flex items-center"><i class="fi fi-rr-clipboard-list"></i></span>
                             <input id="npwp" type="text" name="npwp" value="{{ old('npwp') }}"
                                 placeholder="xx.xxx.xxx.x-xxx.xxx"
                                 class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#1E6B3D] focus:ring-2 focus:ring-teal-100 transition">
@@ -248,7 +248,7 @@
                             Bidang Usaha <span class="text-gray-400 font-normal">(opsional)</span>
                         </label>
                         <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">💼</span>
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none select-none flex items-center"><i class="fi fi-rr-briefcase"></i></span>
                             <input id="business_field" type="text" name="business_field" value="{{ old('business_field') }}"
                                 placeholder="Misal: Konstruksi, Pertambangan, dll."
                                 class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#1E6B3D] focus:ring-2 focus:ring-teal-100 transition">
@@ -268,7 +268,7 @@
                             Nama PIC / Contact Person <span class="text-red-400">*</span>
                         </label>
                         <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">👤</span>
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none select-none flex items-center"><i class="fi fi-rr-user"></i></span>
                             <input id="pic_name" type="text" name="pic_name" value="{{ old('pic_name') }}"
                                 placeholder="Nama penanggung jawab"
                                 class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#1E6B3D] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('pic_name') ? 'border-red-400' : '' }}">
@@ -281,7 +281,7 @@
                             Jabatan PIC <span class="text-gray-400 font-normal">(opsional)</span>
                         </label>
                         <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">🏷️</span>
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none select-none flex items-center"><i class="fi fi-rr-tag"></i></span>
                             <input id="pic_position" type="text" name="pic_position" value="{{ old('pic_position') }}"
                                 placeholder="Misal: HRD Manager, Direktur"
                                 class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#1E6B3D] focus:ring-2 focus:ring-teal-100 transition">
@@ -301,7 +301,7 @@
                             Email Perusahaan <span class="text-red-400">*</span>
                         </label>
                         <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">📧</span>
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none select-none flex items-center"><i class="fi fi-rr-envelope"></i></span>
                             <input id="email-com" type="email" name="email" value="{{ old('email') }}"
                                 placeholder="info@perusahaan.com"
                                 class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#1E6B3D] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('email') ? 'border-red-400' : '' }}">
@@ -314,7 +314,7 @@
                             No. Telepon <span class="text-gray-400 font-normal">(opsional)</span>
                         </label>
                         <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">📞</span>
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none select-none flex items-center"><i class="fi fi-rr-phone-call"></i></span>
                             <input id="phone-com" type="text" name="phone" value="{{ old('phone') }}"
                                 placeholder="021-xxxxxxxx"
                                 class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-[#1E6B3D] focus:ring-2 focus:ring-teal-100 transition">
@@ -327,11 +327,11 @@
                             Password <span class="text-red-400">*</span>
                         </label>
                         <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">🔒</span>
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none select-none flex items-center"><i class="fi fi-rr-lock"></i></span>
                             <input id="password-com" type="password" name="password"
                                 placeholder="Minimal 8 karakter"
                                 class="w-full border border-gray-300 rounded-lg pl-10 pr-10 py-2.5 text-sm focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('password') ? 'border-red-400' : '' }}">
-                            <button type="button" onclick="togglePassword('password-com', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none text-sm">👁️</button>
+                            <button type="button" onclick="togglePassword('password-com', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none flex items-center"><i class="fi fi-rr-eye"></i></button>
                         </div>
                     </div>
 
@@ -341,11 +341,11 @@
                             Konfirmasi Password <span class="text-red-400">*</span>
                         </label>
                         <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">🔒</span>
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none select-none flex items-center"><i class="fi fi-rr-lock"></i></span>
                             <input id="password-confirm-com" type="password" name="password_confirmation"
                                 placeholder="Ulangi password"
                                 class="w-full border border-gray-300 rounded-lg pl-10 pr-10 py-2.5 text-sm focus:outline-none focus:border-[#00A8A8] focus:ring-2 focus:ring-teal-100 transition">
-                            <button type="button" onclick="togglePassword('password-confirm-com', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none text-sm">👁️</button>
+                            <button type="button" onclick="togglePassword('password-confirm-com', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none flex items-center"><i class="fi fi-rr-eye"></i></button>
                         </div>
                     </div>
 
@@ -434,10 +434,10 @@
         const input = document.getElementById(inputId);
         if (input.type === 'password') {
             input.type = 'text';
-            btn.innerHTML = '🙈';
+            btn.innerHTML = '<i class="fi fi-rr-eye-crossed"></i>';
         } else {
             input.type = 'password';
-            btn.innerHTML = '👁️';
+            btn.innerHTML = '<i class="fi fi-rr-eye"></i>';
         }
     }
 </script>

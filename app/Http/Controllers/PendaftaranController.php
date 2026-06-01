@@ -17,6 +17,11 @@ class PendaftaranController extends Controller
 {
     public function store(Request $request)
     {
+        // Jika kategori_id = 2 (Konsultasi), force jenis_klien ke perusahaan
+        if ($request->input('kategori_id') == 2) {
+            $request->merge(['jenis_klien' => 'perusahaan']);
+        }
+
         $jenis = $request->input('jenis_klien'); // 'individu' | 'perusahaan'
 
         $rules = [
@@ -31,6 +36,7 @@ class PendaftaranController extends Controller
             'tanggal_usul'   => 'nullable|date|after_or_equal:today',
             'lokasi'         => 'nullable|string|max:255',
             'mode_pertemuan' => 'nullable|in:online,offline,hybrid',
+            'catatan_tambahan'=> 'nullable|string',
         ];
 
         if (!$request->jadwal_id && !$request->kategori_id) {
@@ -46,6 +52,23 @@ class PendaftaranController extends Controller
         }
 
         $request->validate($rules);
+
+        // Validasi pendaftaran ganda untuk email yang sama pada jadwal pelatihan yang sama
+        if ($request->jadwal_id) {
+            $existingUser = \App\Models\User::where('email', $request->email)->first();
+            if ($existingUser) {
+                $alreadyRegistered = \App\Models\Pendaftaran::where('id_user', $existingUser->id_user)
+                    ->where('id_jadwal', $request->jadwal_id)
+                    ->where('status_progres', '!=', 'dibatalkan')
+                    ->exists();
+
+                if ($alreadyRegistered) {
+                    throw \Illuminate\Validation\ValidationException::withMessages([
+                        'email' => ['anda sudah mengikuti pelatihan tersebut.'],
+                    ]);
+                }
+            }
+        }
 
         $result = DB::transaction(function () use ($request, $jenis) {
             $jadwalId = $request->jadwal_id;
@@ -67,15 +90,40 @@ class PendaftaranController extends Controller
                     ['kode_jenis' => null]
                 );
 
+                // Auto-generate kode_jenis if empty
+                if (empty($jenisBespoke->kode_jenis)) {
+                    $words = explode(' ', preg_replace('/[^a-zA-Z0-9\s]/', '', $jenisBespoke->nama));
+                    $code = '';
+                    if (count($words) > 1) {
+                        foreach ($words as $w) {
+                            $code .= strtoupper(substr($w, 0, 1));
+                        }
+                    } else {
+                        $code = strtoupper(substr($words[0] ?? 'KNS', 0, 4));
+                    }
+                    $code = preg_replace('/[^A-Z0-9]/', '', $code);
+                    if (empty($code)) {
+                        $code = 'KNS';
+                    }
+                    $jenisBespoke->kode_jenis = substr($code, 0, 15);
+                    $jenisBespoke->save();
+                }
+
+                $kategoriKode = $kategori?->kode_kategori ?? 'KST';
+                $jenisKode = $jenisBespoke->kode_jenis;
+                $urutan = Jadwal::where('id_jenis', $jenisBespoke->id_jenis)->count() + 1;
+                $urutanFormat = str_pad($urutan, 2, '0', STR_PAD_LEFT);
+                $kode_jadwal = "{$kategoriKode}-{$jenisKode}-{$urutanFormat}";
+
                 $jadwalBespoke = Jadwal::create([
                     'id_kategori'    => $kategori?->id_kategori,
                     'id_jenis'       => $jenisBespoke->id_jenis,
+                    'kode_jadwal'    => $kode_jadwal,
                     'jenis_pertemuan'=> $request->mode_pertemuan ?? 'offline',
-                    'tanggal_usul'   => $request->tanggal_usul,
                     'lokasi'         => $request->mode_pertemuan === 'offline' ? $request->lokasi : null,
                     'harga'          => 0,
                     'kapasitas'      => 1,
-                    'deskripsi'      => 'Permintaan dari ' . ($request->nama_perusahaan ?? $request->nama_lengkap),
+                    'deskripsi'      => $request->filled('catatan_tambahan') ? $request->catatan_tambahan : ('Permintaan dari ' . ($request->nama_perusahaan ?? $request->nama_lengkap)),
                 ]);
                 $jadwalId = $jadwalBespoke->id_jadwal;
             }
@@ -115,6 +163,14 @@ class PendaftaranController extends Controller
                 );
             }
 
+            $kategoriId = $request->kategori_id;
+            if ($jadwalId && !$kategoriId) {
+                $jTemp = Jadwal::find($jadwalId);
+                $kategoriId = $jTemp?->id_kategori;
+            }
+
+            $statusProgres = ($kategoriId == 2) ? 'meninjau' : 'menunggu_pembayaran';
+
             $pendaftaran = Pendaftaran::create([
                 'id_jadwal'               => $jadwalId,
                 'id_user'                 => $user->id_user,
@@ -124,7 +180,7 @@ class PendaftaranController extends Controller
                 'rencana_tanggal_mulai'   => $request->tanggal_usul,
                 'rencana_tanggal_selesai' => $request->tanggal_usul,
                 'mode_pertemuan'          => $request->mode_pertemuan,
-                'status_progres'          => 'menunggu_pembayaran',
+                'status_progres'          => $statusProgres,
                 'status_bayar'            => 'belum_bayar',
             ]);
 
@@ -137,11 +193,12 @@ class PendaftaranController extends Controller
             ];
         });
 
-        // Kirim invoice email
+        // Kirim invoice email (lewati jika konsultasi)
         $invoiceSent = false;
         $emailError  = null;
         try {
-            if ($result && isset($result['pendaftaran'], $result['user'])) {
+            $isKonsultasi = ($result && isset($result['jadwal']) && $result['jadwal']->id_kategori == 2);
+            if (!$isKonsultasi && $result && isset($result['pendaftaran'], $result['user'])) {
                 Mail::to($result['user']->email)->send(new PendaftaranInvoiceMail(
                     $result['pendaftaran'],
                     $result['user'],
@@ -156,6 +213,7 @@ class PendaftaranController extends Controller
 
         return redirect()->route('training.status', ['identifier' => $request->email])
             ->with('registration_success', true)
+            ->with('is_konsultasi', $isKonsultasi)
             ->with('invoice_email_sent', $invoiceSent)
             ->with('email_error', $emailError);
     }
@@ -168,6 +226,7 @@ class PendaftaranController extends Controller
         if ($identifier) {
             $user = User::where('email', $identifier)->orWhere('no_telp', $identifier)->first();
             if ($user) {
+                $this->autoClosePassedPendaftarans($user->id_user);
                 $pendaftarans = Pendaftaran::with(['jadwal.jenis', 'jadwal.kategori', 'sertifikat'])
                     ->where('id_user', $user->id_user)
                     ->latest()
@@ -175,7 +234,8 @@ class PendaftaranController extends Controller
             }
         }
 
-        return view('pages.training-status', compact('pendaftarans', 'identifier'));
+        $rekening = \App\Models\Rekening::where('status_aktif', true)->first();
+        return view('pages.training-status', compact('pendaftarans', 'identifier', 'rekening'));
     }
 
     public function checkStatus(Request $request)
@@ -190,13 +250,45 @@ class PendaftaranController extends Controller
             return back()->withErrors(['identifier' => 'Data tidak ditemukan.'])->withInput();
         }
 
+        $this->autoClosePassedPendaftarans($user->id_user);
+
         $pendaftarans = Pendaftaran::with(['jadwal.jenis', 'jadwal.kategori', 'sertifikat'])
             ->where('id_user', $user->id_user)
             ->latest()
             ->get();
 
+        $rekening = \App\Models\Rekening::where('status_aktif', true)->first();
         $identifier = $request->identifier;
-        return view('pages.training-status', compact('pendaftarans', 'identifier'));
+        return view('pages.training-status', compact('pendaftarans', 'identifier', 'rekening'));
+    }
+
+    /**
+     * Auto close pendaftarans whose training date has passed (real-time check)
+     */
+    private function autoClosePassedPendaftarans($userId)
+    {
+        if (!$userId) return;
+
+        $today = \Carbon\Carbon::today()->toDateString();
+        
+        $pendaftarans = Pendaftaran::where('id_user', $userId)
+            ->where('status_progres', 'diproses')
+            ->whereHas('jadwal', function ($query) use ($today) {
+                $query->where(function ($q) use ($today) {
+                    $q->whereNotNull('tgl_selesai')
+                      ->where('tgl_selesai', '<', $today);
+                })->orWhere(function ($q) use ($today) {
+                    $q->whereNull('tgl_selesai')
+                      ->where('tgl_mulai', '<', $today);
+                });
+            })
+            ->get();
+
+        foreach ($pendaftarans as $pendaftaran) {
+            $pendaftaran->update([
+                'status_progres' => 'selesai'
+            ]);
+        }
     }
 
     /**
@@ -236,11 +328,15 @@ class PendaftaranController extends Controller
             ], 422);
         }
 
+        $rekening = \App\Models\Rekening::where('status_aktif', true)->first();
         return response()->json([
             'valid'             => true,
             'id_pendaftaran'    => $pendaftaran->id_pendaftaran,
             'program'           => $pendaftaran->jadwal?->jenis?->nama ?? '-',
             'nomor_pendaftaran' => $pendaftaran->nomor_pendaftaran,
+            'bank_name'         => $rekening?->nama_bank ?? 'Bank Mandiri',
+            'bank_account'      => $rekening?->nomor_rekening ?? '131-00-1886111-1',
+            'bank_recipient'    => $rekening?->atas_nama ?? 'PT Katiga Veritas Indonesia',
         ]);
     }
 
@@ -273,14 +369,46 @@ class PendaftaranController extends Controller
 
             $file->move(public_path('uploads/pembayaran'), $filename);
 
+            $isKonsultasi = ($pendaftaran->jadwal?->id_kategori == 2);
             $pendaftaran->update([
                 'bukti_bayar'    => $filename,
                 'status_bayar'   => 'menunggu_konfirmasi',
-                'status_progres' => 'menunggu',
+                'status_progres' => $isKonsultasi ? 'pembayaran_ditinjau' : 'menunggu',
             ]);
         }
 
         return redirect()->route('training.status', ['identifier' => $request->email])
             ->with('bukti_terkirim', true);
+    }
+
+    /**
+     * Pelanggan membatalkan ikut serta ketika pembayaran belum dilakukan
+     */
+    public function cancelByUser(Request $request, $id)
+    {
+        $request->validate([
+            'identifier' => 'required|string',
+        ]);
+
+        $pendaftaran = Pendaftaran::where('id_pendaftaran', $id)
+            ->whereHas('user', fn($q) => $q->where('email', $request->identifier))
+            ->firstOrFail();
+
+        // Pastikan pembayaran belum dilakukan
+        if (!in_array($pendaftaran->status_bayar, ['belum_bayar', 'belum_lunas'])) {
+            return redirect()->back()->with('error', 'Pendaftaran tidak dapat dibatalkan karena pembayaran sedang diverifikasi atau sudah lunas.');
+        }
+
+        // Pastikan belum dibatalkan / selesai
+        if (in_array($pendaftaran->status_progres, ['dibatalkan', 'selesai'])) {
+            return redirect()->back()->with('error', 'Status pendaftaran sudah dibatalkan atau selesai.');
+        }
+
+        $pendaftaran->update([
+            'status_progres' => 'dibatalkan',
+        ]);
+
+        return redirect()->route('training.status', ['identifier' => $request->identifier])
+            ->with('success', 'Keikutsertaan Anda telah berhasil dibatalkan.');
     }
 }

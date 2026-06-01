@@ -31,6 +31,12 @@ class PendaftaranExport implements FromQuery, WithHeadings, WithMapping, ShouldA
             $query->whereMonth('tanggal_daftar', $this->filters['month']);
         }
 
+        if (!empty($this->filters['category_name_like'])) {
+            $query->whereHas('jadwal.kategori', function($q) {
+                $q->where('nama', 'like', '%' . $this->filters['category_name_like'] . '%');
+            });
+        }
+
         return $query;
     }
 
@@ -42,8 +48,7 @@ class PendaftaranExport implements FromQuery, WithHeadings, WithMapping, ShouldA
             'Layanan',
             'Tanggal Daftar',
             'Status Progres',
-            'Status Bayar',
-            'Cabang'
+            'Status Bayar'
         ];
     }
 
@@ -55,8 +60,7 @@ class PendaftaranExport implements FromQuery, WithHeadings, WithMapping, ShouldA
             $pendaftaran->jadwal?->jenis?->nama ?? ($pendaftaran->jadwal?->kategori?->nama ?? '-'),
             $pendaftaran->tanggal_daftar ? $pendaftaran->tanggal_daftar->format('d/m/Y') : '-',
             strtoupper(str_replace('_', ' ', $pendaftaran->status_progres)),
-            strtoupper(str_replace('_', ' ', $pendaftaran->status_bayar)),
-            strtoupper($pendaftaran->cabang)
+            strtoupper(str_replace('_', ' ', $pendaftaran->status_bayar))
         ];
     }
 

@@ -334,9 +334,9 @@
                     </div>
                     <div>
                         <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Metode Pembayaran:</p>
-                        <p class="text-sm font-black text-slate-900 leading-tight mb-1">Transfer {{ $activeRekening['bank'] }}</p>
-                        <p class="text-xs font-medium text-slate-500">No. Rek: <span class="font-bold text-slate-800">{{ $activeRekening['nomor'] }}</span></p>
-                        <p class="text-xs font-medium text-slate-500">a.n {{ $activeRekening['atas_nama'] }}</p>
+                        <p class="text-sm font-black text-slate-900 leading-tight mb-1">Transfer Bank {{ $rekening?->nama_bank ?? 'Mandiri' }}</p>
+                        <p class="text-xs font-medium text-slate-500">No. Rek: <span class="font-bold text-slate-800">{{ $rekening?->nomor_rekening ?? '131-00-1886111-1' }}</span></p>
+                        <p class="text-xs font-medium text-slate-500">a.n {{ $rekening?->atas_nama ?? 'PT Katiga Veritas Indonesia' }}</p>
                     </div>
                 </div>
 

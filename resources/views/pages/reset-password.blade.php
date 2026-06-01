@@ -12,8 +12,8 @@
 
             {{-- HEADER --}}
             <div class="text-center mb-7">
-                <div class="w-16 h-16 bg-[#1E6B3D] rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg">
-                    🔒
+                <div class="w-16 h-16 bg-[#1E6B3D] text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg">
+                    <i class="fi fi-rr-lock"></i>
                 </div>
                 <h1 class="text-2xl font-bold text-[#1E6B3D]">Buat Password Baru</h1>
                 <p class="text-sm text-gray-500 mt-2 leading-relaxed">
@@ -42,7 +42,7 @@
                         Password Baru <span class="text-red-400">*</span>
                     </label>
                     <div class="relative">
-                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">🔒</span>
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none select-none flex items-center"><i class="fi fi-rr-lock"></i></span>
                         <input
                             id="new-password"
                             type="password"
@@ -53,8 +53,8 @@
                             class="w-full border border-gray-300 rounded-xl pl-10 pr-10 py-2.5 text-sm focus:outline-none focus:border-[#1E6B3D] focus:ring-2 focus:ring-teal-100 transition {{ $errors->has('password') ? 'border-red-400' : '' }}"
                         >
                         <button type="button" onclick="togglePass('new-password', 'eye1')"
-                            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-base select-none">
-                            <span id="eye1">👁️</span>
+                            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-base select-none flex items-center">
+                            <span id="eye1"><i class="fi fi-rr-eye"></i></span>
                         </button>
                     </div>
 
@@ -76,7 +76,7 @@
                         Konfirmasi Password <span class="text-red-400">*</span>
                     </label>
                     <div class="relative">
-                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">🔒</span>
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none select-none flex items-center"><i class="fi fi-rr-lock"></i></span>
                         <input
                             id="confirm-password"
                             type="password"
@@ -86,12 +86,12 @@
                             class="w-full border border-gray-300 rounded-xl pl-10 pr-10 py-2.5 text-sm focus:outline-none focus:border-[#1E6B3D] focus:ring-2 focus:ring-teal-100 transition"
                         >
                         <button type="button" onclick="togglePass('confirm-password', 'eye2')"
-                            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-base select-none">
-                            <span id="eye2">👁️</span>
+                            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-base select-none flex items-center">
+                            <span id="eye2"><i class="fi fi-rr-eye"></i></span>
                         </button>
                     </div>
                     <p class="text-xs mt-1 hidden text-red-500" id="match-msg">Password tidak cocok</p>
-                    <p class="text-xs mt-1 hidden text-green-600" id="match-ok">✓ Password cocok</p>
+                    <p class="text-xs mt-1 hidden text-green-600" id="match-ok"><i class="fi fi-rr-check text-green-600 mr-1 font-bold"></i> Password cocok</p>
                 </div>
 
                 {{-- SUBMIT --}}
@@ -113,10 +113,10 @@
         const eye   = document.getElementById(eyeId);
         if (input.type === 'password') {
             input.type = 'text';
-            eye.textContent = '🙈';
+            eye.innerHTML = '<i class="fi fi-rr-eye-crossed"></i>';
         } else {
             input.type = 'password';
-            eye.textContent = '👁️';
+            eye.innerHTML = '<i class="fi fi-rr-eye"></i>';
         }
     }
 

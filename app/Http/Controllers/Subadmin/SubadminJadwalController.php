@@ -8,8 +8,12 @@ use App\Models\KategoriLayanan;
 use App\Models\JenisLayanan;
 use App\Models\Pemateri;
 use App\Models\Pendaftaran;
+use App\Models\Materi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TrainingReminderMail;
 
 class SubadminJadwalController extends Controller
 {
@@ -70,20 +74,48 @@ class SubadminJadwalController extends Controller
 
     public function show($id)
     {
-        $jadwal   = Jadwal::with(['kategori', 'jenis', 'pemateri'])->findOrFail($id);
+        $jadwal   = Jadwal::with(['pemateri', 'materi'])->findOrFail($id);
         $pesertas = Pendaftaran::where('id_jadwal', $id)
-            ->with(['user', 'perusahaan'])
+            ->where('status_progres', '!=', 'dibatalkan')
+            ->with('user')
             ->latest()
             ->get();
-
         return view('subadmin.jadwal.show', compact('jadwal', 'pesertas'));
+    }
+
+    public function resendReminder($id)
+    {
+        $jadwal = Jadwal::findOrFail($id);
+
+        if (in_array($jadwal->jenis_pertemuan, ['online', 'hybrid']) && empty($jadwal->link_meet)) {
+            return redirect()->back()->with('error', 'Gagal mengirim email konfirmasi. Link Meet belum diisi untuk jadwal online/hybrid.');
+        }
+
+        $pendaftarans = Pendaftaran::where('id_jadwal', $jadwal->id_jadwal)
+            ->where('status_progres', 'diproses')
+            ->get();
+
+        $count = 0;
+        foreach ($pendaftarans as $pendaftaran) {
+            $email = $pendaftaran->user->email ?? null;
+            if ($email) {
+                Mail::to($email)->send(new TrainingReminderMail($pendaftaran));
+                $count++;
+            }
+        }
+
+        $jadwal->update(['reminder_h3_sent_at' => now()]);
+
+        return redirect()->route('subadmin.jadwal.show', $id)
+            ->with('success', "Berhasil mengirim $count email reminder.");
     }
 
     public function create()
     {
-        $kategoris = KategoriLayanan::where('nama', 'not like', '%Pelatihan%')->with('jenis')->get();
+        $kategoris = KategoriLayanan::with('jenis')->get();
         $pemateris = Pemateri::orderBy('nama_lengkap')->get();
-        return view('subadmin.jadwal.create', compact('kategoris', 'pemateris'));
+        $materis = Materi::latest()->get();
+        return view('subadmin.jadwal.create', compact('kategoris', 'pemateris', 'materis'));
     }
 
     public function store(Request $request)
@@ -102,27 +134,30 @@ class SubadminJadwalController extends Controller
             'deskripsi'      => 'nullable|string',
             'pemateri_ids'   => 'nullable|array',
             'pemateri_ids.*' => 'exists:pemateri,id_pemateri',
+            'materi_ids'     => 'nullable|array',
+            'materi_ids.*'   => 'exists:materi,id_materi',
+            'link_meet'      => 'nullable|url|max:255',
+            'file_rundown'   => 'nullable|file|mimes:pdf|max:10240',
         ]);
 
-        // Aturan Bisnis: Ahli K3 Umum 13 hari, lainnya 5 hari (jika tgl_selesai kosong dan tgl_mulai ada)
-        $tgl_selesai = $request->tgl_selesai;
-        if ($request->tgl_mulai && empty($tgl_selesai)) {
-            $jenis = JenisLayanan::find($request->id_jenis);
-            if ($jenis) {
-                $isK3Umum = stripos($jenis->nama, 'Ahli K3 Umum') !== false;
-                $days = $isK3Umum ? 12 : 4; // 13 hari atau 5 hari inklusif
-                $tgl_selesai = \Carbon\Carbon::parse($request->tgl_mulai)->addDays($days)->format('Y-m-d');
-            }
+        $data = $request->only([
+            'id_kategori', 'id_jenis', 'kode_jadwal', 'jenis_pertemuan',
+            'tgl_mulai', 'tgl_selesai', 'jam_pertemuan', 'lokasi',
+            'kapasitas', 'harga', 'deskripsi', 'link_meet',
+        ]);
+
+        if ($request->hasFile('file_rundown')) {
+            $data['file_rundown'] = $request->file('file_rundown')->store('rundown', 'public');
         }
 
-        $jadwal = Jadwal::create(array_merge($request->only([
-            'id_kategori', 'id_jenis', 'kode_jadwal', 'jenis_pertemuan',
-            'tgl_mulai', 'jam_pertemuan', 'lokasi',
-            'kapasitas', 'harga', 'deskripsi',
-        ]), ['tgl_selesai' => $tgl_selesai]));
+        $jadwal = Jadwal::create($data);
 
         if ($request->filled('pemateri_ids')) {
             $jadwal->pemateri()->sync($request->pemateri_ids);
+        }
+        
+        if ($request->filled('materi_ids')) {
+            $jadwal->materi()->sync($request->materi_ids);
         }
 
         return redirect()->route('subadmin.jadwal.index')
@@ -131,55 +166,40 @@ class SubadminJadwalController extends Controller
 
     public function edit($id)
     {
-        $jadwal    = Jadwal::with('pemateri')->findOrFail($id);
-        if (str_contains(strtolower($jadwal->kategori->nama ?? ''), 'pelatihan')) abort(403, 'Anda tidak dapat mengedit jadwal pelatihan.');
-        $kategoris = KategoriLayanan::where('nama', 'not like', '%Pelatihan%')->with('jenis')->get();
+        $jadwal    = Jadwal::with(['pemateri', 'materi'])->findOrFail($id);
+        $kategoris = KategoriLayanan::with('jenis')->get();
         $pemateris = Pemateri::orderBy('nama_lengkap')->get();
-        return view('subadmin.jadwal.edit', compact('jadwal', 'kategoris', 'pemateris'));
+        $materis = Materi::latest()->get();
+        return view('subadmin.jadwal.edit', compact('jadwal', 'kategoris', 'pemateris', 'materis'));
     }
 
     public function update(Request $request, $id)
     {
         $jadwal = Jadwal::findOrFail($id);
-        if (str_contains(strtolower($jadwal->kategori->nama ?? ''), 'pelatihan')) abort(403, 'Anda tidak dapat mengedit jadwal pelatihan.');
 
         $request->validate([
-            'id_kategori'    => 'required|exists:kategori_layanan,id_kategori',
-            'id_jenis'       => 'required|exists:jenis_layanan,id_jenis',
-            'kode_jadwal'    => 'nullable|string|max:20',
-            'jenis_pertemuan'=> 'required|in:online,offline,hybrid',
-            'tgl_mulai'      => 'nullable|date',
-            'tgl_selesai'    => 'nullable|date',
-            'jam_pertemuan'  => 'nullable',
-            'lokasi'         => 'nullable|string|max:255',
-            'kapasitas'      => 'nullable|integer|min:1',
-            'harga'          => 'required|numeric|min:0',
-            'deskripsi'      => 'nullable|string',
-            'pemateri_ids'   => 'nullable|array',
-            'pemateri_ids.*' => 'exists:pemateri,id_pemateri',
+            'materi_ids'     => 'nullable|array',
+            'materi_ids.*'   => 'exists:materi,id_materi',
+            'file_rundown'   => 'nullable|file|mimes:pdf|max:10240',
         ]);
 
-        // Aturan Bisnis: Ahli K3 Umum 13 hari, lainnya 5 hari (jika tgl_selesai kosong dan tgl_mulai ada)
-        $tgl_selesai = $request->tgl_selesai;
-        if ($request->tgl_mulai && empty($tgl_selesai)) {
-            $jenis = JenisLayanan::find($request->id_jenis);
-            if ($jenis) {
-                $isK3Umum = stripos($jenis->nama, 'Ahli K3 Umum') !== false;
-                $days = $isK3Umum ? 12 : 4; // 13 hari atau 5 hari inklusif
-                $tgl_selesai = \Carbon\Carbon::parse($request->tgl_mulai)->addDays($days)->format('Y-m-d');
+        $data = [];
+
+        if ($request->hasFile('file_rundown')) {
+            if ($jadwal->file_rundown) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($jadwal->file_rundown);
             }
+            $data['file_rundown'] = $request->file('file_rundown')->store('rundown', 'public');
         }
 
-        $jadwal->update(array_merge($request->only([
-            'id_kategori', 'id_jenis', 'kode_jadwal', 'jenis_pertemuan',
-            'tgl_mulai', 'jam_pertemuan', 'lokasi',
-            'kapasitas', 'harga', 'deskripsi',
-        ]), ['tgl_selesai' => $tgl_selesai]));
+        if (!empty($data)) {
+            $jadwal->update($data);
+        }
 
-        if ($request->has('pemateri_ids')) {
-            $jadwal->pemateri()->sync($request->pemateri_ids);
+        if ($request->has('materi_ids')) {
+            $jadwal->materi()->sync($request->materi_ids);
         } else {
-            $jadwal->pemateri()->detach();
+            $jadwal->materi()->detach();
         }
 
         return redirect()->route('subadmin.jadwal.index')
@@ -189,7 +209,9 @@ class SubadminJadwalController extends Controller
     public function destroy($id)
     {
         $jadwal = Jadwal::findOrFail($id);
-        if (str_contains(strtolower($jadwal->kategori->nama ?? ''), 'pelatihan')) abort(403, 'Anda tidak dapat menghapus jadwal pelatihan.');
+        if ($jadwal->file_rundown) {
+            Storage::disk('public')->delete($jadwal->file_rundown);
+        }
         $jadwal->pemateri()->detach();
         $jadwal->delete();
 

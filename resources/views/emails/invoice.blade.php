@@ -211,7 +211,9 @@
                 </tr>
                 <tr>
                     <td class="label">No. Pendaftaran</td>
-                    <td class="value" style="color: #0891b2; font-weight: 900; font-size: 13px; letter-spacing: 0.5px;">{{ $pendaftaran->nomor_pendaftaran }}</td>
+                    <td class="value">
+                        <span style="display: inline-block; font-family: Monaco, Consolas, 'Courier New', monospace; background-color: #f1f5f9; border: 1px dashed #0891b2; padding: 4px 8px; border-radius: 4px; color: #0891b2; font-weight: bold; font-size: 13px; letter-spacing: 0.5px; user-select: all; -webkit-user-select: all; -moz-user-select: all; -ms-user-select: all; cursor: text;" title="Klik dua kali atau tekan lama untuk menyalin">{{ $pendaftaran->nomor_pendaftaran }}</span>
+                    </td>
                 </tr>
                 <tr>
                     <td class="label">Program / Layanan</td>
@@ -252,9 +254,22 @@
                 Silakan lakukan transfer pembayaran penuh sejumlah nominal di atas ke rekening resmi kami berikut:
             </p>
             <div class="bank-info">
-                <div class="bank-name">🏦 {{ $activeRekening['bank'] }}</div>
-                <div class="acc-number">{{ $activeRekening['nomor'] }}</div>
-                <div class="acc-name">A.N. {{ $activeRekening['atas_nama'] }}</div>
+                <div class="bank-name">🏦 {{ $rekening?->nama_bank ?? 'Bank Mandiri' }}</div>
+                <div style="margin: 8px 0;">
+                    <span style="display: inline-block; font-family: Monaco, Consolas, 'Courier New', monospace; background-color: #e2e8f0; border: 1px dashed #0891b2; padding: 6px 12px; border-radius: 6px; color: #0891b2; font-size: 18px; font-weight: 900; letter-spacing: 1px; user-select: all; -webkit-user-select: all; -moz-user-select: all; -ms-user-select: all; cursor: text;" title="Klik dua kali atau tekan lama untuk menyalin">{{ str_replace('-', '', $rekening?->nomor_rekening ?? '1310018861111') }}</span>
+                    <span style="font-size: 12px; color: #64748b; margin-left: 8px;">(Salin tanpa tanda hubung)</span>
+                </div>
+                <div class="acc-name" style="margin-bottom: 12px;">A.N. {{ $rekening?->atas_nama ?? 'PT Katiga Veritas Indonesia' }}</div>
+                
+                <!-- Unique Code Instruction -->
+                <div style="background-color: #f0fdf4; border-left: 3px solid #22c55e; padding: 12px; margin-top: 10px; border-radius: 6px; text-align: left;">
+                    <p style="margin: 0; font-size: 13px; color: #15803d; font-weight: bold; line-height: 1.4;">
+                        ⚠️ PENTING: Masukkan 5 digit kode transfer berikut pada <strong>Berita Transfer / Catatan Transaksi</strong> Anda saat melakukan pembayaran untuk memudahkan pelacakan & verifikasi bukti bayar:
+                    </p>
+                    <p style="margin: 6px 0 0 0; font-family: Monaco, Consolas, 'Courier New', monospace; font-size: 20px; color: #166534; font-weight: 900; letter-spacing: 2px;">
+                        {{ explode('-', $pendaftaran->nomor_pendaftaran)[0] }}
+                    </p>
+                </div>
             </div>
             
             @if(!empty($invoiceSettings) && $invoiceSettings->catatan_invoice)
@@ -273,8 +288,9 @@
                 
                 <div style="background-color: #fffbeb; border-left: 3px solid #fbbf24; padding: 12px; margin-bottom: 20px; text-align: left; border-radius: 4px;">
                     <p style="margin: 0; font-size: 13px; color: #b45309;">
-                        <strong>Nomor Pendaftaran Anda:</strong> <span style="font-family: monospace; font-size: 15px; color: #0891b2; font-weight: 900;">{{ $pendaftaran->nomor_pendaftaran }}</span><br>
-                        <span style="font-size: 11px;">Simpan nomor ini untuk mengirim bukti pembayaran di halaman Cek Status.</span>
+                        <strong>Nomor Pendaftaran Anda:</strong><br>
+                        <span style="display: inline-block; margin-top: 4px; font-family: Monaco, Consolas, 'Courier New', monospace; background-color: #fef3c7; border: 1px dashed #d97706; padding: 4px 8px; border-radius: 4px; color: #b45309; font-weight: 900; font-size: 14px; letter-spacing: 0.5px; user-select: all; -webkit-user-select: all; -moz-user-select: all; -ms-user-select: all; cursor: text;" title="Klik dua kali atau tekan lama untuk menyalin">{{ $pendaftaran->nomor_pendaftaran }}</span><br>
+                        <span style="font-size: 11px; display: inline-block; margin-top: 6px;">Simpan nomor ini untuk mengirim bukti pembayaran di halaman Cek Status.</span>
                     </p>
                 </div>
             </div>

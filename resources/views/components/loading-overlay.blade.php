@@ -4,7 +4,7 @@
         <div class="flex flex-col items-center text-center">
             <!-- Icon -->
             <div class="w-16 h-16 mb-4 bg-emerald-50 text-[#1E6B3D] rounded-2xl flex items-center justify-center text-3xl shadow-inner border border-emerald-100 animate-pulse">
-                🛡️
+                <i class="fi fi-rr-shield-check"></i>
             </div>
             
             <h3 class="text-xl font-bold text-slate-800 mb-2 tracking-tight">Konfirmasi Pengiriman</h3>
@@ -24,7 +24,7 @@
         </div>
     </div>
 </div>
-
+ 
 <!-- ── OVERLAY LOADING SPIN ────────────────────────────────────────── -->
 <div id="loading-overlay" class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-slate-950/70 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
     <div class="relative flex items-center justify-center mb-6">
@@ -33,11 +33,13 @@
         <!-- Inner Ring -->
         <div class="absolute w-14 h-14 rounded-full border-4 border-slate-700/30 border-b-emerald-400 animate-spin" style="animation-direction: reverse; animation-duration: 1.5s;"></div>
         <!-- Center Icon -->
-        <div class="text-xl relative z-10 text-emerald-400 animate-pulse">🛡️</div>
+        <div class="text-xl relative z-10 text-emerald-400 animate-pulse">
+            <i class="fi fi-rr-shield-check"></i>
+        </div>
     </div>
     
-    <h3 class="text-white font-bold text-lg mb-2 tracking-wide">Memproses Permintaan Anda...</h3>
-    <p class="text-slate-400 text-xs md:text-sm max-w-md text-center px-6 leading-relaxed">
+    <h3 id="loading-overlay-title" class="text-white font-bold text-lg mb-2 tracking-wide">Memproses Permintaan Anda...</h3>
+    <p id="loading-overlay-desc" class="text-slate-400 text-xs md:text-sm max-w-md text-center px-6 leading-relaxed">
         Mohon tunggu sejenak. Kami sedang memproses pendaftaran, membuat invoice, dan mengirimkan email konfirmasi ke alamat email Anda.
     </p>
 </div>
@@ -118,6 +120,20 @@
                     // 2. Show loading overlay
                     const overlay = document.getElementById('loading-overlay');
                     if (overlay) {
+                        const kategoriInput = activeFormToSubmit.querySelector('input[name="kategori_id"]');
+                        const isConsultation = kategoriInput && kategoriInput.value === '2';
+                        
+                        const titleEl = document.getElementById('loading-overlay-title');
+                        const descEl = document.getElementById('loading-overlay-desc');
+                        
+                        if (isConsultation) {
+                            if (titleEl) titleEl.textContent = 'Mengirim Permintaan Konsultasi...';
+                            if (descEl) descEl.textContent = 'Mohon tunggu sejenak. Kami sedang memproses data pengajuan konsultasi Anda.';
+                        } else {
+                            if (titleEl) titleEl.textContent = 'Memproses Pendaftaran...';
+                            if (descEl) descEl.textContent = 'Mohon tunggu sejenak. Kami sedang memproses pendaftaran, membuat invoice, dan mengirimkan email konfirmasi ke alamat email Anda.';
+                        }
+
                         overlay.classList.remove('opacity-0', 'pointer-events-none');
                         overlay.classList.add('opacity-100');
                     }

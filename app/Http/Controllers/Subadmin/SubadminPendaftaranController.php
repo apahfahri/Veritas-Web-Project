@@ -25,16 +25,9 @@ class SubadminPendaftaranController extends Controller
 
     public function index(Request $request)
     {
-        $cabang = Auth::user()->cabang;
-        $query = Pendaftaran::with(['user', 'jadwal.jenis', 'jadwal.kategori']);
-
-        if ($cabang) {
-            $query->where(function($q) use ($cabang) {
-                $q->where('cabang', $cabang)
-                  ->orWhereNull('cabang')
-                  ->orWhere('cabang', '');
-            });
-        }
+        $query = Pendaftaran::whereHas('jadwal.kategori', function($q) {
+            $q->where('nama', 'like', '%Pelatihan%');
+        })->with(['user', 'jadwal.jenis', 'jadwal.kategori']);
 
         $query->latest();
 
@@ -45,7 +38,8 @@ class SubadminPendaftaranController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
-                $q->where('id_pendaftaran', 'LIKE', "%{$search}%")
+                $q->where('nomor_pendaftaran', 'LIKE', "%{$search}%")
+                  ->orWhere('id_pendaftaran', 'LIKE', "%{$search}%")
                   ->orWhereHas('user', function($qUser) use ($search) {
                       $qUser->where('nama', 'LIKE', "%{$search}%")
                             ->orWhere('email', 'LIKE', "%{$search}%")
@@ -64,44 +58,21 @@ class SubadminPendaftaranController extends Controller
 
     public function show($id)
     {
-        $cabang = Auth::user()->cabang;
-        $query = Pendaftaran::with(['user', 'jadwal.jenis', 'sertifikat']);
-
-        if ($cabang) {
-            $query->where(function($q) use ($cabang) {
-                $q->where('cabang', $cabang)
-                  ->orWhereNull('cabang')
-                  ->orWhere('cabang', '');
-            });
-        }
+        $query = Pendaftaran::whereHas('jadwal.kategori', function($q) {
+            $q->where('nama', 'like', '%Pelatihan%');
+        })->with(['user', 'jadwal.jenis', 'sertifikat']);
 
         $pendaftaran = $query->findOrFail($id);
+        $rekening = \App\Models\Rekening::where('status_aktif', true)->first();
 
-        return view('subadmin.pendaftaran.show', compact('pendaftaran'));
+        return view('subadmin.pendaftaran.show', compact('pendaftaran', 'rekening'));
     }
 
     public function update(Request $request, $id)
     {
-        $cabang = Auth::user()->cabang;
-        $query = Pendaftaran::query();
-
-        if ($cabang) {
-            $query->where(function($q) use ($cabang) {
-                $q->where('cabang', $cabang)
-                  ->orWhereNull('cabang')
-                  ->orWhere('cabang', '');
-            });
-        }
-
-        $pendaftaran = $query->findOrFail($id);
-
-        // Auto-assign branch to this subadmin if it was unassigned
-        if (empty($pendaftaran->cabang) && $cabang) {
-            $pendaftaran->cabang = $cabang;
-            $pendaftaran->save();
-        }
+        $pendaftaran = $this->findByBranch($id);
         
-        // Prevent finishing if not paid (except for corporate/in-house requests which can pay at the end)
+        // Prevent finishing if not paid
         if ($request->status_progres == 'selesai' && $request->status_bayar != 'lunas') {
             if (!$pendaftaran->is_utusan_perusahaan) {
                 return redirect()->back()->with('error', 'Pendaftaran individu tidak dapat diselesaikan karena status pembayaran belum LUNAS. (Hanya perusahaan yang dapat bayar di akhir).');
@@ -147,7 +118,8 @@ class SubadminPendaftaranController extends Controller
     {
         $filters = [
             'year' => $request->year ?? date('Y'),
-            'month' => $request->month
+            'month' => $request->month,
+            'category_name_like' => 'Pelatihan',
         ];
 
         return Excel::download(new PendaftaranExport($filters), 'laporan-pendaftaran-' . now()->format('Ymd') . '.xlsx');
@@ -155,62 +127,8 @@ class SubadminPendaftaranController extends Controller
 
     public function exportPdf(Request $request)
     {
-        $cabang = Auth::user()->cabang;
-        $query = Pendaftaran::with(['user', 'jadwal.jenis', 'jadwal.kategori']);
-
-        if ($cabang) {
-            $query->where(function($q) use ($cabang) {
-                $q->where('cabang', $cabang)
-                  ->orWhereNull('cabang')
-                  ->orWhere('cabang', '');
-            });
-        }
-
-        $query->latest();
-
-        if ($request->filled('status')) {
-            $query->where('status_progres', $request->status);
-        }
-
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('id_pendaftaran', 'LIKE', "%{$search}%")
-                  ->orWhereHas('user', function($qUser) use ($search) {
-                      $qUser->where('nama', 'LIKE', "%{$search}%")
-                            ->orWhere('email', 'LIKE', "%{$search}%")
-                            ->orWhere('no_telp', 'LIKE', "%{$search}%");
-                  })
-                  ->orWhereHas('jadwal.jenis', function($qJenis) use ($search) {
-                      $qJenis->where('nama', 'LIKE', "%{$search}%");
-                  });
-            });
-        }
-
-        $pendaftarans = $query->get();
-
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('subadmin.pendaftaran.export-pdf', compact('pendaftarans'))
-                ->setPaper('a4', 'landscape');
-
-        return $pdf->download('laporan-pendaftaran-' . now()->format('YmdHis') . '.pdf');
-    }
-
-    public function destroy($id)
-    {
-        try {
-            $cabang = Auth::user()->cabang;
-            $query = Pendaftaran::query();
-
-            if ($cabang) {
-                $query->where(function($q) use ($cabang) {
-                    $q->where('cabang', $cabang)
-                      ->orWhereNull('cabang')
-                      ->orWhere('cabang', '');
-                });
-            }
-
-            $pendaftaran = $query->findOrFail($id);
-            $pendaftaran->delete();
+        $pendaftaran = $this->findByBranch($id);
+        $pendaftaran->delete();
 
             return redirect()->route('subadmin.pendaftaran.index')
                 ->with('success', 'Pendaftaran berhasil dihapus.');
@@ -222,24 +140,7 @@ class SubadminPendaftaranController extends Controller
 
     public function updateNote(Request $request, $id)
     {
-        $cabang = Auth::user()->cabang;
-        $query = Pendaftaran::query();
-
-        if ($cabang) {
-            $query->where(function($q) use ($cabang) {
-                $q->where('cabang', $cabang)
-                  ->orWhereNull('cabang')
-                  ->orWhere('cabang', '');
-            });
-        }
-
-        $pendaftaran = $query->findOrFail($id);
-
-        // Auto-assign branch to this subadmin if it was unassigned
-        if (empty($pendaftaran->cabang) && $cabang) {
-            $pendaftaran->cabang = $cabang;
-            $pendaftaran->save();
-        }
+        $pendaftaran = $this->findByBranch($id);
 
         $request->validate([
             'admin_note' => 'required|string',
@@ -256,18 +157,8 @@ class SubadminPendaftaranController extends Controller
 
     public function uploadPaymentProof(Request $request, $id)
     {
+        $pendaftaran = $this->findByBranch($id);
         $cabang = Auth::user()->cabang;
-        $query = Pendaftaran::query();
-
-        if ($cabang) {
-            $query->where(function($q) use ($cabang) {
-                $q->where('cabang', $cabang)
-                  ->orWhereNull('cabang')
-                  ->orWhere('cabang', '');
-            });
-        }
-
-        $pendaftaran = $query->findOrFail($id);
 
         // Auto-assign branch to this subadmin if it was unassigned
         if (empty($pendaftaran->cabang) && $cabang) {
@@ -356,16 +247,9 @@ class SubadminPendaftaranController extends Controller
      */
     private function findByBranch($id): Pendaftaran
     {
-        $cabang = Auth::user()->cabang;
-        $query  = Pendaftaran::query();
-
-        if ($cabang) {
-            $query->where(function ($q) use ($cabang) {
-                $q->where('cabang', $cabang)
-                  ->orWhereNull('cabang')
-                  ->orWhere('cabang', '');
-            });
-        }
+        $query  = Pendaftaran::whereHas('jadwal.kategori', function($q) {
+            $q->where('nama', 'like', '%Pelatihan%');
+        });
 
         return $query->findOrFail($id);
     }

@@ -220,17 +220,20 @@
             Silakan lakukan transfer pembayaran penuh sejumlah nominal di atas ke rekening resmi kami:
         </p>
         <div class="bank-box">
-            <div class="bank-name">🏦 {{ $activeRekening['bank'] ?? 'Bank Mandiri' }}</div>
-            <div class="acc-number">{{ $activeRekening['nomor'] ?? '131-00-1886111-1' }}</div>
-            <div class="acc-holder">A.N. {{ $activeRekening['atas_nama'] ?? 'PT Katiga Veritas Indonesia' }}</div>
+            <div class="bank-name">🏦 {{ $rekening?->nama_bank ?? 'Bank Mandiri' }}</div>
+            <div class="acc-number">{{ $rekening?->nomor_rekening ?? '131-00-1886111-1' }}</div>
+            <div class="acc-holder" style="margin-bottom: 10px; display: block;">A.N. {{ $rekening?->atas_nama ?? 'PT Katiga Veritas Indonesia' }}</div>
+            
+            <!-- Unique Code Instruction -->
+            <div style="background-color: #f0fdf4; border-left: 3px solid #22c55e; padding: 10px; margin-top: 8px; border-radius: 6px;">
+                <p style="margin: 0; font-size: 11px; color: #15803d; font-weight: bold; line-height: 1.4;">
+                    PENTING: Masukkan 5 digit kode transfer ini pada <strong>Berita Transfer / Catatan Transaksi</strong> Anda:
+                </p>
+                <p style="margin: 4px 0 0 0; font-family: DejaVu Sans, sans-serif; font-size: 16px; color: #166534; font-weight: bold; letter-spacing: 2px;">
+                    {{ explode('-', $pendaftaran->nomor_pendaftaran)[0] }}
+                </p>
+            </div>
         </div>
-        
-        @if(!empty($invoiceSettings) && $invoiceSettings->catatan_invoice)
-        <div style="margin-top: 15px; padding: 10px; background-color: #f8fafc; border: 1px solid #e2e8f0; font-size: 11px;">
-            <strong>Catatan:</strong><br>
-            {{ $invoiceSettings->catatan_invoice }}
-        </div>
-        @endif
 
     </div>
 

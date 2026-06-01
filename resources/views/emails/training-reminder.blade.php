@@ -1,177 +1,106 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pengingat Pelatihan - Veritas</title>
+    <meta charset="utf-8">
+    <title>Surat Konfirmasi Pelaksanaan Pelatihan</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f1f5f9;
-            margin: 0;
-            padding: 20px;
-            color: #334155;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             line-height: 1.6;
-        }
-        .container {
+            color: #333;
             max-width: 600px;
             margin: 0 auto;
-            background: #ffffff;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid #e2e8f0;
+            padding: 20px;
         }
         .header {
-            background-color: #0891b2;
-            color: #ffffff;
-            padding: 25px;
+            background-color: #1e293b;
+            color: white;
+            padding: 20px;
             text-align: center;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 22px;
-            font-weight: 800;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-        .header p {
-            margin: 5px 0 0 0;
-            font-size: 13px;
-            color: #cffafe;
-            font-weight: 600;
+            border-radius: 8px 8px 0 0;
         }
         .content {
-            padding: 30px;
-        }
-        .greeting {
-            font-size: 16px;
-            color: #0f172a;
-            margin-bottom: 20px;
-        }
-        .info-box {
             background-color: #f8fafc;
-            border-left: 4px solid #0891b2;
-            padding: 20px;
-            border-radius: 0 8px 8px 0;
-            margin-bottom: 25px;
+            padding: 30px;
+            border: 1px solid #e2e8f0;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
         }
-        .info-item {
+        .details-box {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #e2e8f0;
+        }
+        .details-row {
             margin-bottom: 10px;
         }
-        .info-item:last-child {
-            margin-bottom: 0;
-        }
-        .info-label {
-            font-size: 12px;
-            color: #64748b;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 2px;
-        }
-        .info-value {
-            font-size: 15px;
-            color: #0f172a;
-            font-weight: 800;
-        }
-        .section-title {
-            font-size: 14px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #0f172a;
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 8px;
-            margin-top: 25px;
-            margin-bottom: 15px;
-        }
-        .deskripsi {
-            background-color: #f1f5f9;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 14px;
+        .details-label {
+            font-weight: bold;
             color: #475569;
+            width: 120px;
+            display: inline-block;
         }
         .footer {
-            background-color: #f8fafc;
-            padding: 20px;
+            margin-top: 30px;
             text-align: center;
             font-size: 12px;
             color: #94a3b8;
-            border-top: 1px solid #e2e8f0;
-        }
-        .footer a {
-            color: #0891b2;
-            text-decoration: none;
-            font-weight: 600;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <h1>PENGINGAT PELATIHAN (H-3)</h1>
-            <p>PT Katiga Veritas Indonesia</p>
-        </div>
-
-        <!-- Content -->
-        <div class="content">
-            <div class="greeting">
-                Halo <strong>{{ $user->nama }}</strong>,
-                <br><br>
-                Kami ingin mengingatkan bahwa program pelatihan Anda di <strong>PT Katiga Veritas Indonesia</strong> akan dilaksanakan dalam waktu 3 hari ke depan. Berikut adalah detail pelaksanaan kegiatan:
+    <div class="header">
+        <h2 style="margin: 0;">Surat Konfirmasi Pelaksanaan Pelatihan</h2>
+    </div>
+    
+    <div class="content">
+        <p>Yth. <strong>{{ $pendaftaran->user->name ?? $pendaftaran->user->email }}</strong>,</p>
+        
+        <p>Terima kasih telah mendaftar pelatihan bersama kami. Kami ingin menginformasikan bahwa pelatihan Anda akan segera dimulai. Berikut adalah rincian pelaksanaannya:</p>
+        
+        <div class="details-box">
+            <div class="details-row">
+                <span class="details-label">Program:</span>
+                {{ $pendaftaran->jadwal->jenis->nama ?? '-' }}
             </div>
-
-            <div class="info-box">
-                <div class="info-item">
-                    <div class="info-label">Program Pelatihan</div>
-                    <div class="info-value">{{ $jadwal->nama_program }}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Jadwal Pelaksanaan</div>
-                    <div class="info-value">
-                        {{ $jadwal->tgl_mulai ? $jadwal->tgl_mulai->format('d M Y') : '-' }} 
-                        @if($jadwal->tgl_selesai && $jadwal->tgl_selesai != $jadwal->tgl_mulai)
-                            s.d {{ $jadwal->tgl_selesai->format('d M Y') }}
-                        @endif
-                    </div>
-                </div>
-                @if($jadwal->jam_pertemuan)
-                <div class="info-item">
-                    <div class="info-label">Waktu</div>
-                    <div class="info-value">{{ date('H:i', strtotime($jadwal->jam_pertemuan)) }} WIB</div>
-                </div>
-                @endif
-                <div class="info-item">
-                    <div class="info-label">Mode / Lokasi</div>
-                    <div class="info-value">
-                        {{ strtoupper($jadwal->jenis_pertemuan) }} 
-                        @if($jadwal->lokasi) - {{ $jadwal->lokasi }} @endif
-                    </div>
-                </div>
+            <div class="details-row">
+                <span class="details-label">Tanggal:</span>
+                {{ $pendaftaran->jadwal->tgl_mulai ? $pendaftaran->jadwal->tgl_mulai->format('d M Y') : '-' }} s/d {{ $pendaftaran->jadwal->tgl_selesai ? $pendaftaran->jadwal->tgl_selesai->format('d M Y') : '-' }}
             </div>
-
-            @if($jadwal->deskripsi)
-            <div class="section-title">Materi & Rundown Pelatihan</div>
-            <div class="deskripsi">
-                {!! nl2br(e($jadwal->deskripsi)) !!}
+            <div class="details-row">
+                <span class="details-label">Waktu:</span>
+                {{ $pendaftaran->jadwal->jam_pertemuan ? date('H:i', strtotime($pendaftaran->jadwal->jam_pertemuan)) : '-' }} WIB
+            </div>
+            <div class="details-row">
+                <span class="details-label">Mode:</span>
+                <span style="text-transform: capitalize;">{{ $pendaftaran->jadwal->jenis_pertemuan }}</span>
+            </div>
+            <div class="details-row">
+                <span class="details-label">Lokasi:</span>
+                {{ $pendaftaran->jadwal->lokasi ?? '-' }}
+            </div>
+            @if($pendaftaran->jadwal->link_meet)
+            <div class="details-row">
+                <span class="details-label">Link Meet:</span>
+                <a href="{{ $pendaftaran->jadwal->link_meet }}">{{ $pendaftaran->jadwal->link_meet }}</a>
             </div>
             @endif
-
-            <p style="margin-top: 25px; font-size: 14px;">
-                Harap mempersiapkan diri sesuai dengan jadwal yang telah ditentukan. Jika ada pertanyaan lebih lanjut, silakan hubungi tim kami.
-                <br><br>
-                Terima kasih,<br>
-                <strong>Tim PT Katiga Veritas Indonesia</strong>
-            </p>
         </div>
 
-        <!-- Footer -->
-        <div class="footer">
-            &copy; {{ date('Y') }} PT Katiga Veritas Indonesia. All rights reserved.<br>
-            <a href="{{ url('/') }}">Kunjungi Website Kami</a>
-        </div>
+        <p>Bersama email ini, kami telah melampirkan <strong>Rundown</strong> dan <strong>Materi Pelatihan</strong> (jika tersedia) untuk Anda pelajari sebelum kelas dimulai.</p>
+        
+        <p>Harap hadir tepat waktu sesuai jadwal yang tertera. Jika ada pertanyaan lebih lanjut, silakan balas email ini atau hubungi tim *support* kami.</p>
+
+        <p style="margin-top: 30px;">
+            Salam hangat,<br>
+            <strong>Tim {{ config('app.name', 'Veritas') }}</strong>
+        </p>
+    </div>
+
+    <div class="footer">
+        Email ini dibuat secara otomatis oleh sistem. Mohon tidak membalas langsung ke alamat email *no-reply*.
     </div>
 </body>
 </html>

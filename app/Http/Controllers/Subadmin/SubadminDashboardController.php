@@ -40,9 +40,7 @@ class SubadminDashboardController extends Controller
         $totalKonsultasi = $stats[2] ?? 0;
         $totalAudit = $stats[3] ?? 0;
 
-        $totalSertifikat = Sertifikat::whereHas('pendaftaran', function($q) use ($cabang) {
-            if ($cabang) $q->where('cabang', $cabang);
-        })->count();
+        $totalSertifikat = Sertifikat::count();
 
         // Multi-Series Chart Data
         $categories = [1 => 'Pelatihan', 2 => 'Konsultasi', 3 => 'Audit'];

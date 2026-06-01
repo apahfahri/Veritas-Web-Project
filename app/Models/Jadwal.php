@@ -21,7 +21,6 @@ class Jadwal extends Model
         'id_jenis',
         'kode_jadwal',
         'jenis_pertemuan',
-        'tanggal_usul',
         'tgl_mulai',
         'tgl_selesai',
         'jam_pertemuan',
@@ -30,11 +29,12 @@ class Jadwal extends Model
         'kuota_minimal',
         'harga',
         'deskripsi',
-        'is_active',
+        'file_rundown',
+        'link_meet',
+        'reminder_h3_sent_at',
     ];
 
     protected $casts = [
-        'tanggal_usul' => 'date',
         'tgl_mulai'    => 'date',
         'tgl_selesai'  => 'date',
         'is_active'    => 'boolean',
@@ -60,6 +60,11 @@ class Jadwal extends Model
     public function pendaftarans()
     {
         return $this->hasMany(Pendaftaran::class, 'id_jadwal', 'id_jadwal');
+    }
+
+    public function materi()
+    {
+        return $this->belongsToMany(Materi::class, 'jadwal_materi', 'id_jadwal', 'id_materi');
     }
 
     /* ─── HELPERS ────────────────────────────────────────────── */

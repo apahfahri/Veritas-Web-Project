@@ -20,8 +20,8 @@
 
             {{-- HEADER --}}
             <div class="text-center mb-7">
-                <div class="w-16 h-16 bg-[#1E6B3D] rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg">
-                    🔑
+                <div class="w-16 h-16 bg-[#1E6B3D] text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg">
+                    <i class="fi fi-rr-key"></i>
                 </div>
                 <h1 class="text-2xl font-bold text-[#1E6B3D]">Lupa Password?</h1>
                 <p class="text-sm text-gray-500 mt-2 leading-relaxed">
@@ -32,7 +32,7 @@
             {{-- INFO / ERROR --}}
             @if (session('error'))
                 <div class="mb-5 bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm flex items-start gap-2">
-                    <span class="shrink-0">⚠️</span>
+                    <i class="fi fi-rr-warning text-red-500 text-lg shrink-0 mt-0.5"></i>
                     <span>{{ session('error') }}</span>
                 </div>
             @endif
@@ -57,7 +57,7 @@
                         Email <span class="text-red-400">*</span>
                     </label>
                     <div class="relative">
-                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">📧</span>
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none select-none flex items-center"><i class="fi fi-rr-envelope"></i></span>
                         <input
                             id="fp-email"
                             type="email"

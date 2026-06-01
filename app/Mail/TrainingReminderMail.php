@@ -2,29 +2,22 @@
 
 namespace App\Mail;
 
-use App\Models\Pendaftaran;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+
+use App\Models\Pendaftaran;
 
 class TrainingReminderMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $pendaftaran;
-    public $jadwal;
-    public $user;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
     public function __construct(Pendaftaran $pendaftaran)
     {
         $this->pendaftaran = $pendaftaran;
-        $this->jadwal = $pendaftaran->jadwal;
-        $this->user = $pendaftaran->user;
     }
 
     /**
@@ -34,9 +27,27 @@ class TrainingReminderMail extends Mailable
      */
     public function build()
     {
-        $namaProgram = $this->jadwal->nama_program ?? 'Program Pelatihan';
-        
-        return $this->subject("[Veritas] Pengingat Pelatihan: {$namaProgram}")
-                    ->view('emails.training-reminder');
+        $mail = $this->subject('Surat Konfirmasi Pelaksanaan Pelatihan - ' . ($this->pendaftaran->jadwal->jenis->nama ?? ''))
+                     ->view('emails.training-reminder');
+
+        $jadwal = $this->pendaftaran->jadwal;
+
+        if ($jadwal->file_rundown && file_exists(storage_path('app/public/' . $jadwal->file_rundown))) {
+            $mail->attach(storage_path('app/public/' . $jadwal->file_rundown), [
+                'as' => 'Rundown_Pelatihan.pdf',
+                'mime' => 'application/pdf',
+            ]);
+        }
+
+        foreach ($jadwal->materi as $index => $materi) {
+            if ($materi->file_path && file_exists(storage_path('app/public/' . $materi->file_path))) {
+                $mail->attach(storage_path('app/public/' . $materi->file_path), [
+                    'as' => 'Materi_' . ($index + 1) . '_' . str_replace(' ', '_', $materi->judul) . '.pdf',
+                    'mime' => 'application/pdf',
+                ]);
+            }
+        }
+
+        return $mail;
     }
 }
