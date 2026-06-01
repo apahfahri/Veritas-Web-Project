@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TrainingReminderMail;
+use Illuminate\Support\Facades\DB;
 
 class LayananAdminController extends Controller
 {
@@ -215,5 +216,160 @@ class LayananAdminController extends Controller
 
         return redirect()->route('admin.jadwal.index')
             ->with('success', 'Jadwal layanan berhasil dihapus.');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'csv_file' => 'required|file|mimes:csv,txt|max:5120',
+        ]);
+
+        $file = $request->file('csv_file');
+        $filePath = $file->getRealPath();
+
+        // Auto-detect delimiter
+        $delimiter = ',';
+        if (($handle = fopen($filePath, 'r')) !== false) {
+            $firstLine = fgets($handle);
+            if ($firstLine !== false) {
+                if (substr_count($firstLine, ';') > substr_count($firstLine, ',')) {
+                    $delimiter = ';';
+                }
+            }
+            fclose($handle);
+        }
+
+        $rows = [];
+        if (($handle = fopen($filePath, 'r')) !== false) {
+            $header = fgetcsv($handle, 1000, $delimiter);
+            if ($header) {
+                $header = array_map(function($h) {
+                    return strtolower(trim(preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $h)));
+                }, $header);
+            }
+
+            while (($data = fgetcsv($handle, 1000, $delimiter)) !== false) {
+                if (count($data) >= count($header)) {
+                    $rows[] = array_combine(array_slice($header, 0, count($data)), $data);
+                } else {
+                    $row = [];
+                    foreach ($header as $index => $colName) {
+                        $row[$colName] = $data[$index] ?? null;
+                    }
+                    $rows[] = $row;
+                }
+            }
+            fclose($handle);
+        }
+
+        if (empty($rows)) {
+            return back()->with('error', 'Berkas CSV kosong atau format tidak sesuai.');
+        }
+
+        $importedCount = 0;
+        $errors = [];
+        DB::transaction(function() use ($rows, &$importedCount, &$errors) {
+            foreach ($rows as $index => $row) {
+                $kode_kategori = strtoupper(trim($row['kode_kategori'] ?? ''));
+                $kode_jenis = strtoupper(trim($row['kode_jenis'] ?? ''));
+                $jenis_pertemuan = strtolower(trim($row['jenis_pertemuan'] ?? ''));
+                $tgl_mulai = trim($row['tgl_mulai'] ?? '');
+                $tgl_selesai = trim($row['tgl_selesai'] ?? '');
+                $jam_pertemuan = trim($row['jam_pertemuan'] ?? '');
+                $lokasi = trim($row['lokasi'] ?? '');
+                $kapasitas = trim($row['kapasitas'] ?? '');
+                $harga = trim($row['harga'] ?? '0');
+                $deskripsi = trim($row['deskripsi'] ?? '');
+                $link_meet = trim($row['link_meet'] ?? '');
+
+                if (empty($kode_kategori) || empty($kode_jenis)) {
+                    $errors[] = "Baris " . ($index + 2) . ": Kode Kategori dan Kode Jenis Program wajib diisi.";
+                    continue;
+                }
+
+                $kategori = KategoriLayanan::where('kode_kategori', $kode_kategori)->first();
+                if (!$kategori) {
+                    $kategori = KategoriLayanan::where('nama', $row['kode_kategori'] ?? '')->first();
+                }
+
+                if (!$kategori) {
+                    $errors[] = "Baris " . ($index + 2) . ": Kategori dengan kode/nama '{$kode_kategori}' tidak ditemukan.";
+                    continue;
+                }
+
+                $jenis = JenisLayanan::where('id_kategori', $kategori->id_kategori)
+                    ->where('kode_jenis', $kode_jenis)
+                    ->first();
+                if (!$jenis) {
+                    $jenis = JenisLayanan::where('id_kategori', $kategori->id_kategori)
+                        ->where('nama', $row['kode_jenis'] ?? '')
+                        ->first();
+                }
+
+                if (!$jenis) {
+                    $errors[] = "Baris " . ($index + 2) . ": Jenis program dengan kode/nama '{$kode_jenis}' tidak ditemukan di kategori ini.";
+                    continue;
+                }
+
+                if (!in_array($jenis_pertemuan, ['online', 'offline', 'hybrid'])) {
+                    $jenis_pertemuan = 'offline';
+                }
+
+                // Generate kode_jadwal
+                $urutan = Jadwal::where('id_jenis', $jenis->id_jenis)->count() + 1;
+                $urutanFormat = str_pad($urutan, 2, '0', STR_PAD_LEFT);
+                $kode_jadwal = "{$kategori->kode_kategori}-{$jenis->kode_jenis}-{$urutanFormat}";
+
+                Jadwal::create([
+                    'id_kategori'     => $kategori->id_kategori,
+                    'id_jenis'        => $jenis->id_jenis,
+                    'kode_jadwal'     => $kode_jadwal,
+                    'jenis_pertemuan' => $jenis_pertemuan,
+                    'tgl_mulai'       => empty($tgl_mulai) ? null : $tgl_mulai,
+                    'tgl_selesai'     => empty($tgl_selesai) ? null : $tgl_selesai,
+                    'jam_pertemuan'   => empty($jam_pertemuan) ? null : $jam_pertemuan,
+                    'lokasi'          => empty($lokasi) ? null : $lokasi,
+                    'kapasitas'       => is_numeric($kapasitas) ? intval($kapasitas) : null,
+                    'harga'           => is_numeric($harga) ? floatval($harga) : 0,
+                    'deskripsi'       => empty($deskripsi) ? null : $deskripsi,
+                    'link_meet'       => empty($link_meet) ? null : $link_meet,
+                ]);
+                $importedCount++;
+            }
+        });
+
+        if (count($errors) > 0) {
+            $msg = "Berhasil mengimpor {$importedCount} jadwal. Beberapa baris dilewati:\n" . implode("\n", $errors);
+            return back()->with('warning', $msg);
+        }
+
+        return back()->with('success', "Berhasil mengimpor {$importedCount} jadwal pelatihan.");
+    }
+
+    public function importTemplate()
+    {
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="template_jadwal.csv"',
+        ];
+
+        $callback = function() {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, [
+                'kode_kategori', 'kode_jenis', 'jenis_pertemuan', 'tgl_mulai', 'tgl_selesai',
+                'jam_pertemuan', 'lokasi', 'kapasitas', 'harga', 'deskripsi', 'link_meet'
+            ]);
+            fputcsv($file, [
+                'PLT', 'AK3U', 'online', '2026-07-01', '2026-07-05',
+                '08:00 - 16:00', 'Online Zoom', '30', '2500000', 'Pelatihan Ahli K3 Umum Sertifikasi Kemnaker RI', 'https://zoom.us/j/123456789'
+            ]);
+            fputcsv($file, [
+                'PLT', 'K3L', 'offline', '2026-08-10', '2026-08-12',
+                '09:00 - 17:00', 'Hotel Veritas Jakarta', '15', '3500000', 'Pelatihan K3 Lingkungan Kerja', ''
+            ]);
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }

@@ -168,4 +168,133 @@ class KlienMitraController extends Controller
         return redirect()->route('admin.mitra.index')
             ->with('success', "Mitra perusahaan berhasil dihapus.");
     }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'csv_file' => 'required|file|mimes:csv,txt|max:5120',
+        ]);
+
+        $file = $request->file('csv_file');
+        $filePath = $file->getRealPath();
+
+        // Auto-detect delimiter
+        $delimiter = ',';
+        if (($handle = fopen($filePath, 'r')) !== false) {
+            $firstLine = fgets($handle);
+            if ($firstLine !== false) {
+                if (substr_count($firstLine, ';') > substr_count($firstLine, ',')) {
+                    $delimiter = ';';
+                }
+            }
+            fclose($handle);
+        }
+
+        $rows = [];
+        if (($handle = fopen($filePath, 'r')) !== false) {
+            $header = fgetcsv($handle, 1000, $delimiter);
+            if ($header) {
+                $header = array_map(function($h) {
+                    return strtolower(trim(preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $h)));
+                }, $header);
+            }
+
+            while (($data = fgetcsv($handle, 1000, $delimiter)) !== false) {
+                if (count($data) >= count($header)) {
+                    $rows[] = array_combine(array_slice($header, 0, count($data)), $data);
+                } else {
+                    $row = [];
+                    foreach ($header as $index => $colName) {
+                        $row[$colName] = $data[$index] ?? null;
+                    }
+                    $rows[] = $row;
+                }
+            }
+            fclose($handle);
+        }
+
+        if (empty($rows)) {
+            return back()->with('error', 'Berkas CSV kosong atau format tidak sesuai.');
+        }
+
+        $importedCount = 0;
+        $errors = [];
+        DB::transaction(function() use ($rows, &$importedCount, &$errors) {
+            foreach ($rows as $index => $row) {
+                $nama = trim($row['nama_perusahaan'] ?? $row['nama'] ?? '');
+                $alamat = trim($row['alamat'] ?? '');
+                $sektor_industri = trim($row['sektor_industri'] ?? '');
+                $jumlah_karyawan = trim($row['jumlah_karyawan'] ?? '0');
+                $nama_cp = trim($row['nama_cp'] ?? '');
+                $no_hp_cp = trim($row['no_hp_cp'] ?? $row['no_telp_cp'] ?? $row['telp_cp'] ?? '');
+                $jabatan = trim($row['jabatan'] ?? '');
+
+                if (empty($nama)) {
+                    $errors[] = "Baris " . ($index + 2) . ": Nama perusahaan wajib diisi.";
+                    continue;
+                }
+
+                $perusahaan = Perusahaan::where('nama', $nama)->first();
+                if (!$perusahaan) {
+                    $perusahaan = Perusahaan::create([
+                        'nama'            => $nama,
+                        'alamat'          => empty($alamat) ? null : $alamat,
+                        'sektor_industri' => empty($sektor_industri) ? null : $sektor_industri,
+                        'jumlah_karyawan' => is_numeric($jumlah_karyawan) ? intval($jumlah_karyawan) : 0,
+                    ]);
+                } else {
+                    $perusahaan->update([
+                        'alamat'          => empty($alamat) ? $perusahaan->alamat : $alamat,
+                        'sektor_industri' => empty($sektor_industri) ? $perusahaan->sektor_industri : $sektor_industri,
+                        'jumlah_karyawan' => is_numeric($jumlah_karyawan) ? intval($jumlah_karyawan) : $perusahaan->jumlah_karyawan,
+                    ]);
+                }
+
+                if (!empty($nama_cp)) {
+                    $cp = $perusahaan->klienPerusahaan()->first();
+                    if ($cp) {
+                        $cp->update([
+                            'nama_cp'  => $nama_cp,
+                            'no_hp_cp' => empty($no_hp_cp) ? $cp->no_hp_cp : $no_hp_cp,
+                            'jabatan'  => empty($jabatan) ? $cp->jabatan : $jabatan,
+                        ]);
+                    } else {
+                        KlienPerusahaan::create([
+                            'id_perusahaan' => $perusahaan->id_perusahaan,
+                            'id_user'       => null,
+                            'jabatan'       => empty($jabatan) ? null : $jabatan,
+                            'nama_cp'       => $nama_cp,
+                            'no_hp_cp'      => empty($no_hp_cp) ? null : $no_hp_cp,
+                        ]);
+                    }
+                }
+                $importedCount++;
+            }
+        });
+
+        if (count($errors) > 0) {
+            $msg = "Berhasil mengimpor {$importedCount} mitra. Beberapa baris dilewati:\n" . implode("\n", $errors);
+            return back()->with('warning', $msg);
+        }
+
+        return back()->with('success', "Berhasil mengimpor {$importedCount} mitra perusahaan.");
+    }
+
+    public function importTemplate()
+    {
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="template_mitra.csv"',
+        ];
+
+        $callback = function() {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, ['nama_perusahaan', 'alamat', 'sektor_industri', 'jumlah_karyawan', 'nama_cp', 'no_hp_cp', 'jabatan']);
+            fputcsv($file, ['PT Krakatau Steel', 'Jl. Industri No. 5 Cilegon', 'Manufaktur & Baja', '2500', 'Bambang Tri', '081234567890', 'HR Manager']);
+            fputcsv($file, ['PT Pertamina (Persero)', 'Jl. Medan Merdeka Timur Jakarta', 'Energi & Migas', '15000', 'Siti Rahma', '089876543210', 'Head of HSE']);
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
 }

@@ -10,11 +10,18 @@
         <h2 class="text-2xl font-black text-slate-900 tracking-tight">Daftar Pemateri</h2>
         <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-1">Total: {{ $pemateris->total() }} Instruktur Terdaftar</p>
     </div>
-    <a href="{{ route('admin.petugas.create') }}"
-       class="bg-slate-900 text-white px-6 py-3 rounded-2xl hover:bg-slate-800 transition shadow-lg shadow-slate-200 flex items-center gap-2 text-sm font-black group">
-        <svg class="w-5 h-5 text-cyan-400 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-        Tambah Pemateri Baru
-    </a>
+    <div class="flex items-center gap-3">
+        <button onclick="openImportModal()"
+                class="bg-white border border-slate-200 text-slate-700 px-6 py-3 rounded-2xl hover:bg-slate-50 transition shadow-sm flex items-center gap-2 text-sm font-black group">
+            <svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+            Import CSV
+        </button>
+        <a href="{{ route('admin.petugas.create') }}"
+           class="bg-slate-900 text-white px-6 py-3 rounded-2xl hover:bg-slate-800 transition shadow-lg shadow-slate-200 flex items-center gap-2 text-sm font-black group">
+            <svg class="w-5 h-5 text-cyan-400 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+            Tambah Pemateri Baru
+        </a>
+    </div>
 </div>
 
 <div class="bg-white rounded-[32px] shadow-sm border border-slate-100 overflow-hidden">
@@ -115,4 +122,48 @@
     @endif
 </div>
 
+{{-- MODAL: Import Data --}}
+<div id="importModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-[32px] shadow-2xl w-full max-w-md p-8 border border-slate-100">
+        <h3 class="text-xl font-black text-slate-900 mb-1">Import Pemateri</h3>
+        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-7">Unggah file CSV untuk mengimport data pemateri</p>
+        <form action="{{ route('admin.petugas.import') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
+            @csrf
+            <div>
+                <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1.5">Pilih File CSV *</label>
+                <input type="file" name="csv_file" required accept=".csv,text/csv"
+                       class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-2xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+            </div>
+            <div class="bg-slate-50 p-4 rounded-2xl text-xs text-slate-500 space-y-2 border border-slate-100">
+                <p class="font-bold text-slate-700">Format Kolom CSV:</p>
+                <code class="block bg-white p-2 rounded-xl border border-slate-200/60 text-[10px] text-indigo-600 font-black">nama_lengkap, email, no_telp, kompetensi, bio</code>
+                <a href="{{ route('admin.petugas.import-template') }}" class="inline-flex items-center gap-1.5 text-indigo-600 hover:underline font-bold mt-1">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    Unduh Template CSV
+                </a>
+            </div>
+            <div class="flex gap-3 pt-2">
+                <button type="button" onclick="closeImportModal()" class="flex-1 px-5 py-3 text-xs font-black text-slate-400 hover:text-slate-600 transition uppercase tracking-widest">Batal</button>
+                <button type="submit" class="flex-1 bg-slate-900 text-white px-5 py-3 rounded-2xl text-xs font-black hover:bg-slate-800 transition uppercase tracking-widest">Import</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 @endsection
+
+@push('scripts')
+<script>
+    function openImportModal() {
+        document.getElementById('importModal').classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+    }
+    function closeImportModal() {
+        document.getElementById('importModal').classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+    }
+    window.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeImportModal();
+    });
+</script>
+@endpush
