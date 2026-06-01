@@ -1,6 +1,6 @@
 @extends('layouts.admin')
-@section('title', 'Manajemen Jadwal Layanan')
-@section('page-title', 'Manajemen Jadwal Layanan')
+@section('title', 'Manajemen Jadwal Pelatihan')
+@section('page-title', 'Manajemen Jadwal Pelatihan')
 @section('page-subtitle', 'Kelola semua jadwal program Pelatihan, Konsultasi, dan Audit')
 
 @section('content')

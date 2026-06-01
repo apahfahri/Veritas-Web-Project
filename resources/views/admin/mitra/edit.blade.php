@@ -1,6 +1,6 @@
 @extends('layouts.admin')
-@section('title', 'Edit Klien & Mitra')
-@section('page-title', 'Edit Klien & Mitra')
+@section('title', 'Edit Perusahaan')
+@section('page-title', 'Edit Perusahaan')
 @section('page-subtitle', 'Perbarui data Perusahaan B2B dan Contact Person')
 
 @section('content')
@@ -8,13 +8,13 @@
     <div class="mb-6">
         <a href="{{ route('admin.mitra.index') }}" class="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-slate-900 transition">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-            Kembali ke Daftar Klien & Mitra
+            Kembali ke Daftar Perusahaan
         </a>
     </div>
 
     <div class="bg-white rounded-[32px] shadow-sm border border-slate-100 overflow-hidden">
         <div class="bg-slate-50 p-6 lg:p-8 border-b border-slate-100">
-            <h3 class="text-lg font-black text-slate-900 tracking-tight">Formulir Edit Klien/Mitra</h3>
+            <h3 class="text-lg font-black text-slate-900 tracking-tight">Formulir Edit Perusahaan</h3>
             <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Perbarui data perusahaan dan contact person di bawah ini</p>
         </div>
         

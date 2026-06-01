@@ -107,7 +107,7 @@
             <div class="flex gap-2">
                 <button type="submit" class="flex-1 bg-slate-900 text-white py-3.5 rounded-2xl text-sm font-black hover:bg-slate-800 transition shadow-lg shadow-slate-200 flex items-center justify-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 8.293A1 1 0 013 7.586V4z"></path></svg>
-                    Saring
+                    Filter
                 </button>
                 
                 @if(request()->anyFilled(['start_date', 'end_date']))
@@ -189,7 +189,7 @@
                 <tbody class="divide-y divide-slate-50">
                     @forelse($registrations as $index => $r)
                     <tr class="hover:bg-slate-50/50 transition">
-                        <td class="p-6 text-[12px] font-bold text-slate-400">{{ $index + 1 }}</td>
+                        <td class="p-6 text-[12px] font-bold text-slate-400">{{ $registrations->firstItem() + $index }}</td>
                         <td class="p-6 text-[12px] font-mono font-black text-indigo-600">{{ $r->no_registrasi }}</td>
                         <td class="p-6 text-[12px] text-slate-600">{{ $r->created_at ? $r->created_at->format('d M Y') : '—' }}</td>
                         <td class="p-6">
@@ -293,7 +293,7 @@
                 <tbody class="divide-y divide-slate-50">
                     @forelse($registrations as $index => $r)
                     <tr class="hover:bg-slate-50/50 transition">
-                        <td class="p-6 text-[12px] font-bold text-slate-400">{{ $index + 1 }}</td>
+                        <td class="p-6 text-[12px] font-bold text-slate-400">{{ $registrations->firstItem() + $index }}</td>
                         <td class="p-6 text-[12px] text-slate-600">{{ $r->created_at ? $r->created_at->format('d M Y') : '—' }}</td>
                         <td class="p-6">
                             <div class="flex flex-col">
@@ -404,7 +404,7 @@
                 <tbody class="divide-y divide-slate-50">
                     @forelse($data['products'] as $index => $p)
                     <tr class="hover:bg-slate-50/50 transition">
-                        <td class="p-6 text-[12px] font-bold text-slate-400">{{ $index + 1 }}</td>
+                        <td class="p-6 text-[12px] font-bold text-slate-400">{{ $data['products']->firstItem() + $index }}</td>
                         <td class="p-6 text-[12px] font-black text-slate-900">{{ $p->nama_layanan }}</td>
                         <td class="p-6 text-[12px] font-bold text-slate-500">{{ $p->nama_kategori }}</td>
                         <td class="p-6 text-center text-[12px] font-black text-indigo-600">{{ number_format($p->qty) }} Pendaftar</td>

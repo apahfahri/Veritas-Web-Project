@@ -1,6 +1,6 @@
 @extends('layouts.admin')
-@section('title', 'Tambah Klien & Mitra Baru')
-@section('page-title', 'Tambah Klien & Mitra Baru')
+@section('title', 'Tambah Perusahaan Baru')
+@section('page-title', 'Tambah Perusahaan Baru')
 @section('page-subtitle', 'Daftarkan Perusahaan B2B beserta Contact Person')
 
 @section('content')
@@ -8,13 +8,13 @@
     <div class="mb-6">
         <a href="{{ route('admin.mitra.index') }}" class="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-slate-900 transition">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-            Kembali ke Daftar Klien & Mitra
+            Kembali ke Daftar Perusahaan
         </a>
     </div>
 
-    <div class="bg-white rounded-[32px] shadow-sm border border-slate-100 overflow-hidden">
+        <div class="bg-white rounded-[32px] shadow-sm border border-slate-100 overflow-hidden">
         <div class="bg-slate-50 p-6 lg:p-8 border-b border-slate-100">
-            <h3 class="text-lg font-black text-slate-900 tracking-tight">Formulir Klien/Mitra Baru</h3>
+            <h3 class="text-lg font-black text-slate-900 tracking-tight">Formulir Perusahaan Baru</h3>
             <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Lengkapi data perusahaan dan contact person di bawah ini</p>
         </div>
         
@@ -87,7 +87,7 @@
 
             <div class="flex items-center justify-end gap-3 pt-6 border-t border-slate-100">
                 <a href="{{ route('admin.mitra.index') }}" class="px-6 py-3 rounded-2xl bg-slate-100 text-slate-600 hover:bg-slate-200 text-sm font-black transition">Batal</a>
-                <button type="submit" class="bg-indigo-600 text-white px-8 py-3 rounded-2xl text-sm font-black uppercase tracking-wider hover:bg-indigo-700 shadow-md transition">Simpan Klien & Mitra</button>
+                <button type="submit" class="bg-indigo-600 text-white px-8 py-3 rounded-2xl text-sm font-black uppercase tracking-wider hover:bg-indigo-700 shadow-md transition">Simpan Perusahaan</button>
             </div>
         </form>
     </div>
