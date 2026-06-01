@@ -14,7 +14,7 @@
                 <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 backdrop-blur-md border border-white/20 text-white shadow-inner text-2xl">
                     <i class="fi fi-rr-shield-check"></i>
                 </div>
-                <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">Pelatihan K3 Veritas</h1>
+                <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight">Pelatihan K3 Veritas</h1>
             </div>
             <p class="text-base md:text-lg text-emerald-50 max-w-2xl font-light">Pilih program pelatihan K3 unggulan bersertifikat nasional yang sesuai dengan kompetensi dan kebutuhan industri Anda.</p>
         </div>
@@ -46,15 +46,15 @@
         </form>
 
         <!-- REQUEST COMPANY TRAINING BANNER -->
-        <div class="relative overflow-hidden bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl shadow-[0_8px_30px_-6px_rgba(245,158,11,0.3)] p-6 md:p-8 mb-8 text-white flex flex-col md:flex-row items-center justify-between transition-transform duration-300 hover:scale-[1.01]">
-            <div class="absolute -right-16 -bottom-16 w-48 h-48 bg-white/10 rounded-full blur-2xl"></div>
+        <div class="relative overflow-hidden bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl shadow-[0_8px_30px_-6px_rgba(245,158,11,0.3)] p-4 md:p-6 mb-8 text-white flex flex-col md:flex-row items-center justify-between transition-transform duration-300 hover:scale-[1.01]">
+                        <div class="absolute -right-16 -bottom-16 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
             <div class="mb-4 md:mb-0 relative z-10 max-w-xl text-center md:text-left">
-                <h2 class="text-xl md:text-2xl font-bold mb-2 flex items-center justify-center md:justify-start gap-2">
+                                <h2 class="text-base md:text-lg font-bold mb-2 flex items-center justify-center md:justify-start gap-2">
                     <i class="fi fi-rr-building"></i> Butuh Pelatihan Khusus Perusahaan?
                 </h2>
                 <p class="text-sm md:text-base text-amber-50 font-light">Kami menyediakan program pelatihan <strong>In-House / Custom Training</strong> K3 khusus yang dirancang eksklusif untuk memenuhi regulasi dan operasional korporasi Anda.</p>
             </div>
-            <a href="{{ route('request.training.create') }}" class="relative z-10 bg-white text-orange-600 font-bold px-6 py-3.5 rounded-xl hover:bg-orange-50 active:scale-95 transition-all whitespace-nowrap shadow-md hover:shadow-lg">
+            <a href="{{ route('request.training.create') }}" class="relative z-10 bg-white text-orange-600 font-bold px-5 py-3 rounded-xl hover:bg-orange-50 active:scale-95 transition-all whitespace-nowrap shadow-md hover:shadow-lg">
                 Ajukan Request Pelatihan
             </a>
         </div>
