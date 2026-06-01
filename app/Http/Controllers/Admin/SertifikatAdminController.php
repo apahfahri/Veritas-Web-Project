@@ -168,4 +168,240 @@ class SertifikatAdminController extends Controller
         return redirect()->route('admin.sertifikat.index')
             ->with('success', "Sertifikat {$no_sertifikat} telah dihapus.");
     }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'csv_file' => 'required|file|mimes:csv,txt|max:5120',
+            'zip_file' => 'nullable|file|mimes:zip|max:51200', // max 50MB
+        ]);
+
+        $file = $request->file('csv_file');
+        $filePath = $file->getRealPath();
+
+        // Auto-detect delimiter
+        $delimiter = ',';
+        if (($handle = fopen($filePath, 'r')) !== false) {
+            $firstLine = fgets($handle);
+            if ($firstLine !== false) {
+                if (substr_count($firstLine, ';') > substr_count($firstLine, ',')) {
+                    $delimiter = ';';
+                }
+            }
+            fclose($handle);
+        }
+
+        $rows = [];
+        if (($handle = fopen($filePath, 'r')) !== false) {
+            $header = fgetcsv($handle, 1000, $delimiter);
+            if ($header) {
+                $header = array_map(function($h) {
+                    return strtolower(trim(preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $h)));
+                }, $header);
+            }
+
+            while (($data = fgetcsv($handle, 1000, $delimiter)) !== false) {
+                if (count($data) >= count($header)) {
+                    $rows[] = array_combine(array_slice($header, 0, count($data)), $data);
+                } else {
+                    $row = [];
+                    foreach ($header as $index => $colName) {
+                        $row[$colName] = $data[$index] ?? null;
+                    }
+                    $rows[] = $row;
+                }
+            }
+            fclose($handle);
+        }
+
+        if (empty($rows)) {
+            return back()->with('error', 'Berkas CSV kosong atau format tidak sesuai.');
+        }
+
+        // Extract ZIP if uploaded
+        $tempDir = null;
+        if ($request->hasFile('zip_file')) {
+            $zipFile = $request->file('zip_file');
+            $tempDir = storage_path('app/temp_sertifikat_import_' . time() . '_' . uniqid());
+            
+            $zip = new \ZipArchive();
+            if ($zip->open($zipFile->getRealPath()) === true) {
+                $zip->extractTo($tempDir);
+                $zip->close();
+            } else {
+                $tempDir = null;
+            }
+        }
+
+        $importedCount = 0;
+        $errors = [];
+
+        DB::transaction(function() use ($rows, $tempDir, &$importedCount, &$errors) {
+            foreach ($rows as $index => $row) {
+                $idOrNomor = trim($row['nomor_pendaftaran'] ?? $row['id_pendaftaran'] ?? $row['email'] ?? '');
+                $noSertifikat = trim($row['no_sertifikat'] ?? '');
+                $namaLengkap = trim($row['nama_lengkap'] ?? '');
+                $tanggalTerbit = trim($row['tanggal_terbit'] ?? '');
+                $masaBerlaku = trim($row['masa_berlaku'] ?? '');
+                $penerbit = trim($row['penerbit'] ?? 'PT Katiga Veritas Indonesia');
+                $fileName = trim($row['file_name'] ?? '');
+
+                if (empty($idOrNomor)) {
+                    $errors[] = "Baris " . ($index + 2) . ": nomor_pendaftaran atau email wajib diisi.";
+                    continue;
+                }
+
+                // Find Pendaftaran
+                $pendaftaran = Pendaftaran::where('nomor_pendaftaran', $idOrNomor)
+                    ->orWhere('id_pendaftaran', $idOrNomor)
+                    ->orWhereHas('user', function($q) use ($idOrNomor) {
+                        $q->where('email', $idOrNomor);
+                    })
+                    ->first();
+
+                if (!$pendaftaran) {
+                    $errors[] = "Baris " . ($index + 2) . ": Pendaftaran untuk '{$idOrNomor}' tidak ditemukan.";
+                    continue;
+                }
+
+                // Ensure it doesn't already have a certificate
+                if ($pendaftaran->sertifikat) {
+                    $errors[] = "Baris " . ($index + 2) . ": Sertifikat untuk '{$idOrNomor}' sudah diterbitkan.";
+                    continue;
+                }
+
+                // Generate no_sertifikat if empty
+                if (empty($noSertifikat)) {
+                    $noSertifikat = $this->generateNoSertifikatAuto();
+                } else {
+                    // Ensure unique
+                    $exists = Sertifikat::where('no_sertifikat', $noSertifikat)->exists();
+                    if ($exists) {
+                        $errors[] = "Baris " . ($index + 2) . ": Nomor sertifikat '{$noSertifikat}' sudah digunakan.";
+                        continue;
+                    }
+                }
+
+                // Validate and format dates
+                $tglTerbitParsed = null;
+                if (!empty($tanggalTerbit)) {
+                    try {
+                        $tglTerbitParsed = \Carbon\Carbon::parse($tanggalTerbit)->format('Y-m-d');
+                    } catch (\Exception $e) {
+                        $tglTerbitParsed = date('Y-m-d');
+                    }
+                } else {
+                    $tglTerbitParsed = date('Y-m-d');
+                }
+
+                $masaBerlakuParsed = null;
+                if (!empty($masaBerlaku)) {
+                    try {
+                        $masaBerlakuParsed = \Carbon\Carbon::parse($masaBerlaku)->format('Y-m-d');
+                    } catch (\Exception $e) {}
+                }
+
+                // If nama_lengkap is empty, use user name
+                if (empty($namaLengkap)) {
+                    $namaLengkap = $pendaftaran->user?->nama ?? 'Peserta';
+                }
+
+                // Match PDF file if ZIP was uploaded
+                $publicPath = null;
+                if ($tempDir && !empty($fileName)) {
+                    $localPath = $this->findFileRecursive($tempDir, $fileName);
+                    if ($localPath) {
+                        $storedName = Str::slug($noSertifikat) . '_' . time() . '_' . uniqid() . '.pdf';
+                        $publicPath = 'sertifikat/uploads/' . $storedName;
+                        Storage::disk('public')->put($publicPath, file_get_contents($localPath));
+                    } else {
+                        $errors[] = "Baris " . ($index + 2) . ": File PDF '{$fileName}' tidak ditemukan di dalam berkas ZIP.";
+                    }
+                }
+
+                Sertifikat::create([
+                    'no_sertifikat'  => $noSertifikat,
+                    'id_pendaftaran' => $pendaftaran->id_pendaftaran,
+                    'nama_lengkap'   => $namaLengkap,
+                    'tanggal_terbit' => $tglTerbitParsed,
+                    'masa_berlaku'   => $masaBerlakuParsed,
+                    'penerbit'       => $penerbit,
+                    'file_pdf'       => $publicPath,
+                ]);
+
+                // Update status_progres to selesai
+                $pendaftaran->update(['status_progres' => 'selesai']);
+
+                $importedCount++;
+            }
+        });
+
+        // Cleanup temp folder
+        if ($tempDir) {
+            $this->deleteDirRecursive($tempDir);
+        }
+
+        if (count($errors) > 0) {
+            $msg = "Berhasil mengimpor {$importedCount} sertifikat. Beberapa baris dilewati:\n" . implode("\n", $errors);
+            return back()->with('warning', $msg);
+        }
+
+        return back()->with('success', "Berhasil mengimpor {$importedCount} sertifikat.");
+    }
+
+    public function importTemplate()
+    {
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="template_sertifikat.csv"',
+        ];
+
+        $callback = function() {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, [
+                'nomor_pendaftaran', 'no_sertifikat', 'nama_lengkap', 'tanggal_terbit',
+                'penerbit', 'masa_berlaku', 'file_name'
+            ]);
+            fputcsv($file, [
+                'REG-PLT-AK3U-01', 'KV-ADM-K3-2026-000001', 'Dr. John Doe', '2026-06-01',
+                'PT Katiga Veritas Indonesia', '2029-06-01', 'sertifikat_john.pdf'
+            ]);
+            fputcsv($file, [
+                'peserta.jane@example.com', '', 'Jane Smith, M.Si', '2026-06-01',
+                'PT Katiga Veritas Indonesia', '', ''
+            ]);
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    private function generateNoSertifikatAuto(): string
+    {
+        $year = date('Y');
+        $count = Sertifikat::whereYear('created_at', $year)->count() + 1;
+        return sprintf('KV-ADM-K3-%s-%06d', $year, $count);
+    }
+
+    private function findFileRecursive($dir, $filename)
+    {
+        if (!is_dir($dir)) return null;
+        $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir));
+        foreach ($it as $file) {
+            if ($file->isFile() && strtolower($file->getBasename()) === strtolower($filename)) {
+                return $file->getPathname();
+            }
+        }
+        return null;
+    }
+
+    private function deleteDirRecursive($dir)
+    {
+        if (!is_dir($dir)) return;
+        $files = array_diff(scandir($dir), ['.', '..']);
+        foreach ($files as $file) {
+            (is_dir("$dir/$file")) ? $this->deleteDirRecursive("$dir/$file") : unlink("$dir/$file");
+        }
+        return rmdir($dir);
+    }
 }

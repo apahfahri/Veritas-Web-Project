@@ -1,5 +1,5 @@
 <?php
- 
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,17 +13,32 @@ class SimplifyCustomTrainingTable extends Migration
      */
     public function up()
     {
-        // Add is_kustom and catatan_klien to pendaftaran table
-        if (Schema::hasTable('pendaftaran')) {
-            Schema::table('pendaftaran', function (Blueprint $table) {
-                if (!Schema::hasColumn('pendaftaran', 'is_kustom')) {
-                    $table->boolean('is_kustom')->default(false);
+        // 1. Drop request_pelatihan table (and its foreign keys) safely
+        if (Schema::hasTable('request_pelatihan')) {
+            Schema::table('request_pelatihan', function (Blueprint $table) {
+                // Check if foreign keys exist before dropping them
+                // DB driver specific: dropForeign expects array of columns
+                try {
+                    $table->dropForeign(['id_pendaftaran']);
+                } catch (\Exception $e) {
+                    // Ignore if foreign key doesn't exist
                 }
-                if (!Schema::hasColumn('pendaftaran', 'catatan_klien')) {
-                    $table->text('catatan_klien')->nullable();
+
+                try {
+                    $table->dropForeign(['id_perusahaan']);
+                } catch (\Exception $e) {
+                    // Ignore if foreign key doesn't exist
                 }
             });
+
+            Schema::dropIfExists('request_pelatihan');
         }
+
+        // 2. Add is_kustom and catatan_klien to pendaftaran table
+        Schema::table('pendaftaran', function (Blueprint $table) {
+            $table->boolean('is_kustom')->default(false)->after('id_perusahaan');
+            $table->text('catatan_klien')->nullable()->after('is_kustom');
+        });
     }
 
     /**
