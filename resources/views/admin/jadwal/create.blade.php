@@ -163,14 +163,31 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">File Rundown (Opsional, max 10MB PDF)</label>
-                    <input type="file" name="file_rundown" accept=".pdf"
-                           class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">File Rundown (Opsional, max 10MB PDF)</label>
+                        <input type="file" name="file_rundown" accept=".pdf"
+                               class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Foto / Banner Pelatihan (Opsional, max 2MB JPG/PNG)</label>
+                        <div class="flex items-center gap-6 bg-slate-50 border border-slate-200 rounded-2xl p-4">
+                            <div class="relative w-20 h-20 bg-white rounded-xl border border-slate-200 overflow-hidden flex items-center justify-center flex-shrink-0">
+                                <img id="foto-preview" src="#" alt="Preview" class="hidden w-full h-full object-cover">
+                                <svg id="foto-placeholder" class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            </div>
+                            <div class="flex-1">
+                                <input type="file" name="foto" accept="image/*" onchange="previewFoto(this)"
+                                       class="w-full text-xs font-bold file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                                <p class="text-[10px] text-slate-400 mt-1">Format: JPG, JPEG, atau PNG. Maksimal 2MB.</p>
+                            </div>
+                        </div>
+                        @error('foto')<p class="text-red-500 text-[10px] font-bold mt-1 uppercase tracking-tighter">{{ $message }}</p>@enderror
+                    </div>
                 </div>
                 <div>
                     <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Deskripsi</label>
-                    <textarea name="deskripsi" rows="6" placeholder="Deskripsi singkat program..."
+                    <textarea name="deskripsi" rows="8" placeholder="Deskripsi singkat program..."
                               class="w-full bg-slate-50 border border-slate-200 px-5 py-3 rounded-2xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:outline-none transition">{{ old('deskripsi') }}</textarea>
                 </div>
             </div>
@@ -216,6 +233,27 @@ function filterPemateri(q) {
     document.querySelectorAll('.pemateri-item').forEach(item => {
         item.style.display = item.dataset.name.includes(q.toLowerCase()) ? '' : 'none';
     });
+}
+
+function previewFoto(input) {
+    const preview = document.getElementById('foto-preview');
+    const placeholder = document.getElementById('foto-placeholder');
+
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.classList.remove('hidden');
+            placeholder.classList.add('hidden');
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    } else {
+        preview.src = '#';
+        preview.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+    }
 }
 
 document.addEventListener('DOMContentLoaded', loadJenis);
