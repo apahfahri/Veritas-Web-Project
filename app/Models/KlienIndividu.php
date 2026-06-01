@@ -30,7 +30,7 @@ class KlienIndividu extends Model
     {
         static::addGlobalScope('cabang', function (Builder $builder) {
             if (Auth::check() && Auth::user()->isSubadmin()) {
-                $cabang = Auth::user()->admin?->cabang;
+                $cabang = Auth::user()->cabang;
                 if ($cabang) {
                     $builder->where('klien_individu.cabang', $cabang);
                 }

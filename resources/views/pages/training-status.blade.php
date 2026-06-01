@@ -13,9 +13,9 @@
                     <i class="fi fi-rr-envelope text-blue-500 text-2xl mt-0.5"></i>
                     <div>
                         <h4 class="font-bold text-lg text-blue-900">Pendaftaran Berhasil!</h4>
-                        @if(session('is_konsultasi'))
+                        @if(session('is_konsultasi') || session('is_audit'))
                             <p class="text-sm text-blue-700 mt-1">
-                                Permintaan konsultasi Anda telah berhasil dikirimkan. Tim kami akan segera meninjau detail pengajuan Anda dan menghubungi Anda via Email atau WhatsApp untuk koordinasi jadwal pelaksanaan.
+                                Permintaan {{ session('is_audit') ? 'audit K3' : 'konsultasi' }} Anda telah berhasil dikirimkan. Tim kami akan segera meninjau detail pengajuan Anda dan menghubungi Anda via Email atau WhatsApp untuk koordinasi jadwal pelaksanaan.
                             </p>
                         @elseif(session('invoice_email_sent') === false)
                             <p class="text-sm text-red-600 mt-1 font-semibold">
@@ -149,7 +149,12 @@
                     </h2>
 
                     @foreach($pendaftarans as $item)
-                        @php $isKonsultasi = ($item->jadwal?->id_kategori == 2); @endphp
+                        @php
+                            $isKonsultasi = ($item->jadwal?->id_kategori == 2);
+                            $isAudit = ($item->jadwal?->id_kategori == 3);
+                            $isCustomTraining = $item->is_kustom;
+                            $isBespoke = ($isKonsultasi || $isAudit || $isCustomTraining);
+                        @endphp
                         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition">
                             <div class="p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
                                 <div class="flex-1">
@@ -159,7 +164,7 @@
                                         </span>
                                         <span class="text-gray-400 text-sm">•</span>
                                         <span class="text-gray-500 text-sm">Terdaftar: {{ $item->tanggal_daftar->format('d M Y') }}</span>
-                                        @if($item->rencana_tanggal_mulai && !$isKonsultasi)
+                                        @if($item->rencana_tanggal_mulai && !$isBespoke)
                                             <span class="text-gray-400 text-sm">•</span>
                                             <span class="text-gray-500 text-sm">
                                                 Jadwal: {{ $item->rencana_tanggal_mulai->format('d M Y') }}
@@ -168,23 +173,52 @@
                                                 @endif
                                             </span>
                                         @endif
-                                        @if($item->mode_pertemuan && !$isKonsultasi)
+                                        @if($item->mode_pertemuan && !$isBespoke)
                                             <span class="text-gray-400 text-sm">•</span>
                                             <span class="bg-[#1E6B3D]/10 text-[#1E6B3D] text-[10px] font-bold px-1.5 py-0.5 rounded uppercase">{{ $item->mode_pertemuan }}</span>
                                         @endif
                                     </div>
 
-                                    @if($isKonsultasi)
+                                    @if($isBespoke)
                                         @php
-                                            $konsultasiStages = [
-                                                'meninjau'            => ['icon' => '<i class="fi fi-rr-eye"></i>', 'label' => 'Ditinjau',    'desc' => 'Tim kami sedang meninjau pengajuan Anda'],
-                                                'disetujui'           => ['icon' => '<i class="fi fi-rr-check-circle"></i>', 'label' => 'Disetujui',   'desc' => 'Pengajuan disetujui, siap masuk tahap penjadwalan'],
-                                                'dijadwalkan'         => ['icon' => '<i class="fi fi-rr-calendar"></i>', 'label' => 'Penjadwalan', 'desc' => 'Jadwal pertemuan sedang ditentukan oleh tim'],
-                                                'menunggu_pelaksanaan' => ['icon' => '<i class="fi fi-rr-clock"></i>', 'label' => 'Terjadwal',  'desc' => 'Jadwal telah dikonfirmasi, menunggu pelaksanaan konsultasi'],
-                                                'menunggu_pembayaran' => ['icon' => '<i class="fi fi-rr-credit-card"></i>', 'label' => 'Tagihan',     'desc' => 'Sesi konsultasi selesai — silakan selesaikan pembayaran'],
-                                                'selesai'             => ['icon' => '<i class="fi fi-rr-trophy"></i>', 'label' => 'Selesai',     'desc' => 'Seluruh proses pendaftaran berhasil diselesaikan'],
+                                            $bespokeStages = [
+                                                'meninjau'            => [
+                                                    'icon' => '<i class="fi fi-rr-eye"></i>', 
+                                                    'label' => 'Ditinjau',    
+                                                    'desc' => $isAudit ? 'Tim kami sedang meninjau pengajuan audit Anda' : ($isCustomTraining ? 'Tim kami sedang meninjau permohonan pelatihan kustom Anda' : 'Tim kami sedang meninjau pengajuan Anda')
+                                                ],
+                                                'disetujui'           => [
+                                                    'icon' => '<i class="fi fi-rr-check-circle"></i>', 
+                                                    'label' => 'Disetujui',   
+                                                    'desc' => $isAudit ? 'Pengajuan audit disetujui, siap masuk tahap penjadwalan' : ($isCustomTraining ? 'Permintaan pelatihan kustom disetujui, siap masuk tahap penjadwalan' : 'Pengajuan disetujui, siap masuk tahap penjadwalan')
+                                                ],
+                                                'dijadwalkan'         => [
+                                                    'icon' => '<i class="fi fi-rr-calendar"></i>', 
+                                                    'label' => 'Penjadwalan', 
+                                                    'desc' => $isAudit ? 'Jadwal audit lapangan sedang ditentukan oleh tim' : ($isCustomTraining ? 'Jadwal dan instruktur pelatihan sedang ditentukan oleh tim' : 'Jadwal pertemuan sedang ditentukan oleh tim')
+                                                ],
+                                                'menunggu_pelaksanaan' => [
+                                                    'icon' => '<i class="fi fi-rr-clock"></i>', 
+                                                    'label' => 'Terjadwal',  
+                                                    'desc' => $isAudit ? 'Jadwal audit telah dikonfirmasi, menunggu pelaksanaan audit lapangan' : ($isCustomTraining ? 'Jadwal pelatihan telah dikonfirmasi, menunggu pelaksanaan kelas' : 'Jadwal telah dikonfirmasi, menunggu pelaksanaan konsultasi')
+                                                ],
+                                                'menunggu_pembayaran' => [
+                                                    'icon' => '<i class="fi fi-rr-credit-card"></i>', 
+                                                    'label' => 'Tagihan',     
+                                                    'desc' => $isAudit ? 'Audit lapangan selesai — silakan selesaikan pembayaran tagihan' : ($isCustomTraining ? 'Pelatihan selesai diselenggarakan — silakan selesaikan pembayaran tagihan' : 'Sesi selesai — silakan selesaikan pembayaran')
+                                                ],
+                                                'pembayaran_ditinjau' => [
+                                                    'icon' => '<i class="fi fi-rr-time-past"></i>',
+                                                    'label' => 'Verifikasi',
+                                                    'desc' => 'Bukti pembayaran telah diunggah — sedang diverifikasi oleh admin'
+                                                ],
+                                                'selesai'             => [
+                                                    'icon' => '<i class="fi fi-rr-trophy"></i>', 
+                                                    'label' => 'Selesai',     
+                                                    'desc' => $isAudit ? 'Seluruh proses audit & pembayaran berhasil diselesaikan' : ($isCustomTraining ? 'Seluruh tahapan pelatihan kustom dan pembayaran selesai' : 'Seluruh proses pendaftaran berhasil diselesaikan')
+                                                ],
                                             ];
-                                            $stageKeys  = array_keys($konsultasiStages);
+                                            $stageKeys  = array_keys($bespokeStages);
                                             $curStatus  = $item->status_progres;
                                             $isCanceled = ($curStatus === 'dibatalkan');
                                             $currentIdx = array_search($curStatus, $stageKeys);
@@ -201,7 +235,7 @@
                                         @else
                                             <div class="mt-5 mb-2">
                                                 <div class="flex items-center gap-0 overflow-x-auto pb-1">
-                                                    @foreach($konsultasiStages as $stageKey => $stageInfo)
+                                                    @foreach($bespokeStages as $stageKey => $stageInfo)
                                                         @php
                                                             $stageIdx = array_search($stageKey, $stageKeys);
                                                             $isDone   = ($currentIdx !== false && $stageIdx < $currentIdx);
@@ -209,7 +243,7 @@
                                                         @endphp
                                                         <div class="flex items-center {{ !$loop->last ? 'flex-1' : '' }} shrink-0">
                                                             <div class="flex flex-col items-center gap-1 min-w-[52px]">
-                                                                <div class="w-9 h-9 rounded-full flex items-center justify-center text-base border-2 transition-all
+                                                                 <div class="w-9 h-9 rounded-full flex items-center justify-center text-base border-2 transition-all
                                                                     @if($isDone) bg-emerald-500 border-emerald-500 text-white shadow-sm
                                                                     @elseif($isActive) bg-[#1E6B3D] border-[#1E6B3D] text-white shadow-md ring-4 ring-[#1E6B3D]/15
                                                                     @else bg-gray-50 border-gray-200 text-gray-300
@@ -229,12 +263,51 @@
                                                     @endforeach
                                                 </div>
 
-                                                @if(isset($konsultasiStages[$curStatus]))
+                                                @if(isset($bespokeStages[$curStatus]))
                                                     <div class="mt-3 flex items-start gap-2.5 bg-[#1E6B3D]/5 border border-[#1E6B3D]/15 rounded-xl px-3.5 py-2.5">
-                                                        <span class="text-base mt-0.5 flex items-center text-[#1E6B3D]">{!! $konsultasiStages[$curStatus]['icon'] !!}</span>
+                                                        <span class="text-base mt-0.5 flex items-center text-[#1E6B3D]">{!! $bespokeStages[$curStatus]['icon'] !!}</span>
                                                         <div>
-                                                            <p class="text-xs font-bold text-[#1E6B3D]">Tahap Saat Ini: {{ $konsultasiStages[$curStatus]['label'] }}</p>
-                                                            <p class="text-xs text-gray-600 mt-0.5">{{ $konsultasiStages[$curStatus]['desc'] }}</p>
+                                                            <p class="text-xs font-bold text-[#1E6B3D]">Tahap Saat Ini: {{ $bespokeStages[$curStatus]['label'] }}</p>
+                                                            <p class="text-xs text-gray-600 mt-0.5">{{ $bespokeStages[$curStatus]['desc'] }}</p>
+                                                        </div>
+                                                    </div>
+                                                @endif
+
+                                                @if(!in_array($curStatus, ['meninjau', 'disetujui', 'dijadwalkan', 'dibatalkan']) && $item->jadwal)
+                                                    <div class="mt-3 bg-gray-50 border border-gray-100 rounded-xl p-4 text-xs space-y-2">
+                                                        <p class="font-bold text-gray-700 uppercase tracking-wider text-[10px] mb-1">📅 Rincian Jadwal Pelaksanaan</p>
+                                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-gray-600">
+                                                            <div>
+                                                                <span class="font-semibold text-gray-400">Tanggal:</span>
+                                                                <span class="font-bold text-gray-700">
+                                                                    {{ $item->rencana_tanggal_mulai ? $item->rencana_tanggal_mulai->format('d M Y') : '-' }}
+                                                                    @if($item->rencana_tanggal_selesai && $item->rencana_tanggal_selesai != $item->rencana_tanggal_mulai)
+                                                                        s/d {{ $item->rencana_tanggal_selesai->format('d M Y') }}
+                                                                    @endif
+                                                                </span>
+                                                            </div>
+                                                            <div>
+                                                                <span class="font-semibold text-gray-400">Jam:</span>
+                                                                <span class="font-bold text-gray-700">{{ $item->jadwal->jam_pertemuan ?? '-' }} WIB</span>
+                                                            </div>
+                                                            <div>
+                                                                <span class="font-semibold text-gray-400">Mode:</span>
+                                                                <span class="font-bold text-gray-700 capitalize">{{ $item->mode_pertemuan ?? '-' }}</span>
+                                                            </div>
+                                                            <div>
+                                                                <span class="font-semibold text-gray-400">
+                                                                    @if($item->mode_pertemuan === 'offline') Lokasi: @else Tautan: @endif
+                                                                </span>
+                                                                @if(in_array($item->mode_pertemuan, ['online', 'hybrid']) && $item->jadwal->link_meet)
+                                                                    <a href="{{ $item->jadwal->link_meet }}" target="_blank" class="font-bold text-emerald-600 hover:underline">
+                                                                        Buka Link Kelas
+                                                                    </a>
+                                                                @elseif($item->mode_pertemuan === 'offline' && $item->jadwal->lokasi)
+                                                                    <span class="font-bold text-gray-700">{{ $item->jadwal->lokasi }}</span>
+                                                                @else
+                                                                    <span class="text-gray-400">-</span>
+                                                                @endif
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 @endif
@@ -321,7 +394,7 @@
                                         </a>
 
                                     {{-- ── Konsultasi action buttons ── --}}
-                                    @elseif($isKonsultasi)
+                                    @elseif($isBespoke)
                                         @if($item->status_progres === 'menunggu_pembayaran' && !in_array($item->status_bayar, ['lunas','menunggu_konfirmasi']))
                                             <button type="button"
                                                 onclick="bukaModalBukti('{{ $item->id_pendaftaran }}', '{{ $identifier }}')"
@@ -341,7 +414,8 @@
                                         @elseif($item->status_progres !== 'dibatalkan')
                                             @php
                                                 $waNumber = config('app.whatsapp_number', '6281234567890');
-                                                $waText   = "Halo Admin, saya ingin menanyakan status konsultasi atas nama " . $item->user->nama . " (No. " . ($item->nomor_pendaftaran ?? '') . ")";
+                                                $layananName = $isAudit ? 'audit' : ($isCustomTraining ? 'pelatihan kustom' : 'konsultasi');
+                                                $waText   = "Halo Admin, saya ingin menanyakan status {$layananName} atas nama " . $item->user->nama . " (No. " . ($item->nomor_pendaftaran ?? '') . ")";
                                                 $waUrl    = "https://wa.me/" . $waNumber . "?text=" . rawurlencode($waText);
                                             @endphp
                                             <a href="{{ $waUrl }}" target="_blank"
@@ -623,10 +697,10 @@
             </div>
         </div>
 
-        @if(session('is_konsultasi'))
+        @if(session('is_konsultasi') || session('is_audit'))
             <h2 class="text-2xl font-bold text-gray-800 mb-2">Permintaan Dikirim!</h2>
             <p class="text-gray-500 text-sm mb-8">
-                Permintaan konsultasi Anda berhasil diajukan. Tim kami akan segera meninjau detail dan menghubungi Anda via Email/WhatsApp untuk koordinasi jadwal.
+                Permintaan {{ session('is_audit') ? 'audit' : 'konsultasi' }} Anda berhasil diajukan. Tim kami akan segera meninjau detail dan menghubungi Anda via Email/WhatsApp untuk koordinasi jadwal.
             </p>
         @else
             <h2 class="text-2xl font-bold text-gray-800 mb-2">Pendaftaran Berhasil!</h2>
