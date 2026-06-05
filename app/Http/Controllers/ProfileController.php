@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use App\Models\KlienIndividu;
+use App\Models\User;
 use App\Models\KlienPerusahaan;
 use App\Models\Perusahaan;
 
@@ -18,11 +18,10 @@ class ProfileController extends Controller
     public function edit()
     {
         $user = Auth::user();
-        $individu = $user->klienIndividu;
         $perusahaanProfil = $user->klienPerusahaan;
         $perusahaan = $perusahaanProfil ? $perusahaanProfil->perusahaan : null;
 
-        return view('pages.profile', compact('user', 'individu', 'perusahaanProfil', 'perusahaan'));
+        return view('pages.profile', compact('user', 'perusahaanProfil', 'perusahaan'));
     }
 
     /**
@@ -54,14 +53,7 @@ class ProfileController extends Controller
         }
         $user->save();
 
-        // Update Profil Individu jika ada
-        if ($user->klienIndividu) {
-            $user->klienIndividu->update([
-                'nik' => $request->nik,
-                'nama_lengkap' => $request->name,
-                'no_hp' => $request->no_hp,
-            ]);
-        }
+
 
         // Update Profil Perusahaan jika ada
         if ($user->klienPerusahaan) {

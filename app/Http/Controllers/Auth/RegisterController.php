@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Mail\OtpMail;
-use App\Models\KlienIndividu;
+use App\Mail\OtpMail;
 use App\Models\KlienPerusahaan;
 use App\Models\OtpCode;
 use App\Models\Perusahaan;
@@ -125,22 +125,14 @@ class RegisterController extends Controller
 
         // ── Buat user utama ──────────────────────────────────────────────
         $user = User::create([
-            'username' => $data['username'],
+            'nama'     => $data['username'],
             'email'    => $data['email'],
+            'no_telp'  => $data['phone'] ?? null,
             'password' => Hash::make($data['password']),
         ]);
 
-        // ── Buat profil sesuai tipe ──────────────────────────────────────
-        if ($data['user_type'] === 'individual') {
-
-            KlienIndividu::create([
-                'user_id'      => $user->id,
-                'nik'          => $data['nik']   ?? null,
-                'nama_lengkap' => $data['username'],
-                'no_hp'        => $data['phone'] ?? null,
-            ]);
-
-        } else {
+        // ── Buat profil perusahaan (jika ada) ────────────────────────────
+        if ($data['user_type'] !== 'individual') {
 
             // 1. Buat record Perusahaan
             $perusahaan = Perusahaan::create([

@@ -185,14 +185,7 @@ Route::middleware(['auth', 'is.subadmin'])->prefix('subadmin')->name('subadmin.'
     Route::put('/jadwal/{id}',         [\App\Http\Controllers\Subadmin\SubadminJadwalController::class, 'update'])->name('jadwal.update');
     Route::delete('/jadwal/{id}',      [\App\Http\Controllers\Subadmin\SubadminJadwalController::class, 'destroy'])->name('jadwal.destroy');
 
-    // Klien
-    Route::get('/klien',               [\App\Http\Controllers\Subadmin\SubadminKlienController::class, 'index'])->name('klien.index');
-    Route::get('/klien/create',        [\App\Http\Controllers\Subadmin\SubadminKlienController::class, 'create'])->name('klien.create');
-    Route::post('/klien',              [\App\Http\Controllers\Subadmin\SubadminKlienController::class, 'store'])->name('klien.store');
-    Route::get('/klien/{id}/edit',     [\App\Http\Controllers\Subadmin\SubadminKlienController::class, 'edit'])->name('klien.edit');
-    Route::put('/klien/{id}',          [\App\Http\Controllers\Subadmin\SubadminKlienController::class, 'update'])->name('klien.update');
-    Route::get('/klien/{id}',          [\App\Http\Controllers\Subadmin\SubadminKlienController::class, 'show'])->name('klien.show');
-    Route::delete('/klien/{id}',       [\App\Http\Controllers\Subadmin\SubadminKlienController::class, 'destroy'])->name('klien.destroy');
+
 
     // Perusahaan
     Route::get('/perusahaan',      [\App\Http\Controllers\Subadmin\SubadminPerusahaanController::class, 'index'])->name('perusahaan.index');
