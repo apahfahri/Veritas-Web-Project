@@ -8,21 +8,29 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('request_pelatihan', function (Blueprint $table) {
-            $table->unsignedBigInteger('id_pendaftaran')->nullable()->after('id_perusahaan');
-            
-            $table->foreign('id_pendaftaran')
-                  ->references('id_pendaftaran')
-                  ->on('pendaftaran')
-                  ->onDelete('set null');
-        });
+        if (Schema::hasTable('request_pelatihan')) {
+            Schema::table('request_pelatihan', function (Blueprint $table) {
+                $table->unsignedBigInteger('id_pendaftaran')->nullable()->after('id_perusahaan');
+                
+                $table->foreign('id_pendaftaran')
+                      ->references('id_pendaftaran')
+                      ->on('pendaftaran')
+                      ->onDelete('set null');
+            });
+        }
     }
 
     public function down(): void
     {
-        Schema::table('request_pelatihan', function (Blueprint $table) {
-            $table->dropForeign(['id_pendaftaran']);
-            $table->dropColumn('id_pendaftaran');
-        });
+        if (Schema::hasTable('request_pelatihan')) {
+            Schema::table('request_pelatihan', function (Blueprint $table) {
+                try {
+                    $table->dropForeign(['id_pendaftaran']);
+                } catch (\Exception $e) {}
+                try {
+                    $table->dropColumn('id_pendaftaran');
+                } catch (\Exception $e) {}
+            });
+        }
     }
 };

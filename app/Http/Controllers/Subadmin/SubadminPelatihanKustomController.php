@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Pendaftaran;
 use App\Models\Jadwal;
 use App\Models\Pemateri;
-use App\Models\RequestPelatihan;
 use App\Models\User;
 use App\Models\KlienPerusahaan;
 use App\Models\JenisLayanan;
