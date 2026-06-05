@@ -41,6 +41,7 @@ class SubadminController extends Controller
             'password' => 'required|min:6',
             'no_telp'  => 'required|string|max:20',
             'status'   => 'required|in:aktif,nonaktif',
+            'cabang'   => 'nullable|string|max:255',
         ]);
 
         Admin::create([
@@ -50,6 +51,7 @@ class SubadminController extends Controller
             'no_telp'  => $request->no_telp,
             'role'     => 'subadmin',
             'status'   => $request->status,
+            'cabang'   => $request->cabang,
         ]);
 
         return redirect()->route('admin.subadmin.index')
@@ -72,6 +74,7 @@ class SubadminController extends Controller
             'password' => 'nullable|min:6',
             'no_telp'  => 'required|string|max:20',
             'status'   => 'required|in:aktif,nonaktif',
+            'cabang'   => 'nullable|string|max:255',
         ]);
 
         $data = [
@@ -79,6 +82,7 @@ class SubadminController extends Controller
             'email'    => $request->email,
             'no_telp'  => $request->no_telp,
             'status'   => $request->status,
+            'cabang'   => $request->cabang,
         ];
 
         if ($request->filled('password')) {
