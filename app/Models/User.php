@@ -3,10 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Model
+class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
@@ -26,23 +26,8 @@ class User extends Model
         return $this->hasMany(Pendaftaran::class, 'id_user', 'id_user');
     }
 
-    public function klien()
+    public function klienPerusahaan()
     {
-        return $this->hasOne(KlienIndividu::class, 'user_id', 'id_user');
-    }
-
-    public function admin()
-    {
-        return $this->hasOne(Admin::class, 'id_user', 'id_user');
-    }
-
-    public function isAdmin()
-    {
-        return $this->admin()->where('role', 'admin')->exists();
-    }
-
-    public function isSubadmin()
-    {
-        return $this->admin()->where('role', 'subadmin')->exists();
+        return $this->hasOne(KlienPerusahaan::class, 'user_id', 'id_user');
     }
 }

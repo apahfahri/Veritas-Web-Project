@@ -18,8 +18,6 @@ class DatabaseSeeder extends Seeder
             MateriSeeder::class,          // Jalankan sebelum jadwal agar jadwal bisa melampirkan materi
             JadwalSeeder::class,          // Jalankan setelah kategori/jenis selesai
             PendaftaranSeeder::class,   // Jalankan setelah jadwal selesai
-            SertifikatSeeder::class,    // Data dummy sertifikat untuk verifikasi
-            KlienIndividuSeeder::class,
             RekeningSeeder::class,
         ]);
     }
