@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use App\Models\User;
 use App\Models\KlienPerusahaan;
 use App\Models\Perusahaan;
 
@@ -33,7 +32,7 @@ class ProfileController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id_user . ',id_user',
             'password' => 'nullable|min:8|confirmed',
             // Validasi individu
             'nik' => 'nullable|string|max:16',
@@ -46,8 +45,11 @@ class ProfileController extends Controller
         ]);
 
         // Update User Dasar
-        $user->name = $request->name;
+        $user->nama = $request->name;
         $user->email = $request->email;
+        if ($request->filled('no_hp')) {
+            $user->no_telp = $request->no_hp;
+        }
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }
