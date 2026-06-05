@@ -58,34 +58,7 @@
                 </div>
             </div>
 
-            <!-- Detail Spesifik (Individu / Perusahaan) -->
-            @if($user->klienIndividu)
-            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="bg-gray-50 px-8 py-4 border-b border-gray-100">
-                    <h2 class="text-lg font-bold text-gray-800 flex items-center gap-3">
-                        <i class="fi fi-rr-id-card"></i> Detail Identitas (Individu)
-                    </h2>
-                </div>
-                
-                <div class="p-8 space-y-6">
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-2">NIK (KTP)</label>
-                            <input type="text" name="nik" value="{{ old('nik', $individu->nik) }}" 
-                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition-all outline-none">
-                            @error('nik') <p class="mt-1 text-xs text-red-500 font-medium">{{ $message }}</p> @enderror
-                        </div>
 
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-2">Nomor WhatsApp</label>
-                            <input type="text" name="no_hp" value="{{ old('no_hp', $individu->no_hp) }}" 
-                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E6B3D] focus:border-transparent transition-all outline-none">
-                            @error('no_hp') <p class="mt-1 text-xs text-red-500 font-medium">{{ $message }}</p> @enderror
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @endif
 
             @if($user->klienPerusahaan)
             <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">

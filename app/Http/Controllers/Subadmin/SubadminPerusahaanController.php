@@ -25,15 +25,7 @@ class SubadminPerusahaanController extends Controller
         // Menampilkan daftar semua perusahaan agar subadmin bisa melihat profilnya
         $cabang = Auth::user()->cabang;
         
-        $perusahaans = Perusahaan::withCount(['pendaftarans' => function($q) use ($cabang) {
-            if ($cabang) {
-                $q->where(function($sub) use ($cabang) {
-                    $sub->whereHas('user.klien', function($uq) use ($cabang) {
-                        $uq->where('cabang', $cabang);
-                    })->orWhere('is_utusan_perusahaan', true);
-                });
-            }
-        }])->latest()->paginate(15);
+        $perusahaans = Perusahaan::withCount(['pendaftarans'])->latest()->paginate(15);
 
         return view('subadmin.perusahaan.index', compact('perusahaans'));
     }
