@@ -34,13 +34,7 @@ class SubadminSertifikatController extends Controller
                 ->whereDoesntHave('sertifikat')
                 ->with(['user', 'jadwal.jenis', 'jadwal.kategori']);
 
-            if ($cabang) {
-                $query->where(function($q) use ($cabang) {
-                    $q->whereHas('user.klien', function($uq) use ($cabang) {
-                        $uq->where('cabang', $cabang);
-                    })->orWhere('is_utusan_perusahaan', true);
-                });
-            }
+            // Branch filtering for individuals is deprecated since klien_individu was removed.
 
             if (!empty($search)) {
                 $query->where(function($q) use ($search) {
@@ -60,13 +54,7 @@ class SubadminSertifikatController extends Controller
         } else {
             // Tab: terbit
             $query = Sertifikat::whereHas('pendaftaran', function($q) use ($cabang) {
-                if ($cabang) {
-                    $q->where(function($sub) use ($cabang) {
-                        $sub->whereHas('user.klien', function($uq) use ($cabang) {
-                            $uq->where('cabang', $cabang);
-                        })->orWhere('is_utusan_perusahaan', true);
-                    });
-                }
+                // Branch filtering for individuals is deprecated since klien_individu was removed.
             })->with(['pendaftaran.user', 'pendaftaran.jadwal.jenis']);
 
             if (!empty($search)) {
@@ -169,14 +157,7 @@ class SubadminSertifikatController extends Controller
 
                 // Check branch authorization
                 $cabang = Auth::user()->cabang;
-                if ($cabang && !$pendaftaran->is_utusan_perusahaan) {
-                    $pendaftaranCabang = $pendaftaran->user?->klien?->cabang;
-                    if ($pendaftaranCabang && $pendaftaranCabang !== $cabang) {
-                        $errorCount++;
-                        $errors[] = "Baris " . ($index + 2) . ": Anda tidak memiliki akses ke pendaftaran untuk '{$idOrNomor}' (cabang berbeda).";
-                        continue;
-                    }
-                }
+                // Branch filtering for individuals is deprecated
 
                 // Ensure it doesn't already have a certificate
                 if ($pendaftaran->sertifikat) {
@@ -273,13 +254,7 @@ class SubadminSertifikatController extends Controller
                 ->whereDoesntHave('sertifikat')
                 ->with(['user', 'jadwal.jenis']);
 
-            if ($cabang) {
-                $query->where(function($q) use ($cabang) {
-                    $q->whereHas('user.klien', function($uq) use ($cabang) {
-                        $uq->where('cabang', $cabang);
-                    })->orWhere('is_utusan_perusahaan', true);
-                });
-            }
+            // Branch filtering for individuals is deprecated since klien_individu was removed.
 
             $pendaftaranTersedia = $query->latest()->get();
             $pendaftaran = null;
@@ -298,11 +273,7 @@ class SubadminSertifikatController extends Controller
 
         $pendaftaran = Pendaftaran::findOrFail($request->pendaftaran_id);
 
-        // Security check for branch
-        $pendaftaranCabang = $pendaftaran->user?->klien?->cabang;
-        if ($pendaftaranCabang && $pendaftaranCabang !== Auth::user()->cabang) {
-            abort(403, 'Anda tidak memiliki akses ke data cabang lain.');
-        }
+        // Security check for branch is deprecated
 
         $noSertifikat = $this->generateNoSertifikat();
 
