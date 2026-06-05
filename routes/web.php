@@ -82,6 +82,8 @@ Route::middleware(['auth', 'is.admin'])->prefix('admin')->name('admin.')->group(
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     // Pemateri CRUD
+    Route::post('/petugas/import',     [PemateriController::class, 'import'])->name('petugas.import');
+    Route::get('/petugas/import-template', [PemateriController::class, 'importTemplate'])->name('petugas.import-template');
     Route::get('/petugas',             [PemateriController::class, 'index'])->name('petugas.index');
     Route::get('/petugas/create',      [PemateriController::class, 'create'])->name('petugas.create');
     Route::post('/petugas',            [PemateriController::class, 'store'])->name('petugas.store');
@@ -90,6 +92,8 @@ Route::middleware(['auth', 'is.admin'])->prefix('admin')->name('admin.')->group(
     Route::delete('/petugas/{id}',     [PemateriController::class, 'destroy'])->name('petugas.destroy');
 
     // Jadwal (Manajemen Program Layanan) — menggantikan /pelatihan
+    Route::post('/jadwal/import',      [LayananAdminController::class, 'import'])->name('jadwal.import');
+    Route::get('/jadwal/import-template', [LayananAdminController::class, 'importTemplate'])->name('jadwal.import-template');
     Route::get('/jadwal',              [LayananAdminController::class, 'index'])->name('jadwal.index');
     Route::get('/jadwal/create',       [LayananAdminController::class, 'create'])->name('jadwal.create');
     Route::post('/jadwal',             [LayananAdminController::class, 'store'])->name('jadwal.store');
@@ -100,9 +104,13 @@ Route::middleware(['auth', 'is.admin'])->prefix('admin')->name('admin.')->group(
     Route::delete('/jadwal/{id}',      [LayananAdminController::class, 'destroy'])->name('jadwal.destroy');
 
     // Materi
+    Route::post('/materi/import',          [\App\Http\Controllers\Admin\MateriController::class, 'import'])->name('materi.import');
+    Route::get('/materi/import-template',  [\App\Http\Controllers\Admin\MateriController::class, 'importTemplate'])->name('materi.import-template');
     Route::resource('materi', \App\Http\Controllers\Admin\MateriController::class)->except(['show']);
 
     // Kategori & Jenis Layanan
+    Route::post('/kategori/import',            [KategoriLayananController::class, 'import'])->name('kategori.import');
+    Route::get('/kategori/import-template',    [KategoriLayananController::class, 'importTemplate'])->name('kategori.import-template');
     Route::get('/kategori',                    [KategoriLayananController::class, 'index'])->name('kategori.index');
     Route::post('/kategori',                   [KategoriLayananController::class, 'storeKategori'])->name('kategori.store');
     Route::put('/kategori/{id}',               [KategoriLayananController::class, 'updateKategori'])->name('kategori.update');
@@ -120,6 +128,8 @@ Route::middleware(['auth', 'is.admin'])->prefix('admin')->name('admin.')->group(
     Route::get('/riwayat-pendaftaran',      [RiwayatPendaftaranController::class, 'index'])->name('riwayat.index');
 
     // Sertifikat management
+    Route::post('/sertifikat/import',                   [SertifikatAdminController::class, 'import'])->name('sertifikat.import');
+    Route::get('/sertifikat/import-template',           [SertifikatAdminController::class, 'importTemplate'])->name('sertifikat.import-template');
     Route::get('/sertifikat',                           [SertifikatAdminController::class, 'index'])->name('sertifikat.index');
     Route::get('/sertifikat/create/{id_pendaftaran}',   [SertifikatAdminController::class, 'create'])->name('sertifikat.create');
     Route::post('/sertifikat',                          [SertifikatAdminController::class, 'store'])->name('sertifikat.store');
@@ -130,6 +140,8 @@ Route::middleware(['auth', 'is.admin'])->prefix('admin')->name('admin.')->group(
     Route::get('/laporan-monitoring',                   [LaporanMonitoringController::class, 'index'])->name('laporan.index');
 
     // Subadmin management
+    Route::post('/subadmin/import',             [\App\Http\Controllers\Admin\SubadminController::class, 'import'])->name('subadmin.import');
+    Route::get('/subadmin/import-template',     [\App\Http\Controllers\Admin\SubadminController::class, 'importTemplate'])->name('subadmin.import-template');
     Route::resource('subadmin', \App\Http\Controllers\Admin\SubadminController::class)->except(['show']);
 
     // Rekening management
@@ -137,12 +149,11 @@ Route::middleware(['auth', 'is.admin'])->prefix('admin')->name('admin.')->group(
     Route::post('/rekening/{id}/toggle', [\App\Http\Controllers\Admin\RekeningController::class, 'toggleActive'])->name('rekening.toggle');
 
     // Klien & Mitra (Perusahaan B2B)
+    Route::post('/mitra/import',            [KlienMitraController::class, 'import'])->name('mitra.import');
+    Route::get('/mitra/import-template',    [KlienMitraController::class, 'importTemplate'])->name('mitra.import-template');
     Route::resource('mitra', KlienMitraController::class)->except(['show']);
 
-    // Request Pelatihan Perusahaan
-    Route::get('/request-pelatihan',                   [RequestPelatihanController::class, 'index'])->name('request-pelatihan.index');
-    Route::get('/request-pelatihan/{id}',              [RequestPelatihanController::class, 'show'])->name('request-pelatihan.show');
-    Route::patch('/request-pelatihan/{id}/status',     [RequestPelatihanController::class, 'updateStatus'])->name('request-pelatihan.update-status');
+
 });
 
 /*
@@ -174,14 +185,7 @@ Route::middleware(['auth', 'is.subadmin'])->prefix('subadmin')->name('subadmin.'
     Route::put('/jadwal/{id}',         [\App\Http\Controllers\Subadmin\SubadminJadwalController::class, 'update'])->name('jadwal.update');
     Route::delete('/jadwal/{id}',      [\App\Http\Controllers\Subadmin\SubadminJadwalController::class, 'destroy'])->name('jadwal.destroy');
 
-    // Klien
-    Route::get('/klien',               [\App\Http\Controllers\Subadmin\SubadminKlienController::class, 'index'])->name('klien.index');
-    Route::get('/klien/create',        [\App\Http\Controllers\Subadmin\SubadminKlienController::class, 'create'])->name('klien.create');
-    Route::post('/klien',              [\App\Http\Controllers\Subadmin\SubadminKlienController::class, 'store'])->name('klien.store');
-    Route::get('/klien/{id}/edit',     [\App\Http\Controllers\Subadmin\SubadminKlienController::class, 'edit'])->name('klien.edit');
-    Route::put('/klien/{id}',          [\App\Http\Controllers\Subadmin\SubadminKlienController::class, 'update'])->name('klien.update');
-    Route::get('/klien/{id}',          [\App\Http\Controllers\Subadmin\SubadminKlienController::class, 'show'])->name('klien.show');
-    Route::delete('/klien/{id}',       [\App\Http\Controllers\Subadmin\SubadminKlienController::class, 'destroy'])->name('klien.destroy');
+
 
     // Perusahaan
     Route::get('/perusahaan',      [\App\Http\Controllers\Subadmin\SubadminPerusahaanController::class, 'index'])->name('perusahaan.index');
@@ -189,9 +193,10 @@ Route::middleware(['auth', 'is.subadmin'])->prefix('subadmin')->name('subadmin.'
 
     // Sertifikat
     Route::get('/sertifikat',                          [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'index'])->name('sertifikat.index');
+    Route::get('/sertifikat/create',                   [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'create'])->name('sertifikat.create-general');
     Route::get('/sertifikat/create/{pendaftaran_id}',  [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'create'])->name('sertifikat.create');
     Route::post('/sertifikat',                         [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'store'])->name('sertifikat.store');
-    Route::get('/sertifikat/{no_sertifikat}/show',     [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'show'])->name('sertifikat.show');
+    Route::post('/sertifikat/import',                  [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'import'])->name('sertifikat.import');
     Route::get('/sertifikat/{no_sertifikat}/edit',     [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'edit'])->name('sertifikat.edit');
     Route::put('/sertifikat/{no_sertifikat}',          [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'update'])->name('sertifikat.update');
     Route::delete('/sertifikat/{no_sertifikat}',       [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'destroy'])->name('sertifikat.destroy');

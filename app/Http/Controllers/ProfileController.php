@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use App\Models\KlienIndividu;
 use App\Models\KlienPerusahaan;
 use App\Models\Perusahaan;
 
@@ -18,11 +17,10 @@ class ProfileController extends Controller
     public function edit()
     {
         $user = Auth::user();
-        $individu = $user->klienIndividu;
         $perusahaanProfil = $user->klienPerusahaan;
         $perusahaan = $perusahaanProfil ? $perusahaanProfil->perusahaan : null;
 
-        return view('pages.profile', compact('user', 'individu', 'perusahaanProfil', 'perusahaan'));
+        return view('pages.profile', compact('user', 'perusahaanProfil', 'perusahaan'));
     }
 
     /**
@@ -30,11 +28,15 @@ class ProfileController extends Controller
      */
     public function update(Request $request)
     {
+        /** @var User|null $user */
         $user = Auth::user();
+        if (! $user) {
+            abort(403);
+        }
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id_user . ',id_user',
             'password' => 'nullable|min:8|confirmed',
             // Validasi individu
             'nik' => 'nullable|string|max:16',
@@ -47,21 +49,17 @@ class ProfileController extends Controller
         ]);
 
         // Update User Dasar
-        $user->name = $request->name;
+        $user->nama = $request->name;
         $user->email = $request->email;
+        if ($request->filled('no_hp')) {
+            $user->no_telp = $request->no_hp;
+        }
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }
         $user->save();
 
-        // Update Profil Individu jika ada
-        if ($user->klienIndividu) {
-            $user->klienIndividu->update([
-                'nik' => $request->nik,
-                'nama_lengkap' => $request->name,
-                'no_hp' => $request->no_hp,
-            ]);
-        }
+
 
         // Update Profil Perusahaan jika ada
         if ($user->klienPerusahaan) {

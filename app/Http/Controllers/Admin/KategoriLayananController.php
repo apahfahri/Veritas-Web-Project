@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\KategoriLayanan;
 use App\Models\JenisLayanan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class KategoriLayananController extends Controller
 {
@@ -86,5 +87,120 @@ class KategoriLayananController extends Controller
         $jenis->delete();
 
         return back()->with('success', 'Jenis layanan berhasil dihapus.');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'csv_file' => 'required|file|mimes:csv,txt|max:5120',
+        ]);
+
+        $file = $request->file('csv_file');
+        $filePath = $file->getRealPath();
+
+        // Auto-detect delimiter
+        $delimiter = ',';
+        if (($handle = fopen($filePath, 'r')) !== false) {
+            $firstLine = fgets($handle);
+            if ($firstLine !== false) {
+                if (substr_count($firstLine, ';') > substr_count($firstLine, ',')) {
+                    $delimiter = ';';
+                }
+            }
+            fclose($handle);
+        }
+
+        $rows = [];
+        if (($handle = fopen($filePath, 'r')) !== false) {
+            $header = fgetcsv($handle, 1000, $delimiter);
+            if ($header) {
+                $header = array_map(function($h) {
+                    return strtolower(trim(preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $h)));
+                }, $header);
+            }
+
+            while (($data = fgetcsv($handle, 1000, $delimiter)) !== false) {
+                if (count($data) >= count($header)) {
+                    $rows[] = array_combine(array_slice($header, 0, count($data)), $data);
+                } else {
+                    $row = [];
+                    foreach ($header as $index => $colName) {
+                        $row[$colName] = $data[$index] ?? null;
+                    }
+                    $rows[] = $row;
+                }
+            }
+            fclose($handle);
+        }
+
+        if (empty($rows)) {
+            return back()->with('error', 'Berkas CSV kosong atau format tidak sesuai.');
+        }
+
+        $importedCount = 0;
+        $errors = [];
+        DB::transaction(function() use ($rows, &$importedCount, &$errors) {
+            foreach ($rows as $index => $row) {
+                $kode_kategori = strtoupper(trim($row['kode_kategori'] ?? ''));
+                $nama_kategori = trim($row['nama_kategori'] ?? '');
+                $deskripsi_kategori = trim($row['deskripsi_kategori'] ?? '');
+                $kode_jenis = strtoupper(trim($row['kode_jenis'] ?? ''));
+                $nama_jenis = trim($row['nama_jenis'] ?? '');
+
+                if (empty($kode_kategori) || empty($nama_kategori)) {
+                    $errors[] = "Baris " . ($index + 2) . ": Kode dan Nama Kategori wajib diisi.";
+                    continue;
+                }
+
+                $kategori = KategoriLayanan::where('kode_kategori', $kode_kategori)->first();
+                if (!$kategori) {
+                    $kategori = KategoriLayanan::create([
+                        'kode_kategori' => $kode_kategori,
+                        'nama'          => $nama_kategori,
+                        'deskripsi'     => empty($deskripsi_kategori) ? null : $deskripsi_kategori,
+                    ]);
+                }
+
+                if (!empty($kode_jenis) && !empty($nama_jenis)) {
+                    $jenisExists = JenisLayanan::where('id_kategori', $kategori->id_kategori)
+                        ->where('kode_jenis', $kode_jenis)
+                        ->exists();
+                    if (!$jenisExists) {
+                        JenisLayanan::create([
+                            'id_kategori' => $kategori->id_kategori,
+                            'nama'        => $nama_jenis,
+                            'kode_jenis'  => $kode_jenis,
+                        ]);
+                    }
+                }
+                $importedCount++;
+            }
+        });
+
+        if (count($errors) > 0) {
+            $msg = "Berhasil mengimpor {$importedCount} data kategori/jenis. Beberapa baris dilewati:\n" . implode("\n", $errors);
+            return back()->with('warning', $msg);
+        }
+
+        return back()->with('success', "Berhasil mengimpor {$importedCount} data kategori/jenis layanan.");
+    }
+
+    public function importTemplate()
+    {
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="template_kategori_layanan.csv"',
+        ];
+
+        $callback = function() {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, ['kode_kategori', 'nama_kategori', 'deskripsi_kategori', 'kode_jenis', 'nama_jenis']);
+            fputcsv($file, ['PLT', 'Pelatihan K3', 'Program pelatihan kesehatan & keselamatan kerja', 'AK3U', 'Ahli K3 Umum']);
+            fputcsv($file, ['PLT', 'Pelatihan K3', 'Program pelatihan kesehatan & keselamatan kerja', 'K3L', 'K3 Lingkungan Kerja']);
+            fputcsv($file, ['KNS', 'Konsultasi K3', 'Layanan konsultasi dan pendampingan industri', 'ISO9001', 'Sistem Manajemen Mutu ISO']);
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }
