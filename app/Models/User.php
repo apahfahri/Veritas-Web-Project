@@ -28,6 +28,6 @@ class User extends Authenticatable
 
     public function klienPerusahaan()
     {
-        return $this->hasOne(KlienPerusahaan::class, 'user_id', 'id_user');
+        return $this->hasOne(KlienPerusahaan::class, 'id_user', 'id_user');
     }
 }

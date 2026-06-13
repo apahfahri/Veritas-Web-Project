@@ -15,7 +15,8 @@ class SertifikatSeeder extends Seeder
                 'id_pendaftaran' => 1,
                 'nama_lengkap' => 'Budi Santoso',
                 'tanggal_terbit' => now()->subDays(1)->toDateString(),
-                'file' => 'sertifikat/budi_santoso.pdf',
+                'file_pdf' => 'sertifikat/budi_santoso.pdf',
+                'penerbit' => 'PT Katiga Veritas Indonesia',
                 'created_at' => now(),
                 'updated_at' => now(),
             ]

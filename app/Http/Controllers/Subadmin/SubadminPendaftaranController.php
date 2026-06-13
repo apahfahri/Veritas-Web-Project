@@ -125,14 +125,53 @@ class SubadminPendaftaranController extends Controller
         return Excel::download(new PendaftaranExport($filters), 'laporan-pendaftaran-' . now()->format('Ymd') . '.xlsx');
     }
 
-    public function exportPdf(Request $request)
-{
-    $pendaftaran = $this->findByBranch($id);
-    $pendaftaran->delete();
+    public function destroy($id)
+    {
+        $pendaftaran = $this->findByBranch($id);
+        $pendaftaran->delete();
 
-    return redirect()->route('subadmin.pendaftaran.index')
-        ->with('success', 'Pendaftaran berhasil dihapus.');
-}
+        return redirect()->route('subadmin.pendaftaran.index')
+            ->with('success', 'Pendaftaran berhasil dihapus.');
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $query = Pendaftaran::whereHas('jadwal.kategori', function($q) {
+            $q->where('nama', 'like', '%Pelatihan%');
+        })->with(['user', 'jadwal.jenis'])->latest();
+
+        if ($request->filled('year')) {
+            $query->whereYear('tanggal_daftar', $request->year);
+        } else {
+            $query->whereYear('tanggal_daftar', date('Y'));
+        }
+
+        if ($request->filled('month')) {
+            $query->whereMonth('tanggal_daftar', $request->month);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('nomor_pendaftaran', 'LIKE', "%{$search}%")
+                  ->orWhere('id_pendaftaran', 'LIKE', "%{$search}%")
+                  ->orWhereHas('user', function($qUser) use ($search) {
+                      $qUser->where('nama', 'LIKE', "%{$search}%");
+                  });
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status_progres', $request->status);
+        }
+
+        $pendaftarans = $query->get();
+        $year = $request->year ?? date('Y');
+        $month = $request->month;
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pendaftaran.export_pdf', compact('pendaftarans', 'year', 'month'));
+        return $pdf->download('laporan-pendaftaran-' . now()->format('Ymd') . '.pdf');
+    }
 
     public function updateNote(Request $request, $id)
     {
@@ -154,12 +193,6 @@ class SubadminPendaftaranController extends Controller
     public function uploadPaymentProof(Request $request, $id)
     {
         $pendaftaran = $this->findByBranch($id);
-        $cabang = Auth::user()->cabang;
-
-        // Auto-assign branch to this subadmin if it was unassigned or 'pusat'
-        if ($pendaftaran->user?->klien && ($pendaftaran->user->klien->cabang === 'pusat' || empty($pendaftaran->user->klien->cabang)) && $cabang) {
-            $pendaftaran->user->klien->update(['cabang' => $cabang]);
-        }
 
         $request->validate([
             'bukti_bayar' => 'required|image|mimes:jpeg,png,jpg|max:2048',

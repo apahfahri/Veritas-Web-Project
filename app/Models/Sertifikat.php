@@ -57,6 +57,6 @@ class Sertifikat extends Model
     /** Ambil URL file PDF sertifikat */
     public function getPdfUrlAttribute(): ?string
     {
-        return $this->file_pdf ? asset('storage/' . $this->file_pdf) : null;
+        return route('certificate.download-pdf', $this->no_sertifikat);
     }
 }

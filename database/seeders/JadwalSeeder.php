@@ -50,7 +50,7 @@ class JadwalSeeder extends Seeder
             'kapasitas' => 30,
             'harga' => 5000000,
             'deskripsi' => 'Pelatihan Ahli K3 Umum (Batch Sebelumnya).',
-            'foto' => 'jadwal/k3_training_1.png',
+            'foto' => 'jadwal/training_1.png',
         ], [3, 4], [1]);
 
         // 2. Auditor SMK3 (ASMK3) - Selesai
@@ -64,7 +64,7 @@ class JadwalSeeder extends Seeder
             'kapasitas' => 20,
             'harga' => 6500000,
             'deskripsi' => 'Pelatihan Auditor SMK3 (Batch Sebelumnya).',
-            'foto' => 'jadwal/k3_training_2.png',
+            'foto' => 'jadwal/training_2.png',
         ], [5], [1, 2]);
 
         // 3. Juru Las/Welder (WELD) - Selesai
@@ -77,7 +77,7 @@ class JadwalSeeder extends Seeder
             'kapasitas' => 15,
             'harga' => 4500000,
             'deskripsi' => 'Pelatihan Juru Las / Welder bersertifikat.',
-            'foto' => 'jadwal/k3_training_3.png',
+            'foto' => 'jadwal/training_3.png',
         ], [6, 7]);
 
         // 4. Ahli K3 Lingkungan Kerja (AK3LK) - Selesai
@@ -91,7 +91,7 @@ class JadwalSeeder extends Seeder
             'kapasitas' => 40,
             'harga' => 3000000,
             'deskripsi' => 'Pelatihan Ahli K3 Lingkungan Kerja (Online).',
-            'foto' => 'jadwal/k3_training_1.png',
+            'foto' => 'jadwal/training_4.png',
         ], [8, 9], [1]);
 
         // ==========================
@@ -108,7 +108,7 @@ class JadwalSeeder extends Seeder
             'kapasitas' => 30,
             'harga' => 5000000,
             'deskripsi' => 'Pelatihan Ahli K3 Umum sertifikasi Kemnaker RI.',
-            'foto' => 'jadwal/k3_training_2.png',
+            'foto' => 'jadwal/training_1.png',
         ], [1, 10], [1]);
 
         // 6. Auditor SMK3 (ASMK3) - Akan Datang
@@ -121,7 +121,7 @@ class JadwalSeeder extends Seeder
             'kapasitas' => 20,
             'harga' => 6500000,
             'deskripsi' => 'Pelatihan Auditor SMK3 sertifikasi Kemnaker RI.',
-            'foto' => 'jadwal/k3_training_3.png',
+            'foto' => 'jadwal/training_2.png',
         ], [2, 5], [2]);
 
         // 7. Tenaga Kerja Bangunan Tinggi (TKBT) - Akan Datang
@@ -134,7 +134,7 @@ class JadwalSeeder extends Seeder
             'kapasitas' => 15,
             'harga' => 3500000,
             'deskripsi' => 'Pelatihan TKBT sertifikasi Kemnaker RI.',
-            'foto' => 'jadwal/k3_training_1.png',
+            'foto' => 'jadwal/training_3.png',
         ], [1, 3], [3]);
 
         // 8. Petugas K3 Kimia & Ahli K3 Kimia (AK3KIM) - Akan Datang (Online, link_meet sengaja kosong untuk testing)
@@ -147,7 +147,7 @@ class JadwalSeeder extends Seeder
             'kapasitas' => 40,
             'harga' => 4000000,
             'deskripsi' => 'Pelatihan Petugas & Ahli K3 Kimia Kemnaker RI.',
-            'foto' => 'jadwal/k3_training_2.png',
+            'foto' => 'jadwal/training_4.png',
         ], [6, 2], [1]);
 
         // 9. SIO Operator Angkat Angkut (SIOAA) - Akan Datang
@@ -160,7 +160,7 @@ class JadwalSeeder extends Seeder
             'kapasitas' => 25,
             'harga' => 4500000,
             'deskripsi' => 'Pelatihan Lisensi K3 SIO Operator Angkat Angkut.',
-            'foto' => 'jadwal/k3_training_3.png',
+            'foto' => 'jadwal/training_1.png',
         ], [10, 7]);
 
         // 10. Petugas P3K & Petugas Fireman (P3KFIRE) - Akan Datang
@@ -174,7 +174,7 @@ class JadwalSeeder extends Seeder
             'kapasitas' => 50,
             'harga' => 1500000,
             'deskripsi' => 'Pelatihan sertifikasi Petugas P3K & Pemadam Kebakaran.',
-            'foto' => 'jadwal/k3_training_1.png',
+            'foto' => 'jadwal/training_2.png',
         ], [3, 8], [1]);
     }
 }

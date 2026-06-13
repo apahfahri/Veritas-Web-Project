@@ -16,19 +16,7 @@ class SimplifyCustomTrainingTable extends Migration
         // 1. Drop request_pelatihan table (and its foreign keys) safely
         if (Schema::hasTable('request_pelatihan')) {
             Schema::table('request_pelatihan', function (Blueprint $table) {
-                // Check if foreign keys exist before dropping them
-                // DB driver specific: dropForeign expects array of columns
-                try {
-                    $table->dropForeign(['id_pendaftaran']);
-                } catch (\Exception $e) {
-                    // Ignore if foreign key doesn't exist
-                }
-
-                try {
-                    $table->dropForeign(['id_perusahaan']);
-                } catch (\Exception $e) {
-                    // Ignore if foreign key doesn't exist
-                }
+                // Foreign keys will be dropped when the table is dropped
             });
 
             Schema::dropIfExists('request_pelatihan');

@@ -108,9 +108,13 @@
             <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Pemateri / Instruktur</p>
             @forelse($jadwal->pemateri as $pm)
             <div class="flex items-center gap-3 mb-3">
+                @if($pm->foto)
+                <img src="{{ asset('storage/' . $pm->foto) }}" alt="{{ $pm->nama_lengkap }}" class="w-9 h-9 rounded-xl object-cover">
+                @else
                 <div class="w-9 h-9 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-sm font-black">
                     {{ strtoupper(substr($pm->nama_lengkap, 0, 1)) }}
                 </div>
+                @endif
                 <div>
                     <p class="text-sm font-black text-slate-900 leading-tight">{{ $pm->nama_lengkap }}</p>
                     <p class="text-[10px] text-slate-400 font-bold">{{ $pm->kompetensi ?? 'Pemateri Veritas' }}</p>

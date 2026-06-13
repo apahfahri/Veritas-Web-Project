@@ -52,6 +52,7 @@ Route::redirect('/request-layanan', '/request-training');
 */
 Route::get('/verification',      [VerifikasiController::class, 'index'])->name('verification');
 Route::post('/verification/cek', [VerifikasiController::class, 'cek'])->name('verification.cek');
+Route::get('/certificate/download/{no_sertifikat}', [VerifikasiController::class, 'downloadPdf'])->name('certificate.download-pdf');
 
 /*
 |--------------------------------------------------------------------------
@@ -174,6 +175,7 @@ Route::middleware(['auth', 'is.subadmin'])->prefix('subadmin')->name('subadmin.'
     Route::post('/pendaftaran/{id}/konfirmasi-bukti',      [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'konfirmasiBukti'])->name('pendaftaran.konfirmasi-bukti');
     Route::post('/pendaftaran/{id}/batalkan',              [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'batalkanPendaftaran'])->name('pendaftaran.batalkan');
     Route::get('/pendaftaran-export/excel',                [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'exportExcel'])->name('pendaftaran.export-excel');
+    Route::get('/pendaftaran-export/pdf',                  [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'exportPdf'])->name('pendaftaran.export-pdf');
 
     // Jadwal (view & manage)
     Route::get('/jadwal',              [\App\Http\Controllers\Subadmin\SubadminJadwalController::class, 'index'])->name('jadwal.index');
@@ -197,6 +199,7 @@ Route::middleware(['auth', 'is.subadmin'])->prefix('subadmin')->name('subadmin.'
     Route::get('/sertifikat/create/{pendaftaran_id}',  [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'create'])->name('sertifikat.create');
     Route::post('/sertifikat',                         [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'store'])->name('sertifikat.store');
     Route::post('/sertifikat/import',                  [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'import'])->name('sertifikat.import');
+    Route::get('/sertifikat/{no_sertifikat}',          [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'show'])->name('sertifikat.show');
     Route::get('/sertifikat/{no_sertifikat}/edit',     [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'edit'])->name('sertifikat.edit');
     Route::put('/sertifikat/{no_sertifikat}',          [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'update'])->name('sertifikat.update');
     Route::delete('/sertifikat/{no_sertifikat}',       [\App\Http\Controllers\Subadmin\SubadminSertifikatController::class, 'destroy'])->name('sertifikat.destroy');

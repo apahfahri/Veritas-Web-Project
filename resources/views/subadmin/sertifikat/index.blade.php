@@ -33,7 +33,11 @@
 <div class="flex flex-wrap justify-between items-end gap-4 mb-8">
     <div>
         <h2 class="text-2xl font-black text-slate-900 tracking-tight">Daftar Sertifikat</h2>
-        <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-1">Total: {{ $sertifikats->total() }} Sertifikat Terbit</p>
+        @if($activeTab === 'belum')
+            <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-1">Total: {{ $pendaftaranBelum->total() }} Antrean Sertifikat</p>
+        @else
+            <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-1">Total: {{ $sertifikats->total() }} Sertifikat Terbit</p>
+        @endif
     </div>
     <button onclick="toggleSelectionModal()" 
             class="bg-gradient-to-r from-cyan-600 to-teal-600 text-white px-6 py-3 rounded-2xl hover:from-cyan-700 hover:to-teal-700 transition shadow-lg shadow-cyan-200 flex items-center gap-2 text-sm font-black group">
@@ -246,7 +250,6 @@
             </div>
         </div>
     </div>
-    @endif
 </div>
 
 @endsection
