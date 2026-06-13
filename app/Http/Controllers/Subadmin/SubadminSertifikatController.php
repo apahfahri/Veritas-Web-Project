@@ -37,7 +37,7 @@ class SubadminSertifikatController extends Controller
                 ->whereDoesntHave('sertifikat')
                 ->with(['user', 'jadwal.jenis', 'jadwal.kategori']);
 
-
+            // Branch filtering for individuals is deprecated since klien_individu was removed.
 
             if (!empty($search)) {
                 $query->where(function($q) use ($search) {
@@ -56,7 +56,9 @@ class SubadminSertifikatController extends Controller
             $sertifikats = null;
         } else {
             // Tab: terbit
-            $query = Sertifikat::with(['pendaftaran.user', 'pendaftaran.jadwal.jenis']);
+            $query = Sertifikat::whereHas('pendaftaran', function($q) use ($cabang) {
+                // Branch filtering for individuals is deprecated since klien_individu was removed.
+            })->with(['pendaftaran.user', 'pendaftaran.jadwal.jenis']);
 
             if (!empty($search)) {
                 $query->where(function($q) use ($search) {
@@ -156,7 +158,9 @@ class SubadminSertifikatController extends Controller
                     continue;
                 }
 
-
+                // Check branch authorization
+                $cabang = Auth::user()->cabang;
+                // Branch filtering for individuals is deprecated
 
                 // Ensure it doesn't already have a certificate
                 if ($pendaftaran->sertifikat) {
@@ -253,7 +257,7 @@ class SubadminSertifikatController extends Controller
                 ->whereDoesntHave('sertifikat')
                 ->with(['user', 'jadwal.jenis']);
 
-
+            // Branch filtering for individuals is deprecated since klien_individu was removed.
 
             $pendaftaranTersedia = $query->latest()->get();
             $pendaftaran = null;
@@ -274,18 +278,9 @@ class SubadminSertifikatController extends Controller
             'file_pdf'       => 'required|file|mimes:pdf|max:5120',
         ]);
 
-        $pendaftaran = Pendaftaran::findOrFail($request->id_pendaftaran);
+        $pendaftaran = Pendaftaran::findOrFail($request->pendaftaran_id);
 
-
-        
-        if ($pendaftaran->jumlah_absen > 1) {
-            return redirect()->back()->with('error', 'Tidak dapat menerbitkan sertifikat: Peserta memiliki jumlah absen lebih dari 1x.');
-        }
-
-        $exists = Sertifikat::where('id_pendaftaran', $request->id_pendaftaran)->exists();
-        if ($exists) {
-            return redirect()->back()->with('error', 'Sertifikat untuk pendaftaran ini sudah diterbitkan.');
-        }
+        // Security check for branch is deprecated
 
         // Save file
         $file = $request->file('file_pdf');

@@ -90,6 +90,11 @@ class Pendaftaran extends Model
         return $this->belongsTo(Jadwal::class, 'id_jadwal', 'id_jadwal');
     }
 
+    public function layanan()
+    {
+        return $this->belongsTo(Jadwal::class, 'id_jadwal', 'id_jadwal')->with('jenis');
+    }
+
     public function admin()
     {
         return $this->belongsTo(Admin::class, 'id_admin', 'id_admin');

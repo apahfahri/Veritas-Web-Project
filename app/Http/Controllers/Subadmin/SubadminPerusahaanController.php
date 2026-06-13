@@ -23,7 +23,9 @@ class SubadminPerusahaanController extends Controller
     public function index()
     {
         // Menampilkan daftar semua perusahaan agar subadmin bisa melihat profilnya
-        $perusahaans = Perusahaan::withCount('pendaftarans')->latest()->paginate(15);
+        $cabang = Auth::user()->cabang;
+        
+        $perusahaans = Perusahaan::withCount(['pendaftarans'])->latest()->paginate(15);
 
         return view('subadmin.perusahaan.index', compact('perusahaans'));
     }
@@ -34,7 +36,7 @@ class SubadminPerusahaanController extends Controller
         
         // Peserta dari perusahaan ini di cabang admin
         $pesertas = Pendaftaran::where('id_perusahaan', $id)
-            ->with(['user', 'jadwal.jenis', 'jadwal.kategori'])
+            ->with(['user', 'layanan.materi'])
             ->latest()
             ->get();
 

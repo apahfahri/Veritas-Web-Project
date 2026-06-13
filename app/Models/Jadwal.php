@@ -79,6 +79,14 @@ class Jadwal extends Model
     }
 
     /**
+     * Mendapatkan nama program (alias compatibility layer untuk 'layanan->nama').
+     */
+    public function getNamaAttribute(): string
+    {
+        return $this->jenis?->nama ?? '—';
+    }
+
+    /**
      * Hitung sisa kursi berdasarkan pendaftaran yang terkonfirmasi & lunas.
      */
     public function getSisaKursiAttribute(): ?int
