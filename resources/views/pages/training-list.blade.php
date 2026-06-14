@@ -61,7 +61,7 @@
 
         <!-- RESULT COUNT -->
         <div class="mb-6 text-sm text-slate-500">
-            Menampilkan <strong class="text-slate-800 font-bold">{{ $jadwals->count() }}</strong> program pelatihan
+            Menampilkan <strong class="text-slate-800 font-bold">{{ $jadwals->total() }}</strong> program pelatihan
         </div>
 
         @if($jadwals->isEmpty())
@@ -136,6 +136,10 @@
                     </div>
                 </div>
                 @endforeach
+            </div>
+            
+            <div class="mt-10">
+                {{ $jadwals->links() }}
             </div>
         @endif
     </div>
