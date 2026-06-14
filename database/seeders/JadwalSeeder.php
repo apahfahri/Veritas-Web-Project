@@ -6,175 +6,146 @@ use Illuminate\Database\Seeder;
 use App\Models\Jadwal;
 use App\Models\JenisLayanan;
 use App\Models\KategoriLayanan;
+use Carbon\Carbon;
 
 class JadwalSeeder extends Seeder
 {
     public function run()
     {
-        // Cari kategori Pelatihan K3
-        $katPelatihan = KategoriLayanan::where('nama', 'like', '%Pelatihan%')->first();
-
-        if (!$katPelatihan) {
+        // Get all categories
+        $categories = KategoriLayanan::all()->keyBy('kode_kategori');
+        if ($categories->isEmpty()) {
             return;
         }
 
-        $createJadwal = function($kode_jenis, $data, $pemateriIds, $materiIds = []) use ($katPelatihan) {
-            $jenis = JenisLayanan::where('kode_jenis', $kode_jenis)->first();
-            if (!$jenis) return;
+        // We will generate schedules from June 2025 to August 2026
+        // Past: June 2025 to May 2026
+        // Current/Future: June 2026 to August 2026
 
-            $urutan = Jadwal::where('id_jenis', $jenis->id_jenis)->count() + 1;
-            $kode_jadwal = $katPelatihan->kode_kategori . '-' . $jenis->kode_jenis . '-' . str_pad($urutan, 2, '0', STR_PAD_LEFT);
-            
-            $data['kode_jadwal'] = $kode_jadwal;
-            $data['id_kategori'] = $katPelatihan->id_kategori;
-            $data['id_jenis'] = $jenis->id_jenis;
+        $locations = [
+            'Hotel Aston Bandung',
+            'Hotel Hilton Jakarta',
+            'Hotel Grand Tjokro Bandung',
+            'Veritas Training Center Jakarta',
+            'Zoom Meeting',
+            'Hotel JW Marriott Surabaya',
+            'Novotel Balikpapan',
+            'Microsoft Teams',
+        ];
 
-            $j = Jadwal::create($data);
-            $j->pemateri()->sync($pemateriIds);
-            if (!empty($materiIds)) {
-                $j->materi()->sync($materiIds);
+        // Let's map kinds of services to seed them properly
+        $services = JenisLayanan::all()->groupBy('id_kategori');
+
+        $currentDate = Carbon::create(2025, 6, 1);
+        $endDate = Carbon::create(2026, 8, 31);
+
+        $scheduleCounter = 1;
+
+        while ($currentDate->lessThanOrEqualTo($endDate)) {
+            $isPast = $currentDate->isBefore(Carbon::create(2026, 6, 1));
+            $month = $currentDate->month;
+            $year = $currentDate->year;
+
+            // 1. Seed 2-3 Pelatihan K3 (Category ID 1) per month
+            $pelatihanServices = $services->get(1) ?? collect();
+            if ($pelatihanServices->isNotEmpty()) {
+                $count = $isPast ? rand(2, 3) : 3;
+                for ($i = 0; $i < $count; $i++) {
+                    $service = $pelatihanServices->random();
+                    $dayStart = rand(5, 20);
+                    $tglMulai = Carbon::create($year, $month, $dayStart);
+                    $tglSelesai = (clone $tglMulai)->addDays(rand(2, 4));
+
+                    $jenisPertemuan = collect(['online', 'offline', 'hybrid'])->random();
+                    $lokasi = ($jenisPertemuan === 'online') ? 'Zoom Meeting' : collect($locations)->reject(fn($l) => $l === 'Zoom Meeting' || $l === 'Microsoft Teams')->random();
+
+                    $harga = collect([1500000, 2500000, 3500000, 4500000, 5000000, 6500000])->random();
+
+                    $j = Jadwal::create([
+                        'id_kategori' => 1,
+                        'id_jenis' => $service->id_jenis,
+                        'kode_jadwal' => "PLT-{$service->kode_jenis}-" . str_pad($scheduleCounter++, 3, '0', STR_PAD_LEFT),
+                        'jenis_pertemuan' => $jenisPertemuan,
+                        'tgl_mulai' => $tglMulai,
+                        'tgl_selesai' => $tglSelesai,
+                        'jam_pertemuan' => '08:00:00',
+                        'lokasi' => $lokasi,
+                        'kapasitas' => rand(15, 30),
+                        'harga' => $harga,
+                        'deskripsi' => "Pelatihan sertifikasi {$service->nama} tingkat nasional.",
+                        'link_meet' => ($jenisPertemuan !== 'offline') ? 'https://zoom.us/j/' . rand(100000000, 999999999) : null,
+                        'created_at' => (clone $tglMulai)->subDays(rand(20, 30)),
+                        'updated_at' => (clone $tglMulai)->subDays(rand(20, 30)),
+                    ]);
+
+                    // Sync 1-2 random instructors
+                    $j->pemateri()->sync(collect(range(1, 10))->random(rand(1, 2))->toArray());
+                    // Sync 1-2 random materials
+                    $j->materi()->sync(collect(range(1, 3))->random(rand(1, 2))->toArray());
+                }
             }
-        };
 
-        // ==========================
-        // COMPLETED SCHEDULES (PAST)
-        // ==========================
+            // 2. Seed 1 Konsultasi SMK3 (Category ID 2) every 2 months
+            if ($month % 2 === 0) {
+                $konsulServices = $services->get(2) ?? collect();
+                if ($konsulServices->isNotEmpty()) {
+                    $service = $konsulServices->random();
+                    $tglMulai = Carbon::create($year, $month, 10);
+                    $tglSelesai = (clone $tglMulai)->addDays(rand(1, 2));
 
-        // 1. Ahli K3 Umum (AK3U) - Selesai
-        $createJadwal('AK3U', [
-            'jenis_pertemuan' => 'offline',
-            'tgl_mulai' => now()->subDays(30),
-            'tgl_selesai' => now()->subDays(26),
-            'jam_pertemuan' => '08:00:00',
-            'lokasi' => 'Hotel Aston Bandung',
-            'kapasitas' => 30,
-            'harga' => 5000000,
-            'deskripsi' => 'Pelatihan Ahli K3 Umum (Batch Sebelumnya).',
-            'foto' => 'jadwal/training_1.png',
-        ], [3, 4], [1]);
+                    $jenisPertemuan = 'hybrid';
+                    $lokasi = 'Kantor Klien & Hybrid Zoom';
 
-        // 2. Auditor SMK3 (ASMK3) - Selesai
-        $createJadwal('ASMK3', [
-            'jenis_pertemuan' => 'hybrid',
-            'tgl_mulai' => now()->subDays(15),
-            'tgl_selesai' => now()->subDays(12),
-            'jam_pertemuan' => '08:30:00',
-            'lokasi' => 'Zoom & Hotel Hilton Jakarta',
-            'link_meet' => 'https://zoom.us/j/1234567890',
-            'kapasitas' => 20,
-            'harga' => 6500000,
-            'deskripsi' => 'Pelatihan Auditor SMK3 (Batch Sebelumnya).',
-            'foto' => 'jadwal/training_2.png',
-        ], [5], [1, 2]);
+                    $j = Jadwal::create([
+                        'id_kategori' => 2,
+                        'id_jenis' => $service->id_jenis,
+                        'kode_jadwal' => "KST-{$service->kode_jenis}-" . str_pad($scheduleCounter++, 3, '0', STR_PAD_LEFT),
+                        'jenis_pertemuan' => $jenisPertemuan,
+                        'tgl_mulai' => $tglMulai,
+                        'tgl_selesai' => $tglSelesai,
+                        'jam_pertemuan' => '09:00:00',
+                        'lokasi' => $lokasi,
+                        'kapasitas' => 10,
+                        'harga' => collect([15000000, 25000000, 30000000])->random(),
+                        'deskripsi' => "Pendampingan dan konsultasi program {$service->nama}.",
+                        'link_meet' => 'https://zoom.us/j/' . rand(100000000, 999999999),
+                        'created_at' => (clone $tglMulai)->subDays(rand(30, 40)),
+                        'updated_at' => (clone $tglMulai)->subDays(rand(30, 40)),
+                    ]);
 
-        // 3. Juru Las/Welder (WELD) - Selesai
-        $createJadwal('WELD', [
-            'jenis_pertemuan' => 'offline',
-            'tgl_mulai' => now()->subDays(5),
-            'tgl_selesai' => now()->subDays(2),
-            'jam_pertemuan' => '08:00:00',
-            'lokasi' => 'Workshop Las Jakarta',
-            'kapasitas' => 15,
-            'harga' => 4500000,
-            'deskripsi' => 'Pelatihan Juru Las / Welder bersertifikat.',
-            'foto' => 'jadwal/training_3.png',
-        ], [6, 7]);
+                    $j->pemateri()->sync(collect(range(1, 5))->random(rand(1, 2))->toArray());
+                }
+            }
 
-        // 4. Ahli K3 Lingkungan Kerja (AK3LK) - Selesai
-        $createJadwal('AK3LK', [
-            'jenis_pertemuan' => 'online',
-            'tgl_mulai' => now()->subDays(10),
-            'tgl_selesai' => now()->subDays(8),
-            'jam_pertemuan' => '09:00:00',
-            'lokasi' => 'Zoom Meeting',
-            'link_meet' => 'https://zoom.us/j/2345678901',
-            'kapasitas' => 40,
-            'harga' => 3000000,
-            'deskripsi' => 'Pelatihan Ahli K3 Lingkungan Kerja (Online).',
-            'foto' => 'jadwal/training_4.png',
-        ], [8, 9], [1]);
+            // 3. Seed 1 Audit K3 (Category ID 3) every 2 months
+            if ($month % 2 !== 0) {
+                $auditServices = $services->get(3) ?? collect();
+                if ($auditServices->isNotEmpty()) {
+                    $service = $auditServices->random();
+                    $tglMulai = Carbon::create($year, $month, 15);
+                    $tglSelesai = (clone $tglMulai)->addDays(rand(2, 3));
 
-        // ==========================
-        // UPCOMING SCHEDULES (FUTURE)
-        // ==========================
+                    $j = Jadwal::create([
+                        'id_kategori' => 3,
+                        'id_jenis' => $service->id_jenis,
+                        'kode_jadwal' => "ADT-{$service->kode_jenis}-" . str_pad($scheduleCounter++, 3, '0', STR_PAD_LEFT),
+                        'jenis_pertemuan' => 'offline',
+                        'tgl_mulai' => $tglMulai,
+                        'tgl_selesai' => $tglSelesai,
+                        'jam_pertemuan' => '08:30:00',
+                        'lokasi' => 'Pabrik / Site Klien',
+                        'kapasitas' => 5,
+                        'harga' => collect([20000000, 35000000, 45000000])->random(),
+                        'deskripsi' => "Audit Independen {$service->nama} untuk sertifikasi industri.",
+                        'created_at' => (clone $tglMulai)->subDays(rand(25, 35)),
+                        'updated_at' => (clone $tglMulai)->subDays(rand(25, 35)),
+                    ]);
 
-        // 5. Ahli K3 Umum (AK3U) - Akan Datang
-        $createJadwal('AK3U', [
-            'jenis_pertemuan' => 'offline',
-            'tgl_mulai' => now()->addDays(10),
-            'tgl_selesai' => now()->addDays(14),
-            'jam_pertemuan' => '08:00:00',
-            'lokasi' => 'Hotel Aston Bandung',
-            'kapasitas' => 30,
-            'harga' => 5000000,
-            'deskripsi' => 'Pelatihan Ahli K3 Umum sertifikasi Kemnaker RI.',
-            'foto' => 'jadwal/training_1.png',
-        ], [1, 10], [1]);
+                    $j->pemateri()->sync(collect(range(1, 3))->random(1)->toArray());
+                }
+            }
 
-        // 6. Auditor SMK3 (ASMK3) - Akan Datang
-        $createJadwal('ASMK3', [
-            'jenis_pertemuan' => 'offline',
-            'tgl_mulai' => now()->addDays(15),
-            'tgl_selesai' => now()->addDays(18),
-            'jam_pertemuan' => '08:00:00',
-            'lokasi' => 'Hotel Hilton Jakarta',
-            'kapasitas' => 20,
-            'harga' => 6500000,
-            'deskripsi' => 'Pelatihan Auditor SMK3 sertifikasi Kemnaker RI.',
-            'foto' => 'jadwal/training_2.png',
-        ], [2, 5], [2]);
-
-        // 7. Tenaga Kerja Bangunan Tinggi (TKBT) - Akan Datang
-        $createJadwal('TKBT', [
-            'jenis_pertemuan' => 'offline',
-            'tgl_mulai' => now()->addDays(20),
-            'tgl_selesai' => now()->addDays(22),
-            'jam_pertemuan' => '08:00:00',
-            'lokasi' => 'Training Center Veritas',
-            'kapasitas' => 15,
-            'harga' => 3500000,
-            'deskripsi' => 'Pelatihan TKBT sertifikasi Kemnaker RI.',
-            'foto' => 'jadwal/training_3.png',
-        ], [1, 3], [3]);
-
-        // 8. Petugas K3 Kimia & Ahli K3 Kimia (AK3KIM) - Akan Datang (Online, link_meet sengaja kosong untuk testing)
-        $createJadwal('AK3KIM', [
-            'jenis_pertemuan' => 'online',
-            'tgl_mulai' => now()->addDays(12),
-            'tgl_selesai' => now()->addDays(15),
-            'jam_pertemuan' => '09:00:00',
-            'lokasi' => 'Zoom Meeting',
-            'kapasitas' => 40,
-            'harga' => 4000000,
-            'deskripsi' => 'Pelatihan Petugas & Ahli K3 Kimia Kemnaker RI.',
-            'foto' => 'jadwal/training_4.png',
-        ], [6, 2], [1]);
-
-        // 9. SIO Operator Angkat Angkut (SIOAA) - Akan Datang
-        $createJadwal('SIOAA', [
-            'jenis_pertemuan' => 'offline',
-            'tgl_mulai' => now()->addDays(25),
-            'tgl_selesai' => now()->addDays(28),
-            'jam_pertemuan' => '08:00:00',
-            'lokasi' => 'Workshop Veritas Surabaya',
-            'kapasitas' => 25,
-            'harga' => 4500000,
-            'deskripsi' => 'Pelatihan Lisensi K3 SIO Operator Angkat Angkut.',
-            'foto' => 'jadwal/training_1.png',
-        ], [10, 7]);
-
-        // 10. Petugas P3K & Petugas Fireman (P3KFIRE) - Akan Datang
-        $createJadwal('P3KFIRE', [
-            'jenis_pertemuan' => 'online',
-            'tgl_mulai' => now()->addDays(18),
-            'tgl_selesai' => now()->addDays(20),
-            'jam_pertemuan' => '09:00:00',
-            'lokasi' => 'Zoom Meeting',
-            'link_meet' => 'https://zoom.us/j/3456789012',
-            'kapasitas' => 50,
-            'harga' => 1500000,
-            'deskripsi' => 'Pelatihan sertifikasi Petugas P3K & Pemadam Kebakaran.',
-            'foto' => 'jadwal/training_2.png',
-        ], [3, 8], [1]);
+            $currentDate->addMonth();
+        }
     }
 }

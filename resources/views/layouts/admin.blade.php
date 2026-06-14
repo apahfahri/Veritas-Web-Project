@@ -9,11 +9,26 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script type="module" src="http://localhost:5173/resources/js/app.js"></script>
+    @php
+        $manifestPath = public_path('build/manifest.json');
+        $manifest = file_exists($manifestPath) ? json_decode(file_get_contents($manifestPath), true) : null;
+        $jsFile = $manifest['resources/js/app.js']['file'] ?? null;
+        $cssFiles = $manifest['resources/js/app.js']['css'] ?? [];
+    @endphp
+    @if($manifest && $jsFile)
+        @foreach($cssFiles as $css)
+            <link rel="stylesheet" href="{{ asset('build/' . $css) }}">
+        @endforeach
+        <script type="module" src="{{ asset('build/' . $jsFile) }}"></script>
+    @else
+        <script type="module" src="http://localhost:5173/resources/js/app.js"></script>
+    @endif
     <style>
         body { font-family: 'Outfit', sans-serif; }
-        .sidebar-collapsed { width: 5.5rem !important; }
-        .main-expanded { margin-left: 5.5rem !important; }
+        @media (min-width: 1024px) {
+            .sidebar-collapsed { width: 5.5rem !important; }
+            .main-expanded { margin-left: 5.5rem !important; }
+        }
         .hide-text { display: none !important; }
 
         ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -28,7 +43,7 @@
 <body class="min-h-screen bg-slate-50 flex text-slate-800">
 
     <!-- SIDEBAR -->
-    <aside id="sidebar" class="w-72 h-screen bg-gradient-to-b from-slate-900 to-indigo-950 flex flex-col fixed top-0 left-0 z-40 shadow-2xl text-slate-100 transition-all duration-300 ease-in-out select-none">
+    <aside id="sidebar" class="-translate-x-full lg:translate-x-0 w-72 h-screen bg-gradient-to-b from-slate-900 to-indigo-950 flex flex-col fixed top-0 left-0 z-40 shadow-2xl text-slate-100 transition-all duration-300 ease-in-out select-none">
         
         <!-- Logo -->
         <div class="p-6 border-b border-slate-800/80 flex items-center justify-between gap-3 shrink-0 relative">
@@ -155,13 +170,19 @@
     </aside>
 
     <!-- MAIN CONTENT -->
-    <div id="main-content" class="flex-1 ml-72 flex flex-col min-h-screen transition-all duration-300 ease-in-out">
+    <div id="main-content" class="flex-1 ml-0 lg:ml-72 flex flex-col min-h-screen transition-all duration-300 ease-in-out">
         
         <!-- HEADER TOP BAR -->
-        <header class="bg-white border-b border-slate-100 px-8 py-5 flex justify-between items-center sticky top-0 z-30 backdrop-blur-md bg-white/80">
-            <div>
-                <h1 class="text-xl font-black text-slate-900 tracking-tight">@yield('page-title', 'Admin Dashboard')</h1>
-                <p class="text-xs text-slate-500 font-medium mt-0.5">@yield('page-subtitle', 'PT Katiga Veritas Indonesia — Superadmin Access')</p>
+        <header class="bg-white border-b border-slate-100 px-4 lg:px-8 py-5 flex justify-between items-center sticky top-0 z-30 backdrop-blur-md bg-white/80">
+            <div class="flex items-center gap-3">
+                <!-- Hamburger Menu Button (Mobile) -->
+                <button id="mobileSidebarToggle" class="block lg:hidden text-slate-500 hover:text-slate-900 focus:outline-none p-1.5 rounded-lg hover:bg-slate-100 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+                <div>
+                    <h1 class="text-lg lg:text-xl font-black text-slate-900 tracking-tight">@yield('page-title', 'Admin Dashboard')</h1>
+                    <p class="hidden sm:block text-[10px] lg:text-xs text-slate-500 font-medium mt-0.5">@yield('page-subtitle', 'PT Katiga Veritas Indonesia — Superadmin Access')</p>
+                </div>
             </div>
             <div class="flex items-center gap-3">
                 @yield('header-actions')
@@ -219,6 +240,41 @@
             const sidebarTexts = document.querySelectorAll('.sidebar-text');
             const profileToggle = document.getElementById('profileToggle');
             const profileDropdown = document.getElementById('profileDropdown');
+
+            // Mobile Sidebar Toggle
+            const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+            const backdrop = document.createElement('div');
+            backdrop.className = 'fixed inset-0 bg-slate-950/40 backdrop-blur-sm z-30 opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden';
+            document.body.appendChild(backdrop);
+
+            function openMobileSidebar() {
+                sidebar.classList.remove('-translate-x-full');
+                sidebar.classList.add('translate-x-0');
+                backdrop.classList.add('opacity-100', 'pointer-events-auto');
+                backdrop.classList.remove('opacity-0', 'pointer-events-none');
+            }
+
+            function closeMobileSidebar() {
+                sidebar.classList.add('-translate-x-full');
+                sidebar.classList.remove('translate-x-0');
+                backdrop.classList.add('opacity-0', 'pointer-events-none');
+                backdrop.classList.remove('opacity-100', 'pointer-events-auto');
+            }
+
+            if (mobileSidebarToggle) {
+                mobileSidebarToggle.addEventListener('click', openMobileSidebar);
+            }
+            backdrop.addEventListener('click', closeMobileSidebar);
+
+            // Close mobile sidebar on page navigation click (if on mobile)
+            const sidebarLinks = sidebar.querySelectorAll('nav a');
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth < 1024) {
+                        closeMobileSidebar();
+                    }
+                });
+            });
 
             // Global Tooltip Logic
             const tooltip = document.createElement('div');

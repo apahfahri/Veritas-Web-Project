@@ -65,26 +65,32 @@
                     <li class="flex items-start gap-2">
                         <i class="fi fi-rr-marker mt-0.5 text-emerald-400"></i>
                         <span>
-                            Jl. Profesional No. 123, Jakarta Selatan, DKI Jakarta 12345
+                            Jl. Raden Intan, RT.002/RW.002, nob15, Kec. Talang Padang, Kabupaten Tanggamus, Lampung.
                         </span>
                     </li>
 
                     <li class="flex items-center gap-2">
                         <i class="fi fi-rr-phone-call text-emerald-400"></i>
-                        <span>+62 21 1234 5678</span>
+                        <span>0895-1433-8895 / 0812-9850-457</span>
                     </li>
 
                     <li class="flex items-center gap-2">
                         <i class="fi fi-rr-envelope text-emerald-400"></i>
-                        <span>info@katigaveritas.co.id</span>
+                        <a href="mailto:k3veritas@gmail.com" class="hover:underline">k3veritas@gmail.com</a>
                     </li>
 
-                    <li class="flex items-center gap-2">
-                        <i class="fi fi-brands-whatsapp text-emerald-400"></i>
-                        <a href="https://wa.me/6281234567890" target="_blank"
-                           class="hover:underline">
-                            WhatsApp: +62 812 3456 7890
-                        </a>
+                    <li class="flex flex-col gap-2">
+                        <div class="flex items-center gap-2">
+                            <i class="fi fi-brands-whatsapp text-emerald-400"></i>
+                            <a href="https://wa.me/6289514338895" target="_blank" class="hover:underline">
+                                WhatsApp 1: 0895-1433-8895
+                            </a>
+                        </div>
+                        <div class="flex items-center gap-2 pl-6">
+                            <a href="https://wa.me/628129850457" target="_blank" class="hover:underline">
+                                WhatsApp 2: 0812-9850-457
+                            </a>
+                        </div>
                     </li>
 
                 </ul>

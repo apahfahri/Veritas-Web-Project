@@ -167,7 +167,7 @@
                     </div>
                 </div>
                 <div class="flex gap-6">
-                    <div class="w-14 h-14 shrink-0 bg-white rounded-2xl shadow-sm flex items-center justify-center text-2xl text-blue-600"><i class="fi fi-rr-chart-trend-up"></i></div>
+                    <div class="w-14 h-14 shrink-0 bg-white rounded-2xl shadow-sm flex items-center justify-center text-2xl text-blue-600"><i class="fi fi-rr-handshake"></i></div>
                     <div>
                         <h5 class="text-xl font-bold mb-1">Prinsip Syariah</h5>
                         <p class="text-gray-500">Satu-satunya penyedia jasa K3 yang mengedepankan nilai-nilai syariah dalam bermuamalah.</p>

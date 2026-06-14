@@ -16,7 +16,13 @@ class SimplifyCustomTrainingTable extends Migration
         // 1. Drop request_pelatihan table (and its foreign keys) safely
         if (Schema::hasTable('request_pelatihan')) {
             Schema::table('request_pelatihan', function (Blueprint $table) {
-                // Foreign keys will be dropped when the table is dropped
+                // Check if columns exist before dropping their foreign keys
+                if (Schema::hasColumn('request_pelatihan', 'id_pendaftaran')) {
+                    $table->dropForeign(['id_pendaftaran']);
+                }
+                if (Schema::hasColumn('request_pelatihan', 'id_perusahaan')) {
+                    $table->dropForeign(['id_perusahaan']);
+                }
             });
 
             Schema::dropIfExists('request_pelatihan');

@@ -17,7 +17,9 @@ class DatabaseSeeder extends Seeder
             KategoriLayananSeeder::class,  // Isi kategori, jenis, dan kode_jenis
             MateriSeeder::class,          // Jalankan sebelum jadwal agar jadwal bisa melampirkan materi
             JadwalSeeder::class,          // Jalankan setelah kategori/jenis selesai
-            PendaftaranSeeder::class,   // Jalankan setelah jadwal selesai
+            PendaftaranSeeder::class,     // Jalankan setelah jadwal selesai
+            SertifikatSeeder::class,      // Jalankan setelah pendaftaran selesai
+            VerifikasiSeeder::class,      // Jalankan setelah sertifikat selesai
             RekeningSeeder::class,
         ]);
     }
