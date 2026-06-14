@@ -9,7 +9,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script type="module" src="http://localhost:5173/resources/js/app.js"></script>
+    @php
+        $manifestPath = public_path('build/manifest.json');
+        $manifest = file_exists($manifestPath) ? json_decode(file_get_contents($manifestPath), true) : null;
+        $jsFile = $manifest['resources/js/app.js']['file'] ?? null;
+        $cssFiles = $manifest['resources/js/app.js']['css'] ?? [];
+    @endphp
+    @if($manifest && $jsFile)
+        @foreach($cssFiles as $css)
+            <link rel="stylesheet" href="{{ asset('build/' . $css) }}">
+        @endforeach
+        <script type="module" src="{{ asset('build/' . $jsFile) }}"></script>
+    @else
+        <script type="module" src="http://localhost:5173/resources/js/app.js"></script>
+    @endif
     <style>
         body { font-family: 'Outfit', sans-serif; }
         @media (min-width: 1024px) {

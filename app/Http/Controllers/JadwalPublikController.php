@@ -36,7 +36,7 @@ class JadwalPublikController extends Controller
             });
         }
 
-        $jadwals = $query->get();
+        $jadwals = $query->paginate(6)->withQueryString();
         return view('pages.training-list', compact('jadwals'));
     }
 
