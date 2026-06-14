@@ -4,102 +4,47 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use App\Models\Pendaftaran;
+use Carbon\Carbon;
 
 class SertifikatSeeder extends Seeder
 {
     public function run()
     {
-        DB::table('sertifikat')->insert([
-            [
-                'no_sertifikat'  => 'KV-K3-2026-000001',
-                'id_pendaftaran' => 1,
-                'nama_lengkap'   => 'Ahmad Fauzi Ramadan',
-                'tanggal_terbit' => now()->subDays(28)->toDateString(),
-                'file'           => null,
-                'created_at'     => now(),
-                'updated_at'     => now(),
-            ],
-            [
-                'no_sertifikat'  => 'KV-K3-2026-000002',
-                'id_pendaftaran' => 2,
-                'nama_lengkap'   => 'Budi Santoso',
-                'tanggal_terbit' => now()->subDays(14)->toDateString(),
-                'file'           => null,
-                'created_at'     => now(),
-                'updated_at'     => now(),
-            ],
-            [
-                'no_sertifikat'  => 'KV-SMK3-2026-000001',
-                'id_pendaftaran' => 1,
-                'nama_lengkap'   => 'Dewi Puspitasari',
-                'tanggal_terbit' => now()->subDays(12)->toDateString(),
-                'file'           => null,
-                'created_at'     => now(),
-                'updated_at'     => now(),
-            ],
-            [
-                'no_sertifikat'  => 'KV-SMK3-2026-000002',
-                'id_pendaftaran' => 2,
-                'nama_lengkap'   => 'Rizky Ananda Putra',
-                'tanggal_terbit' => now()->subDays(10)->toDateString(),
-                'file'           => null,
-                'created_at'     => now(),
-                'updated_at'     => now(),
-            ],
-            [
-                'no_sertifikat'  => 'KV-WELD-2026-000001',
-                'id_pendaftaran' => 1,
-                'nama_lengkap'   => 'Hendra Kurniawan',
-                'tanggal_terbit' => now()->subDays(4)->toDateString(),
-                'file'           => null,
-                'created_at'     => now(),
-                'updated_at'     => now(),
-            ],
-            [
-                'no_sertifikat'  => 'KV-WELD-2026-000002',
-                'id_pendaftaran' => 2,
-                'nama_lengkap'   => 'Siti Nurhaliza',
-                'tanggal_terbit' => now()->subDays(3)->toDateString(),
-                'file'           => null,
-                'created_at'     => now(),
-                'updated_at'     => now(),
-            ],
-            [
-                'no_sertifikat'  => 'KV-LK-2026-000001',
-                'id_pendaftaran' => 1,
-                'nama_lengkap'   => 'Andi Wijaya Kusuma',
-                'tanggal_terbit' => now()->subDays(9)->toDateString(),
-                'file'           => null,
-                'created_at'     => now(),
-                'updated_at'     => now(),
-            ],
-            [
-                'no_sertifikat'  => 'KV-LK-2026-000002',
-                'id_pendaftaran' => 2,
-                'nama_lengkap'   => 'Fitriani Rahayu',
-                'tanggal_terbit' => now()->subDays(8)->toDateString(),
-                'file'           => null,
-                'created_at'     => now(),
-                'updated_at'     => now(),
-            ],
-            [
-                'no_sertifikat'  => 'KV-P3K-2025-000001',
-                'id_pendaftaran' => 1,
-                'nama_lengkap'   => 'Muhamad Yusuf Hidayat',
-                'tanggal_terbit' => now()->subMonths(6)->toDateString(),
-                'file'           => null,
-                'created_at'     => now(),
-                'updated_at'     => now(),
-            ],
-            [
-                'no_sertifikat'  => 'KV-K3-2025-000099',
-                'id_pendaftaran' => 2,
-                'nama_lengkap'   => 'Rini Setiawati',
-                'tanggal_terbit' => now()->subMonths(3)->toDateString(),
-                'file'           => null,
-                'created_at'     => now(),
-                'updated_at'     => now(),
-            ],
-        ]);
+        $completedRegistrations = Pendaftaran::with(['user', 'jadwal.jenis'])
+            ->where('status_progres', 'selesai')
+            ->orderBy('id_pendaftaran', 'asc')
+            ->get();
+
+        $certCounter = 1;
+
+        foreach ($completedRegistrations as $reg) {
+            $user = $reg->user;
+            $jadwal = $reg->jadwal;
+            
+            if (!$user || !$jadwal) {
+                continue;
+            }
+
+            $kodeJenis = $jadwal->jenis?->kode_jenis ?? 'K3';
+            $tglSelesai = $jadwal->tgl_selesai ?? $reg->tanggal_daftar->addDays(3);
+            $year = $tglSelesai->format('Y');
+
+            $noSertifikat = "KV-{$kodeJenis}-{$year}-" . str_pad($certCounter++, 6, '0', STR_PAD_LEFT);
+            $tglTerbit = (clone $tglSelesai)->addDays(rand(1, 3));
+            $masaBerlaku = (clone $tglTerbit)->addYears(3);
+
+            DB::table('sertifikat')->insert([
+                'no_sertifikat' => $noSertifikat,
+                'id_pendaftaran' => $reg->id_pendaftaran,
+                'nama_lengkap' => $user->nama,
+                'tanggal_terbit' => $tglTerbit->toDateString(),
+                'file_pdf' => 'sertifikat/mock_cert_' . $reg->id_pendaftaran . '.pdf',
+                'masa_berlaku' => $masaBerlaku->toDateString(),
+                'penerbit' => 'PT Katiga Veritas Indonesia',
+                'created_at' => $tglTerbit,
+                'updated_at' => $tglTerbit,
+            ]);
+        }
     }
 }
