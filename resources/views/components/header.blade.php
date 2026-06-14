@@ -17,25 +17,25 @@
 
             <!-- Navigation -->
             <div class="hidden lg:flex gap-4">
-                <a href="/" class="px-3 py-2 hover:text-[#1E6B3D] transition-colors font-medium">Beranda</a>
+                <a href="/" class="px-3 py-2 hover:text-[#1E6B3D] transition-colors font-medium {{ request()->is('/') ? 'text-[#1E6B3D] font-bold' : 'text-gray-600' }}">Beranda</a>
                 
                 <!-- Layanan Dropdown -->
                 <div class="relative group">
-                    <button class="px-3 py-2 flex items-center gap-1 hover:text-[#1E6B3D] transition-colors font-medium">
+                    <button class="px-3 py-2 flex items-center gap-1 hover:text-[#1E6B3D] transition-colors font-medium {{ ((request()->is('training*') && !request()->routeIs('training.status*')) || request()->is('consultation*') || request()->is('audit*')) ? 'text-[#1E6B3D] font-bold' : 'text-gray-600' }}">
                         Layanan
                         <svg class="w-4 h-4 text-gray-400 group-hover:text-[#1E6B3D] transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </button>
                     <div class="absolute left-0 mt-0 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-2 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300 z-50 translate-y-2 group-hover:translate-y-0">
-                        <a href="/training" class="block px-4 py-2 hover:bg-[#1E6B3D]/10 hover:text-[#1E6B3D] transition-colors">Pelatihan</a>
-                        <a href="/consultation" class="block px-4 py-2 hover:bg-[#1E6B3D]/10 hover:text-[#1E6B3D] transition-colors">Konsultasi</a>
-                        <a href="/audit" class="block px-4 py-2 hover:bg-[#1E6B3D]/10 hover:text-[#1E6B3D] transition-colors">Audit</a>
+                        <a href="/training" class="block px-4 py-2 hover:bg-[#1E6B3D]/10 hover:text-[#1E6B3D] transition-colors {{ (request()->is('training*') && !request()->routeIs('training.status*')) ? 'bg-[#1E6B3D]/10 text-[#1E6B3D] font-semibold' : 'text-gray-700' }}">Pelatihan</a>
+                        <a href="/consultation" class="block px-4 py-2 hover:bg-[#1E6B3D]/10 hover:text-[#1E6B3D] transition-colors {{ request()->is('consultation*') ? 'bg-[#1E6B3D]/10 text-[#1E6B3D] font-semibold' : 'text-gray-700' }}">Konsultasi</a>
+                        <a href="/audit" class="block px-4 py-2 hover:bg-[#1E6B3D]/10 hover:text-[#1E6B3D] transition-colors {{ request()->is('audit*') ? 'bg-[#1E6B3D]/10 text-[#1E6B3D] font-semibold' : 'text-gray-700' }}">Audit</a>
                     </div>
                 </div>
 
-                <a href="{{ route('training.status') }}" class="px-3 py-2 hover:text-[#1E6B3D] transition-colors font-medium">Cek Status</a>
-                <a href="/verification" class="px-3 py-2 hover:text-[#1E6B3D] transition-colors font-medium">Verifikasi</a>
+                <a href="{{ route('training.status') }}" class="px-3 py-2 hover:text-[#1E6B3D] transition-colors font-medium {{ request()->routeIs('training.status') ? 'text-[#1E6B3D] font-bold' : 'text-gray-600' }}">Cek Status</a>
+                <a href="/verification" class="px-3 py-2 hover:text-[#1E6B3D] transition-colors font-medium {{ request()->is('verification*') ? 'text-[#1E6B3D] font-bold' : 'text-gray-600' }}">Verifikasi</a>
             </div>
 
             <!-- Auth Buttons -->
@@ -112,6 +112,64 @@
                 @endauth
             </div>
 
+            <!-- Hamburger Menu Button (Mobile) -->
+            <div class="flex lg:hidden items-center gap-4">
+                @auth
+                    <div class="w-8 h-8 rounded-full bg-[#1E6B3D] flex items-center justify-center text-white text-xs font-bold shadow-sm">
+                        {{ strtoupper(substr(Auth::user()->username, 0, 1)) }}
+                    </div>
+                @endauth
+                <button id="mobile-menu-button" class="text-gray-600 hover:text-[#1E6B3D] focus:outline-none p-2 rounded-xl bg-gray-50 border border-gray-100 transition-all">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Mobile Menu (Collapsible) -->
+        <div id="mobile-menu" class="hidden lg:hidden border-t border-gray-100 bg-white py-4 px-2 space-y-2">
+            <a href="/" class="block px-4 py-2.5 hover:bg-[#1E6B3D]/10 hover:text-[#1E6B3D] transition-colors rounded-xl font-medium {{ request()->is('/') ? 'text-[#1E6B3D] font-bold bg-[#1E6B3D]/5' : 'text-gray-600' }}">Beranda</a>
+            
+            <div class="px-4 py-2 text-xs font-bold text-gray-400 uppercase tracking-widest">Layanan</div>
+            <div class="pl-4 space-y-1">
+                <a href="/training" class="block px-4 py-2 hover:bg-[#1E6B3D]/10 hover:text-[#1E6B3D] transition-colors rounded-xl font-medium {{ (request()->is('training*') && !request()->routeIs('training.status*')) ? 'text-[#1E6B3D] font-semibold bg-[#1E6B3D]/5' : 'text-gray-600' }}">Pelatihan</a>
+                <a href="/consultation" class="block px-4 py-2 hover:bg-[#1E6B3D]/10 hover:text-[#1E6B3D] transition-colors rounded-xl font-medium {{ request()->is('consultation*') ? 'text-[#1E6B3D] font-semibold bg-[#1E6B3D]/5' : 'text-gray-600' }}">Konsultasi</a>
+                <a href="/audit" class="block px-4 py-2 hover:bg-[#1E6B3D]/10 hover:text-[#1E6B3D] transition-colors rounded-xl font-medium {{ request()->is('audit*') ? 'text-[#1E6B3D] font-semibold bg-[#1E6B3D]/5' : 'text-gray-600' }}">Audit</a>
+            </div>
+
+            <a href="{{ route('training.status') }}" class="block px-4 py-2.5 hover:bg-[#1E6B3D]/10 hover:text-[#1E6B3D] transition-colors rounded-xl font-medium {{ request()->routeIs('training.status') ? 'text-[#1E6B3D] font-bold bg-[#1E6B3D]/5' : 'text-gray-600' }}">Cek Status</a>
+            <a href="/verification" class="block px-4 py-2.5 hover:bg-[#1E6B3D]/10 hover:text-[#1E6B3D] transition-colors rounded-xl font-medium {{ request()->is('verification*') ? 'text-[#1E6B3D] font-bold bg-[#1E6B3D]/5' : 'text-gray-600' }}">Verifikasi</a>
+
+            @auth
+                <div class="my-3 border-t border-gray-100"></div>
+                <div class="px-4 py-2 text-xs font-bold text-gray-400 uppercase tracking-widest">Akun</div>
+                <div class="pl-4 space-y-1">
+                    <a href="{{ Auth::user()->isSubadmin() ? route('subadmin.dashboard') : route('admin.dashboard') }}" class="block px-4 py-2 hover:bg-[#1E6B3D]/10 hover:text-[#1E6B3D] transition-colors rounded-xl font-bold text-gray-700">
+                        Dashboard Admin
+                    </a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="w-full text-left block px-4 py-2 text-red-600 hover:bg-red-50 rounded-xl transition-all font-bold">
+                            Logout
+                        </button>
+                    </form>
+                </div>
+            @endauth
         </div>
     </nav>
 </header>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+    });
+</script>
