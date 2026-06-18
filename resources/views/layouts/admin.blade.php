@@ -27,10 +27,41 @@
     @endif
     <style>
         body { font-family: 'Outfit', sans-serif; }
-        @media (min-width: 1024px) {
-            .sidebar-collapsed { width: 5.5rem !important; }
-            .main-expanded { margin-left: 5.5rem !important; }
+
+        /* ── Layout Stability Fix ─────────────────────────────────────────
+           Sidebar is position:fixed so it's out of normal flow.
+           Main content uses margin-left to offset itself. We define the
+           sidebar width as a CSS variable so both sidebar and margin stay
+           in sync at every zoom level.
+        ────────────────────────────────────────────────────────────────── */
+        :root {
+            --sidebar-w: 18rem;       /* = w-72 = 288px */
+            --sidebar-collapsed-w: 5.5rem;
         }
+
+        /* Prevent body from ever showing a horizontal scrollbar */
+        html, body { overflow-x: hidden; max-width: 100%; }
+
+        /* Sidebar always fixed width */
+        #sidebar { width: var(--sidebar-w); }
+
+        /* Main content: always occupies remaining width, never overflows */
+        #main-content {
+            min-width: 0;
+            max-width: 100%;
+            /* On desktop, compensate for the fixed sidebar */
+        }
+        @media (min-width: 1024px) {
+            #main-content { margin-left: var(--sidebar-w); }
+            #sidebar.sidebar-collapsed { width: var(--sidebar-collapsed-w) !important; }
+            #main-content.main-expanded { margin-left: var(--sidebar-collapsed-w) !important; }
+        }
+
+        /* Remove old Tailwind margin so CSS var takes over on desktop */
+        @media (min-width: 1024px) {
+            #main-content.lg\:ml-72 { margin-left: var(--sidebar-w); }
+        }
+
         .hide-text { display: none !important; }
 
         ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -39,10 +70,13 @@
         ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.5); }
         .profile-dropdown { transition: all 0.2s ease-in-out; max-height: 0; overflow: hidden; opacity: 0; }
         .profile-dropdown.show { max-height: 200px; opacity: 1; margin-top: 0.5rem; }
+
+        /* Ensure tables with overflow-x-auto don't bleed out of their container */
+        .overflow-x-auto { max-width: 100%; }
     </style>
     @stack('styles')
 </head>
-<body class="min-h-screen bg-slate-50 flex text-slate-800">
+<body class="min-h-screen bg-slate-50 flex text-slate-800 overflow-x-hidden">
 
     <!-- SIDEBAR -->
     <aside id="sidebar" class="-translate-x-full lg:translate-x-0 w-72 h-screen bg-gradient-to-b from-slate-900 to-indigo-950 flex flex-col fixed top-0 left-0 z-40 shadow-2xl text-slate-100 transition-all duration-300 ease-in-out select-none">
@@ -172,7 +206,7 @@
     </aside>
 
     <!-- MAIN CONTENT -->
-    <div id="main-content" class="flex-1 ml-0 lg:ml-72 flex flex-col min-h-screen transition-all duration-300 ease-in-out">
+    <div id="main-content" class="flex-1 min-w-0 ml-0 lg:ml-72 flex flex-col min-h-screen transition-all duration-300 ease-in-out overflow-x-hidden">
         
         <!-- HEADER TOP BAR -->
         <header class="bg-white border-b border-slate-100 px-4 lg:px-8 py-5 flex justify-between items-center sticky top-0 z-30 backdrop-blur-md bg-white/80">
@@ -212,7 +246,7 @@
         </header>
 
         <!-- PAGE BODY -->
-        <main class="p-8 flex-1 bg-slate-50">
+        <main class="p-6 flex-1 bg-slate-50 min-w-0 w-full">
             @if($errors->any())
                 <div class="mb-6 bg-red-50/70 border border-red-200/60 rounded-2xl p-4 backdrop-blur-sm">
                     <ul class="text-sm text-red-700 font-medium space-y-1">
