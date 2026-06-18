@@ -25,9 +25,10 @@ class SubadminPendaftaranController extends Controller
 
     public function index(Request $request)
     {
-        $query = Pendaftaran::whereHas('jadwal.kategori', function($q) {
-            $q->where('nama', 'like', '%Pelatihan%');
-        })->with(['user', 'jadwal.jenis', 'jadwal.kategori']);
+        $query = Pendaftaran::where('is_kustom', false)
+            ->whereHas('jadwal.kategori', function($q) {
+                $q->where('nama', 'like', '%Pelatihan%');
+            })->with(['user', 'jadwal.jenis', 'jadwal.kategori']);
 
         $query->latest();
 
@@ -58,9 +59,10 @@ class SubadminPendaftaranController extends Controller
 
     public function show($id)
     {
-        $query = Pendaftaran::whereHas('jadwal.kategori', function($q) {
-            $q->where('nama', 'like', '%Pelatihan%');
-        })->with(['user', 'jadwal.jenis', 'sertifikat']);
+        $query = Pendaftaran::where('is_kustom', false)
+            ->whereHas('jadwal.kategori', function($q) {
+                $q->where('nama', 'like', '%Pelatihan%');
+            })->with(['user', 'jadwal.jenis', 'sertifikat']);
 
         $pendaftaran = $query->findOrFail($id);
         $rekening = \App\Models\Rekening::where('status_aktif', true)->first();
@@ -116,6 +118,7 @@ class SubadminPendaftaranController extends Controller
             'year' => $request->year ?? date('Y'),
             'month' => $request->month,
             'category_name_like' => 'Pelatihan',
+            'is_kustom' => false,
         ];
 
         return Excel::download(new PendaftaranExport($filters), 'laporan-pendaftaran-' . now()->format('Ymd') . '.xlsx');
@@ -208,26 +211,26 @@ class SubadminPendaftaranController extends Controller
     }
 
     /**
-     * Batalkan pendaftaran dari bukti yang tidak valid
+     * Tolak bukti pembayaran yang tidak valid
      */
-    public function batalkanPendaftaran($id)
+    public function tolakBuktiPembayaran($id)
     {
         $pendaftaran = $this->findByBranch($id);
-        $oldStatus   = $pendaftaran->status_progres;
+        $oldStatus   = $pendaftaran->status_bayar;
 
         $pendaftaran->update([
-            'status_progres' => 'dibatalkan',
+            'status_bayar' => 'ditolak',
         ]);
 
-        if ($oldStatus !== 'dibatalkan') {
-            $notification = new PendaftaranStatusNotification($pendaftaran, 'dibatalkan');
+        if ($oldStatus !== 'ditolak') {
+            $notification = new PendaftaranStatusNotification($pendaftaran, 'menunggu_pembayaran'); // or a specific notification context if exists
             $pendaftaran->user?->notify($notification);
             if ($pendaftaran->user?->no_telp) {
                 try { $notification->sendWhatsapp($pendaftaran->user->no_telp); } catch (\Exception $e) {}
             }
         }
 
-        return redirect()->back()->with('success', 'Pendaftaran berhasil dibatalkan.');
+        return redirect()->back()->with('success', 'Bukti pembayaran ditolak. Pendaftar akan diminta untuk mengunggah ulang.');
     }
 
     /**
@@ -235,9 +238,10 @@ class SubadminPendaftaranController extends Controller
      */
     private function findByBranch($id): Pendaftaran
     {
-        $query  = Pendaftaran::whereHas('jadwal.kategori', function($q) {
-            $q->where('nama', 'like', '%Pelatihan%');
-        });
+        $query  = Pendaftaran::where('is_kustom', false)
+            ->whereHas('jadwal.kategori', function($q) {
+                $q->where('nama', 'like', '%Pelatihan%');
+            });
 
         return $query->findOrFail($id);
     }

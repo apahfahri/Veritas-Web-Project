@@ -68,6 +68,7 @@
         <table class="w-full text-left border-collapse">
             <thead>
                 <tr class="bg-slate-100/50 border-b-2 border-slate-100">
+                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">ID</th>
                     <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Nama Pendaftar</th>
                     <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Kategori Layanan</th>
                     <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Tgl Daftar</th>
@@ -78,7 +79,10 @@
             </thead>
             <tbody class="divide-y divide-slate-50">
                 @forelse($pendaftarans as $p)
-                <tr class="hover:bg-slate-50/50 transition-colors group">
+                <tr class="hover:bg-slate-50/50 transition-colors group cursor-pointer" onclick="window.location='{{ route('admin.pendaftaran.show', $p->id_pendaftaran) }}'">
+                    <td class="p-6 text-[12px] font-black tracking-widest text-slate-900 group-hover:text-indigo-600 transition-colors">
+                        {{ $p->nomor_pendaftaran ? substr($p->nomor_pendaftaran, 0, 5) : 'ID-'.$p->id_pendaftaran }}
+                    </td>
                     <td class="p-6">
                         <div class="flex flex-col">
                             <span class="text-[12px] font-medium text-slate-900 group-hover:text-indigo-600 transition">{{ $p->user?->nama }}</span>
@@ -87,6 +91,13 @@
                     </td>
                     <td class="p-6">
                         <span class="text-[12px] font-medium text-slate-900 leading-relaxed">{{ $p->jadwal?->jenis?->nama ?? ($p->jadwal?->kategori?->nama ?? '-') }}</span>
+                        @if($p->jadwal && $p->jadwal->status_pelaksanaan === 'Berlangsung')
+                            <div class="mt-1.5">
+                                <span class="inline-flex px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest border bg-rose-50 text-rose-600 border-rose-200 items-center gap-1.5 w-max">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span> Berlangsung
+                                </span>
+                            </div>
+                        @endif
                     </td>
                     <td class="p-6 whitespace-nowrap">
                         <span class="text-[12px] font-medium text-slate-900">{{ $p->tanggal_daftar ? $p->tanggal_daftar->format('d M Y') : '-' }}</span>
@@ -123,26 +134,22 @@
                     </td>
                     <td class="p-6">
                         <div class="flex items-center justify-center gap-2">
-                            <a href="{{ route('admin.pendaftaran.show', $p->id_pendaftaran) }}"
-                               class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-indigo-600 hover:text-indigo-600 hover:shadow-lg hover:shadow-indigo-50 transition shadow-sm group/btn">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                            </a>
-                            @if($p->status_progres === 'selesai' && $p->status_bayar === 'lunas' && !$p->sertifikat)
-                            <a href="{{ route('admin.sertifikat.create', $p->id_pendaftaran) }}"
-                               title="Terbitkan Sertifikat"
-                               class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-amber-500 hover:text-amber-500 hover:shadow-lg hover:shadow-amber-50 transition shadow-sm">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138z"></path></svg>
-                            </a>
-                            @endif
+                            <form action="{{ route('admin.pendaftaran.destroy', $p->id_pendaftaran) }}" method="POST" onsubmit="event.stopPropagation(); return confirm('Apakah Anda yakin ingin menghapus pendaftaran ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" onclick="event.stopPropagation()" class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-red-600 hover:text-red-600 hover:shadow-lg hover:shadow-red-50 transition shadow-sm group/btn" title="Hapus">
+                                    <i class="fi fi-rr-trash"></i>
+                                </button>
+                            </form>
                         </div>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="p-20 text-center">
+                    <td colspan="7" class="p-20 text-center">
                         <div class="flex flex-col items-center">
                             <div class="w-20 h-20 bg-slate-50 text-slate-200 rounded-3xl flex items-center justify-center mb-4">
-                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                <i class="fi fi-rr-book-alt w-10 h-10"></i>
                             </div>
                             <p class="text-sm font-black text-slate-400 uppercase tracking-widest">Tidak ada data pendaftaran</p>
                         </div>

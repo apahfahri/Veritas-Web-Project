@@ -3,11 +3,25 @@
 @section('page-title', 'Daftar Materi Pelatihan')
 
 @section('content')
-<div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-    <div class="px-7 py-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/30">
-        <h2 class="text-xl font-black text-slate-900">Data Materi</h2>
-        <a href="{{ route('subadmin.materi.create') }}" class="bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-indigo-600/20 hover:bg-indigo-700 hover:shadow-indigo-600/40 transition-all duration-300">
-            + Tambah Materi Baru
+<div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
+    <div class="p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-slate-50/30 border-b border-slate-100">
+        <form method="GET" action="{{ route('subadmin.materi.index') }}" class="flex flex-wrap items-center gap-3 w-full md:flex-1">
+            <div class="relative flex-1 min-w-[200px]">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                    <i class="fi fi-rr-search"></i>
+                </span>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari materi..." class="w-full bg-slate-50 border border-slate-200/80 rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium text-slate-700 outline-none focus:ring-2 focus:ring-cyan-500 transition">
+            </div>
+            <button type="submit" class="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fi fi-rr-search"></i> Cari Data
+            </button>
+            @if(request()->filled('search'))
+                <a href="{{ route('subadmin.materi.index') }}" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm px-4 py-2.5 rounded-xl transition">Reset</a>
+            @endif
+        </form>
+
+        <a href="{{ route('subadmin.materi.create') }}" class="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-md transition whitespace-nowrap flex items-center gap-2">
+            <i class="fi fi-rr-plus"></i> Tambah Materi
         </a>
     </div>
 
@@ -17,44 +31,52 @@
         </div>
     @endif
 
-    <div class="p-7">
-        <div class="overflow-x-auto rounded-xl border border-slate-100">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="bg-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                        <th class="px-6 py-4 border-b border-slate-100">No</th>
-                        <th class="px-6 py-4 border-b border-slate-100">Judul Materi</th>
-                        <th class="px-6 py-4 border-b border-slate-100">Deskripsi</th>
-                        <th class="px-6 py-4 border-b border-slate-100">File</th>
-                        <th class="px-6 py-4 border-b border-slate-100 text-right">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="text-sm font-medium text-slate-600">
-                    @forelse($materis as $m)
-                    <tr class="hover:bg-slate-50 transition border-b border-slate-50 last:border-none">
-                        <td class="px-6 py-4">{{ $loop->iteration }}</td>
-                        <td class="px-6 py-4 font-bold text-slate-800">{{ $m->judul }}</td>
-                        <td class="px-6 py-4 text-xs text-slate-500">{{ Str::limit($m->deskripsi, 50) }}</td>
-                        <td class="px-6 py-4">
-                            <a href="{{ Storage::url($m->file_path) }}" target="_blank" class="text-indigo-600 hover:text-indigo-800 text-xs font-bold underline">Lihat PDF</a>
-                        </td>
-                        <td class="px-6 py-4 text-right space-x-2">
-                            <a href="{{ route('subadmin.materi.edit', $m->id_materi) }}" class="inline-flex items-center justify-center bg-amber-100 text-amber-700 hover:bg-amber-200 px-4 py-2 rounded-lg text-xs font-bold transition">Edit</a>
-                            <form action="{{ route('subadmin.materi.destroy', $m->id_materi) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus materi ini?');">
+    <div class="overflow-x-auto select-none">
+        <table class="w-full text-left border-collapse">
+            <thead class="bg-slate-50 border-b border-slate-100">
+                <tr>
+                    <th class="px-5 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">No</th>
+                    <th class="px-5 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">Judul Materi</th>
+                    <th class="px-5 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">Deskripsi</th>
+                    <th class="px-5 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">File</th>
+                    <th class="px-5 py-4 text-right text-[10px] font-black uppercase tracking-widest text-slate-400">Aksi</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+                @forelse($materis as $m)
+                <tr class="hover:bg-slate-50/80 transition cursor-pointer group" onclick="window.open('{{ Storage::url($m->file_path) }}', '_blank')">
+                    <td class="p-4 text-sm font-medium text-slate-600">{{ $loop->iteration }}</td>
+                    <td class="p-4 font-bold text-slate-800 text-sm">{{ $m->judul }}</td>
+                    <td class="p-4 text-xs text-slate-500 max-w-xs truncate">{{ Str::limit($m->deskripsi, 50) }}</td>
+                    <td class="p-4">
+                        <a href="{{ Storage::url($m->file_path) }}" target="_blank" class="text-cyan-600 hover:text-cyan-800 text-xs font-black uppercase tracking-wider transition">Lihat PDF</a>
+                    </td>
+                    <td class="p-4 text-right">
+                        <div class="flex items-center justify-end gap-2">
+                            <a href="{{ route('subadmin.materi.edit', $m->id_materi) }}" onclick="event.stopPropagation()" class="text-cyan-600 hover:text-cyan-800 bg-cyan-50 hover:bg-cyan-100 w-8 h-8 rounded-lg flex items-center justify-center transition" title="Edit">
+                                <i class="fi fi-rr-edit"></i>
+                            </a>
+                            <form action="{{ route('subadmin.materi.destroy', $m->id_materi) }}" method="POST" class="inline" onsubmit="event.stopPropagation(); return confirm('Yakin ingin menghapus materi ini?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="inline-flex items-center justify-center bg-red-100 text-red-700 hover:bg-red-200 px-4 py-2 rounded-lg text-xs font-bold transition">Hapus</button>
+                                <button type="submit" onclick="event.stopPropagation()" class="text-rose-500 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 w-8 h-8 rounded-lg flex items-center justify-center transition" title="Hapus">
+                                    <i class="fi fi-rr-trash"></i>
+                                </button>
                             </form>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="5" class="px-6 py-8 text-center text-slate-400 text-sm">Belum ada data materi.</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="5" class="p-12 text-center text-slate-400 text-sm font-medium">Belum ada data materi.</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="p-6 border-t border-slate-100 flex justify-center">
+        {{ $materis->links() }}
     </div>
 </div>
 @endsection

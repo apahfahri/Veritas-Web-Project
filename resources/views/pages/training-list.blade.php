@@ -83,6 +83,24 @@
                                 <i class="fi fi-rr-graduation-cap text-4xl text-white/70"></i>
                             </div>
                         @endif
+
+                        <!-- Floating Status Badge -->
+                        <div class="absolute top-3 right-3 z-10">
+                            @if($pelatihan->status_pelaksanaan === 'Berlangsung')
+                                <span class="bg-rose-500 text-white text-[10px] font-bold tracking-wider uppercase px-2.5 py-1.5 rounded-lg shadow-md flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
+                                    Berlangsung
+                                </span>
+                            @elseif($pelatihan->status_pelaksanaan === 'Akan Datang')
+                                <span class="bg-sky-500 text-white text-[10px] font-bold tracking-wider uppercase px-2.5 py-1.5 rounded-lg shadow-md">
+                                    Akan Datang
+                                </span>
+                            @else
+                                <span class="bg-slate-600 text-white text-[10px] font-bold tracking-wider uppercase px-2.5 py-1.5 rounded-lg shadow-md">
+                                    {{ $pelatihan->status_pelaksanaan }}
+                                </span>
+                            @endif
+                        </div>
                     </div>
                     
                     <div class="p-6 flex-1 flex flex-col justify-between">

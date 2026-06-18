@@ -106,24 +106,24 @@
         <div>
             <div class="flex gap-2">
                 <button type="submit" class="flex-1 bg-slate-900 text-white py-3.5 rounded-2xl text-sm font-black hover:bg-slate-800 transition shadow-lg shadow-slate-200 flex items-center justify-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 8.293A1 1 0 013 7.586V4z"></path></svg>
+                    <i class="fi fi-rr-filter"></i>
                     Filter
                 </button>
                 
                 @if(request()->anyFilled(['start_date', 'end_date']))
                     <a href="{{ route('admin.laporan.index', ['type' => $type]) }}" class="px-5 bg-slate-100 text-slate-500 hover:bg-slate-200 transition rounded-2xl flex items-center justify-center" title="Reset Rentang Tanggal">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H18.2"></path></svg>
+                        <i class="fi fi-rr-refresh"></i>
                     </a>
                 @endif
 
                 <!-- Excel Export -->
                 <button type="button" onclick="exportTableToExcel('laporan-datatable')" class="px-5 bg-emerald-50 text-emerald-600 border border-emerald-100 hover:bg-emerald-100/60 rounded-2xl flex items-center justify-center transition" title="Export Excel (.csv)">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <i class="fi fi-rr-download"></i>
                 </button>
 
                 <!-- PDF/Print Export -->
                 <button type="button" onclick="window.print()" class="px-5 bg-indigo-50 text-indigo-600 border border-indigo-100 hover:bg-indigo-100/60 rounded-2xl flex items-center justify-center transition" title="Cetak / Ekspor PDF">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                    <i class="fi fi-rr-database"></i>
                 </button>
             </div>
         </div>
@@ -142,7 +142,7 @@
         <!-- Widget 1: Total Omset -->
         <div class="bg-white p-6 lg:p-8 rounded-[2rem] shadow-sm border border-slate-100 flex items-center gap-5 hover:shadow-md transition">
             <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center shadow-sm shrink-0">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <i class="fi fi-rr-dollar"></i>
             </div>
             <div>
                 <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest">Total Omset Masuk</p>
@@ -153,7 +153,7 @@
         <!-- Widget 2: Total Piutang -->
         <div class="bg-white p-6 lg:p-8 rounded-[2rem] shadow-sm border border-slate-100 flex items-center gap-5 hover:shadow-md transition">
             <div class="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center shadow-sm shrink-0">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <i class="fi fi-rr-time-past w-7 h-7"></i>
             </div>
             <div>
                 <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest">Total Piutang Berjalan</p>

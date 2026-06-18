@@ -4,7 +4,7 @@
 @section('page-title', 'Edit Data Sertifikat')
 
 @section('content')
-<div class="bg-white rounded-3xl border border-slate-100 p-8 shadow-sm max-w-xl select-none">
+<div class="bg-white rounded-[2rem] border border-slate-100 p-8 shadow-sm max-w-xl select-none">
     <h3 class="text-lg font-black text-slate-900 tracking-tight mb-6">Ubah Data Sertifikat</h3>
 
     <form method="POST" action="{{ route('subadmin.sertifikat.update', $sertifikat->no_sertifikat) }}">

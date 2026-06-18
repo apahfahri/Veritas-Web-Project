@@ -16,7 +16,7 @@
                     <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Hanya pendaftaran berstatus 'Selesai' & 'Lunas' yang belum diunggah sertifikatnya</p>
                 </div>
                 <button onclick="toggleSelectionModal()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-slate-900 transition shadow-sm">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    <i class="fi fi-rr-cross"></i>
                 </button>
             </div>
             <div class="p-6 lg:p-8">
@@ -56,7 +56,7 @@
                                 <td colspan="4" class="p-20 text-center">
                                     <div class="flex flex-col items-center">
                                         <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-200 mb-4">
-                                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 00-2 2H6a2 2 0 00-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+                                            <i class="fi fi-rr-computer"></i>
                                         </div>
                                         <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest leading-relaxed">Tidak ada pendaftaran lunas<br>yang siap diunggah sertifikatnya</p>
                                     </div>
@@ -79,12 +79,12 @@
     <div class="flex items-center gap-3">
         <button onclick="openImportModal()"
                 class="bg-white border border-slate-200 text-slate-700 px-6 py-3 rounded-2xl hover:bg-slate-50 transition shadow-sm flex items-center gap-2 text-sm font-black group">
-            <svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+            <i class="fi fi-rr-upload text-slate-400 group-hover:text-slate-600 transition"></i>
             Import CSV & ZIP
         </button>
         <button onclick="toggleSelectionModal()" 
                 class="bg-slate-900 text-white px-6 py-3 rounded-2xl hover:bg-slate-800 transition shadow-lg shadow-slate-200 flex items-center gap-2 text-sm font-black group">
-            <svg class="w-5 h-5 text-cyan-400 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path></svg>
+            <i class="fi fi-rr-copy text-cyan-400 group-hover:rotate-90 transition-transform duration-300"></i>
             Unggah Dokumen Baru
         </button>
     </div>
@@ -128,17 +128,17 @@
                     <td class="p-6 text-center">
                         <div class="flex items-center justify-center gap-2">
                             <a href="{{ route('admin.sertifikat.show', $s->no_sertifikat) }}" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-red-500 hover:text-red-500 hover:shadow-lg hover:shadow-red-50 transition shadow-sm" title="Lihat PDF">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                <i class="fi fi-rr-download"></i>
                             </a>
                             <a href="{{ route('admin.sertifikat.edit', $s->no_sertifikat) }}" class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-amber-500 hover:text-amber-500 hover:shadow-lg hover:shadow-amber-50 transition shadow-sm" title="Edit">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-5M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                                <i class="fi fi-rr-edit"></i>
                             </a>
                             <form action="{{ route('admin.sertifikat.destroy', $s->no_sertifikat) }}" method="POST" class="delete-form" data-name="Sertifikat {{ $s->no_sertifikat }}">
                                 @csrf
                                 @method('DELETE')
                                 <input type="hidden" name="kembalikan_ke_proses" value="0" id="kembalikan_{{ str_replace('-','_',$s->no_sertifikat) }}">
                                 <button type="button" onclick="confirmDelete('{{ $s->no_sertifikat }}')" class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-red-500 hover:text-red-500 hover:shadow-lg hover:shadow-red-50 transition shadow-sm" title="Hapus">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v1m3 5V4"></path></svg>
+                                    <i class="fi fi-rr-trash"></i>
                                 </button>
                             </form>
                         </div>
@@ -149,7 +149,7 @@
                     <td colspan="6" class="p-24 text-center">
                         <div class="flex flex-col items-center">
                             <div class="w-20 h-20 bg-slate-50 text-slate-200 rounded-3xl flex items-center justify-center mb-4">
-                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 00-2 2H6a2 2 0 00-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+                                <i class="fi fi-rr-computer"></i>
                             </div>
                             <p class="text-sm font-black text-slate-400 uppercase tracking-widest">Belum ada dokumen yang diunggah</p>
                             <button onclick="toggleSelectionModal()" class="mt-4 text-xs font-bold text-indigo-600 hover:underline">Unggah Dokumen Pertama</button>
@@ -224,7 +224,7 @@
                 <p class="text-[10px]">*) Kolom <span class="font-bold text-slate-700">nomor_pendaftaran</span> dapat berupa nomor pendaftaran, ID pendaftaran, atau email peserta.</p>
                 <p class="text-[10px]">*) Berkas PDF di ZIP dicocokkan dengan kolom <span class="font-bold text-slate-700">file_name</span>.</p>
                 <a href="{{ route('admin.sertifikat.import-template') }}" class="inline-flex items-center gap-1.5 text-indigo-600 hover:underline font-bold mt-1">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    <i class="fi fi-rr-download"></i>
                     Unduh Template CSV
                 </a>
             </div>

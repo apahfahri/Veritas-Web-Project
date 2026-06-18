@@ -86,5 +86,13 @@ class PendaftaranAdminController extends Controller
 
         return back()->with('success', 'Status pendaftaran berhasil diperbarui.');
     }
+
+    public function destroy($id)
+    {
+        $pendaftaran = Pendaftaran::findOrFail($id);
+        $pendaftaran->delete();
+
+        return back()->with('success', 'Pendaftaran berhasil dihapus.');
+    }
 }
 

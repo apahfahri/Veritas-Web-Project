@@ -20,6 +20,9 @@ class Kernel extends ConsoleKernel
         
         // Auto close passed trainings daily at 00:05
         $schedule->command('pendaftaran:auto-close-trainings')->dailyAt('00:05');
+
+        // Custom Training H-3 Reminder
+        $schedule->command('veritas:send-h3-reminder')->dailyAt('08:00');
     }
 
     /**

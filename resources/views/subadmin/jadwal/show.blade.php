@@ -3,18 +3,70 @@
 @section('page-title', 'Detail Jadwal')
 
 @section('content')
-<div class="mb-6">
-    <a href="{{ route('subadmin.jadwal.index') }}" class="inline-flex items-center gap-2 text-slate-400 hover:text-slate-900 font-bold text-xs uppercase tracking-widest transition">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-        Kembali
+<div class="mb-8">
+    <a href="{{ route('subadmin.jadwal.index') }}" class="flex items-center gap-2 text-xs font-black text-slate-400 hover:text-slate-600 transition uppercase tracking-widest">
+        <i class="fi fi-rr-arrow-left"></i> KEMBALI
     </a>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-    {{-- Info Jadwal --}}
-    <div class="lg:col-span-1 space-y-5">
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+    {{-- Daftar Peserta (Main Content - Left Column) --}}
+    <div class="lg:col-span-2">
+        <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
+            <div class="px-8 py-6 border-b border-slate-50 bg-slate-50/30 flex justify-between items-center">
+                <h3 class="font-black text-slate-800 flex items-center gap-2">
+                    <i class="fi fi-rr-users text-indigo-600"></i>
+                    Daftar Peserta
+                </h3>
+                <div class="flex items-center gap-3">
+                    <span class="px-3 py-1 bg-white border border-slate-200 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded-lg">
+                        {{ $pesertas->count() }} Pendaftar
+                    </span>
+                    @if($pesertas->count() > 0)
+                    <a href="{{ route('subadmin.jadwal.export-absensi', $jadwal->id_jadwal) }}" target="_blank" class="px-3 py-1 bg-slate-900 hover:bg-slate-800 text-cyan-400 text-[10px] font-black uppercase tracking-widest rounded-lg flex items-center gap-1.5 transition shadow-sm">
+                        <i class="fi fi-rr-file-pdf"></i> PDF Daftar Hadir
+                    </a>
+                    @endif
+                </div>
+            </div>
+            <div class="divide-y divide-slate-50">
+                @forelse($pesertas as $p)
+                <div class="px-6 py-4 flex items-center justify-between gap-4 hover:bg-slate-50/80 transition cursor-pointer group" onclick="window.location.href='{{ route('subadmin.pendaftaran.show', $p->id_pendaftaran) }}'">
+                    <div class="flex items-center gap-3 flex-1 min-w-0">
+                        <div class="w-10 h-10 bg-slate-100 text-slate-500 rounded-xl flex items-center justify-center text-sm font-black shrink-0 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition">
+                            {{ strtoupper(substr($p->user?->nama ?? '?', 0, 1)) }}
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-sm font-black text-slate-900 truncate group-hover:text-indigo-600 transition">{{ $p->user?->nama }}</p>
+                            <p class="text-[10px] text-slate-400 font-bold truncate">{{ $p->user?->email }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 shrink-0">
+                        <span class="text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider
+                            {{ $p->status_progres === 'terkonfirmasi' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : ($p->status_progres === 'dibatalkan' ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-amber-50 text-amber-700 border border-amber-100') }}">
+                            {{ str_replace('_', ' ', $p->status_progres) }}
+                        </span>
+                        <div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition">
+                            <i class="fi fi-rr-angle-small-right text-lg mt-1"></i>
+                        </div>
+                    </div>
+                </div>
+                @empty
+                <div class="px-6 py-16 text-center">
+                    <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-slate-300">
+                        <i class="fi fi-rr-users text-2xl"></i>
+                    </div>
+                    <p class="text-sm font-black text-slate-400 uppercase tracking-widest">Belum ada peserta</p>
+                </div>
+                @endforelse
+            </div>
+        </div>
+    </div>
+
+    {{-- Info Jadwal (Sidebar - Right Column) --}}
+    <div class="space-y-6">
+        <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
             <div class="bg-slate-50/50 px-6 py-5 border-b border-slate-100">
                 <div class="flex items-center gap-2 mb-2">
                     <span class="text-[9px] font-black bg-slate-900 text-cyan-400 px-2 py-1 rounded-lg tracking-widest">{{ $jadwal->kategori?->kode_kategori }}</span>
@@ -82,7 +134,7 @@
                             </span>
                         @else
                             <span class="text-xs font-bold text-amber-600">
-                                ⏳ Belum dikirim
+                                <i class="fi fi-rr-time-past"></i> Belum dikirim
                             </span>
                         @endif
                     </div>
@@ -90,7 +142,7 @@
                     <form action="{{ route('subadmin.jadwal.resend', $jadwal->id_jadwal) }}" method="POST" onsubmit="return confirm('Kirim email konfirmasi ke semua peserta terkonfirmasi? Ini akan memakan waktu sejenak.');">
                         @csrf
                         <button type="submit" class="w-full bg-slate-900 text-white text-xs font-bold py-2.5 rounded-xl hover:bg-slate-800 transition flex items-center justify-center gap-2">
-                            <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                            <i class="fi fi-rr-envelope text-cyan-400"></i>
                             Kirim (Ulang) Email Konfirmasi
                         </button>
                     </form>
@@ -99,7 +151,7 @@
         </div>
 
         {{-- Pemateri --}}
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6">
             <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Pemateri / Instruktur</p>
             @forelse($jadwal->pemateri as $pm)
             <div class="flex items-center gap-3 mb-3">
@@ -117,7 +169,7 @@
         </div>
 
         {{-- Materi Pendukung --}}
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6">
             <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Materi Pendukung</p>
             @forelse($jadwal->materi as $m)
             <div class="flex items-center gap-3 mb-3">
@@ -139,43 +191,6 @@
         </div>
     </div>
 
-    {{-- Daftar Peserta --}}
-    <div class="lg:col-span-2">
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-            <div class="px-6 py-5 border-b border-slate-100 flex justify-between items-center">
-                <div>
-                    <h3 class="text-lg font-black text-slate-900">Daftar Peserta</h3>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{{ $pesertas->count() }} pendaftar</p>
-                </div>
-            </div>
-            <div class="divide-y divide-slate-50">
-                @forelse($pesertas as $p)
-                <div class="px-6 py-4 flex items-center justify-between gap-4 hover:bg-slate-50/50 transition">
-                    <div class="flex items-center gap-3 flex-1 min-w-0">
-                        <div class="w-9 h-9 bg-slate-100 text-slate-500 rounded-xl flex items-center justify-center text-sm font-black shrink-0">
-                            {{ strtoupper(substr($p->user?->nama ?? '?', 0, 1)) }}
-                        </div>
-                        <div class="min-w-0">
-                            <p class="text-sm font-black text-slate-900 truncate">{{ $p->user?->nama }}</p>
-                            <p class="text-[10px] text-slate-400 font-bold truncate">{{ $p->user?->email }}</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3 shrink-0">
-                        <span class="text-[9px] font-black px-2 py-1 rounded-full uppercase tracking-wider
-                            {{ $p->status_progres === 'terkonfirmasi' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : ($p->status_progres === 'dibatalkan' ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-amber-50 text-amber-700 border border-amber-100') }}">
-                            {{ str_replace('_', ' ', $p->status_progres) }}
-                        </span>
-                        <a href="{{ route('subadmin.pendaftaran.show', $p->id_pendaftaran) }}"
-                           class="text-[10px] font-black text-indigo-600 hover:text-indigo-800 transition">Detail →</a>
-                    </div>
-                </div>
-                @empty
-                <div class="px-6 py-16 text-center">
-                    <p class="text-sm font-black text-slate-300 uppercase tracking-widest">Belum ada peserta</p>
-                </div>
-                @endforelse
-            </div>
-        </div>
     </div>
 </div>
 @endsection

@@ -307,10 +307,8 @@ class SubadminPelatihanKustomController extends Controller
 
         $jadwal->pemateri()->sync($request->pemateri_ids);
 
-        // Also sync participant records' schedule dates to make sure they match!
+        // Also sync participant records' mode_pertemuan
         Pendaftaran::where('id_jadwal', $jadwal->id_jadwal)->update([
-            'rencana_tanggal_mulai' => $request->tgl_mulai,
-            'rencana_tanggal_selesai' => $request->tgl_selesai,
             'mode_pertemuan' => $request->mode_pertemuan,
         ]);
 

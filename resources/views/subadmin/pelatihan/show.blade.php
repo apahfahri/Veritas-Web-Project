@@ -7,7 +7,7 @@
 <div class="mb-8 flex items-center justify-between">
     <div class="flex items-center gap-4">
         <a href="{{ route('subadmin.pelatihan.index') }}" class="p-2.5 bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-slate-900 transition shadow-sm">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            <i class="fi fi-rr-arrow-left"></i>
         </a>
         <div>
             <p class="text-xs text-slate-500 font-extrabold uppercase tracking-widest">{{ $pelatihan->kategori?->nama_kategori }}</p>
@@ -26,7 +26,7 @@
     <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden select-none">
         <div class="p-6 border-b border-slate-50 bg-slate-50/30 flex justify-between items-center">
             <h3 class="font-black text-slate-800 flex items-center gap-2">
-                <svg class="w-5 h-5 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                <i class="fi fi-rr-users text-cyan-600"></i>
                 Daftar Peserta Terdaftar
             </h3>
         </div>
@@ -82,7 +82,7 @@
                     </td>
                     <td class="px-6 py-5 text-right">
                         <a href="{{ route('subadmin.pendaftaran.show', ['id' => $p->id_pendaftaran, 'context' => 'pelatihan']) }}" class="p-2 text-slate-400 hover:text-cyan-600 transition">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            <i class="fi fi-rr-angle-right"></i>
                         </a>
                     </td>
                 </tr>
@@ -90,7 +90,7 @@
                 <tr>
                     <td colspan="4" class="px-6 py-20 text-center">
                         <div class="opacity-30">
-                            <svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                            <i class="fi fi-rr-users w-16 h-16 mx-auto mb-4"></i>
                             <p class="text-sm font-bold">Belum Ada Peserta Terdaftar</p>
                         </div>
                     </td>
