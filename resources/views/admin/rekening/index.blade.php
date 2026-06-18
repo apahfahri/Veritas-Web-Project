@@ -12,7 +12,7 @@
     </div>
     <a href="{{ route('admin.rekening.create') }}"
        class="bg-slate-900 text-white px-6 py-3 rounded-2xl hover:bg-slate-800 transition shadow-lg shadow-slate-200 flex items-center gap-2 text-sm font-black group">
-        <svg class="w-5 h-5 text-cyan-400 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+        <i class="fi fi-rr-plus text-cyan-400 group-hover:rotate-90 transition-transform duration-300"></i>
         Tambah Rekening Baru
     </a>
 </div>
@@ -57,13 +57,13 @@
                         <div class="flex items-center justify-center gap-2">
                             <a href="{{ route('admin.rekening.edit', $r->id_rekening) }}"
                                class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-indigo-600 hover:text-indigo-600 hover:shadow-lg hover:shadow-indigo-50 transition shadow-sm">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                <i class="fi fi-rr-edit"></i>
                             </a>
                             <form method="POST" action="{{ route('admin.rekening.destroy', $r->id_rekening) }}" class="delete-form" data-name="Rekening {{ $r->nama_bank }} - {{ $r->nomor_rekening }}">
                                 @csrf @method('DELETE')
                                 <button type="submit"
                                         class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-red-500 hover:text-red-500 hover:shadow-lg hover:shadow-red-50 transition shadow-sm">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                    <i class="fi fi-rr-trash"></i>
                                 </button>
                             </form>
                         </div>
@@ -74,7 +74,7 @@
                     <td colspan="5" class="p-20 text-center">
                         <div class="flex flex-col items-center">
                             <div class="w-20 h-20 bg-slate-50 text-slate-200 rounded-3xl flex items-center justify-center mb-4">
-                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                                <i class="fi fi-rr-credit-card w-10 h-10"></i>
                             </div>
                             <p class="text-sm font-black text-slate-400 uppercase tracking-widest">Belum ada rekening terdaftar</p>
                             <a href="{{ route('admin.rekening.create') }}" class="mt-4 text-xs font-bold text-indigo-600 hover:underline">Tambah Rekening Pertama</a>

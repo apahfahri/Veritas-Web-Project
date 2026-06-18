@@ -139,17 +139,17 @@
                             $isBespoke = ($isKonsultasi || $isAudit || $isCustomTraining);
                         @endphp
                         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition">
-                            <div class="p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                            <div class="p-6 md:p-8 flex flex-col gap-6">
                                 <div class="flex-1">
-                                    <div class="flex items-center gap-3 mb-2">
+                                    <div class="flex items-center gap-3 mb-2 flex-wrap">
                                         <span class="bg-[#1E6B3D]/10 text-[#1E6B3D] text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">
                                             {{ $item->jadwal?->kategori?->nama ?? 'Pelatihan K3' }}
                                         </span>
-                                        <span class="text-gray-400 text-sm">•</span>
+                                        <span class="text-gray-400 text-sm hidden sm:inline">•</span>
                                         <span class="bg-[#1E6B3D]/10 text-[#1E6B3D] text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">
                                             {{ $item->jadwal?->jenis?->nama ?? 'Pelatihan' }}
                                         </span>
-                                        <span class="text-gray-400 text-sm">•</span>
+                                        <span class="text-gray-400 text-sm hidden sm:inline">•</span>
                                         <span class="text-gray-500 text-sm">Pendaftar: <strong class="font-bold">{{ $item->user?->nama ?? '-' }}</strong></span>
                                     </div>
 
@@ -176,6 +176,11 @@
                                                     'label' => 'Terjadwal',  
                                                     'desc' => $isAudit ? 'Jadwal audit telah dikonfirmasi, menunggu pelaksanaan audit lapangan' : ($isCustomTraining ? 'Jadwal pelatihan telah dikonfirmasi, menunggu pelaksanaan kelas' : 'Jadwal telah dikonfirmasi, menunggu pelaksanaan konsultasi')
                                                 ],
+                                                'berlangsung'         => [
+                                                    'icon' => '<i class="fi fi-rr-play"></i>', 
+                                                    'label' => 'Berlangsung', 
+                                                    'desc' => $isAudit ? 'Audit lapangan sedang berlangsung saat ini' : 'Pelaksanaan sedang berlangsung saat ini'
+                                                ],
                                                 'menunggu_pembayaran' => [
                                                     'icon' => '<i class="fi fi-rr-credit-card"></i>', 
                                                     'label' => 'Tagihan',     
@@ -194,7 +199,13 @@
                                             ];
                                             $stageKeys  = array_keys($bespokeStages);
                                             $curStatus  = $item->status_progres;
-                                            $isCanceled = ($curStatus === 'dibatalkan');
+                                            
+                                            // Dynamic logic for berlangsung
+                                            if (in_array($curStatus, ['dijadwalkan', 'menunggu_pelaksanaan']) && $item->jadwal && in_array($item->jadwal->status_pelaksanaan, ['Berlangsung', 'Selesai'])) {
+                                                $curStatus = 'berlangsung';
+                                            }
+
+                                            $isCanceled = ($item->status_progres === 'dibatalkan');
                                             $currentIdx = array_search($curStatus, $stageKeys);
                                         @endphp
 
@@ -247,7 +258,7 @@
                                                     </div>
                                                 @endif
 
-                                                @if(!in_array($curStatus, ['meninjau', 'disetujui', 'dijadwalkan', 'dibatalkan']) && $item->jadwal)
+                                                @if(!in_array($curStatus, ['meninjau', 'disetujui', 'dijadwalkan', 'dibatalkan']) && $item->jadwal && !$isCustomTraining)
                                                     <div class="mt-3 bg-gray-50 border border-gray-100 rounded-xl p-4 text-xs space-y-2">
                                                         <p class="font-bold text-gray-700 uppercase tracking-wider text-[10px] mb-1">📅 Rincian Jadwal Pelaksanaan</p>
                                                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-gray-600">
@@ -285,6 +296,106 @@
                                                         </div>
                                                     </div>
                                                 @endif
+
+                                                @if($isCustomTraining && !in_array($curStatus, ['meninjau', 'dibatalkan']) && $item->jadwal)
+                                                    @php
+                                                        $participants = \App\Models\Pendaftaran::where('id_jadwal', $item->jadwal->id_jadwal)
+                                                            ->where('id_pendaftaran', '!=', $item->id_pendaftaran)
+                                                            ->with('user')
+                                                            ->get();
+                                                        
+                                                        $daysToStart = $item->rencana_tanggal_mulai ? now()->diffInDays($item->rencana_tanggal_mulai, false) : 999;
+                                                        $showWarning = ($daysToStart <= 5 && $participants->isEmpty());
+                                                    @endphp
+
+                                                    <div class="mt-4 bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                                                        <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+                                                            <div>
+                                                                <h4 class="text-sm font-black text-slate-800 flex items-center gap-2">
+                                                                    <i class="fi fi-rr-users text-cyan-600"></i> Kelola Data Peserta
+                                                                </h4>
+                                                                <p class="text-[10px] text-slate-500 mt-1">Unggah daftar peserta yang akan mengikuti pelatihan kustom ini.</p>
+                                                            </div>
+                                                            <div class="flex gap-2">
+                                                                <a href="{{ route('pendaftaran.download-panduan-peserta', $item->id_pendaftaran) }}" target="_blank" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-bold px-3 py-2 rounded-xl transition flex items-center gap-1.5 border border-slate-200">
+                                                                    <i class="fi fi-rr-document"></i> Panduan (PDF)
+                                                                </a>
+                                                                <button type="button" onclick="document.getElementById('modal-upload-peserta-{{ $item->id_pendaftaran }}').classList.remove('hidden')" class="bg-[#1E6B3D] hover:bg-[#24824A] text-white text-[10px] font-bold px-3 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+                                                                    <i class="fi fi-rr-upload"></i> Unggah Peserta
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                        @if($showWarning)
+                                                            <div class="mb-4 bg-amber-50 border border-amber-200 text-amber-800 p-3 rounded-xl flex items-start gap-3">
+                                                                <i class="fi fi-rr-triangle-warning text-amber-500 text-lg mt-0.5"></i>
+                                                                <div>
+                                                                    <p class="text-xs font-bold uppercase tracking-wider mb-0.5">Peringatan: Data Peserta Kosong</p>
+                                                                    <p class="text-[10px] opacity-90 leading-relaxed">Hari pelaksanaan pelatihan kustom Anda sudah dekat. Segera unggah data peserta beserta email mereka agar kami dapat mengirimkan tautan undangan dan materi pelatihan (maksimal H-3).</p>
+                                                                </div>
+                                                            </div>
+                                                        @endif
+
+                                                        <div class="space-y-3 max-h-60 overflow-y-auto pr-1">
+                                                            @forelse($participants as $part)
+                                                                <div class="flex items-center justify-between bg-slate-50 border border-slate-100 p-3 rounded-xl">
+                                                                    <div class="flex items-center gap-3">
+                                                                        <div class="w-8 h-8 rounded-full bg-cyan-100 text-cyan-700 font-black text-xs flex items-center justify-center uppercase">
+                                                                            {{ substr($part->user?->nama ?? 'U', 0, 2) }}
+                                                                        </div>
+                                                                        <div>
+                                                                            <p class="text-xs font-bold text-slate-800">{{ $part->user?->nama }}</p>
+                                                                            <p class="text-[10px] text-slate-500">{{ $part->user?->email }} • {{ $part->user?->no_telp }}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <form action="{{ route('pendaftaran.delete-peserta', ['id_peserta' => $part->id_pendaftaran, 'id_pendaftaran' => $item->id_pendaftaran]) }}" method="POST" onsubmit="return confirm('Hapus peserta ini?')">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <input type="hidden" name="identifier" value="{{ $identifier }}">
+                                                                        <button type="submit" class="w-8 h-8 flex items-center justify-center rounded-lg text-rose-400 hover:bg-rose-50 hover:text-rose-600 transition">
+                                                                            <i class="fi fi-rr-trash text-sm"></i>
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            @empty
+                                                                <div class="text-center py-6 text-[11px] text-slate-400 font-medium">
+                                                                    Belum ada data peserta yang diunggah.
+                                                                </div>
+                                                            @endforelse
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Modal Upload Peserta -->
+                                                    <div id="modal-upload-peserta-{{ $item->id_pendaftaran }}" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm hidden">
+                                                        <div class="bg-white rounded-3xl w-full max-w-md mx-4 shadow-2xl overflow-hidden">
+                                                            <div class="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                                                                <h3 class="text-base font-black text-slate-900 flex items-center gap-2">
+                                                                    <i class="fi fi-rr-upload text-[#1E6B3D]"></i> Unggah CSV Peserta
+                                                                </h3>
+                                                                <button type="button" onclick="document.getElementById('modal-upload-peserta-{{ $item->id_pendaftaran }}').classList.add('hidden')" class="text-slate-400 hover:text-rose-500 transition-colors w-8 h-8 flex items-center justify-center rounded-xl hover:bg-rose-50">
+                                                                    <i class="fi fi-rr-cross"></i>
+                                                                </button>
+                                                            </div>
+                                                            <form action="{{ route('pendaftaran.upload-peserta', $item->id_pendaftaran) }}" method="POST" enctype="multipart/form-data" class="p-6">
+                                                                @csrf
+                                                                <input type="hidden" name="identifier" value="{{ $identifier }}">
+                                                                
+                                                                <div class="mb-5">
+                                                                    <label class="block text-xs font-bold text-slate-700 mb-2">Pilih File CSV/Excel <span class="text-rose-500">*</span></label>
+                                                                    <input type="file" name="csv_file" accept=".csv, .txt" required class="w-full border border-slate-200 rounded-xl px-4 py-3 text-xs focus:ring-4 focus:ring-emerald-500/10 focus:outline-none focus:border-emerald-600 bg-slate-50 text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-bold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 transition-all cursor-pointer">
+                                                                    <p class="text-[10px] text-slate-500 mt-2">Pastikan file dalam format <strong>CSV</strong>. Silakan baca <a href="{{ route('pendaftaran.download-panduan-peserta', $item->id_pendaftaran) }}" target="_blank" class="text-cyan-600 hover:underline font-bold">Panduan (PDF)</a> untuk bantuan konversi dari Excel ke CSV.</p>
+                                                                </div>
+
+                                                                <div class="flex justify-end gap-3 pt-4 border-t border-slate-100 mt-6">
+                                                                    <button type="button" onclick="document.getElementById('modal-upload-peserta-{{ $item->id_pendaftaran }}').classList.add('hidden')" class="px-5 py-2.5 text-xs font-bold text-slate-500 hover:bg-slate-100 rounded-xl transition">Batal</button>
+                                                                    <button type="submit" class="px-6 py-2.5 bg-[#1E6B3D] hover:bg-[#24824A] text-white text-xs font-black uppercase tracking-wider rounded-xl shadow-lg shadow-emerald-600/20 hover:shadow-emerald-600/40 transition-all flex items-center gap-2">
+                                                                        <i class="fi fi-rr-disk"></i> Simpan
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                @endif
                                             </div>
                                         @endif
 
@@ -294,12 +405,19 @@
                                             $pelatihanStages = [
                                                 'menunggu_pembayaran' => ['icon' => '<i class="fi fi-rr-credit-card"></i>', 'label' => 'Tagihan',     'desc' => 'Menunggu pembayaran — silakan selesaikan pembayaran & kirim bukti bayar'],
                                                 'menunggu'            => ['icon' => '<i class="fi fi-rr-clock"></i>',       'label' => 'Verifikasi',  'desc' => 'Bukti pembayaran telah dikirim — admin sedang memverifikasi'],
-                                                'diproses'            => ['icon' => '<i class="fi fi-rr-checkbox"></i>',    'label' => 'Terkonfirmasi', 'desc' => 'Pendaftaran terkonfirmasi — kelas aktif & siap dilaksanakan sesuai jadwal'],
+                                                'diproses'            => ['icon' => '<i class="fi fi-rr-checkbox"></i>',    'label' => 'Terkonfirmasi', 'desc' => 'Pendaftaran terkonfirmasi — kelas aktif & menunggu jadwal pelaksanaan'],
+                                                'berlangsung'         => ['icon' => '<i class="fi fi-rr-play"></i>',        'label' => 'Berlangsung', 'desc' => 'Pelatihan sedang berlangsung saat ini'],
                                                 'selesai'             => ['icon' => '<i class="fi fi-rr-trophy"></i>',      'label' => 'Selesai',     'desc' => 'Pelatihan selesai — terima kasih telah mengikuti pelatihan kami'],
                                             ];
                                             $stageKeys  = array_keys($pelatihanStages);
                                             $curStatus  = $item->status_progres;
-                                            $isCanceled = ($curStatus === 'dibatalkan');
+
+                                            // Dynamic logic for berlangsung
+                                            if ($curStatus === 'diproses' && $item->jadwal && in_array($item->jadwal->status_pelaksanaan, ['Berlangsung', 'Selesai'])) {
+                                                $curStatus = 'berlangsung';
+                                            }
+
+                                            $isCanceled = ($item->status_progres === 'dibatalkan');
                                             $currentIdx = array_search($curStatus, $stageKeys);
                                         @endphp
 
@@ -351,6 +469,16 @@
                                                         </div>
                                                     </div>
                                                 @endif
+
+                                                @if($item->status_bayar === 'ditolak')
+                                                    <div class="mt-3 flex items-start gap-2.5 bg-red-50 border border-red-200 rounded-xl px-3.5 py-2.5">
+                                                        <span class="text-base mt-0.5 flex items-center text-red-600"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span>
+                                                        <div>
+                                                            <p class="text-xs font-bold text-red-800">Bukti Pembayaran Ditolak</p>
+                                                            <p class="text-xs text-red-600 mt-0.5">Bukti yang Anda kirimkan sebelumnya tidak valid. Harap unggah ulang bukti pembayaran yang benar.</p>
+                                                        </div>
+                                                    </div>
+                                                @endif
                                             </div>
                                         @endif
                                     @endif
@@ -358,9 +486,9 @@
                                 </div>
 
                                 {{-- ── ACTION BUTTONS ──────────────────────────────── --}}
-                                <div class="flex md:flex-col gap-3 shrink-0">
+                                <div class="flex flex-col sm:flex-row sm:justify-center gap-3 pt-6 border-t border-gray-100">
                                     @if($item->status_progres === 'selesai' && $item->sertifikat)
-                                        <a href="#" class="inline-flex items-center justify-center gap-2 bg-[#1E6B3D] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 transition shadow-sm">
+                                        <a href="#" class="w-full sm:w-56 inline-flex items-center justify-center gap-2 bg-[#1E6B3D] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 transition shadow-sm">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                             </svg>
@@ -372,18 +500,18 @@
                                         @if($item->status_progres === 'menunggu_pembayaran' && !in_array($item->status_bayar, ['lunas','menunggu_konfirmasi']))
                                             <button type="button"
                                                 onclick="bukaModalBukti('{{ $item->id_pendaftaran }}', '{{ $identifier }}')"
-                                                class="inline-flex items-center justify-center gap-2 bg-amber-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-amber-600 transition shadow-sm animate-pulse">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-                                                Kirim Bukti Bayar
+                                                class="w-full sm:w-56 inline-flex items-center justify-center gap-2 bg-amber-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-amber-600 transition shadow-sm animate-pulse">
+                                                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                                                <span class="truncate">{{ $item->status_bayar === 'ditolak' ? 'Kirim Ulang Bukti' : 'Kirim Bukti Bayar' }}</span>
                                             </button>
                                         @elseif($item->status_bayar === 'menunggu_konfirmasi')
-                                            <span class="inline-flex items-center justify-center gap-1.5 bg-orange-50 border border-orange-200 text-orange-600 px-4 py-2.5 rounded-xl text-xs font-bold">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                            <span class="w-full sm:w-56 inline-flex items-center justify-center gap-1.5 bg-orange-50 border border-orange-200 text-orange-600 px-4 py-2.5 rounded-xl text-xs font-bold">
+                                                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                                 Bukti Sedang Diverifikasi
                                             </span>
                                         @elseif($item->status_bayar === 'lunas')
-                                            <span class="inline-flex items-center justify-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-2.5 rounded-xl text-xs font-bold">
-                                                <i class="fi fi-rr-check-circle text-emerald-600 text-sm"></i> Pembayaran Lunas
+                                            <span class="w-full sm:w-56 inline-flex items-center justify-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-2.5 rounded-xl text-xs font-bold">
+                                                <i class="fi fi-rr-check-circle text-emerald-600 text-sm shrink-0"></i> Pembayaran Lunas
                                             </span>
                                         @elseif($item->status_progres !== 'dibatalkan')
                                             @php
@@ -393,26 +521,26 @@
                                                 $waUrl    = "https://wa.me/" . $waNumber . "?text=" . rawurlencode($waText);
                                             @endphp
                                             <a href="{{ $waUrl }}" target="_blank"
-                                               class="inline-flex items-center justify-center gap-2 bg-[#25D366] text-white px-4 py-2.5 rounded-xl text-xs font-semibold hover:bg-green-600 transition shadow-sm">
-                                                <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.938 3.659 1.435 5.63 1.435h.008c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                                               class="w-full sm:w-56 inline-flex items-center justify-center gap-2 bg-[#25D366] text-white px-4 py-2.5 rounded-xl text-xs font-semibold hover:bg-green-600 transition shadow-sm">
+                                                <svg class="w-4 h-4 fill-white shrink-0" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.938 3.659 1.435 5.63 1.435h.008c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                                                 Tanya Admin
                                             </a>
                                         @endif
 
                                     {{-- ── Pelatihan action buttons ── --}}
                                     @elseif($item->status_progres !== 'dibatalkan')
-                                        @if(in_array($item->status_bayar, ['belum_bayar', 'belum_lunas']) || $item->status_progres === 'menunggu_pembayaran')
+                                        @if(in_array($item->status_bayar, ['belum_bayar', 'belum_lunas', 'ditolak']) || $item->status_progres === 'menunggu_pembayaran')
                                             <button type="button"
                                                 onclick="bukaModalBukti('{{ $item->id_pendaftaran }}', '{{ $identifier }}')"
-                                                class="inline-flex items-center justify-center gap-2 bg-amber-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-amber-600 transition shadow-sm animate-pulse">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                class="w-full sm:w-56 inline-flex items-center justify-center gap-2 bg-amber-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-amber-600 transition shadow-sm animate-pulse">
+                                                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
                                                 </svg>
-                                                Kirim Bukti Bayar
+                                                <span class="truncate">{{ $item->status_bayar === 'ditolak' ? 'Kirim Ulang Bukti' : 'Kirim Bukti Bayar' }}</span>
                                             </button>
                                         @elseif($item->status_bayar === 'menunggu_konfirmasi')
-                                            <span class="inline-flex items-center justify-center gap-1.5 bg-orange-50 border border-orange-200 text-orange-600 px-5 py-2.5 rounded-xl text-sm font-semibold">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                            <span class="w-full sm:w-56 inline-flex items-center justify-center gap-1.5 bg-orange-50 border border-orange-200 text-orange-600 px-5 py-2.5 rounded-xl text-sm font-semibold">
+                                                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                                 Menunggu Verifikasi
                                             </span>
                                         @else
@@ -422,8 +550,8 @@
                                                 $waUrl    = "https://wa.me/" . $waNumber . "?text=" . rawurlencode($waText);
                                             @endphp
                                             <a href="{{ $waUrl }}" target="_blank"
-                                               class="inline-flex items-center justify-center gap-2 bg-green-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-green-600 transition shadow-sm">
-                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.938 3.659 1.435 5.63 1.435h.008c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                                               class="w-full sm:w-56 inline-flex items-center justify-center gap-2 bg-green-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-green-600 transition shadow-sm">
+                                                <svg class="w-4 h-4 fill-white shrink-0" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.938 3.659 1.435 5.63 1.435h.008c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                                                 Tanya Admin
                                             </a>
                                         @endif
@@ -431,11 +559,11 @@
 
                                     {{-- Tombol Batalkan Keikutsertaan --}}
                                     @if(in_array($item->status_bayar, ['belum_bayar', 'belum_lunas']) && !in_array($item->status_progres, ['dibatalkan', 'selesai']))
-                                        <form action="{{ route('pendaftaran.cancel-user', $item->id_pendaftaran) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan keikutsertaan Anda dalam program ini?')">
+                                        <form action="{{ route('pendaftaran.cancel-user', $item->id_pendaftaran) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan keikutsertaan Anda dalam program ini?')" class="w-full sm:w-56">
                                             @csrf
                                             <input type="hidden" name="identifier" value="{{ $identifier }}">
                                             <button type="submit" class="w-full inline-flex items-center justify-center gap-2 bg-rose-50 border border-rose-200 text-rose-600 px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-rose-100 transition shadow-sm">
-                                                <i class="fi fi-rr-cross-circle text-rose-500 text-xs"></i>
+                                                <i class="fi fi-rr-cross-circle text-rose-500 text-xs shrink-0"></i>
                                                 Batalkan Pendaftaran
                                             </button>
                                         </form>
@@ -542,7 +670,7 @@
 
                     <div class="flex gap-3">
                         <button type="button" onclick="kembaliStep1()" class="flex-1 py-3 border border-gray-200 text-gray-500 text-sm font-bold rounded-xl hover:bg-gray-50 transition">← Kembali</button>
-                        <button type="submit" class="flex-1 py-3 bg-[#1E6B3D] text-white text-sm font-bold rounded-xl hover:bg-[#3CDA7D] transition">Kirim Bukti</button>
+                        <button type="submit" id="btnKirimBukti" class="flex-1 py-3 bg-[#1E6B3D] text-white text-sm font-bold rounded-xl hover:bg-[#3CDA7D] transition">Kirim Bukti</button>
                     </div>
                 </form>
             </div>
@@ -639,9 +767,38 @@
 
     function tampilkanNamaFile(input) {
         const el = document.getElementById('namaFileBukti');
+        const btnKirim = document.getElementById('btnKirimBukti');
+        
+        let warningEl = document.getElementById('fileSizeWarning');
+        if (warningEl) warningEl.remove();
+
         if (input.files && input.files[0]) {
-            el.textContent = input.files[0].name;
-            el.classList.add('text-amber-600');
+            const file = input.files[0];
+            el.textContent = file.name;
+            
+            if (file.size > 1048576) { // > 1MB
+                el.classList.add('text-red-500');
+                el.classList.remove('text-amber-600');
+                
+                const warningHTML = `<p id="fileSizeWarning" class="text-xs font-bold text-red-600 mt-2 bg-red-50 px-3 py-2 rounded-lg border border-red-200">⚠️ Ukuran foto melebihi 1 MB. Silakan kompres foto Anda atau pilih file yang ukurannya lebih kecil.</p>`;
+                input.parentElement.insertAdjacentHTML('beforeend', warningHTML);
+                
+                if (btnKirim) {
+                    btnKirim.disabled = true;
+                    btnKirim.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+                
+                // Kosongkan input agar tidak bisa tersubmit
+                input.value = '';
+            } else {
+                el.classList.add('text-amber-600');
+                el.classList.remove('text-red-500');
+                
+                if (btnKirim) {
+                    btnKirim.disabled = false;
+                    btnKirim.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            }
         }
     }
 

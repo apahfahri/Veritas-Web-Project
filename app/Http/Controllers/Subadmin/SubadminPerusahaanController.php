@@ -20,12 +20,23 @@ class SubadminPerusahaanController extends Controller
         });
     }
 
-    public function index()
+    public function index(Request $request)
     {
         // Menampilkan daftar semua perusahaan agar subadmin bisa melihat profilnya
         $cabang = Auth::user()->cabang;
         
-        $perusahaans = Perusahaan::withCount(['pendaftarans'])->latest()->paginate(15);
+        $query = Perusahaan::withCount(['pendaftarans']);
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                  ->orWhere('sektor_industri', 'like', "%{$search}%")
+                  ->orWhere('alamat', 'like', "%{$search}%");
+            });
+        }
+
+        $perusahaans = $query->latest()->paginate(15)->withQueryString();
 
         return view('subadmin.perusahaan.index', compact('perusahaans'));
     }

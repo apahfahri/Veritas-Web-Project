@@ -98,4 +98,26 @@ class Jadwal extends Model
 
         return max(0, $this->kapasitas - $terdaftar);
     }
+
+    /**
+     * Mendapatkan status pelaksanaan secara dinamis berdasarkan tanggal.
+     */
+    public function getStatusPelaksanaanAttribute(): string
+    {
+        $now = now()->startOfDay();
+        $mulai = $this->tgl_mulai ? $this->tgl_mulai->startOfDay() : null;
+        $selesai = $this->tgl_selesai ? $this->tgl_selesai->startOfDay() : null;
+
+        if (!$mulai || !$selesai) {
+            return 'Jadwal Belum Ditetapkan';
+        }
+
+        if ($now->lt($mulai)) {
+            return 'Akan Datang';
+        } elseif ($now->gt($selesai)) {
+            return 'Selesai';
+        } else {
+            return 'Berlangsung';
+        }
+    }
 }

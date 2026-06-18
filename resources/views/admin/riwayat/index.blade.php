@@ -14,7 +14,7 @@
             <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 ml-1">Cari Data</label>
             <div class="relative">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <i class="fi fi-rr-search"></i>
                 </span>
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Peserta, Mitra, REG..." 
                        class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold text-slate-700 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition">
@@ -46,12 +46,12 @@
                 </select>
                 
                 <button type="submit" class="bg-slate-900 text-white px-5 rounded-2xl hover:bg-slate-800 transition shadow-lg shadow-slate-200 flex items-center justify-center">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 8.293A1 1 0 013 7.586V4z"></path></svg>
+                    <i class="fi fi-rr-filter"></i>
                 </button>
                 
                 @if(request()->anyFilled(['search', 'start_date', 'end_date', 'status']))
                     <a href="{{ route('admin.riwayat.index') }}" class="px-5 rounded-2xl bg-slate-200 text-slate-700 hover:bg-slate-300 transition flex items-center justify-center" title="Reset Filters">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H18.2"></path></svg>
+                        <i class="fi fi-rr-refresh"></i>
                     </a>
                 @endif
             </div>
@@ -130,7 +130,7 @@
                             <button onclick="openDetailModal({{ json_encode($r) }}, {{ json_encode($r->user) }}, {{ json_encode($r->jadwal) }}, {{ json_encode($r->perusahaan) }}, {{ json_encode($r->sertifikat) }})"
                                     class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-indigo-600 hover:text-indigo-600 hover:shadow-lg hover:shadow-indigo-50 transition shadow-sm group/btn" 
                                     title="Lihat Detail Riwayat">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                <i class="fi fi-rr-eye"></i>
                             </button>
 
                             <!-- Tombol Download Sertifikat (Bersyarat) -->
@@ -139,13 +139,13 @@
                                     <a href="{{ route('admin.sertifikat.show', $r->sertifikat->no_sertifikat) }}" target="_blank"
                                        class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-emerald-600 hover:text-emerald-600 hover:shadow-lg hover:shadow-emerald-50 transition shadow-sm"
                                        title="Unduh Dokumen Sertifikat (PDF)">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                        <i class="fi fi-rr-download"></i>
                                     </a>
                                 @else
                                     <button disabled 
                                             class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-50 border border-slate-200 text-slate-300 cursor-not-allowed" 
                                             title="Sertifikat Belum Diterbitkan">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                        <i class="fi fi-rr-download"></i>
                                     </button>
                                 @endif
                             @endif
@@ -157,7 +157,7 @@
                     <td colspan="8" class="p-24 text-center">
                         <div class="flex flex-col items-center">
                             <div class="w-20 h-20 bg-slate-50 text-slate-200 rounded-3xl flex items-center justify-center mb-4 border border-slate-100 shadow-inner">
-                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <i class="fi fi-rr-time-past w-10 h-10"></i>
                             </div>
                             <p class="text-sm font-black text-slate-400 uppercase tracking-widest">Tidak ada riwayat pendaftaran ditemukan</p>
                             <p class="text-xs font-bold text-slate-400 mt-1 uppercase">Silakan ubah filter pencarian Anda</p>
@@ -221,7 +221,7 @@
                     <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Detail Dokumen Transaksi Riwayat</p>
                 </div>
                 <button onclick="closeDetailModal()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-slate-900 transition shadow-sm">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    <i class="fi fi-rr-cross"></i>
                 </button>
             </div>
             
@@ -230,7 +230,7 @@
                 <!-- ALASAN PEMBATALAN (Jika Dibatalkan) -->
                 <div id="modal_cancel_card" class="hidden bg-red-50 border border-red-100 rounded-3xl p-5 flex gap-4">
                     <div class="w-10 h-10 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center shrink-0">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        <i class="fi fi-rr-triangle-warning"></i>
                     </div>
                     <div>
                         <h4 class="text-[11px] font-black text-red-800 uppercase tracking-wider mb-0.5">Catatan Pembatalan Transaksi</h4>
@@ -286,7 +286,7 @@
                 <div id="modal_sertifikat_card" class="hidden bg-emerald-50 border border-emerald-100 rounded-3xl p-5 flex justify-between items-center">
                     <div class="flex gap-4">
                         <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center shrink-0">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138z"></path></svg>
+                            <i class="fi fi-rr-diploma"></i>
                         </div>
                         <div>
                             <h4 class="text-[11px] font-black text-emerald-800 uppercase tracking-wider mb-0.5">Sertifikat Resmi Diterbitkan</h4>
@@ -380,7 +380,7 @@
                 <a href="/storage/${pendaftaran.bukti_bayar}" target="_blank" class="group relative block w-32 h-20 rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition">
                     <img src="/storage/${pendaftaran.bukti_bayar}" class="w-full h-full object-cover transition duration-300 group-hover:scale-110">
                     <div class="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition duration-300">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                        <i class="fi fi-rr-eye text-white"></i>
                     </div>
                 </a>
             `;

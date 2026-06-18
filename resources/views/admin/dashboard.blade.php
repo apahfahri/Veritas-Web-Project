@@ -5,7 +5,7 @@
 
 @section('header-actions')
 <button onclick="exportDashboardAsPNG(this)" class="bg-slate-900 text-white text-[11px] font-black uppercase tracking-wider px-6 py-3.5 rounded-2xl hover:bg-slate-800 transition-all shadow-xl shadow-slate-200 flex items-center gap-2.5 group">
-    <svg class="w-4 h-4 text-cyan-400 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+    <i class="fi fi-rr-picture text-cyan-400 group-hover:rotate-12 transition-transform"></i>
     Export PNG
 </button>
 @endsection
@@ -33,7 +33,7 @@
         <!-- Card 1: Total Pendaftar (Indigo) -->
         <div class="bg-white p-5 lg:p-6 rounded-[1.5rem] shadow-sm border border-slate-100 flex items-center gap-4 hover:shadow-md transition duration-300 group h-full">
             <div class="w-12 h-12 lg:w-14 lg:h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center shadow-sm shrink-0">
-                <svg class="w-6 h-6 lg:w-7 lg:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                <i class="fi fi-rr-users lg: lg:"></i>
             </div>
             <div class="min-w-0">
                 <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest truncate">Total Pendaftar</p>
@@ -44,7 +44,7 @@
         <!-- Card 2: Menunggu Proses (Amber) -->
         <div class="bg-white p-5 lg:p-6 rounded-[1.5rem] shadow-sm border border-slate-100 flex items-center gap-4 hover:shadow-md transition duration-300 group h-full">
             <div class="w-12 h-12 lg:w-14 lg:h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center shadow-sm shrink-0">
-                <svg class="w-6 h-6 lg:w-7 lg:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <i class="fi fi-rr-time-past lg:w-7 lg:h-7"></i>
             </div>
             <div class="min-w-0">
                 <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest truncate">Menunggu Proses</p>
@@ -55,7 +55,7 @@
         <!-- Card 3: Selesai (Emerald) -->
         <div class="bg-white p-5 lg:p-6 rounded-[1.5rem] shadow-sm border border-slate-100 flex items-center gap-4 hover:shadow-md transition duration-300 group h-full">
             <div class="w-12 h-12 lg:w-14 lg:h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center shadow-sm shrink-0">
-                <svg class="w-6 h-6 lg:w-7 lg:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <i class="fi fi-rr-check-circle lg: lg:"></i>
             </div>
             <div class="min-w-0">
                 <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest truncate">Selesai</p>
@@ -66,7 +66,7 @@
         <!-- Card 4: Total Pelatihan (Cyan) -->
         <div class="bg-white p-5 lg:p-6 rounded-[1.5rem] shadow-sm border border-slate-100 flex items-center gap-4 hover:shadow-md transition duration-300 group h-full">
             <div class="w-12 h-12 lg:w-14 lg:h-14 bg-cyan-50 text-cyan-600 rounded-2xl flex items-center justify-center shadow-sm shrink-0">
-                <svg class="w-6 h-6 lg:w-7 lg:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                <i class="fi fi-rr-book-open-cover lg: lg:"></i>
             </div>
             <div class="min-w-0">
                 <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest truncate">Total Pelatihan</p>
@@ -77,7 +77,7 @@
         <!-- Card 5: Petugas Aktif (Blue) -->
         <div class="bg-white p-5 lg:p-6 rounded-[1.5rem] shadow-sm border border-slate-100 flex items-center gap-4 hover:shadow-md transition duration-300 group h-full">
             <div class="w-12 h-12 lg:w-14 lg:h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center shadow-sm shrink-0">
-                <svg class="w-6 h-6 lg:w-7 lg:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                <i class="fi fi-rr-user lg: lg:"></i>
             </div>
             <div class="min-w-0">
                 <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest truncate">Pemateri Aktif</p>
@@ -88,7 +88,7 @@
         <!-- Card 6: Sertifikat Terbit (Purple) -->
         <div class="bg-white p-5 lg:p-6 rounded-[1.5rem] shadow-sm border border-slate-100 flex items-center gap-4 hover:shadow-md transition duration-300 group h-full">
             <div class="w-12 h-12 lg:w-14 lg:h-14 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center shadow-sm shrink-0">
-                <svg class="w-6 h-6 lg:w-7 lg:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138z"></path></svg>
+                <i class="fi fi-rr-diploma lg: lg:"></i>
             </div>
             <div class="min-w-0">
                 <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest truncate">Sertifikat Terbit</p>
@@ -244,7 +244,7 @@
         }
 
         exportBtn.disabled = true;
-        exportBtn.innerHTML = '<svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+        exportBtn.innerHTML = '<i class="fi fi-rr-spinner animate-spin"></i>';
 
         try {
             const captureArea = document.getElementById('export-area');

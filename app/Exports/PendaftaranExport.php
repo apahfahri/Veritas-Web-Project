@@ -37,6 +37,10 @@ class PendaftaranExport implements FromQuery, WithHeadings, WithMapping, ShouldA
             });
         }
 
+        if (isset($this->filters['is_kustom'])) {
+            $query->where('is_kustom', $this->filters['is_kustom']);
+        }
+
         return $query;
     }
 

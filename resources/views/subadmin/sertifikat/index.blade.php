@@ -4,73 +4,62 @@
 @section('page-title', 'Manajemen Sertifikat')
 
 @section('content')
-<div class="bg-white rounded-[2rem] border border-slate-100 p-8 shadow-sm select-none">
-    
+<!-- Alert status -->
+@if(session('success'))
+    <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-semibold rounded-2xl">
+        {{ session('success') }}
+    </div>
+@endif
+@if(session('warning'))
+    <div class="mb-6 p-4 bg-amber-50 border border-amber-200 text-amber-800 text-sm font-semibold rounded-2xl leading-relaxed">
+        {{ session('warning') }}
+    </div>
+@endif
+@if(session('error'))
+    <div class="mb-6 p-4 bg-rose-50 border border-rose-200 text-rose-800 text-sm font-semibold rounded-2xl">
+        {{ session('error') }}
+    </div>
+@endif
+
+<div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden select-none">
     <!-- Header Section -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-        <div>
-            <h3 class="text-xl font-black text-slate-900 tracking-tight">Data & Penerbitan Sertifikat</h3>
-            <p class="text-xs text-slate-500 mt-1">Kelola sertifikat terbit atau terbitkan sertifikat untuk peserta yang telah menyelesaikan pelatihan.</p>
-        </div>
-        
-        <div class="flex items-center gap-3 w-full md:w-auto">
-            <!-- Button Tambah -->
-            <a href="{{ route('subadmin.sertifikat.create-general') }}" 
-               class="bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs px-5 py-3 rounded-xl shadow-md transition uppercase tracking-wider flex items-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                Tambah Sertifikat
-            </a>
-            <!-- Button Import -->
-            <button onclick="document.getElementById('modal-import-sertifikat').classList.remove('hidden')" 
-                    class="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white font-extrabold text-xs px-5 py-3 rounded-xl shadow-md transition uppercase tracking-wider flex items-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-                Import Sertifikat (CSV/Excel)
-            </button>
-        </div>
-    </div>
-
-    <!-- Alert status -->
-    @if(session('success'))
-        <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-semibold rounded-2xl">
-            {{ session('success') }}
-        </div>
-    @endif
-    @if(session('warning'))
-        <div class="mb-6 p-4 bg-amber-50 border border-amber-200 text-amber-800 text-sm font-semibold rounded-2xl leading-relaxed">
-            {{ session('warning') }}
-        </div>
-    @endif
-    @if(session('error'))
-        <div class="mb-6 p-4 bg-rose-50 border border-rose-200 text-rose-800 text-sm font-semibold rounded-2xl">
-            {{ session('error') }}
-        </div>
-    @endif
-
-    <!-- Tabs Navigasi -->
-    <div class="flex border-b border-slate-100 mb-8 gap-6">
-        <a href="?tab=terbit" class="pb-4 text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 {{ $activeTab === 'terbit' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-slate-400 hover:text-slate-600' }}">
-            <span>📜</span> Sertifikat Terbit
-        </a>
-        <a href="?tab=belum" class="pb-4 text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 {{ $activeTab === 'belum' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-slate-400 hover:text-slate-600' }}">
-            <span>🎓</span> Belum Memiliki Sertifikat
-        </a>
-    </div>
-
-    <!-- Search Form -->
-    <div class="flex justify-between items-center gap-4 mb-6">
-        <form method="GET" action="{{ route('subadmin.sertifikat.index') }}" class="flex items-center gap-3 w-full md:w-auto">
-            <input type="hidden" name="tab" value="{{ $activeTab }}">
-            <div class="relative">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ $activeTab === 'belum' ? 'Cari nama, email, nomor registrasi...' : 'Cari nomor sertifikat, nama...' }}" 
-                       class="border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-xs bg-slate-50 font-medium text-slate-700 focus:outline-none focus:ring-4 focus:ring-cyan-500/10 w-full md:w-80">
-                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></span >
+    <div class="p-6 md:p-8 bg-slate-50/30 border-b border-slate-100">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+            <!-- Tabs Navigasi -->
+            <div class="flex border-b border-slate-200/50 gap-6 w-full md:w-auto">
+                <a href="?tab=terbit" class="pb-3 text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 {{ $activeTab === 'terbit' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-slate-400 hover:text-slate-600' }}">
+                    Sertifikat Terbit
+                </a>
+                <a href="?tab=belum" class="pb-3 text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 {{ $activeTab === 'belum' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-slate-400 hover:text-slate-600' }}">
+                    Belum Memiliki Sertifikat
+                </a>
             </div>
-            <button type="submit" class="bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs px-5 py-2.5 rounded-xl transition">
-                Cari
+
+            <div class="flex items-center gap-3 w-full md:w-auto shrink-0">
+                <a href="{{ route('subadmin.sertifikat.create-general') }}" class="bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-md transition uppercase tracking-wider flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    Tambah
+                </a>
+                <button onclick="document.getElementById('modal-import-sertifikat').classList.remove('hidden')" class="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-md transition uppercase tracking-wider flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                    Import
+                </button>
+            </div>
+        </div>
+
+        <form method="GET" action="{{ route('subadmin.sertifikat.index') }}" class="flex flex-wrap items-center gap-3 w-full">
+            <input type="hidden" name="tab" value="{{ $activeTab }}">
+            <div class="relative flex-1 min-w-[200px]">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                    <i class="fi fi-rr-search"></i>
+                </span>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ $activeTab === 'belum' ? 'Cari nama, email, nomor registrasi...' : 'Cari nomor sertifikat, nama...' }}" class="w-full bg-slate-50 border border-slate-200/80 rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium text-slate-700 outline-none focus:ring-2 focus:ring-cyan-500 transition">
+            </div>
+            <button type="submit" class="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fi fi-rr-search"></i> Cari Data
             </button>
             @if(request()->filled('search'))
-                <a href="?tab={{ $activeTab }}" class="text-xs font-bold text-red-500 hover:text-red-700 transition">Reset</a>
+                <a href="?tab={{ $activeTab }}" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm px-4 py-2.5 rounded-xl transition">Reset</a>
             @endif
         </form>
     </div>
@@ -79,18 +68,17 @@
         <!-- Tab Belum Memiliki Sertifikat -->
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="bg-slate-50 border-b border-slate-100">
-                        <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider">No Registrasi</th>
-                        <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider">Nama Lengkap</th>
-                        <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider">Layanan</th>
-                        <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider">Tanggal Selesai</th>
-                        <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider text-right">Aksi</th>
+                <thead class="bg-slate-50 border-b border-slate-100">
+                    <tr>
+                        <th class="px-5 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">No Registrasi</th>
+                        <th class="px-5 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">Nama Lengkap</th>
+                        <th class="px-5 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">Layanan</th>
+                        <th class="px-5 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">Tanggal Selesai</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-50">
                     @forelse($pendaftaranBelum as $p)
-                    <tr class="hover:bg-slate-50/60 transition group">
+                    <tr class="hover:bg-slate-50/80 transition cursor-pointer group" onclick="window.location='{{ route('subadmin.sertifikat.create', $p->id_pendaftaran) }}'">
                         <td class="p-4 text-xs font-black tracking-widest text-slate-900">
                             {{ $p->nomor_pendaftaran }}
                         </td>
@@ -104,11 +92,6 @@
                         <td class="p-4 text-sm font-bold text-slate-600">
                             {{ $p->rencana_tanggal_selesai ? $p->rencana_tanggal_selesai->format('d M Y') : ($p->jadwal?->tgl_selesai ? \Carbon\Carbon::parse($p->jadwal->tgl_selesai)->format('d M Y') : '-') }}
                         </td>
-                        <td class="p-4 text-right">
-                            <a href="{{ route('subadmin.sertifikat.create', $p->id_pendaftaran) }}" class="inline-block bg-cyan-600 hover:bg-cyan-700 text-white text-[10px] font-black uppercase tracking-wider px-4 py-2.5 rounded-xl shadow-sm transition">
-                                Input Sertifikat
-                            </a>
-                        </td>
                     </tr>
                     @empty
                     <tr>
@@ -119,20 +102,20 @@
             </table>
         </div>
         
-        <div class="mt-8">
+        <div class="p-6 border-t border-slate-100 flex justify-center">
             {{ $pendaftaranBelum->links() }}
         </div>
     @else
         <!-- Tab Sertifikat Terbit -->
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="bg-slate-50 border-b border-slate-100">
-                        <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider">No Sertifikat</th>
-                        <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider">Nama Lengkap</th>
-                        <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider">Layanan</th>
-                        <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider">Tanggal Terbit</th>
-                        <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider text-right">Aksi</th>
+                <thead class="bg-slate-50 border-b border-slate-100">
+                    <tr>
+                        <th class="px-5 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">No Sertifikat</th>
+                        <th class="px-5 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">Nama Lengkap</th>
+                        <th class="px-5 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">Layanan</th>
+                        <th class="px-5 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">Tanggal Terbit</th>
+                        <th class="px-5 py-4 text-right text-[10px] font-black uppercase tracking-widest text-slate-400">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-50">
@@ -146,13 +129,15 @@
                         </td>
                         <td class="p-4 text-right">
                             <div class="flex items-center justify-end gap-2">
-                                <a href="{{ route('subadmin.sertifikat.edit', $s->no_sertifikat) }}" class="bg-cyan-50 hover:bg-cyan-100 text-cyan-600 px-3.5 py-1.5 rounded-xl text-xs font-black transition">
-                                    Edit
+                                <a href="{{ route('subadmin.sertifikat.edit', $s->no_sertifikat) }}" class="text-cyan-600 hover:text-cyan-800 bg-cyan-50 hover:bg-cyan-100 w-8 h-8 rounded-lg flex items-center justify-center transition" title="Edit">
+                                    <i class="fi fi-rr-edit"></i>
                                 </a>
                                 <form action="{{ route('subadmin.sertifikat.destroy', $s->no_sertifikat) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus sertifikat ini?')" class="inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="bg-red-50 hover:bg-red-100 text-red-600 px-3.5 py-1.5 rounded-xl text-xs font-black transition">Hapus</button>
+                                    <button type="submit" class="text-rose-500 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 w-8 h-8 rounded-lg flex items-center justify-center transition" title="Hapus">
+                                        <i class="fi fi-rr-trash"></i>
+                                    </button>
                                 </form>
                             </div>
                         </td>
@@ -166,7 +151,7 @@
             </table>
         </div>
 
-        <div class="mt-8">
+        <div class="p-6 border-t border-slate-100 flex justify-center">
             {{ $sertifikats->links() }}
         </div>
     @endif

@@ -414,4 +414,126 @@ class PendaftaranController extends Controller
         return redirect()->route('training.status', ['identifier' => $request->identifier])
             ->with('success', 'Keikutsertaan Anda telah berhasil dibatalkan.');
     }
+
+    public function downloadPanduanPeserta($id)
+    {
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.panduan-peserta');
+        return $pdf->stream('Panduan_Data_Peserta_Veritas.pdf');
+    }
+
+    public function uploadPeserta(Request $request, $id)
+    {
+        $pendaftaran = Pendaftaran::where('id_pendaftaran', $id)
+            ->where('nomor_pendaftaran', $request->identifier)
+            ->firstOrFail();
+
+        $request->validate([
+            'csv_file' => 'required|file|mimes:csv,txt|max:5120',
+        ]);
+
+        $file = $request->file('csv_file');
+        $filePath = $file->getRealPath();
+
+        $delimiter = ',';
+        if (($handle = fopen($filePath, 'r')) !== false) {
+            $firstLine = fgets($handle);
+            if ($firstLine !== false) {
+                if (substr_count($firstLine, ';') > substr_count($firstLine, ',')) {
+                    $delimiter = ';';
+                }
+            }
+            fclose($handle);
+        }
+
+        $rows = [];
+        if (($handle = fopen($filePath, 'r')) !== false) {
+            $header = fgetcsv($handle, 1000, $delimiter);
+            if ($header) {
+                $header = array_map(function($h) {
+                    return strtolower(trim(preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $h)));
+                }, $header);
+            }
+
+            while (($data = fgetcsv($handle, 1000, $delimiter)) !== false) {
+                if (count($data) >= count($header)) {
+                    $rows[] = array_combine(array_slice($header, 0, count($data)), $data);
+                } else {
+                    $row = [];
+                    foreach ($header as $index => $colName) {
+                        $row[$colName] = $data[$index] ?? null;
+                    }
+                    $rows[] = $row;
+                }
+            }
+            fclose($handle);
+        }
+
+        if (empty($rows)) {
+            return back()->with('error', 'Berkas CSV kosong atau format tidak sesuai.');
+        }
+
+        $importedCount = 0;
+        \Illuminate\Support\Facades\DB::transaction(function() use ($pendaftaran, $rows, &$importedCount) {
+            foreach ($rows as $row) {
+                $nama = trim($row['nama'] ?? '');
+                $email = trim($row['email'] ?? '');
+                $whatsapp = trim($row['whatsapp'] ?? $row['no_telp'] ?? $row['no_hp'] ?? '');
+
+                if (empty($nama) || empty($email) || empty($whatsapp)) {
+                    continue;
+                }
+
+                $user = \App\Models\User::where('email', $email)->first();
+                if (!$user) {
+                    $user = \App\Models\User::create([
+                        'nama'       => $nama,
+                        'email'      => $email,
+                        'no_telp'    => $whatsapp,
+                        'pendidikan' => 'Perusahaan',
+                        'password'   => \Illuminate\Support\Facades\Hash::make('Veritas123!'),
+                    ]);
+                }
+
+                $exists = Pendaftaran::where('id_jadwal', $pendaftaran->id_jadwal)
+                    ->where('id_user', $user->id_user)
+                    ->exists();
+
+                if (!$exists) {
+                    Pendaftaran::create([
+                        'id_jadwal'               => $pendaftaran->id_jadwal,
+                        'id_user'                 => $user->id_user,
+                        'id_perusahaan'           => $pendaftaran->id_perusahaan,
+                        'is_utusan_perusahaan'    => true,
+                        'is_kustom'               => true,
+                        'status_progres'          => $pendaftaran->status_progres,
+                        'status_bayar'            => $pendaftaran->status_bayar,
+                        'tanggal_daftar'          => now(),
+                        'rencana_tanggal_mulai'   => $pendaftaran->rencana_tanggal_mulai,
+                        'rencana_tanggal_selesai' => $pendaftaran->rencana_tanggal_selesai,
+                    ]);
+                    $importedCount++;
+                }
+            }
+        });
+
+        return redirect()->route('training.status', ['identifier' => $request->identifier])
+            ->with('success', "Berhasil menambahkan {$importedCount} peserta.");
+    }
+
+    public function deletePeserta(Request $request, $id_peserta, $id_pendaftaran)
+    {
+        $parentPendaftaran = Pendaftaran::where('id_pendaftaran', $id_pendaftaran)
+            ->where('nomor_pendaftaran', $request->identifier)
+            ->firstOrFail();
+
+        $peserta = Pendaftaran::where('id_pendaftaran', $id_peserta)
+            ->where('id_jadwal', $parentPendaftaran->id_jadwal)
+            ->where('id_pendaftaran', '!=', $parentPendaftaran->id_pendaftaran)
+            ->firstOrFail();
+
+        $peserta->delete();
+
+        return redirect()->route('training.status', ['identifier' => $request->identifier])
+            ->with('success', 'Peserta berhasil dihapus.');
+    }
 }

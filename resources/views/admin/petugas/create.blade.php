@@ -8,7 +8,7 @@
 <div class="max-w-4xl mx-auto">
     <div class="mb-6">
         <a href="{{ route('admin.petugas.index') }}" class="inline-flex items-center gap-2 text-slate-400 hover:text-slate-900 font-bold text-xs uppercase tracking-widest transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            <i class="fi fi-rr-arrow-left"></i>
             Kembali ke Daftar
         </a>
     </div>
@@ -27,7 +27,7 @@
                                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
                         <div id="image-preview-container" class="w-full h-full bg-slate-50 border-2 border-dashed border-slate-200 rounded-[2.5rem] flex flex-col items-center justify-center overflow-hidden transition group-hover:border-indigo-400 group-hover:bg-indigo-50/30">
                             <div id="preview-placeholder" class="text-center">
-                                <svg class="w-10 h-10 text-slate-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                <i class="fi fi-rr-picture text-slate-300 mx-auto mb-2"></i>
                                 <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-tight">Pilih Foto<br>(2MB Max)</p>
                             </div>
                             <img id="image-preview" src="#" alt="Preview" class="hidden w-full h-full object-cover">
@@ -87,7 +87,7 @@
                 <button type="submit"
                         style="background-color: #7d2ae7;"
                         class="flex-1 text-white py-3.5 rounded-2xl text-sm font-black hover:opacity-90 transition shadow-lg shadow-indigo-100 flex items-center justify-center gap-2">
-                    <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                    <i class="fi fi-rr-plus text-cyan-400"></i>
                     Simpan Data Pemateri
                 </button>
             </div>
