@@ -20,9 +20,18 @@ class RekeningController extends Controller
         });
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $rekenings = Rekening::latest()->paginate(10);
+        $query = Rekening::latest();
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('bank', 'like', "%{$search}%")
+                  ->orWhere('atas_nama', 'like', "%{$search}%")
+                  ->orWhere('nomor_rekening', 'like', "%{$search}%");
+            });
+        }
+        $rekenings = $query->paginate(10)->withQueryString();
         return view('admin.rekening.index', compact('rekenings'));
     }
 

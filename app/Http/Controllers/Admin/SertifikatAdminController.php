@@ -13,9 +13,19 @@ use Illuminate\Support\Str;
 
 class SertifikatAdminController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $sertifikats = Sertifikat::with(['pendaftaran.user', 'pendaftaran.jadwal.jenis', 'pendaftaran.jadwal.kategori'])->latest()->paginate(5);
+        $query = Sertifikat::with(['pendaftaran.user', 'pendaftaran.jadwal.jenis', 'pendaftaran.jadwal.kategori'])->latest();
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('no_sertifikat', 'like', "%{$search}%")
+                  ->orWhereHas('pendaftaran.user', function ($q2) use ($search) {
+                      $q2->where('nama_lengkap', 'like', "%{$search}%");
+                  });
+            });
+        }
+        $sertifikats = $query->paginate(5)->withQueryString();
         
         // Hanya pendaftaran Selesai & Lunas yang belum punya sertifikat
         $pendaftaranTersedia = Pendaftaran::with(['user', 'jadwal.jenis', 'jadwal.kategori'])

@@ -11,9 +11,17 @@ use Illuminate\Support\Str;
 
 class MateriController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $materis = Materi::latest()->paginate(5);
+        $query = Materi::latest();
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                  ->orWhere('jenis', 'like', "%{$search}%");
+            });
+        }
+        $materis = $query->paginate(5)->withQueryString();
         return view('admin.materi.index', compact('materis'));
     }
 

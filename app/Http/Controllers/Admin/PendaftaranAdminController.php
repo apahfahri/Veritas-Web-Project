@@ -55,7 +55,7 @@ class PendaftaranAdminController extends Controller
             $query->where('status_bayar', $request->bayar);
         }
 
-        $pendaftarans = $query->paginate(5);
+        $pendaftarans = $query->paginate(5)->withQueryString();
 
         return view('admin.pendaftaran.index', compact('pendaftarans'));
     }

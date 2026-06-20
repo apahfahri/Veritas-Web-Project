@@ -76,7 +76,7 @@
 
 <!-- GLOBAL FILTER BAR -->
 <div class="bg-white rounded-[32px] shadow-sm border border-slate-100 p-8 mb-8 no-print filter-box">
-    <form method="GET" action="{{ route('admin.laporan.index') }}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-end" id="laporanFilterForm">
+    <form method="GET" action="{{ route('admin.laporan.index') }}" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 items-end" id="laporanFilterForm">
         
         <!-- Dropdown Jenis Laporan -->
         <div>
@@ -86,6 +86,13 @@
                 <option value="participants" {{ $type === 'participants' ? 'selected' : '' }}>Laporan Detail Peserta</option>
                 <option value="products" {{ $type === 'products' ? 'selected' : '' }}>Laporan Evaluasi Produk</option>
             </select>
+        </div>
+
+        <!-- Text Search -->
+        <div>
+            <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 ml-1">Pencarian</label>
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari data..."
+                   class="w-full px-5 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-medium text-slate-700 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition">
         </div>
 
         <!-- Date Picker: Dari Tanggal -->
@@ -172,20 +179,21 @@
     <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
         <div class="p-8 border-b border-slate-50 flex justify-between items-center">
             <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest">Rekapitulasi Keuangan</h3>
-            <span class="text-[10px] font-black text-slate-400 bg-slate-50 border px-3 py-1 rounded-full">{{ $registrations->count() }} Data Transaksi</span>
+            <span class="text-[10px] font-black text-slate-400 bg-slate-50 border px-3 py-1 rounded-full">{{ $registrations->total() }} Data Transaksi</span>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse" id="laporan-datatable">
-                <thead>
-                    <tr class="bg-slate-100/50 border-b-2 border-slate-100">
-                        <th class="p-6 text-[12px] font-black text-slate-900">No.</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900">No. Invoice</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900">Tanggal Daftar</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900">Nama Instansi / Klien</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900">Nominal Pendapatan</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900 text-center">Status Bayar</th>
-                    </tr>
-                </thead>
+            <thead class="bg-slate-50 border-b border-slate-100 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">
+                <tr>
+                    <th class="px-5 py-4">No.</th>
+                    <th class="px-5 py-4">Invoice / TRX ID</th>
+                    <th class="px-5 py-4">Tanggal Pembayaran</th>
+                    <th class="px-5 py-4">Program / Layanan</th>
+                    <th class="px-5 py-4">Pembeli / Klien</th>
+                    <th class="px-5 py-4">Nominal TRX</th>
+                    <th class="px-5 py-4 text-center">Status</th>
+                </tr>
+            </thead>
                 <tbody class="divide-y divide-slate-50">
                     @forelse($registrations as $index => $r)
                     <tr class="hover:bg-slate-50/50 transition">
@@ -222,38 +230,8 @@
         </div>
         <!-- PAGINATION -->
         @if($registrations->hasPages())
-        <div class="px-8 py-5 border-t border-slate-100 bg-slate-50/30 flex flex-col sm:flex-row items-center justify-between gap-4 no-print">
-            <p class="text-[12px] font-medium text-slate-500">
-                Menampilkan
-                <span class="font-black text-slate-800">{{ $registrations->firstItem() }}–{{ $registrations->lastItem() }}</span>
-                dari
-                <span class="font-black text-slate-800">{{ $registrations->total() }}</span>
-                data transaksi
-            </p>
-            <div class="flex items-center gap-1">
-                {{-- Previous --}}
-                @if($registrations->onFirstPage())
-                    <span class="px-3 py-1.5 text-[11px] font-black text-slate-300 border border-slate-100 rounded-xl cursor-not-allowed bg-white">‹</span>
-                @else
-                    <a href="{{ $registrations->previousPageUrl() }}" class="px-3 py-1.5 text-[11px] font-black text-slate-500 border border-slate-200 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition bg-white">‹</a>
-                @endif
-
-                {{-- Pages --}}
-                @for($i = 1; $i <= $registrations->lastPage(); $i++)
-                    @if($i == $registrations->currentPage())
-                        <span class="px-3 py-1.5 text-[11px] font-black text-white bg-slate-900 rounded-xl">{{ $i }}</span>
-                    @else
-                        <a href="{{ $registrations->url($i) }}" class="px-3 py-1.5 text-[11px] font-black text-slate-500 border border-slate-200 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition bg-white">{{ $i }}</a>
-                    @endif
-                @endfor
-
-                {{-- Next --}}
-                @if($registrations->hasMorePages())
-                    <a href="{{ $registrations->nextPageUrl() }}" class="px-3 py-1.5 text-[11px] font-black text-slate-500 border border-slate-200 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition bg-white">›</a>
-                @else
-                    <span class="px-3 py-1.5 text-[11px] font-black text-slate-300 border border-slate-100 rounded-xl cursor-not-allowed bg-white">›</span>
-                @endif
-            </div>
+        <div class="p-6 border-t border-slate-100 no-print">
+            {{ $registrations->appends(request()->query())->links('vendor.pagination.tailwind') }}
         </div>
         @endif
     </div>
@@ -280,16 +258,16 @@
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse" id="laporan-datatable">
-                <thead>
-                    <tr class="bg-slate-100/50 border-b-2 border-slate-100">
-                        <th class="p-6 text-[12px] font-black text-slate-900">No.</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900">Tanggal Daftar</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900">Nama Lengkap</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900">Kategori / Asal Perusahaan</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900">Layanan K3 yang Diambil</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900 text-center">Status Progres</th>
-                    </tr>
-                </thead>
+            <thead class="bg-slate-50 border-b border-slate-100 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">
+                <tr>
+                    <th class="px-5 py-4">No.</th>
+                    <th class="px-5 py-4">Tanggal Daftar</th>
+                    <th class="px-5 py-4">Nama Lengkap</th>
+                    <th class="px-5 py-4">Kategori / Asal Perusahaan</th>
+                    <th class="px-5 py-4">Layanan K3 yang Diambil</th>
+                    <th class="px-5 py-4 text-center">Status Progres</th>
+                </tr>
+            </thead>
                 <tbody class="divide-y divide-slate-50">
                     @forelse($registrations as $index => $r)
                     <tr class="hover:bg-slate-50/50 transition">
@@ -334,38 +312,8 @@
         </div>
         <!-- PAGINATION -->
         @if($registrations->hasPages())
-        <div class="px-8 py-5 border-t border-slate-100 bg-slate-50/30 flex flex-col sm:flex-row items-center justify-between gap-4 no-print">
-            <p class="text-[12px] font-medium text-slate-500">
-                Menampilkan
-                <span class="font-black text-slate-800">{{ $registrations->firstItem() }}–{{ $registrations->lastItem() }}</span>
-                dari
-                <span class="font-black text-slate-800">{{ $registrations->total() }}</span>
-                pendaftar
-            </p>
-            <div class="flex items-center gap-1">
-                {{-- Previous --}}
-                @if($registrations->onFirstPage())
-                    <span class="px-3 py-1.5 text-[11px] font-black text-slate-300 border border-slate-100 rounded-xl cursor-not-allowed bg-white">‹</span>
-                @else
-                    <a href="{{ $registrations->previousPageUrl() }}" class="px-3 py-1.5 text-[11px] font-black text-slate-500 border border-slate-200 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition bg-white">‹</a>
-                @endif
-
-                {{-- Pages --}}
-                @for($i = 1; $i <= $registrations->lastPage(); $i++)
-                    @if($i == $registrations->currentPage())
-                        <span class="px-3 py-1.5 text-[11px] font-black text-white bg-slate-900 rounded-xl">{{ $i }}</span>
-                    @else
-                        <a href="{{ $registrations->url($i) }}" class="px-3 py-1.5 text-[11px] font-black text-slate-500 border border-slate-200 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition bg-white">{{ $i }}</a>
-                    @endif
-                @endfor
-
-                {{-- Next --}}
-                @if($registrations->hasMorePages())
-                    <a href="{{ $registrations->nextPageUrl() }}" class="px-3 py-1.5 text-[11px] font-black text-slate-500 border border-slate-200 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition bg-white">›</a>
-                @else
-                    <span class="px-3 py-1.5 text-[11px] font-black text-slate-300 border border-slate-100 rounded-xl cursor-not-allowed bg-white">›</span>
-                @endif
-            </div>
+        <div class="p-6 border-t border-slate-100 no-print">
+            {{ $registrations->appends(request()->query())->links('vendor.pagination.tailwind') }}
         </div>
         @endif
     </div>
@@ -392,15 +340,15 @@
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse" id="laporan-datatable">
-                <thead>
-                    <tr class="bg-slate-100/50 border-b-2 border-slate-100">
-                        <th class="p-6 text-[12px] font-black text-slate-900">No.</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900">Nama Layanan K3</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900">Kategori Layanan</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900 text-center">Jumlah Penjualan (Qty)</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900">Kontribusi ke Omset</th>
-                    </tr>
-                </thead>
+            <thead class="bg-slate-50 border-b border-slate-100 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">
+                <tr>
+                    <th class="px-5 py-4">No.</th>
+                    <th class="px-5 py-4">Nama Layanan K3</th>
+                    <th class="px-5 py-4">Kategori Layanan</th>
+                    <th class="px-5 py-4 text-center">Jumlah Penjualan (Qty)</th>
+                    <th class="px-5 py-4">Kontribusi ke Omset</th>
+                </tr>
+            </thead>
                 <tbody class="divide-y divide-slate-50">
                     @forelse($data['products'] as $index => $p)
                     <tr class="hover:bg-slate-50/50 transition">
@@ -418,38 +366,8 @@
         </div>
         <!-- PAGINATION -->
         @if($data['products']->hasPages())
-        <div class="px-8 py-5 border-t border-slate-100 bg-slate-50/30 flex flex-col sm:flex-row items-center justify-between gap-4 no-print">
-            <p class="text-[12px] font-medium text-slate-500">
-                Menampilkan
-                <span class="font-black text-slate-800">{{ $data['products']->firstItem() }}–{{ $data['products']->lastItem() }}</span>
-                dari
-                <span class="font-black text-slate-800">{{ $data['products']->total() }}</span>
-                layanan terdaftar
-            </p>
-            <div class="flex items-center gap-1">
-                {{-- Previous --}}
-                @if($data['products']->onFirstPage())
-                    <span class="px-3 py-1.5 text-[11px] font-black text-slate-300 border border-slate-100 rounded-xl cursor-not-allowed bg-white">‹</span>
-                @else
-                    <a href="{{ $data['products']->previousPageUrl() }}" class="px-3 py-1.5 text-[11px] font-black text-slate-500 border border-slate-200 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition bg-white">‹</a>
-                @endif
-
-                {{-- Pages --}}
-                @for($i = 1; $i <= $data['products']->lastPage(); $i++)
-                    @if($i == $data['products']->currentPage())
-                        <span class="px-3 py-1.5 text-[11px] font-black text-white bg-slate-900 rounded-xl">{{ $i }}</span>
-                    @else
-                        <a href="{{ $data['products']->url($i) }}" class="px-3 py-1.5 text-[11px] font-black text-slate-500 border border-slate-200 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition bg-white">{{ $i }}</a>
-                    @endif
-                @endfor
-
-                {{-- Next --}}
-                @if($data['products']->hasMorePages())
-                    <a href="{{ $data['products']->nextPageUrl() }}" class="px-3 py-1.5 text-[11px] font-black text-slate-500 border border-slate-200 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition bg-white">›</a>
-                @else
-                    <span class="px-3 py-1.5 text-[11px] font-black text-slate-300 border border-slate-100 rounded-xl cursor-not-allowed bg-white">›</span>
-                @endif
-            </div>
+        <div class="p-6 border-t border-slate-100 no-print">
+            {{ $data['products']->appends(request()->query())->links('vendor.pagination.tailwind') }}
         </div>
         @endif
     </div>

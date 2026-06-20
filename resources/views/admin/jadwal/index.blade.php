@@ -12,49 +12,65 @@
 </div>
 @endif
 
-<div class="flex flex-wrap justify-between items-end gap-4 mb-6">
-    <div>
-        <h2 class="text-2xl font-black text-slate-900 tracking-tight">Daftar Jadwal</h2>
-        <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-1">Total: {{ $jadwals->total() }} Jadwal Terdaftar</p>
-    </div>
-    <div class="flex items-center gap-3">
-        <button onclick="openImportModal()"
-                class="bg-white border border-slate-200 text-slate-700 px-6 py-3 rounded-2xl hover:bg-slate-50 transition shadow-sm flex items-center gap-2 text-sm font-black group">
-            <i class="fi fi-rr-upload text-slate-400 group-hover:text-slate-600 transition"></i>
-            Import CSV
-        </button>
-        <a href="{{ route('admin.jadwal.create') }}"
-           class="bg-slate-900 text-white px-6 py-3 rounded-2xl hover:bg-slate-800 transition shadow-lg shadow-slate-200 flex items-center gap-2 text-sm font-black group">
-            <i class="fi fi-rr-plus text-cyan-400 group-hover:rotate-90 transition-transform duration-300"></i>
-            Tambah Jadwal Baru
-        </a>
-    </div>
-</div>
+<div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+    <div class="p-6 md:p-8 bg-slate-50/30 border-b border-slate-100 select-none">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+            <div class="flex border-b border-slate-200/50 gap-6 w-full md:w-auto">
+                <a href="{{ route('admin.jadwal.index', array_merge(request()->except(['page', 'filter']), ['filter' => 'akan_datang'])) }}" class="pb-3 text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 {{ (!isset($filter) || $filter === 'akan_datang') ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-slate-400 hover:text-slate-600' }}">
+                    Akan Datang
+                </a>
+                <a href="{{ route('admin.jadwal.index', array_merge(request()->except(['page', 'filter']), ['filter' => 'riwayat'])) }}" class="pb-3 text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 {{ (isset($filter) && $filter === 'riwayat') ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-slate-400 hover:text-slate-600' }}">
+                    Riwayat
+                </a>
+                <a href="{{ route('admin.jadwal.index', array_merge(request()->except(['page', 'filter']), ['filter' => 'semua'])) }}" class="pb-3 text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 {{ (isset($filter) && $filter === 'semua') ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-slate-400 hover:text-slate-600' }}">
+                    Semua
+                </a>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <button onclick="openImportModal()" class="bg-white border border-slate-200 text-slate-700 font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-sm hover:bg-slate-50 transition uppercase tracking-wider flex items-center gap-2">
+                    <i class="fi fi-rr-upload"></i> Import CSV
+                </button>
+                <a href="{{ route('admin.jadwal.create') }}" class="bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-md transition uppercase tracking-wider flex items-center gap-2">
+                    <i class="fi fi-rr-plus"></i> Tambah Jadwal
+                </a>
+            </div>
+        </div>
 
-<div class="mb-6 bg-white p-1.5 rounded-2xl shadow-sm border border-slate-100 inline-flex gap-1">
-    <a href="{{ route('admin.jadwal.index', ['filter' => 'akan_datang']) }}" class="px-4 py-2 rounded-xl text-sm font-bold transition-all {{ (!isset($filter) || $filter === 'akan_datang') ? 'bg-slate-900 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">Akan Datang</a>
-    <a href="{{ route('admin.jadwal.index', ['filter' => 'riwayat']) }}" class="px-4 py-2 rounded-xl text-sm font-bold transition-all {{ (isset($filter) && $filter === 'riwayat') ? 'bg-slate-900 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">Riwayat</a>
-    <a href="{{ route('admin.jadwal.index', ['filter' => 'semua']) }}" class="px-4 py-2 rounded-xl text-sm font-bold transition-all {{ (isset($filter) && $filter === 'semua') ? 'bg-slate-900 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">Semua</a>
-</div>
-
-<div class="bg-white rounded-[32px] shadow-sm border border-slate-100 overflow-hidden">
+        <form method="GET" action="{{ route('admin.jadwal.index') }}" class="flex flex-wrap items-center gap-3 w-full">
+            @if(request('filter')) <input type="hidden" name="filter" value="{{ request('filter') }}"> @endif
+            <div class="relative flex-1 min-w-[200px]">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                    <i class="fi fi-rr-search"></i>
+                </span>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari jadwal..."
+                       class="w-full bg-slate-50 border border-slate-200/80 rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium text-slate-700 outline-none focus:ring-2 focus:ring-cyan-500 transition">
+            </div>
+            <button type="submit" class="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fi fi-rr-search"></i> Cari Data
+            </button>
+            @if(request()->has('search'))
+                <a href="{{ route('admin.jadwal.index', ['filter' => request('filter')]) }}" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm px-4 py-2.5 rounded-xl transition">Reset</a>
+            @endif
+        </form>
+    </div>
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="bg-slate-50/60 border-b border-slate-100">
-                    <th class="p-5 text-[11px] font-black text-slate-500 uppercase tracking-widest">Kategori</th>
-                    <th class="p-5 text-[11px] font-black text-slate-500 uppercase tracking-widest">Program Layanan</th>
-                    <th class="p-5 text-[11px] font-black text-slate-500 uppercase tracking-widest">Pemateri</th>
-                    <th class="p-5 text-[11px] font-black text-slate-500 uppercase tracking-widest text-center">Mode</th>
-                    <th class="p-5 text-[11px] font-black text-slate-500 uppercase tracking-widest">Tanggal</th>
-                    <th class="p-5 text-[11px] font-black text-slate-500 uppercase tracking-widest">Harga</th>
-                    <th class="p-5 text-[11px] font-black text-slate-500 uppercase tracking-widest text-center">Kapasitas</th>
-                    <th class="p-5 text-[11px] font-black text-slate-500 uppercase tracking-widest text-center">Aksi</th>
+            <thead class="bg-slate-50 border-b border-slate-100 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">
+                <tr>
+                    <th class="px-5 py-4">Kategori</th>
+                    <th class="px-5 py-4">Program Layanan</th>
+                    <th class="px-5 py-4">Pemateri</th>
+                    <th class="px-5 py-4 text-center">Mode</th>
+                    <th class="px-5 py-4">Tanggal</th>
+                    <th class="px-5 py-4">Harga</th>
+                    <th class="px-5 py-4 text-center">Kapasitas</th>
+                    <th class="px-5 py-4 text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-50">
                 @forelse($jadwals as $j)
-                <tr class="hover:bg-slate-50/50 transition-colors group">
+                <tr onclick="window.location='{{ route('admin.jadwal.show', $j->id_jadwal) }}'" class="hover:bg-slate-50/80 transition cursor-pointer group">
                     <td class="p-5">
                         <div class="flex items-center gap-2">
                             <span class="inline-flex bg-slate-900 text-cyan-400 text-[9px] font-black px-2 py-1 rounded-lg tracking-widest">
@@ -148,20 +164,19 @@
                     </td>
                     <td class="p-5">
                         <div class="flex items-center justify-center gap-2">
-                            <a href="{{ route('admin.jadwal.show', $j->id_jadwal) }}"
-                               class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-cyan-500 hover:text-cyan-600 hover:shadow-lg hover:shadow-cyan-50 transition shadow-sm" title="Detail">
-                                <i class="fi fi-rr-eye"></i>
-                            </a>
                             <a href="{{ route('admin.jadwal.edit', $j->id_jadwal) }}"
-                               class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-indigo-500 hover:text-indigo-600 hover:shadow-lg hover:shadow-indigo-50 transition shadow-sm" title="Edit">
+                               class="w-8 h-8 flex items-center justify-center rounded-lg bg-cyan-50 text-cyan-600 hover:text-cyan-800 hover:bg-cyan-100 transition" title="Edit">
                                 <i class="fi fi-rr-edit"></i>
                             </a>
                             <form method="POST" action="{{ route('admin.jadwal.destroy', $j->id_jadwal) }}" class="delete-form" data-name="{{ $j->jenis?->nama }}">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-red-500 hover:text-red-500 hover:shadow-lg hover:shadow-red-50 transition shadow-sm">
+                                <button type="submit" class="w-8 h-8 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:text-rose-700 hover:bg-rose-100 transition">
                                     <i class="fi fi-rr-trash"></i>
                                 </button>
                             </form>
+                            <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center group-hover:bg-cyan-600 group-hover:text-white transition">
+                                <i class="fi fi-rr-angle-small-right text-lg mt-0.5"></i>
+                            </div>
                         </div>
                     </td>
                 </tr>
@@ -180,56 +195,9 @@
         </table>
     </div>
 
-    @if($jadwals->count())
-    <div class="px-6 py-4 border-t border-slate-100 bg-slate-50/40 flex items-center justify-between gap-4">
-        {{-- Info halaman --}}
-        <p class="text-[13px] font-bold text-slate-900 tracking-widest whitespace-nowrap">
-            Menampilkan
-            <span class="text-slate-900">{{ $jadwals->firstItem() }}–{{ $jadwals->lastItem() }}</span>
-            dari
-            <span class="text-slate-900">{{ $jadwals->total() }}</span>
-            data
-        </p>
-
-        {{-- Navigasi halaman (hanya jika ada lebih dari 1 halaman) --}}
-        @if($jadwals->hasPages())
-        <div class="flex items-center gap-1">
-            {{-- Prev --}}
-            @if($jadwals->onFirstPage())
-                <span class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-100 text-slate-300 cursor-not-allowed">
-                    <i class="fi fi-rr-angle-left"></i>
-                </span>
-            @else
-                <a href="{{ $jadwals->previousPageUrl() }}" class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 hover:border-indigo-500 hover:text-indigo-600 hover:shadow-sm transition">
-                    <i class="fi fi-rr-angle-left"></i>
-                </a>
-            @endif
-
-            {{-- Nomor halaman --}}
-            @foreach($jadwals->getUrlRange(1, $jadwals->lastPage()) as $page => $url)
-                @if($page == $jadwals->currentPage())
-                    <span class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-900 text-white text-[12px] font-black shadow-sm">
-                        {{ $page }}
-                    </span>
-                @else
-                    <a href="{{ $url }}" class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 text-[12px] font-bold hover:border-indigo-500 hover:text-indigo-600 hover:shadow-sm transition">
-                        {{ $page }}
-                    </a>
-                @endif
-            @endforeach
-
-            {{-- Next --}}
-            @if($jadwals->hasMorePages())
-                <a href="{{ $jadwals->nextPageUrl() }}" class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 hover:border-indigo-500 hover:text-indigo-600 hover:shadow-sm transition">
-                    <i class="fi fi-rr-angle-right"></i>
-                </a>
-            @else
-                <span class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-100 text-slate-300 cursor-not-allowed">
-                    <i class="fi fi-rr-angle-right"></i>
-                </span>
-            @endif
-        </div>
-        @endif
+    @if($jadwals->hasPages())
+    <div class="p-6 border-t border-slate-100 flex justify-center">
+        {{ $jadwals->links() }}
     </div>
     @endif
 </div>
