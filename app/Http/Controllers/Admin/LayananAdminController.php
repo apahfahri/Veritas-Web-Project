@@ -21,6 +21,31 @@ class LayananAdminController extends Controller
     {
         $query = Jadwal::with(['kategori', 'jenis', 'pemateri']);
         
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('jenis', function ($q2) use ($search) {
+                    $q2->where('nama', 'like', "%{$search}%");
+                });
+                
+                if (stripos('Akan Datang', $search) !== false) {
+                    $q->orWhereDate('tgl_mulai', '>', now());
+                }
+                if (stripos('Selesai', $search) !== false) {
+                    $q->orWhereDate('tgl_selesai', '<', now());
+                }
+                if (stripos('Berlangsung', $search) !== false) {
+                    $q->orWhere(function ($sub) {
+                        $sub->whereDate('tgl_mulai', '<=', now())
+                            ->whereDate('tgl_selesai', '>=', now());
+                    });
+                }
+                if (stripos('Jadwal Belum Ditetapkan', $search) !== false) {
+                    $q->orWhereNull('tgl_mulai')->orWhereNull('tgl_selesai');
+                }
+            });
+        }
+
         $filter = $request->input('filter', 'akan_datang');
 
         if ($filter === 'akan_datang') {
@@ -39,7 +64,7 @@ class LayananAdminController extends Controller
             });
         }
 
-        $jadwals = $query->latest()->paginate(5)->appends(['filter' => $filter]);
+        $jadwals = $query->latest()->paginate(5)->withQueryString();
         return view('admin.jadwal.index', compact('jadwals', 'filter'));
     }
 

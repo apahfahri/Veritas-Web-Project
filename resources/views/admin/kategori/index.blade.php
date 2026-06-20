@@ -13,19 +13,32 @@
 </div>
 @endif
 
-<div class="flex justify-between items-center mb-8">
-    <div>
-        <p class="text-[11px] text-slate-400 font-black uppercase tracking-widest">{{ $kategoris->count() }} Kategori · {{ $kategoris->sum(fn($k) => $k->jenis->count()) }} Jenis Program</p>
-    </div>
-    <div class="flex items-center gap-3">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+    <form method="GET" action="{{ route('admin.kategori.index') }}" class="flex flex-wrap items-center gap-3 w-full md:w-auto flex-1">
+        <div class="relative flex-1 min-w-[200px] max-w-md">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                <i class="fi fi-rr-search"></i>
+            </span>
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari kategori..."
+                   class="w-full bg-white border border-slate-200/80 rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium text-slate-700 outline-none focus:ring-2 focus:ring-cyan-500 transition shadow-sm">
+        </div>
+        <button type="submit" class="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-md transition flex items-center gap-2">
+            <i class="fi fi-rr-search"></i> Cari Data
+        </button>
+        @if(request()->has('search'))
+            <a href="{{ route('admin.kategori.index') }}" class="bg-white hover:bg-slate-50 text-slate-600 font-bold text-sm px-4 py-2.5 rounded-xl border border-slate-200 transition shadow-sm">Reset</a>
+        @endif
+    </form>
+
+    <div class="flex items-center gap-3 shrink-0">
         <button onclick="openImportModal()"
-                class="bg-white border border-slate-200 text-slate-700 px-5 py-2.5 rounded-2xl hover:bg-slate-50 transition shadow-sm flex items-center gap-2 text-sm font-black group">
-            <i class="fi fi-rr-upload text-slate-400 group-hover:text-slate-600 transition"></i>
+                class="bg-white border border-slate-200 text-slate-700 font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-sm hover:bg-slate-50 transition uppercase tracking-wider flex items-center gap-2">
+            <i class="fi fi-rr-upload text-slate-400"></i>
             Import CSV
         </button>
         <button onclick="openAddKategoriModal()"
-                class="bg-slate-900 text-white px-5 py-2.5 rounded-2xl hover:bg-slate-800 transition shadow-lg shadow-slate-200 flex items-center gap-2 text-sm font-black group">
-            <i class="fi fi-rr-plus text-cyan-400 group-hover:rotate-90 transition-transform"></i>
+                class="bg-slate-900 text-white font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-md transition uppercase tracking-wider flex items-center gap-2">
+            <i class="fi fi-rr-plus text-cyan-400"></i>
             Tambah Kategori
         </button>
     </div>

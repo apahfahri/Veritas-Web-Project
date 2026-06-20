@@ -19,10 +19,9 @@
 @section('content')
 
 <div class="max-w-6xl mx-auto space-y-8 print:p-0">
-    <div class="print:hidden">
-        <a href="{{ route('admin.sertifikat.index') }}" class="inline-flex items-center gap-2 text-slate-400 hover:text-slate-900 font-bold text-xs uppercase tracking-widest transition">
-            <i class="fi fi-rr-arrow-left"></i>
-            Kembali ke Daftar
+    <div class="print:hidden mb-6">
+        <a href="{{ route('admin.sertifikat.index') }}" class="flex items-center gap-2 text-xs font-black text-slate-400 hover:text-slate-600 transition uppercase tracking-widest">
+            <i class="fi fi-rr-arrow-left"></i> KEMBALI
         </a>
     </div>
 
@@ -30,7 +29,7 @@
         
         <!-- LEFT: PREVIEW (Visual) -->
         <div class="lg:col-span-7 space-y-6">
-            <div class="bg-white p-2 rounded-[2.5rem] shadow-2xl shadow-slate-200 border border-slate-100 overflow-hidden group relative">
+            <div class="bg-white p-2 rounded-[2rem] shadow-2xl shadow-slate-200 border border-slate-100 overflow-hidden group relative">
                 <!-- Watermark / Design Background -->
                 <div class="absolute inset-0 opacity-[0.03] pointer-events-none flex items-center justify-center">
                     <i class="fi fi-rr-bolt"></i>
@@ -137,7 +136,7 @@
         .ml-72 { margin-left: 0 !important; }
         .p-8 { padding: 0 !important; }
         .bg-white { box-shadow: none !important; border: none !important; }
-        .rounded-\[2\.5rem\] { border-radius: 0 !important; }
+        .rounded-\[2rem\] { border-radius: 0 !important; }
         .border-slate-100 { border-color: #f1f5f9 !important; }
     }
 </style>

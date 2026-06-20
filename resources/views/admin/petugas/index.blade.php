@@ -5,40 +5,51 @@
 
 @section('content')
 
-<div class="flex flex-wrap justify-between items-end gap-4 mb-8">
-    <div>
-        <h2 class="text-2xl font-black text-slate-900 tracking-tight">Daftar Pemateri</h2>
-        <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-1">Total: {{ $pemateris->total() }} Instruktur Terdaftar</p>
-    </div>
-    <div class="flex items-center gap-3">
-        <button onclick="openImportModal()"
-                class="bg-white border border-slate-200 text-slate-700 px-6 py-3 rounded-2xl hover:bg-slate-50 transition shadow-sm flex items-center gap-2 text-sm font-black group">
-            <i class="fi fi-rr-upload text-slate-400 group-hover:text-slate-600 transition"></i>
-            Import CSV
-        </button>
-        <a href="{{ route('admin.petugas.create') }}"
-           class="bg-slate-900 text-white px-6 py-3 rounded-2xl hover:bg-slate-800 transition shadow-lg shadow-slate-200 flex items-center gap-2 text-sm font-black group">
-            <i class="fi fi-rr-plus text-cyan-400 group-hover:rotate-90 transition-transform duration-300"></i>
-            Tambah Pemateri Baru
-        </a>
-    </div>
-</div>
+<div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+    <div class="p-6 md:p-8 bg-slate-50/30 border-b border-slate-100 select-none">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <form method="GET" action="{{ route('admin.petugas.index') }}" class="flex flex-wrap items-center gap-3 w-full md:w-auto flex-1">
+                <div class="relative flex-1 min-w-[200px] max-w-md">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                        <i class="fi fi-rr-search"></i>
+                    </span>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari pemateri..."
+                           class="w-full bg-slate-50 border border-slate-200/80 rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium text-slate-700 outline-none focus:ring-2 focus:ring-cyan-500 transition">
+                </div>
+                <button type="submit" class="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-md transition flex items-center gap-2">
+                    <i class="fi fi-rr-search"></i> Cari Data
+                </button>
+                @if(request()->has('search'))
+                    <a href="{{ route('admin.petugas.index') }}" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm px-4 py-2.5 rounded-xl transition">Reset</a>
+                @endif
+            </form>
 
-<div class="bg-white rounded-[32px] shadow-sm border border-slate-100 overflow-hidden">
+            <div class="flex items-center gap-3 shrink-0">
+                <button onclick="openImportModal()"
+                        class="bg-white border border-slate-200 text-slate-700 font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-sm hover:bg-slate-50 transition uppercase tracking-wider flex items-center gap-2">
+                    <i class="fi fi-rr-upload"></i> Import CSV
+                </button>
+                <a href="{{ route('admin.petugas.create') }}"
+                   class="bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-md transition uppercase tracking-wider flex items-center gap-2">
+                    <i class="fi fi-rr-plus"></i> Tambah Pemateri Baru
+                </a>
+            </div>
+        </div>
+    </div>
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="bg-slate-100/50 border-b-2 border-slate-100">
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Nama & Identitas</th>
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Kontak Detail</th>
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Kompetensi</th>
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Portofolio</th>
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50 text-center">Aksi</th>
+            <thead class="bg-slate-50 border-b border-slate-100 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">
+                <tr>
+                    <th class="px-5 py-4">Nama & Identitas</th>
+                    <th class="px-5 py-4">Kontak Detail</th>
+                    <th class="px-5 py-4">Kompetensi</th>
+                    <th class="px-5 py-4">Portofolio</th>
+                    <th class="px-5 py-4 text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-50">
                 @forelse($pemateris as $p)
-                <tr class="hover:bg-slate-50/50 transition-colors group">
+                <tr class="hover:bg-slate-50/50 transition-colors">
                     <td class="p-6">
                         <div class="flex items-center gap-4">
                             @if($p->foto)
@@ -85,16 +96,16 @@
                             </span>
                         @endif
                     </td>
-                    <td class="p-6 text-center">
+                    <td class="p-5 text-center">
                         <div class="flex items-center justify-center gap-2">
                             <a href="{{ route('admin.petugas.edit', $p->id_pemateri) }}"
-                               class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-indigo-600 hover:text-indigo-600 hover:shadow-lg hover:shadow-indigo-50 transition shadow-sm" title="Edit">
+                               class="w-8 h-8 flex items-center justify-center rounded-lg bg-cyan-50 text-cyan-600 hover:text-cyan-800 hover:bg-cyan-100 transition" title="Edit">
                                 <i class="fi fi-rr-edit"></i>
                             </a>
                             <form action="{{ route('admin.petugas.destroy', $p->id_pemateri) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus pemateri ini?')">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-red-500 hover:text-red-500 hover:shadow-lg hover:shadow-red-50 transition shadow-sm" title="Hapus">
+                                <button type="submit" class="w-8 h-8 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:text-rose-700 hover:bg-rose-100 transition" title="Hapus">
                                     <i class="fi fi-rr-trash"></i>
                                 </button>
                             </form>
@@ -117,56 +128,9 @@
             </tbody>
         </table>
     </div>
-    @if($pemateris->count())
-    <div class="px-6 py-4 border-t border-slate-100 bg-slate-50/40 flex items-center justify-between gap-4">
-        {{-- Info halaman --}}
-        <p class="text-[13px] font-bold text-slate-900 tracking-widest whitespace-nowrap">
-            Menampilkan
-            <span class="text-slate-900">{{ $pemateris->firstItem() }}–{{ $pemateris->lastItem() }}</span>
-            dari
-            <span class="text-slate-900">{{ $pemateris->total() }}</span>
-            data
-        </p>
-
-        {{-- Navigasi halaman (hanya jika ada lebih dari 1 halaman) --}}
-        @if($pemateris->hasPages())
-        <div class="flex items-center gap-1">
-            {{-- Prev --}}
-            @if($pemateris->onFirstPage())
-                <span class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-100 text-slate-300 cursor-not-allowed">
-                    <i class="fi fi-rr-angle-left"></i>
-                </span>
-            @else
-                <a href="{{ $pemateris->previousPageUrl() }}" class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 hover:border-indigo-500 hover:text-indigo-600 hover:shadow-sm transition">
-                    <i class="fi fi-rr-angle-left"></i>
-                </a>
-            @endif
-
-            {{-- Nomor halaman --}}
-            @foreach($pemateris->getUrlRange(1, $pemateris->lastPage()) as $page => $url)
-                @if($page == $pemateris->currentPage())
-                    <span class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-900 text-white text-[12px] font-black shadow-sm">
-                        {{ $page }}
-                    </span>
-                @else
-                    <a href="{{ $url }}" class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 text-[12px] font-bold hover:border-indigo-500 hover:text-indigo-600 hover:shadow-sm transition">
-                        {{ $page }}
-                    </a>
-                @endif
-            @endforeach
-
-            {{-- Next --}}
-            @if($pemateris->hasMorePages())
-                <a href="{{ $pemateris->nextPageUrl() }}" class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 hover:border-indigo-500 hover:text-indigo-600 hover:shadow-sm transition">
-                    <i class="fi fi-rr-angle-right"></i>
-                </a>
-            @else
-                <span class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-100 text-slate-300 cursor-not-allowed">
-                    <i class="fi fi-rr-angle-right"></i>
-                </span>
-            @endif
-        </div>
-        @endif
+    @if($pemateris->hasPages())
+    <div class="p-6 border-t border-slate-100 flex justify-center">
+        {{ $pemateris->appends(request()->query())->links() }}
     </div>
     @endif
 </div>

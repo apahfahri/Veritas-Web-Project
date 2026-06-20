@@ -5,43 +5,57 @@
 
 @section('content')
 
-<div class="flex flex-wrap justify-between items-end gap-4 mb-8 select-none">
-    <div>
-        <h2 class="text-2xl font-black text-slate-900 tracking-tight">Daftar Rekening</h2>
-        <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-1">Total: {{ $rekenings->total() }} Rekening Terdaftar</p>
-    </div>
-    <a href="{{ route('admin.rekening.create') }}"
-       class="bg-slate-900 text-white px-6 py-3 rounded-2xl hover:bg-slate-800 transition shadow-lg shadow-slate-200 flex items-center gap-2 text-sm font-black group">
-        <i class="fi fi-rr-plus text-cyan-400 group-hover:rotate-90 transition-transform duration-300"></i>
-        Tambah Rekening Baru
-    </a>
-</div>
+<div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden select-none">
+    <div class="p-6 md:p-8 bg-slate-50/30 border-b border-slate-100 select-none">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <form method="GET" action="{{ route('admin.rekening.index') }}" class="flex flex-wrap items-center gap-3 w-full md:w-auto flex-1">
+                <div class="relative flex-1 min-w-[200px] max-w-md">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                        <i class="fi fi-rr-search"></i>
+                    </span>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari rekening..."
+                           class="w-full bg-slate-50 border border-slate-200/80 rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium text-slate-700 outline-none focus:ring-2 focus:ring-cyan-500 transition">
+                </div>
+                <button type="submit" class="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-md transition flex items-center gap-2">
+                    <i class="fi fi-rr-search"></i> Cari Data
+                </button>
+                @if(request()->has('search'))
+                    <a href="{{ route('admin.rekening.index') }}" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm px-4 py-2.5 rounded-xl transition">Reset</a>
+                @endif
+            </form>
 
-<div class="bg-white rounded-[32px] shadow-sm border border-slate-100 overflow-hidden select-none">
+            <div class="flex items-center gap-3 shrink-0">
+                <a href="{{ route('admin.rekening.create') }}"
+                   class="bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-md transition uppercase tracking-wider flex items-center gap-2">
+                    <i class="fi fi-rr-plus"></i> Tambah Rekening Baru
+                </a>
+            </div>
+        </div>
+    </div>
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="bg-slate-100/50 border-b-2 border-slate-100">
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Nama Bank</th>
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Nomor Rekening</th>
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Atas Nama</th>
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50 text-center">Status Aktif</th>
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50 text-center">Aksi</th>
+            <thead class="bg-slate-50 border-b border-slate-100 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">
+                <tr>
+                    <th class="px-5 py-4">Nama Bank</th>
+                    <th class="px-5 py-4">Nomor Rekening</th>
+                    <th class="px-5 py-4">Atas Nama</th>
+                    <th class="px-5 py-4 text-center">Status Aktif</th>
+                    <th class="px-5 py-4 text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-50">
                 @forelse($rekenings as $r)
-                <tr class="hover:bg-slate-50/50 transition-colors group">
-                    <td class="p-6">
+                <tr class="hover:bg-slate-50/50 transition-colors">
+                    <td class="p-5">
                         <span class="text-sm font-black text-slate-800 tracking-tight block uppercase">{{ $r->nama_bank }}</span>
                     </td>
-                    <td class="p-6">
+                    <td class="p-5">
                         <span class="text-sm font-mono font-bold text-slate-900">{{ $r->nomor_rekening }}</span>
                     </td>
-                    <td class="p-6">
+                    <td class="p-5">
                         <span class="text-sm font-bold text-slate-700">{{ $r->atas_nama }}</span>
                     </td>
-                    <td class="p-6">
+                    <td class="p-5">
                         <div class="flex items-center justify-center">
                             <form method="POST" action="{{ route('admin.rekening.toggle', $r->id_rekening) }}">
                                 @csrf
@@ -53,16 +67,16 @@
                             </form>
                         </div>
                     </td>
-                    <td class="p-6 text-center">
+                    <td class="p-5 text-center">
                         <div class="flex items-center justify-center gap-2">
                             <a href="{{ route('admin.rekening.edit', $r->id_rekening) }}"
-                               class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-indigo-600 hover:text-indigo-600 hover:shadow-lg hover:shadow-indigo-50 transition shadow-sm">
+                               class="w-8 h-8 flex items-center justify-center rounded-lg bg-cyan-50 text-cyan-600 hover:text-cyan-800 hover:bg-cyan-100 transition" title="Edit">
                                 <i class="fi fi-rr-edit"></i>
                             </a>
                             <form method="POST" action="{{ route('admin.rekening.destroy', $r->id_rekening) }}" class="delete-form" data-name="Rekening {{ $r->nama_bank }} - {{ $r->nomor_rekening }}">
                                 @csrf @method('DELETE')
                                 <button type="submit"
-                                        class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-red-500 hover:text-red-500 hover:shadow-lg hover:shadow-red-50 transition shadow-sm">
+                                        class="w-8 h-8 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:text-rose-700 hover:bg-rose-100 transition" title="Hapus">
                                     <i class="fi fi-rr-trash"></i>
                                 </button>
                             </form>
@@ -87,8 +101,8 @@
     </div>
     
     @if($rekenings->hasPages())
-    <div class="p-6 border-t border-slate-50 bg-slate-50/30">
-        {{ $rekenings->links() }}
+    <div class="p-6 border-t border-slate-100 flex justify-center">
+        {{ $rekenings->appends(request()->query())->links() }}
     </div>
     @endif
 </div>

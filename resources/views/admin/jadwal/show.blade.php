@@ -4,9 +4,8 @@
 
 @section('content')
 <div class="mb-6">
-    <a href="{{ route('admin.jadwal.index') }}" class="inline-flex items-center gap-2 text-slate-400 hover:text-slate-900 font-bold text-xs uppercase tracking-widest transition">
-        <i class="fi fi-rr-arrow-left"></i>
-        Kembali
+    <a href="{{ route('admin.jadwal.index') }}" class="flex items-center gap-2 text-xs font-black text-slate-400 hover:text-slate-600 transition uppercase tracking-widest">
+        <i class="fi fi-rr-arrow-left"></i> KEMBALI
     </a>
 </div>
 
@@ -14,7 +13,7 @@
 
     {{-- Info Jadwal --}}
     <div class="lg:col-span-1 space-y-5">
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
             @if($jadwal->foto)
             <div class="w-full h-48 overflow-hidden border-b border-slate-100">
                 <img src="{{ asset('storage/' . $jadwal->foto) }}" alt="{{ $jadwal->jenis?->nama }}" class="w-full h-full object-cover">
@@ -104,7 +103,7 @@
         </div>
 
         {{-- Pemateri --}}
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6">
             <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Pemateri / Instruktur</p>
             @forelse($jadwal->pemateri as $pm)
             <div class="flex items-center gap-3 mb-3">
@@ -122,7 +121,7 @@
         </div>
 
         {{-- Materi Pendukung --}}
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6">
             <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Materi Pendukung</p>
             @forelse($jadwal->materi as $m)
             <div class="flex items-center gap-3 mb-3">
@@ -146,7 +145,7 @@
 
     {{-- Daftar Peserta --}}
     <div class="lg:col-span-2">
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
             <div class="px-6 py-5 border-b border-slate-100 flex justify-between items-center">
                 <div>
                     <h3 class="text-lg font-black text-slate-900">Daftar Peserta</h3>

@@ -4,14 +4,13 @@
 
 @section('content')
 
-<div class="mb-6 flex items-center justify-between">
-    <a href="{{ route('admin.pendaftaran.index') }}" class="text-slate-500 hover:text-indigo-600 text-sm font-semibold flex items-center gap-2 transition w-max">
-        <i class="fi fi-rr-arrow-left"></i>
-        Kembali ke Daftar
+<div class="mb-6">
+    <a href="{{ route('admin.pendaftaran.index') }}" class="flex items-center gap-2 text-xs font-black text-slate-400 hover:text-slate-600 transition uppercase tracking-widest">
+        <i class="fi fi-rr-arrow-left"></i> KEMBALI
     </a>
 </div>
 
-<div class="bg-white rounded-[32px] shadow-sm border border-slate-100 overflow-hidden">
+<div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
     <!-- Header Card -->
     <div class="bg-slate-50/50 border-b border-slate-100 p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>

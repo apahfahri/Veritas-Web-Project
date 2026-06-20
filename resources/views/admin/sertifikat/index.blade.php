@@ -71,42 +71,53 @@
     </div>
 </div>
 
-<div class="flex flex-wrap justify-between items-end gap-4 mb-8">
-    <div>
-        <h2 class="text-2xl font-black text-slate-900 tracking-tight">Daftar Sertifikat</h2>
-        <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-1">Total: {{ $sertifikats->total() }} Sertifikat Terbit</p>
-    </div>
-    <div class="flex items-center gap-3">
-        <button onclick="openImportModal()"
-                class="bg-white border border-slate-200 text-slate-700 px-6 py-3 rounded-2xl hover:bg-slate-50 transition shadow-sm flex items-center gap-2 text-sm font-black group">
-            <i class="fi fi-rr-upload text-slate-400 group-hover:text-slate-600 transition"></i>
-            Import CSV & ZIP
-        </button>
-        <button onclick="toggleSelectionModal()" 
-                class="bg-slate-900 text-white px-6 py-3 rounded-2xl hover:bg-slate-800 transition shadow-lg shadow-slate-200 flex items-center gap-2 text-sm font-black group">
-            <i class="fi fi-rr-copy text-cyan-400 group-hover:rotate-90 transition-transform duration-300"></i>
-            Unggah Dokumen Baru
-        </button>
-    </div>
-</div>
+<div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+    <div class="p-6 md:p-8 bg-slate-50/30 border-b border-slate-100 select-none">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <form method="GET" action="{{ route('admin.sertifikat.index') }}" class="flex flex-wrap items-center gap-3 w-full md:w-auto flex-1">
+                <div class="relative flex-1 min-w-[200px] max-w-md">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                        <i class="fi fi-rr-search"></i>
+                    </span>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari sertifikat..."
+                           class="w-full bg-slate-50 border border-slate-200/80 rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium text-slate-700 outline-none focus:ring-2 focus:ring-cyan-500 transition">
+                </div>
+                <button type="submit" class="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-md transition flex items-center gap-2">
+                    <i class="fi fi-rr-search"></i> Cari Data
+                </button>
+                @if(request()->has('search'))
+                    <a href="{{ route('admin.sertifikat.index') }}" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm px-4 py-2.5 rounded-xl transition">Reset</a>
+                @endif
+            </form>
 
-<div class="bg-white rounded-[32px] shadow-sm border border-slate-100 overflow-hidden">
+            <div class="flex items-center gap-3 shrink-0">
+                <button onclick="openImportModal()"
+                        class="bg-white border border-slate-200 text-slate-700 font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-sm hover:bg-slate-50 transition uppercase tracking-wider flex items-center gap-2">
+                    <i class="fi fi-rr-upload"></i> Import CSV & ZIP
+                </button>
+                <button onclick="toggleSelectionModal()" 
+                        class="bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-md transition uppercase tracking-wider flex items-center gap-2">
+                    <i class="fi fi-rr-copy"></i> Unggah Dokumen Baru
+                </button>
+            </div>
+        </div>
+    </div>
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="bg-slate-100/50 border-b-2 border-slate-100">
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">No Sertifikat</th>
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Nama Peserta</th>
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Kategori Layanan</th>
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50 text-center">Penerbit</th>
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50 text-center">Tgl Terbit</th>
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50 text-center">Masa Berlaku</th>
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50 text-center">Aksi</th>
+            <thead class="bg-slate-50 border-b border-slate-100 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">
+                <tr>
+                    <th class="px-5 py-4">No Sertifikat</th>
+                    <th class="px-5 py-4">Nama Peserta</th>
+                    <th class="px-5 py-4">Kategori Layanan</th>
+                    <th class="px-5 py-4 text-center">Penerbit</th>
+                    <th class="px-5 py-4 text-center">Tgl Terbit</th>
+                    <th class="px-5 py-4 text-center">Masa Berlaku</th>
+                    <th class="px-5 py-4 text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-50">
                 @forelse($sertifikats as $s)
-                <tr class="hover:bg-slate-50/50 transition-colors group">
+                <tr class="hover:bg-slate-50/50 transition-colors">
                     <td class="p-6">
                         <span class="text-[12px] font-medium text-slate-900">{{ $s->no_sertifikat }}</span>
                     </td>
@@ -125,19 +136,19 @@
                     <td class="p-6 text-center whitespace-nowrap">
                         <span class="text-[12px] font-medium text-slate-900">{{ $s->masa_berlaku ? $s->masa_berlaku->format('d M Y') : '-' }}</span>
                     </td>
-                    <td class="p-6 text-center">
+                    <td class="p-5 text-center">
                         <div class="flex items-center justify-center gap-2">
-                            <a href="{{ route('admin.sertifikat.show', $s->no_sertifikat) }}" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-red-500 hover:text-red-500 hover:shadow-lg hover:shadow-red-50 transition shadow-sm" title="Lihat PDF">
+                            <a href="{{ route('admin.sertifikat.show', $s->no_sertifikat) }}" target="_blank" class="w-8 h-8 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 hover:text-indigo-800 hover:bg-indigo-100 transition" title="Lihat PDF">
                                 <i class="fi fi-rr-download"></i>
                             </a>
-                            <a href="{{ route('admin.sertifikat.edit', $s->no_sertifikat) }}" class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-amber-500 hover:text-amber-500 hover:shadow-lg hover:shadow-amber-50 transition shadow-sm" title="Edit">
+                            <a href="{{ route('admin.sertifikat.edit', $s->no_sertifikat) }}" class="w-8 h-8 flex items-center justify-center rounded-lg bg-cyan-50 text-cyan-600 hover:text-cyan-800 hover:bg-cyan-100 transition" title="Edit">
                                 <i class="fi fi-rr-edit"></i>
                             </a>
                             <form action="{{ route('admin.sertifikat.destroy', $s->no_sertifikat) }}" method="POST" class="delete-form" data-name="Sertifikat {{ $s->no_sertifikat }}">
                                 @csrf
                                 @method('DELETE')
                                 <input type="hidden" name="kembalikan_ke_proses" value="0" id="kembalikan_{{ str_replace('-','_',$s->no_sertifikat) }}">
-                                <button type="button" onclick="confirmDelete('{{ $s->no_sertifikat }}')" class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-red-500 hover:text-red-500 hover:shadow-lg hover:shadow-red-50 transition shadow-sm" title="Hapus">
+                                <button type="button" onclick="confirmDelete('{{ $s->no_sertifikat }}')" class="w-8 h-8 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:text-rose-700 hover:bg-rose-100 transition" title="Hapus">
                                     <i class="fi fi-rr-trash"></i>
                                 </button>
                             </form>
@@ -161,44 +172,10 @@
         </table>
     </div>
     @if($sertifikats->hasPages())
-    <div class="px-8 py-5 border-t border-slate-100 bg-slate-50/30 flex flex-col sm:flex-row items-center justify-between gap-4">
-        {{-- Info teks kiri --}}
-        <p class="text-[12px] font-medium text-slate-500">
-            Menampilkan
-            <span class="font-black text-slate-800">{{ $sertifikats->firstItem() }}–{{ $sertifikats->lastItem() }}</span>
-            dari
-            <span class="font-black text-slate-800">{{ $sertifikats->total() }}</span>
-            sertifikat
-        </p>
-
-        {{-- Tombol navigasi kanan --}}
-        <div class="flex items-center gap-1">
-            {{-- Previous --}}
-            @if($sertifikats->onFirstPage())
-                <span class="px-3 py-1.5 text-[11px] font-black text-slate-300 border border-slate-100 rounded-xl cursor-not-allowed bg-white">‹</span>
-            @else
-                <a href="{{ $sertifikats->previousPageUrl() }}" class="px-3 py-1.5 text-[11px] font-black text-slate-500 border border-slate-200 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition bg-white">‹</a>
-            @endif
-
-            {{-- Nomor halaman --}}
-            @for($i = 1; $i <= $sertifikats->lastPage(); $i++)
-                @if($i == $sertifikats->currentPage())
-                    <span class="px-3 py-1.5 text-[11px] font-black text-white bg-slate-900 rounded-xl">{{ $i }}</span>
-                @else
-                    <a href="{{ $sertifikats->url($i) }}" class="px-3 py-1.5 text-[11px] font-black text-slate-500 border border-slate-200 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition bg-white">{{ $i }}</a>
-                @endif
-            @endfor
-
-            {{-- Next --}}
-            @if($sertifikats->hasMorePages())
-                <a href="{{ $sertifikats->nextPageUrl() }}" class="px-3 py-1.5 text-[11px] font-black text-slate-500 border border-slate-200 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition bg-white">›</a>
-            @else
-                <span class="px-3 py-1.5 text-[11px] font-black text-slate-300 border border-slate-100 rounded-xl cursor-not-allowed bg-white">›</span>
-            @endif
-        </div>
+    <div class="p-6 border-t border-slate-100 flex justify-center">
+        {{ $sertifikats->appends(request()->query())->links() }}
     </div>
     @endif
-
 </div>
 
 {{-- MODAL: Import Data --}}
