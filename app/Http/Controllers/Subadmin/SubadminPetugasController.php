@@ -18,9 +18,16 @@ class SubadminPetugasController extends Controller
         });
     }
 
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $pemateris = Pemateri::latest()->paginate(15);
+        $query = Pemateri::query();
+        
+        if ($request->filled('search')) {
+            $query->where('nama_lengkap', 'like', '%' . $request->search . '%')
+                  ->orWhere('email', 'like', '%' . $request->search . '%');
+        }
+        
+        $pemateris = $query->latest()->paginate(15)->withQueryString();
         return view('subadmin.petugas.index', compact('pemateris'));
     }
 }

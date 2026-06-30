@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-solid-rounded/css/uicons-solid-rounded.css'>
     @php
         $manifestPath = public_path('build/manifest.json');
         $manifest = file_exists($manifestPath) ? json_decode(file_get_contents($manifestPath), true) : null;
@@ -25,10 +27,41 @@
     @endif
     <style>
         body { font-family: 'Outfit', sans-serif; }
-        @media (min-width: 1024px) {
-            .sidebar-collapsed { width: 5.5rem !important; }
-            .main-expanded { margin-left: 5.5rem !important; }
+
+        /* ── Layout Stability Fix ─────────────────────────────────────────
+           Sidebar is position:fixed so it's out of normal flow.
+           Main content uses margin-left to offset itself. We define the
+           sidebar width as a CSS variable so both sidebar and margin stay
+           in sync at every zoom level.
+        ────────────────────────────────────────────────────────────────── */
+        :root {
+            --sidebar-w: 18rem;       /* = w-72 = 288px */
+            --sidebar-collapsed-w: 5.5rem;
         }
+
+        /* Prevent body from ever showing a horizontal scrollbar */
+        html, body { overflow-x: hidden; max-width: 100%; }
+
+        /* Sidebar always fixed width */
+        #sidebar { width: var(--sidebar-w); }
+
+        /* Main content: always occupies remaining width, never overflows */
+        #main-content {
+            min-width: 0;
+            max-width: 100%;
+            /* On desktop, compensate for the fixed sidebar */
+        }
+        @media (min-width: 1024px) {
+            #main-content { margin-left: var(--sidebar-w); }
+            #sidebar.sidebar-collapsed { width: var(--sidebar-collapsed-w) !important; }
+            #main-content.main-expanded { margin-left: var(--sidebar-collapsed-w) !important; }
+        }
+
+        /* Remove old Tailwind margin so CSS var takes over on desktop */
+        @media (min-width: 1024px) {
+            #main-content.lg\:ml-72 { margin-left: var(--sidebar-w); }
+        }
+
         .hide-text { display: none !important; }
 
         ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -37,10 +70,13 @@
         ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.5); }
         .profile-dropdown { transition: all 0.2s ease-in-out; max-height: 0; overflow: hidden; opacity: 0; }
         .profile-dropdown.show { max-height: 200px; opacity: 1; margin-top: 0.5rem; }
+
+        /* Ensure tables with overflow-x-auto don't bleed out of their container */
+        .overflow-x-auto { max-width: 100%; }
     </style>
     @stack('styles')
 </head>
-<body class="min-h-screen bg-slate-50 flex text-slate-800">
+<body class="min-h-screen bg-slate-50 flex text-slate-800 overflow-x-hidden">
 
     <!-- SIDEBAR -->
     <aside id="sidebar" class="-translate-x-full lg:translate-x-0 w-72 h-screen bg-gradient-to-b from-slate-900 to-indigo-950 flex flex-col fixed top-0 left-0 z-40 shadow-2xl text-slate-100 transition-all duration-300 ease-in-out select-none">
@@ -57,7 +93,7 @@
 
             <!-- Minimize Button on Sidebar Edge -->
             <button id="sidebarToggle" class="absolute -right-3 top-8 w-6 h-6 bg-slate-800 text-slate-300 rounded-full flex items-center justify-center hover:bg-slate-700 hover:text-white hover:scale-110 transition shadow-lg z-50 border border-slate-700">
-                <svg class="w-3 h-3 transition-transform duration-300" id="sidebarToggleIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                <i class="fi fi-rr-angle-left transition-transform duration-300"></i>
             </button>
         </div>
 
@@ -71,14 +107,14 @@
                     <div class="text-white text-sm font-bold truncate">{{ Auth::user()->username }}</div>
                     <div class="text-xs text-orange-400 font-medium truncate">Superadmin</div>
                 </div>
-                <svg class="w-4 h-4 text-slate-500 sidebar-text group-hover:text-slate-300 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                <i class="fi fi-rr-angle-down text-slate-500 sidebar-text group-hover:text-slate-300 transition"></i>
             </div>
             
             <div id="profileDropdown" class="profile-dropdown px-2">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl transition text-sm font-bold">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                        <i class="fi fi-rr-sign-out-alt"></i>
                         <span class="sidebar-text">Logout</span>
                     </button>
                 </form>
@@ -91,26 +127,26 @@
             
             <a href="{{ route('admin.dashboard') }}" 
                class="group relative flex items-center gap-3.5 px-4 py-3 rounded-xl transition duration-200 hover:bg-slate-800 hover:text-white font-medium text-sm {{ request()->routeIs('admin.dashboard') ? 'bg-gradient-to-r from-cyan-600/90 to-teal-600/90 text-white shadow-lg shadow-cyan-600/20' : 'text-slate-400' }}">
-                <span class="shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg></span>
+                <span class="shrink-0"><i class="fi fi-rr-apps"></i></span>
                 <span class="sidebar-text truncate">Dashboard</span>
             </a>
 
             <a href="{{ route('admin.pendaftaran.index') }}" 
                class="group relative flex items-center gap-3.5 px-4 py-3 rounded-xl transition duration-200 hover:bg-slate-800 hover:text-white font-medium text-sm {{ request()->routeIs('admin.pendaftaran.*') ? 'bg-gradient-to-r from-cyan-600/90 to-teal-600/90 text-white shadow-lg shadow-cyan-600/20' : 'text-slate-400' }}">
-                <span class="shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg></span>
+                <span class="shrink-0"><i class="fi fi-rr-document"></i></span>
                 <span class="sidebar-text truncate">Pendaftaran</span>
             </a>
 
 
             <a href="{{ route('admin.sertifikat.index') }}" 
                class="group relative flex items-center gap-3.5 px-4 py-3 rounded-xl transition duration-200 hover:bg-slate-800 hover:text-white font-medium text-sm {{ request()->routeIs('admin.sertifikat.*') ? 'bg-gradient-to-r from-cyan-600/90 to-teal-600/90 text-white shadow-lg shadow-cyan-600/20' : 'text-slate-400' }}">
-                <span class="shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg></span>
+                <span class="shrink-0"><i class="fi fi-rr-diploma"></i></span>
                 <span class="sidebar-text truncate">Sertifikat</span>
             </a>
 
             <a href="{{ route('admin.laporan.index') }}" 
                class="group relative flex items-center gap-3.5 px-4 py-3 rounded-xl transition duration-200 hover:bg-slate-800 hover:text-white font-medium text-sm {{ request()->routeIs('admin.laporan.*') ? 'bg-gradient-to-r from-cyan-600/90 to-teal-600/90 text-white shadow-lg shadow-cyan-600/20' : 'text-slate-400' }}">
-                <span class="shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg></span>
+                <span class="shrink-0"><i class="fi fi-rr-chart-pie"></i></span>
                 <span class="sidebar-text truncate">Laporan & Monitoring</span>
             </a>
 
@@ -118,31 +154,31 @@
 
             <a href="{{ route('admin.jadwal.index') }}"
                class="group relative flex items-center gap-3.5 px-4 py-3 rounded-xl transition duration-200 hover:bg-slate-800 hover:text-white font-medium text-sm {{ request()->routeIs('admin.jadwal.*') ? 'bg-gradient-to-r from-cyan-600/90 to-teal-600/90 text-white shadow-lg shadow-cyan-600/20' : 'text-slate-400' }}">
-                <span class="shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v12a2 2 0 002 2z"/></svg></span>
+                <span class="shrink-0"><i class="fi fi-rr-calendar"></i></span>
                 <span class="sidebar-text truncate">Jadwal Pelatihan</span>
             </a>
 
             <a href="{{ route('admin.materi.index') }}"
                class="group relative flex items-center gap-3.5 px-4 py-3 rounded-xl transition duration-200 hover:bg-slate-800 hover:text-white font-medium text-sm {{ request()->routeIs('admin.materi.*') ? 'bg-gradient-to-r from-cyan-600/90 to-teal-600/90 text-white shadow-lg shadow-cyan-600/20' : 'text-slate-400' }}">
-                <span class="shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></span>
+                <span class="shrink-0"><i class="fi fi-rr-book-alt"></i></span>
                 <span class="sidebar-text truncate">Kelola Materi</span>
             </a>
 
             <a href="{{ route('admin.petugas.index') }}" 
                class="group relative flex items-center gap-3.5 px-4 py-3 rounded-xl transition duration-200 hover:bg-slate-800 hover:text-white font-medium text-sm {{ request()->routeIs('admin.petugas.*') ? 'bg-gradient-to-r from-cyan-600/90 to-teal-600/90 text-white shadow-lg shadow-cyan-600/20' : 'text-slate-400' }}">
-                <span class="shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg></span>
+                <span class="shrink-0"><i class="fi fi-rr-users"></i></span>
                 <span class="sidebar-text truncate">Pemateri</span>
             </a>
 
             <a href="{{ route('admin.kategori.index') }}" 
                class="group relative flex items-center gap-3.5 px-4 py-3 rounded-xl transition duration-200 hover:bg-slate-800 hover:text-white font-medium text-sm {{ request()->routeIs('admin.kategori.*') ? 'bg-gradient-to-r from-cyan-600/90 to-teal-600/90 text-white shadow-lg shadow-cyan-600/20' : 'text-slate-400' }}">
-                <span class="shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg></span>
+                <span class="shrink-0"><i class="fi fi-rr-briefcase"></i></span>
                 <span class="sidebar-text truncate">Kategori Layanan</span>
             </a>
 
             <a href="{{ route('admin.mitra.index') }}"
                class="group relative flex items-center gap-3.5 px-4 py-3 rounded-xl transition duration-200 hover:bg-slate-800 hover:text-white font-medium text-sm {{ request()->routeIs('admin.mitra.*') ? 'bg-gradient-to-r from-cyan-600/90 to-teal-600/90 text-white shadow-lg shadow-cyan-600/20' : 'text-slate-400' }}">
-                <span class="shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg></span>
+                <span class="shrink-0"><i class="fi fi-rr-building"></i></span>
                 <span class="sidebar-text truncate">Daftar Perusahaan</span>
             </a>
 
@@ -150,19 +186,19 @@
             <div class="text-xs font-semibold text-slate-500 uppercase px-2 pt-4 py-1 tracking-wider sidebar-text">Superadmin Tools</div>
             <a href="{{ route('admin.subadmin.index') }}" 
                class="group relative flex items-center gap-3.5 px-4 py-3 rounded-xl transition duration-200 hover:bg-slate-800 hover:text-white font-medium text-sm {{ request()->routeIs('admin.subadmin.*') ? 'bg-gradient-to-r from-cyan-600/90 to-teal-600/90 text-white shadow-lg shadow-cyan-600/20' : 'text-slate-400' }}">
-                <span class="shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg></span>
+                <span class="shrink-0"><i class="fi fi-rr-building"></i></span>
                 <span class="sidebar-text truncate">Subadmin Management</span>
             </a>
             <a href="{{ route('admin.rekening.index') }}" 
                class="group relative flex items-center gap-3.5 px-4 py-3 rounded-xl transition duration-200 hover:bg-slate-800 hover:text-white font-medium text-sm {{ request()->routeIs('admin.rekening.*') ? 'bg-gradient-to-r from-cyan-600/90 to-teal-600/90 text-white shadow-lg shadow-cyan-600/20' : 'text-slate-400' }}">
-                <span class="shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg></span>
+                <span class="shrink-0"><i class="fi fi-rr-credit-card"></i></span>
                 <span class="sidebar-text truncate">Kelola Rekening</span>
             </a>
             @endif
 
             <div class="text-xs font-semibold text-slate-500 uppercase px-2 pt-4 py-1 tracking-wider sidebar-text">Lainnya</div>
             <a href="{{ route('home') }}" class="group relative flex items-center gap-3.5 px-4 py-3 rounded-xl transition duration-200 hover:bg-slate-800 hover:text-white font-medium text-sm text-slate-400">
-                <span class="shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg></span>
+                <span class="shrink-0"><i class="fi fi-rr-globe"></i></span>
                 <span class="sidebar-text truncate">Lihat Website</span>
             </a>
         </nav>
@@ -170,14 +206,14 @@
     </aside>
 
     <!-- MAIN CONTENT -->
-    <div id="main-content" class="flex-1 ml-0 lg:ml-72 flex flex-col min-h-screen transition-all duration-300 ease-in-out">
+    <div id="main-content" class="flex-1 min-w-0 ml-0 lg:ml-72 flex flex-col min-h-screen transition-all duration-300 ease-in-out overflow-x-hidden">
         
         <!-- HEADER TOP BAR -->
         <header class="bg-white border-b border-slate-100 px-4 lg:px-8 py-5 flex justify-between items-center sticky top-0 z-30 backdrop-blur-md bg-white/80">
             <div class="flex items-center gap-3">
                 <!-- Hamburger Menu Button (Mobile) -->
                 <button id="mobileSidebarToggle" class="block lg:hidden text-slate-500 hover:text-slate-900 focus:outline-none p-1.5 rounded-lg hover:bg-slate-100 transition">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    <i class="fi fi-rr-menu-burger"></i>
                 </button>
                 <div>
                     <h1 class="text-lg lg:text-xl font-black text-slate-900 tracking-tight">@yield('page-title', 'Admin Dashboard')</h1>
@@ -188,21 +224,21 @@
                 @yield('header-actions')
                 @if(session('success'))
                     <span class="text-sm font-semibold text-teal-700 bg-teal-50 border border-teal-200/60 px-3.5 py-1.5 rounded-xl shadow-sm flex items-center gap-1.5">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        <i class="fi fi-rr-check"></i>
                         {{ session('success') }}
                     </span>
                 @endif
                 @if(session('warning'))
                     <button onclick="Swal.fire({title: 'Peringatan Import', html: `<div class='text-left text-sm max-h-60 overflow-y-auto space-y-1'>{!! str_replace("\n", '<br>', addslashes(e(session('warning')))) !!}</div>`, icon: 'warning', confirmButtonColor: '#0f172a', customClass: {popup: 'rounded-[32px]'}})" 
                             class="text-sm font-semibold text-amber-700 bg-amber-50 border border-amber-200/60 px-3.5 py-1.5 rounded-xl shadow-sm flex items-center gap-1.5 hover:bg-amber-100/50 transition">
-                        <svg class="w-4 h-4 text-amber-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        <i class="fi fi-rr-triangle-warning text-amber-500"></i>
                         Import Warning (Klik Detail)
                     </button>
                 @endif
                 @if(session('error'))
                     <button onclick="Swal.fire({title: 'Gagal Import', html: `<div class='text-left text-sm max-h-60 overflow-y-auto space-y-1'>{!! str_replace("\n", '<br>', addslashes(e(session('error')))) !!}</div>`, icon: 'error', confirmButtonColor: '#0f172a', customClass: {popup: 'rounded-[32px]'}})" 
                             class="text-sm font-semibold text-rose-700 bg-rose-50 border border-rose-200/60 px-3.5 py-1.5 rounded-xl shadow-sm flex items-center gap-1.5 hover:bg-rose-100/50 transition">
-                        <svg class="w-4 h-4 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <i class="fi fi-rr-cross-circle text-rose-500"></i>
                         Import Gagal (Klik Detail)
                     </button>
                 @endif
@@ -210,13 +246,13 @@
         </header>
 
         <!-- PAGE BODY -->
-        <main class="p-8 flex-1 bg-slate-50">
+        <main class="p-6 flex-1 bg-slate-50 min-w-0 w-full">
             @if($errors->any())
                 <div class="mb-6 bg-red-50/70 border border-red-200/60 rounded-2xl p-4 backdrop-blur-sm">
                     <ul class="text-sm text-red-700 font-medium space-y-1">
                         @foreach($errors->all() as $error)
                             <li class="flex items-start gap-1.5">
-                                <svg class="w-4 h-4 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <i class="fi fi-rr-cross-circle mt-0.5"></i>
                                 {{ $error }}
                             </li>
                         @endforeach

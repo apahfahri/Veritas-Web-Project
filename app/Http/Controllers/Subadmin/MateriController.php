@@ -9,9 +9,16 @@ use Illuminate\Support\Facades\Storage;
 
 class MateriController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $materis = Materi::latest()->get();
+        $query = Materi::query();
+        
+        if ($request->filled('search')) {
+            $query->where('judul', 'like', '%' . $request->search . '%')
+                  ->orWhere('deskripsi', 'like', '%' . $request->search . '%');
+        }
+        
+        $materis = $query->latest()->paginate(15)->withQueryString();
         return view('subadmin.materi.index', compact('materis'));
     }
 

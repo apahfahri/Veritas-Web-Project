@@ -34,6 +34,20 @@
                         <span class="border text-xs px-3 py-1 rounded {{ $jadwal->jenis_pertemuan === 'online' ? 'border-[#1E6B3D] text-[#1E6B3D]' : 'border-orange-400 text-orange-500' }}">
                             {{ ucfirst($jadwal->jenis_pertemuan) }}
                         </span>
+                        @if($jadwal->status_pelaksanaan === 'Berlangsung')
+                            <span class="bg-rose-500 text-white text-xs px-3 py-1 rounded font-bold shadow-sm flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
+                                Berlangsung
+                            </span>
+                        @elseif($jadwal->status_pelaksanaan === 'Akan Datang')
+                            <span class="bg-sky-500 text-white text-xs px-3 py-1 rounded font-bold shadow-sm">
+                                Akan Datang
+                            </span>
+                        @else
+                            <span class="bg-slate-600 text-white text-xs px-3 py-1 rounded font-bold shadow-sm">
+                                {{ $jadwal->status_pelaksanaan }}
+                            </span>
+                        @endif
                     </div>
 
                     <h1 class="text-3xl font-bold text-[#1E6B3D] mb-2">{{ $jadwal->jenis?->nama }}</h1>

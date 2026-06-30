@@ -76,7 +76,7 @@
 
 <!-- GLOBAL FILTER BAR -->
 <div class="bg-white rounded-[32px] shadow-sm border border-slate-100 p-8 mb-8 no-print filter-box">
-    <form method="GET" action="{{ route('admin.laporan.index') }}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-end" id="laporanFilterForm">
+    <form method="GET" action="{{ route('admin.laporan.index') }}" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 items-end" id="laporanFilterForm">
         
         <!-- Dropdown Jenis Laporan -->
         <div>
@@ -86,6 +86,13 @@
                 <option value="participants" {{ $type === 'participants' ? 'selected' : '' }}>Laporan Detail Peserta</option>
                 <option value="products" {{ $type === 'products' ? 'selected' : '' }}>Laporan Evaluasi Produk</option>
             </select>
+        </div>
+
+        <!-- Text Search -->
+        <div>
+            <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 ml-1">Pencarian</label>
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari data..."
+                   class="w-full px-5 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-medium text-slate-700 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition">
         </div>
 
         <!-- Date Picker: Dari Tanggal -->
@@ -106,24 +113,24 @@
         <div>
             <div class="flex gap-2">
                 <button type="submit" class="flex-1 bg-slate-900 text-white py-3.5 rounded-2xl text-sm font-black hover:bg-slate-800 transition shadow-lg shadow-slate-200 flex items-center justify-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 8.293A1 1 0 013 7.586V4z"></path></svg>
+                    <i class="fi fi-rr-filter"></i>
                     Filter
                 </button>
                 
                 @if(request()->anyFilled(['start_date', 'end_date']))
                     <a href="{{ route('admin.laporan.index', ['type' => $type]) }}" class="px-5 bg-slate-100 text-slate-500 hover:bg-slate-200 transition rounded-2xl flex items-center justify-center" title="Reset Rentang Tanggal">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H18.2"></path></svg>
+                        <i class="fi fi-rr-refresh"></i>
                     </a>
                 @endif
 
                 <!-- Excel Export -->
                 <button type="button" onclick="exportTableToExcel('laporan-datatable')" class="px-5 bg-emerald-50 text-emerald-600 border border-emerald-100 hover:bg-emerald-100/60 rounded-2xl flex items-center justify-center transition" title="Export Excel (.csv)">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <i class="fi fi-rr-download"></i>
                 </button>
 
                 <!-- PDF/Print Export -->
                 <button type="button" onclick="window.print()" class="px-5 bg-indigo-50 text-indigo-600 border border-indigo-100 hover:bg-indigo-100/60 rounded-2xl flex items-center justify-center transition" title="Cetak / Ekspor PDF">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                    <i class="fi fi-rr-database"></i>
                 </button>
             </div>
         </div>
@@ -142,7 +149,7 @@
         <!-- Widget 1: Total Omset -->
         <div class="bg-white p-6 lg:p-8 rounded-[2rem] shadow-sm border border-slate-100 flex items-center gap-5 hover:shadow-md transition">
             <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center shadow-sm shrink-0">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <i class="fi fi-rr-dollar"></i>
             </div>
             <div>
                 <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest">Total Omset Masuk</p>
@@ -153,7 +160,7 @@
         <!-- Widget 2: Total Piutang -->
         <div class="bg-white p-6 lg:p-8 rounded-[2rem] shadow-sm border border-slate-100 flex items-center gap-5 hover:shadow-md transition">
             <div class="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center shadow-sm shrink-0">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <i class="fi fi-rr-time-past w-7 h-7"></i>
             </div>
             <div>
                 <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest">Total Piutang Berjalan</p>
@@ -172,20 +179,21 @@
     <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
         <div class="p-8 border-b border-slate-50 flex justify-between items-center">
             <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest">Rekapitulasi Keuangan</h3>
-            <span class="text-[10px] font-black text-slate-400 bg-slate-50 border px-3 py-1 rounded-full">{{ $registrations->count() }} Data Transaksi</span>
+            <span class="text-[10px] font-black text-slate-400 bg-slate-50 border px-3 py-1 rounded-full">{{ $registrations->total() }} Data Transaksi</span>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse" id="laporan-datatable">
-                <thead>
-                    <tr class="bg-slate-100/50 border-b-2 border-slate-100">
-                        <th class="p-6 text-[12px] font-black text-slate-900">No.</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900">No. Invoice</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900">Tanggal Daftar</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900">Nama Instansi / Klien</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900">Nominal Pendapatan</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900 text-center">Status Bayar</th>
-                    </tr>
-                </thead>
+            <thead class="bg-slate-50 border-b border-slate-100 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">
+                <tr>
+                    <th class="px-5 py-4">No.</th>
+                    <th class="px-5 py-4">Invoice / TRX ID</th>
+                    <th class="px-5 py-4">Tanggal Pembayaran</th>
+                    <th class="px-5 py-4">Program / Layanan</th>
+                    <th class="px-5 py-4">Pembeli / Klien</th>
+                    <th class="px-5 py-4">Nominal TRX</th>
+                    <th class="px-5 py-4 text-center">Status</th>
+                </tr>
+            </thead>
                 <tbody class="divide-y divide-slate-50">
                     @forelse($registrations as $index => $r)
                     <tr class="hover:bg-slate-50/50 transition">
@@ -222,38 +230,8 @@
         </div>
         <!-- PAGINATION -->
         @if($registrations->hasPages())
-        <div class="px-8 py-5 border-t border-slate-100 bg-slate-50/30 flex flex-col sm:flex-row items-center justify-between gap-4 no-print">
-            <p class="text-[12px] font-medium text-slate-500">
-                Menampilkan
-                <span class="font-black text-slate-800">{{ $registrations->firstItem() }}–{{ $registrations->lastItem() }}</span>
-                dari
-                <span class="font-black text-slate-800">{{ $registrations->total() }}</span>
-                data transaksi
-            </p>
-            <div class="flex items-center gap-1">
-                {{-- Previous --}}
-                @if($registrations->onFirstPage())
-                    <span class="px-3 py-1.5 text-[11px] font-black text-slate-300 border border-slate-100 rounded-xl cursor-not-allowed bg-white">‹</span>
-                @else
-                    <a href="{{ $registrations->previousPageUrl() }}" class="px-3 py-1.5 text-[11px] font-black text-slate-500 border border-slate-200 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition bg-white">‹</a>
-                @endif
-
-                {{-- Pages --}}
-                @for($i = 1; $i <= $registrations->lastPage(); $i++)
-                    @if($i == $registrations->currentPage())
-                        <span class="px-3 py-1.5 text-[11px] font-black text-white bg-slate-900 rounded-xl">{{ $i }}</span>
-                    @else
-                        <a href="{{ $registrations->url($i) }}" class="px-3 py-1.5 text-[11px] font-black text-slate-500 border border-slate-200 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition bg-white">{{ $i }}</a>
-                    @endif
-                @endfor
-
-                {{-- Next --}}
-                @if($registrations->hasMorePages())
-                    <a href="{{ $registrations->nextPageUrl() }}" class="px-3 py-1.5 text-[11px] font-black text-slate-500 border border-slate-200 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition bg-white">›</a>
-                @else
-                    <span class="px-3 py-1.5 text-[11px] font-black text-slate-300 border border-slate-100 rounded-xl cursor-not-allowed bg-white">›</span>
-                @endif
-            </div>
+        <div class="p-6 border-t border-slate-100 no-print">
+            {{ $registrations->appends(request()->query())->links('vendor.pagination.tailwind') }}
         </div>
         @endif
     </div>
@@ -280,16 +258,16 @@
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse" id="laporan-datatable">
-                <thead>
-                    <tr class="bg-slate-100/50 border-b-2 border-slate-100">
-                        <th class="p-6 text-[12px] font-black text-slate-900">No.</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900">Tanggal Daftar</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900">Nama Lengkap</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900">Kategori / Asal Perusahaan</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900">Layanan K3 yang Diambil</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900 text-center">Status Progres</th>
-                    </tr>
-                </thead>
+            <thead class="bg-slate-50 border-b border-slate-100 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">
+                <tr>
+                    <th class="px-5 py-4">No.</th>
+                    <th class="px-5 py-4">Tanggal Daftar</th>
+                    <th class="px-5 py-4">Nama Lengkap</th>
+                    <th class="px-5 py-4">Kategori / Asal Perusahaan</th>
+                    <th class="px-5 py-4">Layanan K3 yang Diambil</th>
+                    <th class="px-5 py-4 text-center">Status Progres</th>
+                </tr>
+            </thead>
                 <tbody class="divide-y divide-slate-50">
                     @forelse($registrations as $index => $r)
                     <tr class="hover:bg-slate-50/50 transition">
@@ -334,38 +312,8 @@
         </div>
         <!-- PAGINATION -->
         @if($registrations->hasPages())
-        <div class="px-8 py-5 border-t border-slate-100 bg-slate-50/30 flex flex-col sm:flex-row items-center justify-between gap-4 no-print">
-            <p class="text-[12px] font-medium text-slate-500">
-                Menampilkan
-                <span class="font-black text-slate-800">{{ $registrations->firstItem() }}–{{ $registrations->lastItem() }}</span>
-                dari
-                <span class="font-black text-slate-800">{{ $registrations->total() }}</span>
-                pendaftar
-            </p>
-            <div class="flex items-center gap-1">
-                {{-- Previous --}}
-                @if($registrations->onFirstPage())
-                    <span class="px-3 py-1.5 text-[11px] font-black text-slate-300 border border-slate-100 rounded-xl cursor-not-allowed bg-white">‹</span>
-                @else
-                    <a href="{{ $registrations->previousPageUrl() }}" class="px-3 py-1.5 text-[11px] font-black text-slate-500 border border-slate-200 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition bg-white">‹</a>
-                @endif
-
-                {{-- Pages --}}
-                @for($i = 1; $i <= $registrations->lastPage(); $i++)
-                    @if($i == $registrations->currentPage())
-                        <span class="px-3 py-1.5 text-[11px] font-black text-white bg-slate-900 rounded-xl">{{ $i }}</span>
-                    @else
-                        <a href="{{ $registrations->url($i) }}" class="px-3 py-1.5 text-[11px] font-black text-slate-500 border border-slate-200 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition bg-white">{{ $i }}</a>
-                    @endif
-                @endfor
-
-                {{-- Next --}}
-                @if($registrations->hasMorePages())
-                    <a href="{{ $registrations->nextPageUrl() }}" class="px-3 py-1.5 text-[11px] font-black text-slate-500 border border-slate-200 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition bg-white">›</a>
-                @else
-                    <span class="px-3 py-1.5 text-[11px] font-black text-slate-300 border border-slate-100 rounded-xl cursor-not-allowed bg-white">›</span>
-                @endif
-            </div>
+        <div class="p-6 border-t border-slate-100 no-print">
+            {{ $registrations->appends(request()->query())->links('vendor.pagination.tailwind') }}
         </div>
         @endif
     </div>
@@ -392,15 +340,15 @@
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse" id="laporan-datatable">
-                <thead>
-                    <tr class="bg-slate-100/50 border-b-2 border-slate-100">
-                        <th class="p-6 text-[12px] font-black text-slate-900">No.</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900">Nama Layanan K3</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900">Kategori Layanan</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900 text-center">Jumlah Penjualan (Qty)</th>
-                        <th class="p-6 text-[12px] font-black text-slate-900">Kontribusi ke Omset</th>
-                    </tr>
-                </thead>
+            <thead class="bg-slate-50 border-b border-slate-100 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">
+                <tr>
+                    <th class="px-5 py-4">No.</th>
+                    <th class="px-5 py-4">Nama Layanan K3</th>
+                    <th class="px-5 py-4">Kategori Layanan</th>
+                    <th class="px-5 py-4 text-center">Jumlah Penjualan (Qty)</th>
+                    <th class="px-5 py-4">Kontribusi ke Omset</th>
+                </tr>
+            </thead>
                 <tbody class="divide-y divide-slate-50">
                     @forelse($data['products'] as $index => $p)
                     <tr class="hover:bg-slate-50/50 transition">
@@ -418,38 +366,8 @@
         </div>
         <!-- PAGINATION -->
         @if($data['products']->hasPages())
-        <div class="px-8 py-5 border-t border-slate-100 bg-slate-50/30 flex flex-col sm:flex-row items-center justify-between gap-4 no-print">
-            <p class="text-[12px] font-medium text-slate-500">
-                Menampilkan
-                <span class="font-black text-slate-800">{{ $data['products']->firstItem() }}–{{ $data['products']->lastItem() }}</span>
-                dari
-                <span class="font-black text-slate-800">{{ $data['products']->total() }}</span>
-                layanan terdaftar
-            </p>
-            <div class="flex items-center gap-1">
-                {{-- Previous --}}
-                @if($data['products']->onFirstPage())
-                    <span class="px-3 py-1.5 text-[11px] font-black text-slate-300 border border-slate-100 rounded-xl cursor-not-allowed bg-white">‹</span>
-                @else
-                    <a href="{{ $data['products']->previousPageUrl() }}" class="px-3 py-1.5 text-[11px] font-black text-slate-500 border border-slate-200 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition bg-white">‹</a>
-                @endif
-
-                {{-- Pages --}}
-                @for($i = 1; $i <= $data['products']->lastPage(); $i++)
-                    @if($i == $data['products']->currentPage())
-                        <span class="px-3 py-1.5 text-[11px] font-black text-white bg-slate-900 rounded-xl">{{ $i }}</span>
-                    @else
-                        <a href="{{ $data['products']->url($i) }}" class="px-3 py-1.5 text-[11px] font-black text-slate-500 border border-slate-200 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition bg-white">{{ $i }}</a>
-                    @endif
-                @endfor
-
-                {{-- Next --}}
-                @if($data['products']->hasMorePages())
-                    <a href="{{ $data['products']->nextPageUrl() }}" class="px-3 py-1.5 text-[11px] font-black text-slate-500 border border-slate-200 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition bg-white">›</a>
-                @else
-                    <span class="px-3 py-1.5 text-[11px] font-black text-slate-300 border border-slate-100 rounded-xl cursor-not-allowed bg-white">›</span>
-                @endif
-            </div>
+        <div class="p-6 border-t border-slate-100 no-print">
+            {{ $data['products']->appends(request()->query())->links('vendor.pagination.tailwind') }}
         </div>
         @endif
     </div>

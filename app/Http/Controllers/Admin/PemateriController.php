@@ -11,9 +11,17 @@ use Illuminate\Support\Facades\DB;
 
 class PemateriController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $pemateris = Pemateri::with(['jadwals.jenis', 'jadwals.kategori'])->latest()->paginate(5);
+        $query = Pemateri::with(['jadwals.jenis', 'jadwals.kategori'])->latest();
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_lengkap', 'like', "%{$search}%")
+                  ->orWhere('kompetensi', 'like', "%{$search}%");
+            });
+        }
+        $pemateris = $query->paginate(5)->withQueryString();
         return view('admin.petugas.index', compact('pemateris'));
     }
 

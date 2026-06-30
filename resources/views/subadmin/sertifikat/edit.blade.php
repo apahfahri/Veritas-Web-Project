@@ -3,61 +3,12 @@
 @section('page-title', 'Edit Sertifikat')
 
 @section('content')
+<div class="bg-white rounded-[2rem] border border-slate-100 p-8 shadow-sm max-w-xl select-none">
+    <h3 class="text-lg font-black text-slate-900 tracking-tight mb-6">Ubah Data Sertifikat</h3>
 
-<div class="max-w-4xl mx-auto">
-    <div class="mb-6">
-        <a href="{{ route('subadmin.sertifikat.index') }}" class="inline-flex items-center gap-2 text-slate-400 hover:text-slate-900 font-bold text-xs uppercase tracking-widest transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-            Kembali ke Repository
-        </a>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- INFO PANEL -->
-        <div class="lg:col-span-1 space-y-6">
-            <div class="bg-slate-900 p-6 rounded-3xl shadow-xl shadow-slate-200 text-white">
-                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Status Dokumen</h3>
-                <div class="space-y-4">
-                    <div>
-                        <p class="text-[10px] font-black text-cyan-400 uppercase tracking-tighter">Status File</p>
-                        @if($sertifikat->file_pdf)
-                        <div class="flex items-center gap-2 mt-1">
-                            <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-                            <span class="text-[10px] font-black uppercase text-emerald-400 tracking-widest">File Ready</span>
-                        </div>
-                        <div class="mt-4">
-                            <a href="{{ route('subadmin.sertifikat.show', $sertifikat->no_sertifikat) }}" target="_blank" 
-                               class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition border border-white/10">
-                                <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                                Lihat File Saat Ini
-                            </a>
-                        </div>
-                        @else
-                        <div class="flex items-center gap-2 mt-1">
-                            <span class="w-2 h-2 bg-red-500 rounded-full"></span>
-                            <span class="text-[10px] font-black uppercase text-red-400 tracking-widest">Belum Ada File</span>
-                        </div>
-                        @endif
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-cyan-50 p-6 rounded-3xl border border-cyan-100">
-                <div class="flex items-start gap-3">
-                    <svg class="w-5 h-5 text-cyan-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <p class="text-[10px] text-cyan-700 font-bold uppercase tracking-widest leading-relaxed">
-                        Anda dapat mengubah <span class="underline">Nomor Sertifikat</span> jika terjadi kesalahan input. Sistem akan memperbarui data terkait secara otomatis.
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- FORM PANEL -->
-        <div class="lg:col-span-2">
-            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
-                <form method="POST" action="{{ route('subadmin.sertifikat.update', $sertifikat->no_sertifikat) }}" enctype="multipart/form-data" class="space-y-6">
-                    @csrf
-                    @method('PUT')
+    <form method="POST" action="{{ route('subadmin.sertifikat.update', $sertifikat->no_sertifikat) }}">
+        @csrf
+        @method('PUT')
 
                     <div>
                         <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Nomor Sertifikat *</label>

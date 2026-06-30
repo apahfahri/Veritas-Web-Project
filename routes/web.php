@@ -71,6 +71,9 @@ Route::post('/pendaftaran', [PendaftaranController::class, 'store'])->name('pend
 Route::post('/pendaftaran/verifikasi-nomor', [PendaftaranController::class, 'verifikasiNomor'])->name('pendaftaran.verifikasi-nomor');
 Route::post('/pendaftaran/kirim-bukti', [PendaftaranController::class, 'kirimBuktiBayar'])->name('pendaftaran.kirim-bukti');
 Route::post('/pendaftaran/{id}/cancel-user', [PendaftaranController::class, 'cancelByUser'])->name('pendaftaran.cancel-user');
+Route::get('/pendaftaran/{id}/download-panduan-peserta', [PendaftaranController::class, 'downloadPanduanPeserta'])->name('pendaftaran.download-panduan-peserta');
+Route::post('/pendaftaran/{id}/upload-peserta', [PendaftaranController::class, 'uploadPeserta'])->name('pendaftaran.upload-peserta');
+Route::delete('/pendaftaran/peserta/{id_peserta}/{id_pendaftaran}', [PendaftaranController::class, 'deletePeserta'])->name('pendaftaran.delete-peserta');
 
 /*
 |--------------------------------------------------------------------------
@@ -126,6 +129,7 @@ Route::middleware(['auth', 'is.admin'])->prefix('admin')->name('admin.')->group(
     Route::get('/pendaftaran/export/pdf',   [PendaftaranAdminController::class, 'exportPDF'])->name('pendaftaran.export-pdf');
     Route::get('/pendaftaran/{id}',         [PendaftaranAdminController::class, 'show'])->name('pendaftaran.show');
     Route::put('/pendaftaran/{id}',         [PendaftaranAdminController::class, 'update'])->name('pendaftaran.update');
+    Route::delete('/pendaftaran/{id}',      [PendaftaranAdminController::class, 'destroy'])->name('pendaftaran.destroy');
     Route::get('/riwayat-pendaftaran',      [RiwayatPendaftaranController::class, 'index'])->name('riwayat.index');
 
     // Sertifikat management
@@ -173,7 +177,7 @@ Route::middleware(['auth', 'is.subadmin'])->prefix('subadmin')->name('subadmin.'
     Route::post('/pendaftaran/{id}/update-note',           [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'updateNote'])->name('pendaftaran.update-note');
     Route::post('/pendaftaran/{id}/upload-payment-proof',  [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'uploadPaymentProof'])->name('pendaftaran.upload-payment-proof');
     Route::post('/pendaftaran/{id}/konfirmasi-bukti',      [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'konfirmasiBukti'])->name('pendaftaran.konfirmasi-bukti');
-    Route::post('/pendaftaran/{id}/batalkan',              [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'batalkanPendaftaran'])->name('pendaftaran.batalkan');
+    Route::post('/pendaftaran/{id}/tolak-bukti',           [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'tolakBuktiPembayaran'])->name('pendaftaran.tolak-bukti');
     Route::get('/pendaftaran-export/excel',                [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'exportExcel'])->name('pendaftaran.export-excel');
     Route::get('/pendaftaran-export/pdf',                  [\App\Http\Controllers\Subadmin\SubadminPendaftaranController::class, 'exportPdf'])->name('pendaftaran.export-pdf');
 
@@ -183,6 +187,7 @@ Route::middleware(['auth', 'is.subadmin'])->prefix('subadmin')->name('subadmin.'
     Route::post('/jadwal',             [\App\Http\Controllers\Subadmin\SubadminJadwalController::class, 'store'])->name('jadwal.store');
     Route::get('/jadwal/{id}',         [\App\Http\Controllers\Subadmin\SubadminJadwalController::class, 'show'])->name('jadwal.show');
     Route::post('/jadwal/{id}/resend', [\App\Http\Controllers\Subadmin\SubadminJadwalController::class, 'resendReminder'])->name('jadwal.resend');
+    Route::get('/jadwal/{id}/export-absensi', [\App\Http\Controllers\Subadmin\SubadminJadwalController::class, 'exportAbsensi'])->name('jadwal.export-absensi');
     Route::get('/jadwal/{id}/edit',    [\App\Http\Controllers\Subadmin\SubadminJadwalController::class, 'edit'])->name('jadwal.edit');
     Route::put('/jadwal/{id}',         [\App\Http\Controllers\Subadmin\SubadminJadwalController::class, 'update'])->name('jadwal.update');
     Route::delete('/jadwal/{id}',      [\App\Http\Controllers\Subadmin\SubadminJadwalController::class, 'destroy'])->name('jadwal.destroy');

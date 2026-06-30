@@ -4,38 +4,35 @@
 @section('page-title', 'Manajemen Pelatihan Kustom')
 
 @section('content')
-<div class="bg-white rounded-[2rem] border border-slate-100 p-8 shadow-sm select-none">
+<div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden select-none">
     
     <!-- Header Section -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-        <div>
-            <h3 class="text-xl font-black text-slate-900 tracking-tight">Daftar Pelatihan Kustom B2B</h3>
-            <p class="text-xs text-slate-500 mt-1">Kelola permohonan, progres, penjadwalan, penugasan pemateri, dan tagihan pelatihan kustom B2B.</p>
-        </div>
-        
-        <!-- Filter Status & Search Form -->
-        <form method="GET" action="{{ route('subadmin.pelatihan-kustom.index') }}" class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+    <div class="p-6 md:p-8 flex flex-col md:flex-row justify-between gap-4 bg-slate-50/30 border-b border-slate-100">
+        <form method="GET" action="{{ route('subadmin.pelatihan-kustom.index') }}" class="flex flex-wrap items-center gap-3 w-full">
             <div>
-                <select name="status" onchange="this.form.submit()" class="border border-slate-200 rounded-xl px-4 py-2.5 text-xs bg-slate-50 font-bold text-slate-700 focus:outline-none focus:ring-4 focus:ring-cyan-500/10 cursor-pointer">
+                <select name="status" onchange="this.form.submit()" class="border border-slate-200/80 rounded-xl px-4 py-2.5 text-xs bg-slate-50 font-bold text-slate-700 focus:outline-none focus:ring-4 focus:ring-cyan-500/10 cursor-pointer">
                     <option value="">-- Semua Status --</option>
-                    <option value="meninjau" {{ request('status') === 'meninjau' ? 'selected' : '' }}>⏳ Meninjau</option>
-                    <option value="disetujui" {{ request('status') === 'disetujui' ? 'selected' : '' }}>👍 Disetujui</option>
-                    <option value="dijadwalkan" {{ request('status') === 'dijadwalkan' ? 'selected' : '' }}>📅 Penjadwalan</option>
-                    <option value="menunggu_pelaksanaan" {{ request('status') === 'menunggu_pelaksanaan' ? 'selected' : '' }}>⏳ Menunggu Pelaksanaan</option>
-                    <option value="menunggu_pembayaran" {{ request('status') === 'menunggu_pembayaran' ? 'selected' : '' }}>💳 Menunggu Pembayaran</option>
-                    <option value="pembayaran_ditinjau" {{ request('status') === 'pembayaran_ditinjau' ? 'selected' : '' }}>👀 Pembayaran Ditinjau</option>
-                    <option value="selesai" {{ request('status') === 'selesai' ? 'selected' : '' }}>✅ Selesai</option>
-                    <option value="dibatalkan" {{ request('status') === 'dibatalkan' ? 'selected' : '' }}>❌ Dibatalkan</option>
+                    <option value="meninjau" {{ request('status') === 'meninjau' ? 'selected' : '' }}>Meninjau</option>
+                    <option value="disetujui" {{ request('status') === 'disetujui' ? 'selected' : '' }}>Disetujui</option>
+                    <option value="dijadwalkan" {{ request('status') === 'dijadwalkan' ? 'selected' : '' }}>Dijadwalkan</option>
+                    <option value="menunggu_pelaksanaan" {{ request('status') === 'menunggu_pelaksanaan' ? 'selected' : '' }}>Menunggu Pelaksanaan</option>
+                    <option value="menunggu_pembayaran" {{ request('status') === 'menunggu_pembayaran' ? 'selected' : '' }}>Menunggu Pembayaran</option>
+                    <option value="pembayaran_ditinjau" {{ request('status') === 'pembayaran_ditinjau' ? 'selected' : '' }}>Pembayaran Ditinjau</option>
+                    <option value="selesai" {{ request('status') === 'selesai' ? 'selected' : '' }}>Selesai</option>
+                    <option value="dibatalkan" {{ request('status') === 'dibatalkan' ? 'selected' : '' }}>Dibatalkan</option>
                 </select>
             </div>
-            <div class="relative flex-1 md:flex-initial">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari..." class="border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-xs bg-slate-50 font-medium text-slate-700 focus:outline-none focus:ring-4 focus:ring-cyan-500/10 w-full md:w-60">
-                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <div class="relative flex-1 min-w-[200px]">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                    <i class="fi fi-rr-search"></i>
                 </span>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari pendaftaran..." class="w-full bg-slate-50 border border-slate-200/80 rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium text-slate-700 outline-none focus:ring-2 focus:ring-cyan-500 transition">
             </div>
+            <button type="submit" class="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fi fi-rr-search"></i> Cari Data
+            </button>
             @if(request()->filled('status') || request()->filled('search'))
-                <a href="{{ route('subadmin.pelatihan-kustom.index') }}" class="text-xs font-bold text-red-500 hover:text-red-700 transition">Reset</a>
+                <a href="{{ route('subadmin.pelatihan-kustom.index') }}" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm px-4 py-2.5 rounded-xl transition">Reset</a>
             @endif
         </form>
     </div>
@@ -43,18 +40,17 @@
     <!-- Table -->
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="bg-slate-50 border-b border-slate-100">
-                    <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider">Perusahaan & PIC</th>
-                    <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider">Topik Pelatihan</th>
-                    <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider">Tanggal Rencana</th>
-                    <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider text-center">Status</th>
-                    <th class="p-4 text-xs font-black uppercase text-slate-500 tracking-wider text-right">Aksi</th>
+            <thead class="bg-slate-50 border-b border-slate-100 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">
+                <tr>
+                    <th class="px-5 py-4">Perusahaan & PIC</th>
+                    <th class="px-5 py-4">Topik Pelatihan</th>
+                    <th class="px-5 py-4">Tanggal Rencana</th>
+                    <th class="px-5 py-4 text-center">Status</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-50">
                 @forelse($pendaftarans as $p)
-                <tr class="hover:bg-slate-50/60 transition group">
+                <tr onclick="window.location='{{ route('subadmin.pelatihan-kustom.show', $p->id_pendaftaran) }}'" class="hover:bg-slate-50/80 transition cursor-pointer group">
                     <td class="p-4">
                         <div class="text-sm font-black text-slate-900">{{ $p->perusahaan?->nama ?? '—' }}</div>
                         <div class="text-xs text-slate-500 font-medium">PIC: {{ $p->user?->nama }} ({{ $p->user?->no_telp }})</div>
@@ -84,24 +80,21 @@
                             {{ $status[1] }}
                         </span>
                     </td>
-                    <td class="p-4 text-right">
-                        <a href="{{ route('subadmin.pelatihan-kustom.show', $p->id_pendaftaran) }}" class="inline-block bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-black uppercase tracking-wider px-4 py-2.5 rounded-xl shadow-sm transition">
-                            Kelola Proses
-                        </a>
-                    </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="p-12 text-center text-sm font-medium text-slate-400">Belum ada data pelatihan kustom B2B.</td>
+                    <td colspan="4" class="p-12 text-center text-sm font-medium text-slate-400">Belum ada data pelatihan kustom B2B.</td>
                 </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
 
+    @if($pendaftarans->hasPages())
     <!-- Pagination -->
-    <div class="mt-8">
-        {{ $pendaftarans->links() }}
+    <div class="p-6 border-t border-slate-100">
+        {{ $pendaftarans->links('vendor.pagination.tailwind') }}
     </div>
+    @endif
 </div>
 @endsection

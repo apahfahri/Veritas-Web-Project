@@ -6,12 +6,12 @@
 <div class="max-w-3xl mx-auto">
     <div class="mb-6">
         <a href="{{ route('subadmin.jadwal.index') }}" class="inline-flex items-center gap-2 text-slate-400 hover:text-slate-900 font-bold text-xs uppercase tracking-widest transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            <i class="fi fi-rr-arrow-left"></i>
             Kembali
         </a>
     </div>
 
-    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+    <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
         <div class="px-7 py-6 border-b border-slate-100 bg-slate-50/30">
             <h2 class="text-xl font-black text-slate-900">Edit: {{ $jadwal->jenis?->nama ?? 'Jadwal #'.$jadwal->id_jadwal }}</h2>
         </div>

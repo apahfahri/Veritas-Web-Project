@@ -7,54 +7,70 @@
 
 @if(session('success'))
 <div class="mb-6 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl px-6 py-4 flex items-center gap-3 text-sm font-bold">
-    <svg class="w-5 h-5 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+    <i class="fi fi-rr-check text-emerald-500"></i>
     {{ session('success') }}
 </div>
 @endif
 
-<div class="flex flex-wrap justify-between items-end gap-4 mb-6">
-    <div>
-        <h2 class="text-2xl font-black text-slate-900 tracking-tight">Daftar Jadwal</h2>
-        <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-1">Total: {{ $jadwals->total() }} Jadwal Terdaftar</p>
-    </div>
-    <div class="flex items-center gap-3">
-        <button onclick="openImportModal()"
-                class="bg-white border border-slate-200 text-slate-700 px-6 py-3 rounded-2xl hover:bg-slate-50 transition shadow-sm flex items-center gap-2 text-sm font-black group">
-            <svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-            Import CSV
-        </button>
-        <a href="{{ route('admin.jadwal.create') }}"
-           class="bg-slate-900 text-white px-6 py-3 rounded-2xl hover:bg-slate-800 transition shadow-lg shadow-slate-200 flex items-center gap-2 text-sm font-black group">
-            <svg class="w-5 h-5 text-cyan-400 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-            Tambah Jadwal Baru
-        </a>
-    </div>
-</div>
+<div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+    <div class="p-6 md:p-8 bg-slate-50/30 border-b border-slate-100 select-none">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+            <div class="flex border-b border-slate-200/50 gap-6 w-full md:w-auto">
+                <a href="{{ route('admin.jadwal.index', array_merge(request()->except(['page', 'filter']), ['filter' => 'akan_datang'])) }}" class="pb-3 text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 {{ (!isset($filter) || $filter === 'akan_datang') ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-slate-400 hover:text-slate-600' }}">
+                    Akan Datang
+                </a>
+                <a href="{{ route('admin.jadwal.index', array_merge(request()->except(['page', 'filter']), ['filter' => 'riwayat'])) }}" class="pb-3 text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 {{ (isset($filter) && $filter === 'riwayat') ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-slate-400 hover:text-slate-600' }}">
+                    Riwayat
+                </a>
+                <a href="{{ route('admin.jadwal.index', array_merge(request()->except(['page', 'filter']), ['filter' => 'semua'])) }}" class="pb-3 text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 {{ (isset($filter) && $filter === 'semua') ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-slate-400 hover:text-slate-600' }}">
+                    Semua
+                </a>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <button onclick="openImportModal()" class="bg-white border border-slate-200 text-slate-700 font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-sm hover:bg-slate-50 transition uppercase tracking-wider flex items-center gap-2">
+                    <i class="fi fi-rr-upload"></i> Import CSV
+                </button>
+                <a href="{{ route('admin.jadwal.create') }}" class="bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-md transition uppercase tracking-wider flex items-center gap-2">
+                    <i class="fi fi-rr-plus"></i> Tambah Jadwal
+                </a>
+            </div>
+        </div>
 
-<div class="mb-6 bg-white p-1.5 rounded-2xl shadow-sm border border-slate-100 inline-flex gap-1">
-    <a href="{{ route('admin.jadwal.index', ['filter' => 'akan_datang']) }}" class="px-4 py-2 rounded-xl text-sm font-bold transition-all {{ (!isset($filter) || $filter === 'akan_datang') ? 'bg-slate-900 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">Akan Datang</a>
-    <a href="{{ route('admin.jadwal.index', ['filter' => 'riwayat']) }}" class="px-4 py-2 rounded-xl text-sm font-bold transition-all {{ (isset($filter) && $filter === 'riwayat') ? 'bg-slate-900 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">Riwayat</a>
-    <a href="{{ route('admin.jadwal.index', ['filter' => 'semua']) }}" class="px-4 py-2 rounded-xl text-sm font-bold transition-all {{ (isset($filter) && $filter === 'semua') ? 'bg-slate-900 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">Semua</a>
-</div>
-
-<div class="bg-white rounded-[32px] shadow-sm border border-slate-100 overflow-hidden">
+        <form method="GET" action="{{ route('admin.jadwal.index') }}" class="flex flex-wrap items-center gap-3 w-full">
+            @if(request('filter')) <input type="hidden" name="filter" value="{{ request('filter') }}"> @endif
+            <div class="relative flex-1 min-w-[200px]">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                    <i class="fi fi-rr-search"></i>
+                </span>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari jadwal..."
+                       class="w-full bg-slate-50 border border-slate-200/80 rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium text-slate-700 outline-none focus:ring-2 focus:ring-cyan-500 transition">
+            </div>
+            <button type="submit" class="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fi fi-rr-search"></i> Cari Data
+            </button>
+            @if(request()->has('search'))
+                <a href="{{ route('admin.jadwal.index', ['filter' => request('filter')]) }}" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm px-4 py-2.5 rounded-xl transition">Reset</a>
+            @endif
+        </form>
+    </div>
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="bg-slate-50/60 border-b border-slate-100">
-                    <th class="p-5 text-[11px] font-black text-slate-500 uppercase tracking-widest">Kategori</th>
-                    <th class="p-5 text-[11px] font-black text-slate-500 uppercase tracking-widest">Program Layanan</th>
-                    <th class="p-5 text-[11px] font-black text-slate-500 uppercase tracking-widest">Pemateri</th>
-                    <th class="p-5 text-[11px] font-black text-slate-500 uppercase tracking-widest text-center">Mode</th>
-                    <th class="p-5 text-[11px] font-black text-slate-500 uppercase tracking-widest">Tanggal</th>
-                    <th class="p-5 text-[11px] font-black text-slate-500 uppercase tracking-widest">Harga</th>
-                    <th class="p-5 text-[11px] font-black text-slate-500 uppercase tracking-widest text-center">Kapasitas</th>
-                    <th class="p-5 text-[11px] font-black text-slate-500 uppercase tracking-widest text-center">Aksi</th>
+            <thead class="bg-slate-50 border-b border-slate-100 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">
+                <tr>
+                    <th class="px-5 py-4">Kategori</th>
+                    <th class="px-5 py-4">Program Layanan</th>
+                    <th class="px-5 py-4">Pemateri</th>
+                    <th class="px-5 py-4 text-center">Mode</th>
+                    <th class="px-5 py-4">Tanggal</th>
+                    <th class="px-5 py-4">Harga</th>
+                    <th class="px-5 py-4 text-center">Kapasitas</th>
+                    <th class="px-5 py-4 text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-50">
                 @forelse($jadwals as $j)
-                <tr class="hover:bg-slate-50/50 transition-colors group">
+                <tr onclick="window.location='{{ route('admin.jadwal.show', $j->id_jadwal) }}'" class="hover:bg-slate-50/80 transition cursor-pointer group">
                     <td class="p-5">
                         <div class="flex items-center gap-2">
                             <span class="inline-flex bg-slate-900 text-cyan-400 text-[9px] font-black px-2 py-1 rounded-lg tracking-widest">
@@ -71,7 +87,7 @@
                                 </div>
                             @else
                                 <div class="w-10 h-10 rounded-xl bg-slate-50 text-slate-300 flex items-center justify-center border border-slate-100 shrink-0">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                    <i class="fi fi-rr-picture"></i>
                                 </div>
                             @endif
                             <div>
@@ -148,20 +164,19 @@
                     </td>
                     <td class="p-5">
                         <div class="flex items-center justify-center gap-2">
-                            <a href="{{ route('admin.jadwal.show', $j->id_jadwal) }}"
-                               class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-cyan-500 hover:text-cyan-600 hover:shadow-lg hover:shadow-cyan-50 transition shadow-sm" title="Detail">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                            </a>
                             <a href="{{ route('admin.jadwal.edit', $j->id_jadwal) }}"
-                               class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-indigo-500 hover:text-indigo-600 hover:shadow-lg hover:shadow-indigo-50 transition shadow-sm" title="Edit">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                               class="w-8 h-8 flex items-center justify-center rounded-lg bg-cyan-50 text-cyan-600 hover:text-cyan-800 hover:bg-cyan-100 transition" title="Edit">
+                                <i class="fi fi-rr-edit"></i>
                             </a>
                             <form method="POST" action="{{ route('admin.jadwal.destroy', $j->id_jadwal) }}" class="delete-form" data-name="{{ $j->jenis?->nama }}">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-red-500 hover:text-red-500 hover:shadow-lg hover:shadow-red-50 transition shadow-sm">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                <button type="submit" class="w-8 h-8 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:text-rose-700 hover:bg-rose-100 transition">
+                                    <i class="fi fi-rr-trash"></i>
                                 </button>
                             </form>
+                            <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center group-hover:bg-cyan-600 group-hover:text-white transition">
+                                <i class="fi fi-rr-angle-small-right text-lg mt-0.5"></i>
+                            </div>
                         </div>
                     </td>
                 </tr>
@@ -169,7 +184,7 @@
                 <tr><td colspan="8" class="p-20 text-center">
                     <div class="flex flex-col items-center">
                         <div class="w-20 h-20 bg-slate-50 text-slate-200 rounded-3xl flex items-center justify-center mb-4">
-                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            <i class="fi fi-rr-calendar"></i>
                         </div>
                         <p class="text-sm font-black text-slate-400 uppercase tracking-widest">Belum ada jadwal</p>
                         <a href="{{ route('admin.jadwal.create') }}" class="mt-4 text-xs font-bold text-indigo-600 hover:underline">Tambah Jadwal Pertama</a>
@@ -180,56 +195,9 @@
         </table>
     </div>
 
-    @if($jadwals->count())
-    <div class="px-6 py-4 border-t border-slate-100 bg-slate-50/40 flex items-center justify-between gap-4">
-        {{-- Info halaman --}}
-        <p class="text-[13px] font-bold text-slate-900 tracking-widest whitespace-nowrap">
-            Menampilkan
-            <span class="text-slate-900">{{ $jadwals->firstItem() }}–{{ $jadwals->lastItem() }}</span>
-            dari
-            <span class="text-slate-900">{{ $jadwals->total() }}</span>
-            data
-        </p>
-
-        {{-- Navigasi halaman (hanya jika ada lebih dari 1 halaman) --}}
-        @if($jadwals->hasPages())
-        <div class="flex items-center gap-1">
-            {{-- Prev --}}
-            @if($jadwals->onFirstPage())
-                <span class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-100 text-slate-300 cursor-not-allowed">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                </span>
-            @else
-                <a href="{{ $jadwals->previousPageUrl() }}" class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 hover:border-indigo-500 hover:text-indigo-600 hover:shadow-sm transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                </a>
-            @endif
-
-            {{-- Nomor halaman --}}
-            @foreach($jadwals->getUrlRange(1, $jadwals->lastPage()) as $page => $url)
-                @if($page == $jadwals->currentPage())
-                    <span class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-900 text-white text-[12px] font-black shadow-sm">
-                        {{ $page }}
-                    </span>
-                @else
-                    <a href="{{ $url }}" class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 text-[12px] font-bold hover:border-indigo-500 hover:text-indigo-600 hover:shadow-sm transition">
-                        {{ $page }}
-                    </a>
-                @endif
-            @endforeach
-
-            {{-- Next --}}
-            @if($jadwals->hasMorePages())
-                <a href="{{ $jadwals->nextPageUrl() }}" class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 hover:border-indigo-500 hover:text-indigo-600 hover:shadow-sm transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </a>
-            @else
-                <span class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-100 text-slate-300 cursor-not-allowed">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </span>
-            @endif
-        </div>
-        @endif
+    @if($jadwals->hasPages())
+    <div class="p-6 border-t border-slate-100 flex justify-center">
+        {{ $jadwals->links() }}
     </div>
     @endif
 </div>
@@ -251,7 +219,7 @@
                 <code class="block bg-white p-2 rounded-xl border border-slate-200/60 text-[9px] text-indigo-600 font-black leading-relaxed whitespace-nowrap">kode_kategori, kode_jenis, jenis_pertemuan, tgl_mulai, tgl_selesai, jam_pertemuan, lokasi, kapasitas, harga, deskripsi, link_meet</code>
                 <p class="text-[10px]">*) Kolom jenis_pertemuan diisi dengan: <span class="font-bold text-slate-700">online</span>, <span class="font-bold text-slate-700">offline</span>, atau <span class="font-bold text-slate-700">hybrid</span>.</p>
                 <a href="{{ route('admin.jadwal.import-template') }}" class="inline-flex items-center gap-1.5 text-indigo-600 hover:underline font-bold mt-1">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    <i class="fi fi-rr-download"></i>
                     Unduh Template CSV
                 </a>
             </div>

@@ -7,15 +7,9 @@
 
 {{-- ── TOP BREADCRUMB & HEADER ─────────────────────────────── --}}
 <div class="mb-8 flex items-center justify-between">
-    <div class="flex items-center gap-4">
-        <a href="{{ route('subadmin.pelatihan-kustom.index') }}" class="p-2.5 bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-slate-900 transition shadow-sm">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-        </a>
-        <div>
-            <p class="text-xs text-slate-500 font-extrabold uppercase tracking-widest">Pelatihan Kustom B2B (Bespoke)</p>
-            <h2 class="text-xl font-black text-slate-900 tracking-tight">Detail Proses Pelatihan Kustom</h2>
-        </div>
-    </div>
+    <a href="{{ route('subadmin.pelatihan-kustom.index') }}" class="flex items-center gap-2 text-xs font-black text-slate-400 hover:text-slate-600 transition uppercase tracking-widest">
+        <i class="fi fi-rr-arrow-left"></i> KEMBALI
+    </a>
     <div class="text-right">
         <span class="text-xs text-slate-400 font-bold block">No. Pendaftaran:</span>
         <span class="inline-block bg-slate-100 text-slate-800 font-mono text-xs font-bold px-3 py-1.5 rounded-xl border border-slate-200 mt-0.5">{{ $pendaftaran->nomor_pendaftaran }}</span>
@@ -23,83 +17,106 @@
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
     {{-- ══════════════════════════════════════════════════════════════ --}}
-    {{-- LEFT / MAIN COLUMN                                             --}}
+    {{-- LEFT / MAIN COLUMN (Dominant Information)                        --}}
     {{-- ══════════════════════════════════════════════════════════════ --}}
     <div class="lg:col-span-2 space-y-6">
-
-        {{-- ── STEPPER CARD ──────────────────────────────────────── --}}
+        {{-- Combined Box: Informasi Klien & Pengajuan --}}
         <div class="bg-white rounded-[2rem] border border-slate-100 p-8 shadow-sm">
-            <h3 class="text-base font-black text-slate-900 tracking-tight mb-8">Alur Tahapan Pelatihan Kustom</h3>
+            <h3 class="text-base font-black text-slate-900 tracking-tight mb-6 flex items-center gap-2">
+                <i class="fi fi-rr-folder-open text-cyan-600"></i>
+                Informasi Klien & Pengajuan Awal
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
+                {{-- Profil Perusahaan --}}
+                <div>
+                    <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5 mb-4">
+                        <i class="fi fi-rr-building text-cyan-500"></i> Profil Perusahaan
+                    </h4>
+                    <div class="grid grid-cols-2 gap-4">
+                        @foreach([
+                            ['Nama Perusahaan', $pendaftaran->perusahaan?->nama ?? '—', true],
+                            ['Sektor Industri', $pendaftaran->perusahaan?->sektor_industri ?? '—', false],
+                            ['Jumlah Karyawan', $pendaftaran->perusahaan?->jumlah_karyawan ? $pendaftaran->perusahaan->jumlah_karyawan . ' Karyawan' : '—', false],
+                            ['Alamat', $pendaftaran->perusahaan?->alamat ?? '—', false],
+                        ] as [$label, $value, $large])
+                        <div class="{{ $loop->first || $loop->last ? 'col-span-2' : 'col-span-1' }}">
+                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mb-0.5">{{ $label }}</span>
+                            <span class="font-bold text-slate-800 {{ $large ? 'text-sm' : 'text-xs' }} leading-snug block">{{ $value }}</span>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
 
-            @php
-                $stages = [
-                    'meninjau'            => ['Tinjauan Awal',        'Subadmin meninjau registrasi awal pelatihan.'],
-                    'disetujui'           => ['Disetujui',            'Permintaan disetujui, siap masuk tahap penjadwalan.'],
-                    'dijadwalkan'         => ['Penjadwalan',           'Menentukan tanggal pelatihan, jam, & instruktur pendamping.'],
-                    'menunggu_pelaksanaan' => ['Menunggu Pelaksanaan',  'Jadwal & materi disepakati, menunggu pelatihan dilaksanakan.'],
-                    'menunggu_pembayaran' => ['Tagihan Dikirim',       'Pelatihan selesai dilaksanakan — invoice dikirim ke perusahaan.'],
-                    'pembayaran_ditinjau' => ['Verifikasi Pembayaran', 'Klien telah mengunggah bukti transfer, menunggu konfirmasi subadmin.'],
-                    'selesai'             => ['Selesai',               'Seluruh tahapan pelatihan kustom dan administrasi pembayaran selesai.'],
-                ];
-
-                $currentStage = strtolower($pendaftaran->status_progres);
-                $stageKeys    = array_keys($stages);
-                $currentIndex = array_search($currentStage, $stageKeys);
-                if ($currentStage === 'dibatalkan') $currentIndex = -1;
-            @endphp
-
-            <div class="relative pl-8 border-l-2 border-slate-100 space-y-7">
-                @foreach($stages as $key => $info)
+                {{-- Data PIC --}}
+                <div>
+                    <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5 mb-4">
+                        <i class="fi fi-rr-user text-indigo-500"></i> PIC / Penghubung
+                    </h4>
                     @php
-                        $keyIndex   = array_search($key, $stageKeys);
-                        $isCompleted = ($currentIndex !== false && $keyIndex < $currentIndex);
-                        $isActive    = ($currentStage === $key);
-
-                        $bulletClass = 'bg-slate-100 border-slate-200 text-slate-400';
-                        $titleClass  = 'text-slate-400 font-semibold';
-                        if ($isCompleted) {
-                            $bulletClass = 'bg-emerald-500 border-emerald-500 text-white';
-                            $titleClass  = 'text-emerald-700 font-bold';
-                        } elseif ($isActive) {
-                            $bulletClass = 'bg-cyan-600 border-cyan-600 ring-4 ring-cyan-500/20 text-white';
-                            $titleClass  = 'text-cyan-800 font-black';
-                        }
+                        $jabatanPIC = $pendaftaran->perusahaan?->klienPerusahaan?->where('id_user', $pendaftaran->id_user)->first()?->jabatan ?? 'PIC';
                     @endphp
-                    <div class="relative">
-                        <span class="absolute -left-[41px] top-0.5 flex items-center justify-center w-6 h-6 rounded-full border-2 text-[10px] font-black {{ $bulletClass }}">
-                            @if($isCompleted)✓@else{{ $keyIndex + 1 }}@endif
-                        </span>
-                        <div>
-                            <span class="text-xs uppercase tracking-wider {{ $titleClass }}">{{ $info[0] }}</span>
-                            @if($isActive)
-                                <span class="ml-2 inline-block bg-cyan-100 text-cyan-700 text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border border-cyan-200">Tahap Sekarang</span>
-                            @endif
-                            <p class="text-xs text-slate-400 mt-0.5 leading-relaxed">{{ $info[1] }}</p>
+                    <div class="grid grid-cols-2 gap-4">
+                        @foreach([
+                            ['Nama PIC', $pendaftaran->user?->nama ?? '—', true],
+                            ['Jabatan', $jabatanPIC, false],
+                            ['WhatsApp', $pendaftaran->user?->no_telp ?? '—', false],
+                            ['Email', $pendaftaran->user?->email ?? '—', false],
+                        ] as [$label, $value, $large])
+                        <div class="{{ $loop->first ? 'col-span-2' : 'col-span-1' }}">
+                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mb-0.5">{{ $label }}</span>
+                            <span class="font-bold text-slate-700 {{ $large ? 'text-sm' : 'text-xs' }} leading-snug block break-all">{{ $value }}</span>
                         </div>
+                        @endforeach
                     </div>
-                @endforeach
+                    <div class="pt-4 flex gap-2">
+                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $pendaftaran->user?->no_telp ?? '') }}"
+                           target="_blank"
+                           class="flex-1 bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#128C7E] text-[10px] font-bold px-3 py-2 rounded-lg flex items-center justify-center gap-1.5 transition border border-[#25D366]/20">
+                            <i class="fi fi-brands-whatsapp fill-[#25D366]"></i> WhatsApp
+                        </a>
+                        <a href="mailto:{{ $pendaftaran->user?->email }}"
+                           class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-bold px-3 py-2 rounded-lg flex items-center justify-center gap-1.5 transition">
+                            <i class="fi fi-rr-envelope"></i> Email
+                        </a>
+                    </div>
+                </div>
+            </div>
 
-                @if($currentStage === 'dibatalkan')
-                    <div class="relative">
-                        <span class="absolute -left-[41px] top-0.5 flex items-center justify-center w-6 h-6 rounded-full border-2 bg-rose-500 border-rose-500 text-white text-[10px]">✕</span>
-                        <div>
-                            <span class="text-xs uppercase tracking-wider text-rose-700 font-black">Dibatalkan</span>
-                            <p class="text-xs text-slate-400 mt-0.5">Pelatihan kustom ini telah ditolak atau dibatalkan.</p>
-                        </div>
+            {{-- Pengajuan Awal --}}
+            <div class="pt-6 border-t border-slate-100">
+                <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5 mb-4">
+                    <i class="fi fi-rr-notebook text-rose-400"></i> Catatan Pengajuan Awal
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs mb-4">
+                    <div>
+                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mb-0.5">Topik Pelatihan:</span>
+                        <span class="font-bold text-slate-800">{{ $pendaftaran->jadwal?->jenis?->nama ?? '—' }}</span>
                     </div>
-                @endif
+                    <div>
+                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mb-0.5">Tanggal Usulan:</span>
+                        <span class="font-bold text-slate-800">
+                            {{ $pendaftaran->rencana_tanggal_mulai ? $pendaftaran->rencana_tanggal_mulai->format('d M Y') : '—' }}
+                            @if($pendaftaran->rencana_tanggal_selesai && $pendaftaran->rencana_tanggal_selesai != $pendaftaran->rencana_tanggal_mulai)
+                                s/d {{ $pendaftaran->rencana_tanggal_selesai->format('d M Y') }}
+                            @endif
+                        </span>
+                    </div>
+                </div>
+                <div>
+                    <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mb-1">Pesan PIC:</span>
+                    <p class="text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100 leading-relaxed font-semibold text-xs">{{ $pendaftaran->catatan_klien ?: 'Tidak ada pesan tambahan.' }}</p>
+                </div>
             </div>
         </div>
-
         {{-- ── DYNAMIC ACTION CARD ────────────────────────────────── --}}
         <div class="bg-white rounded-[2rem] border border-slate-100 p-8 shadow-sm">
 
             {{-- STAGE: MENINJAU --}}
             @if($pendaftaran->status_progres === 'meninjau')
                 <div class="flex items-center gap-3 mb-6 pb-5 border-b border-slate-100">
-                    <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-xl">👀</div>
+                    <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-xl"><i class="fi fi-rr-eye text-2xl"></i></div>
                     <div>
                         <p class="text-xs text-slate-400 font-semibold uppercase tracking-widest">Tindakan Diperlukan</p>
                         <h3 class="text-base font-black text-slate-900">Tinjau Registrasi Pelatihan Kustom</h3>
@@ -112,7 +129,7 @@
                     <form action="{{ route('subadmin.pelatihan-kustom.confirm', $pendaftaran->id_pendaftaran) }}" method="POST" class="flex-1">
                         @csrf
                         <button type="submit" class="w-full bg-[#1E6B3D] hover:bg-[#24824A] text-white font-black text-xs px-6 py-4 rounded-2xl shadow-lg shadow-emerald-700/10 transition uppercase tracking-wider flex items-center justify-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                            <i class="fi fi-rr-check"></i>
                             Setujui & Lanjutkan
                         </button>
                     </form>
@@ -130,7 +147,7 @@
             {{-- STAGE: DISETUJUI --}}
             @if($pendaftaran->status_progres === 'disetujui')
                 <div class="flex items-center gap-3 mb-6 pb-5 border-b border-slate-100">
-                    <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-xl">📅</div>
+                    <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-xl"><i class="fi fi-rr-calendar text-2xl"></i></div>
                     <div>
                         <p class="text-xs text-slate-400 font-semibold uppercase tracking-widest">Tindakan Diperlukan</p>
                         <h3 class="text-base font-black text-slate-900">Mulai Penjadwalan Pelatihan</h3>
@@ -150,7 +167,7 @@
             {{-- STAGE: DIJADWALKAN --}}
             @if($pendaftaran->status_progres === 'dijadwalkan')
                 <div class="flex items-center gap-3 mb-6 pb-5 border-b border-slate-100">
-                    <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-xl">📅</div>
+                    <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-xl"><i class="fi fi-rr-calendar text-2xl"></i></div>
                     <div>
                         <p class="text-xs text-slate-400 font-semibold uppercase tracking-widest">Tindakan Diperlukan</p>
                         <h3 class="text-base font-black text-slate-900">Tentukan Jadwal & Pemateri</h3>
@@ -190,9 +207,9 @@
                             <select name="mode_pertemuan" id="mode_pertemuan" required
                                     class="w-full border border-slate-200 rounded-xl px-4 py-3 text-xs bg-slate-50 focus:ring-4 focus:ring-cyan-500/10 focus:outline-none focus:border-cyan-600 text-slate-700 font-semibold cursor-pointer"
                                     onchange="toggleFormLokasi(this.value)">
-                                <option value="online" {{ old('mode_pertemuan', $pendaftaran->mode_pertemuan) === 'online' ? 'selected' : '' }}>🌐 Online (Classroom/Meet)</option>
-                                <option value="offline" {{ old('mode_pertemuan', $pendaftaran->mode_pertemuan) === 'offline' ? 'selected' : '' }}>🏢 Offline (In-House Training)</option>
-                                <option value="hybrid" {{ old('mode_pertemuan', $pendaftaran->mode_pertemuan) === 'hybrid' ? 'selected' : '' }}>🔗 Hybrid</option>
+                                <option value="online" {{ old('mode_pertemuan', $pendaftaran->mode_pertemuan) === 'online' ? 'selected' : '' }}>Online (Classroom/Meet)</option>
+                                <option value="offline" {{ old('mode_pertemuan', $pendaftaran->mode_pertemuan) === 'offline' ? 'selected' : '' }}>Offline (In-House Training)</option>
+                                <option value="hybrid" {{ old('mode_pertemuan', $pendaftaran->mode_pertemuan) === 'hybrid' ? 'selected' : '' }}>Hybrid</option>
                             </select>
                         </div>
                         <div id="lokasi-container" class="{{ old('mode_pertemuan', $pendaftaran->mode_pertemuan) === 'offline' ? '' : 'hidden' }}">
@@ -229,7 +246,7 @@
                     </div>
 
                     <button type="submit" class="w-full bg-[#1E6B3D] hover:bg-[#24824A] text-white font-black text-xs px-6 py-4 rounded-2xl shadow-lg shadow-emerald-700/10 transition uppercase tracking-wider flex items-center justify-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        <i class="fi fi-rr-calendar"></i>
                         Simpan Jadwal & Kirim Email ke PIC Klien
                     </button>
                 </form>
@@ -238,7 +255,7 @@
             {{-- STAGE: MENUNGGU PELAKSANAAN --}}
             @if($pendaftaran->status_progres === 'menunggu_pelaksanaan')
                 <div class="flex items-center gap-3 mb-6 pb-5 border-b border-slate-100">
-                    <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-xl">📅</div>
+                    <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-xl"><i class="fi fi-rr-calendar text-2xl"></i></div>
                     <div>
                         <p class="text-xs text-slate-400 font-semibold uppercase tracking-widest">Jadwal Ditetapkan</p>
                         <h3 class="text-base font-black text-slate-900">Jadwal Pelatihan Kustom</h3>
@@ -321,12 +338,12 @@
 
                         <div class="flex gap-3 pt-2">
                             <button type="submit" class="flex-1 bg-[#1E6B3D] hover:bg-[#24824A] text-white font-black text-xs px-6 py-4 rounded-xl shadow-lg shadow-emerald-700/10 transition uppercase tracking-wider flex items-center justify-center gap-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <i class="fi fi-rr-check-circle"></i>
                                 Kirim Invoice ke Klien
                             </button>
                             <button type="button" onclick="toggleEditJadwal()"
                                     class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs px-5 py-4 rounded-xl transition uppercase tracking-wider flex items-center gap-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                <i class="fi fi-rr-edit"></i>
                                 Ubah Jadwal
                             </button>
                         </div>
@@ -366,7 +383,7 @@
                                         onchange="toggleEditLokasi(this.value)">
                                     <option value="online" {{ $pendaftaran->mode_pertemuan === 'online' ? 'selected' : '' }}>🌐 Online</option>
                                     <option value="offline" {{ $pendaftaran->mode_pertemuan === 'offline' ? 'selected' : '' }}>🏢 Offline</option>
-                                    <option value="hybrid" {{ $pendaftaran->mode_pertemuan === 'hybrid' ? 'selected' : '' }}>🔗 Hybrid</option>
+                                    <option value="hybrid" {{ $pendaftaran->mode_pertemuan === 'hybrid' ? 'selected' : '' }}>Hybrid</option>
                                 </select>
                             </div>
                             <div id="edit-lokasi-container" class="{{ $pendaftaran->mode_pertemuan === 'offline' ? '' : 'hidden' }}">
@@ -410,7 +427,7 @@
             {{-- STAGE: MENUNGGU PEMBAYARAN --}}
             @if($pendaftaran->status_progres === 'menunggu_pembayaran')
                 <div class="flex items-center gap-3 mb-6 pb-5 border-b border-slate-100">
-                    <div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-xl">💳</div>
+                    <div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-xl"><i class="fi fi-rr-credit-card text-2xl"></i></div>
                     <div>
                         <p class="text-xs text-slate-400 font-semibold uppercase tracking-widest">Menunggu Klien</p>
                         <h3 class="text-base font-black text-slate-900">Tagihan Pelatihan Dikirim</h3>
@@ -438,7 +455,7 @@
             {{-- STAGE: PEMBAYARAN DITINJAU --}}
             @if($pendaftaran->status_progres === 'pembayaran_ditinjau')
                 <div class="flex items-center gap-3 mb-6 pb-5 border-b border-slate-100">
-                    <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-xl">🔍</div>
+                    <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-xl"><i class="fi fi-rr-search text-2xl"></i></div>
                     <div>
                         <p class="text-xs text-slate-400 font-semibold uppercase tracking-widest">Tindakan Diperlukan</p>
                         <h3 class="text-base font-black text-slate-900">Verifikasi Bukti Pembayaran</h3>
@@ -458,7 +475,7 @@
                                  class="w-full h-48 object-cover group-hover:scale-105 transition duration-500">
                             <div class="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
                                 <span class="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-4 py-2 rounded-full border border-white/30">
-                                    🔍 Lihat Resolusi Penuh
+                                    <i class="fi fi-rr-search text-2xl"></i> Lihat Resolusi Penuh
                                 </span>
                             </div>
                         </div>
@@ -476,7 +493,7 @@
                         <button type="submit"
                                 onclick="return confirm('Konfirmasi bahwa bukti transfer valid dan pembayaran lunas? Status pelatihan akan berubah menjadi selesai.')"
                                 class="w-full bg-[#1E6B3D] hover:bg-[#24824A] text-white font-black text-xs px-6 py-4 rounded-2xl shadow-lg shadow-emerald-700/10 transition uppercase tracking-wider flex items-center justify-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                            <i class="fi fi-rr-check"></i>
                             Verifikasi Lunas & Selesaikan
                         </button>
                     </form>
@@ -509,7 +526,7 @@
             {{-- STAGE: DIBATALKAN --}}
             @if($pendaftaran->status_progres === 'dibatalkan')
                 <div class="p-8 bg-rose-50 border border-rose-200 rounded-2xl text-center space-y-3">
-                    <span class="text-5xl block">❌</span>
+                    <span class="text-5xl block"><i class="fi fi-rr-cross-circle text-2xl"></i></span>
                     <h4 class="text-base font-black text-rose-800 uppercase tracking-wider">Pelatihan Dibatalkan</h4>
                     <p class="text-sm text-rose-700 max-w-sm mx-auto leading-relaxed">
                         Pelatihan kustom ini telah dibatalkan dari sistem.
@@ -525,74 +542,127 @@
     {{-- ══════════════════════════════════════════════════════════════ --}}
     {{-- RIGHT / SIDEBAR COLUMN                                         --}}
     {{-- ══════════════════════════════════════════════════════════════ --}}
-    <div class="space-y-6">
+    <div class="lg:col-span-1 space-y-6">
+        {{-- ── STEPPER CARD ──────────────────────────────────────── --}}
+        <div class="bg-white rounded-[2rem] border border-slate-100 p-8 shadow-sm">
+            <h3 class="text-base font-black text-slate-900 tracking-tight mb-8">Alur Tahapan Pelatihan Kustom</h3>
 
+            @php
+                $stages = [
+                    'meninjau'            => ['Tinjauan Awal',        'Subadmin meninjau registrasi awal pelatihan.'],
+                    'disetujui'           => ['Disetujui',            'Permintaan disetujui, siap masuk tahap penjadwalan.'],
+                    'dijadwalkan'         => ['Penjadwalan',          'Menentukan jadwal & instruktur, klien dapat mengunggah peserta.'],
+                    'menunggu_pelaksanaan' => ['Menunggu Pelaksanaan', 'Jadwal telah ditetapkan, menunggu tanggal pelaksanaan pelatihan.'],
+                    'berlangsung'         => ['Berlangsung',          'Pelaksanaan pelatihan sedang berlangsung saat ini.'],
+                    'menunggu_pembayaran' => ['Tagihan Dikirim',      'Pelatihan selesai dilaksanakan — invoice dikirim ke perusahaan.'],
+                    'pembayaran_ditinjau' => ['Verifikasi Pembayaran','Klien telah mengunggah bukti transfer, menunggu konfirmasi subadmin.'],
+                    'selesai'             => ['Selesai',              'Seluruh tahapan pelatihan kustom dan administrasi pembayaran selesai.'],
+                ];
+
+                $currentStage = strtolower($pendaftaran->status_progres);
+                
+                // Dynamic logic for berlangsung
+                if (in_array($currentStage, ['dijadwalkan', 'menunggu_pelaksanaan']) && $pendaftaran->jadwal && in_array($pendaftaran->jadwal->status_pelaksanaan, ['Berlangsung', 'Selesai'])) {
+                    $currentStage = 'berlangsung';
+                }
+
+                $stageKeys    = array_keys($stages);
+                $currentIndex = array_search($currentStage, $stageKeys);
+                if ($currentStage === 'dibatalkan') $currentIndex = -1;
+            @endphp
+
+            <div class="relative pl-8 border-l-2 border-slate-100 space-y-7">
+                @foreach($stages as $key => $info)
+                    @php
+                        $keyIndex   = array_search($key, $stageKeys);
+                        $isCompleted = ($currentIndex !== false && $keyIndex < $currentIndex);
+                        $isActive    = ($currentStage === $key);
+
+                        $bulletClass = 'bg-slate-100 border-slate-200 text-slate-400';
+                        $titleClass  = 'text-slate-400 font-semibold';
+                        if ($isCompleted) {
+                            $bulletClass = 'bg-emerald-500 border-emerald-500 text-white';
+                            $titleClass  = 'text-emerald-700 font-bold';
+                        } elseif ($isActive) {
+                            $bulletClass = 'bg-cyan-600 border-cyan-600 ring-4 ring-cyan-500/20 text-white';
+                            $titleClass  = 'text-cyan-800 font-black';
+                        }
+                    @endphp
+                    <div class="relative">
+                        <span class="absolute -left-[41px] top-0.5 flex items-center justify-center w-6 h-6 rounded-full border-2 text-[10px] font-black {{ $bulletClass }}">
+                            @if($isCompleted)<i class="fi fi-rr-check text-[10px]"></i>@else{{ $keyIndex + 1 }}@endif
+                        </span>
+                        <div>
+                            <span class="text-xs uppercase tracking-wider {{ $titleClass }}">{{ $info[0] }}</span>
+                            @if($isActive)
+                                <span class="ml-2 inline-block bg-cyan-100 text-cyan-700 text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border border-cyan-200">Tahap Sekarang</span>
+                            @endif
+                            <p class="text-xs text-slate-400 mt-0.5 leading-relaxed">{{ $info[1] }}</p>
+                        </div>
+                    </div>
+                @endforeach
+
+                @if($currentStage === 'dibatalkan')
+                    <div class="relative">
+                        <span class="absolute -left-[41px] top-0.5 flex items-center justify-center w-6 h-6 rounded-full border-2 bg-rose-500 border-rose-500 text-white text-[10px]"><i class="fi fi-rr-cross text-[10px]"></i></span>
+                        <div>
+                            <span class="text-xs uppercase tracking-wider text-rose-700 font-black">Dibatalkan</span>
+                            <p class="text-xs text-slate-400 mt-0.5">Pelatihan kustom ini telah ditolak atau dibatalkan.</p>
+                        </div>
+                    </div>
+                @endif
+            </div>
+        </div>
         {{-- ── DAFTAR PESERTA CARD IN SIDEBAR ─────────────────────── --}}
         <div class="bg-white rounded-[2rem] border border-slate-100 p-6 shadow-sm">
             <div class="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
                 <div>
                     <h3 class="text-sm font-black text-slate-900 tracking-tight flex items-center gap-2">
-                        👥 Daftar Peserta B2B
+                        <i class="fi fi-rr-users"></i> Daftar Peserta B2B
                     </h3>
-                    <span class="text-[10px] text-slate-400 font-bold uppercase mt-1">Total: {{ $participants->count() + 1 }} Orang</span>
+                    <span class="text-[10px] text-slate-400 font-bold uppercase mt-1">Total: {{ $participants->count() }} Orang</span>
                 </div>
                 @if(!in_array($pendaftaran->status_progres, ['selesai', 'dibatalkan']))
                     <div class="flex gap-2">
                         <button type="button" onclick="document.getElementById('modal-tambah-peserta').classList.remove('hidden')" 
                                 title="Tambah Manual"
                                 class="bg-[#1E6B3D] hover:bg-[#24824A] text-white p-2.5 rounded-xl transition text-xs flex items-center justify-center">
-                            ➕
+                            <i class="fi fi-rr-plus"></i>
                         </button>
                         <button type="button" onclick="document.getElementById('modal-import-peserta').classList.remove('hidden')" 
                                 title="Import CSV"
                                 class="bg-cyan-600 hover:bg-cyan-700 text-white p-2.5 rounded-xl transition text-xs flex items-center justify-center">
-                            📥
+                            <i class="fi fi-rr-download"></i>
                         </button>
                     </div>
                 @endif
             </div>
 
             <div class="space-y-4 max-h-[400px] overflow-y-auto pr-1">
-                <!-- PIC Utama -->
-                <div class="flex items-start justify-between gap-3 p-3 bg-cyan-50/50 border border-cyan-100 rounded-2xl">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-full bg-cyan-600 text-white flex items-center justify-center font-bold text-xs uppercase shrink-0">
-                            {{ substr($pendaftaran->user?->nama ?? 'P', 0, 2) }}
-                        </div>
-                        <div>
-                            <div class="text-xs font-black text-slate-900 leading-snug">{{ $pendaftaran->user?->nama }}</div>
-                            <div class="text-[10px] text-slate-500 font-medium leading-normal">{{ $pendaftaran->user?->email }}</div>
-                            <div class="text-[10px] text-slate-500 font-semibold mt-0.5 leading-normal">WA: {{ $pendaftaran->user?->no_telp }}</div>
-                        </div>
-                    </div>
-                    <span class="bg-cyan-100 text-cyan-800 text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md border border-cyan-200 shrink-0">
-                        PIC
-                    </span>
-                </div>
-
                 <!-- Peserta Utusan -->
                 @forelse($participants as $part)
-                    <div class="flex items-start justify-between gap-3 p-3 bg-slate-50 border border-slate-100 rounded-2xl hover:bg-slate-100/50 transition">
+                    <div class="flex items-center justify-between p-3 bg-slate-50 border border-slate-100 rounded-xl hover:bg-slate-100 transition group">
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs uppercase shrink-0">
+                            <div class="w-8 h-8 rounded-full bg-cyan-100 text-cyan-700 flex items-center justify-center font-black text-xs uppercase shrink-0">
                                 {{ substr($part->user?->nama ?? 'U', 0, 2) }}
                             </div>
                             <div>
                                 <div class="text-xs font-bold text-slate-800 leading-snug">{{ $part->user?->nama }}</div>
-                                <div class="text-[10px] text-slate-500 font-medium leading-normal">{{ $part->user?->email }}</div>
-                                <div class="text-[10px] text-slate-500 font-semibold mt-0.5 leading-normal">WA: {{ $part->user?->no_telp }}</div>
+                                <div class="text-[10px] text-slate-500 font-medium leading-normal flex items-center gap-1">
+                                    <i class="fi fi-rr-envelope text-[8px]"></i> {{ $part->user?->email }}
+                                </div>
+                                <div class="text-[10px] text-slate-500 font-medium leading-normal flex items-center gap-1">
+                                    <i class="fi fi-rr-phone-call text-[8px]"></i> {{ $part->user?->no_telp }}
+                                </div>
                             </div>
                         </div>
-                        <div class="flex flex-col items-end gap-1.5 shrink-0">
-                            <span class="bg-slate-100 text-slate-500 text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md border border-slate-200">
-                                Utusan
-                            </span>
+                        <div class="flex flex-col items-end gap-2 shrink-0">
                             @if(!in_array($pendaftaran->status_progres, ['selesai', 'dibatalkan']))
                                 <form action="{{ route('subadmin.pelatihan-kustom.remove-participant', $part->id_pendaftaran) }}" method="POST" onsubmit="return confirm('Hapus peserta ini?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-[10px] text-red-500 hover:text-red-700 font-bold transition">
-                                        ❌ Hapus
+                                    <button type="submit" class="w-6 h-6 flex items-center justify-center rounded-lg text-rose-400 hover:bg-rose-100 hover:text-rose-600 transition" title="Hapus Peserta">
+                                        <i class="fi fi-rr-trash text-sm"></i>
                                     </button>
                                 </form>
                             @endif
@@ -603,101 +673,14 @@
                 @endforelse
             </div>
         </div>
-
-        {{-- Profil Perusahaan --}}
-        <div class="bg-white rounded-[2rem] border border-slate-100 p-6 shadow-sm">
-            <h3 class="text-sm font-black text-slate-900 tracking-tight mb-5 flex items-center gap-2">
-                <svg class="w-4 h-4 text-cyan-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                Profil Perusahaan Klien
-            </h3>
-            <div class="space-y-4">
-                @foreach([
-                    ['Nama Perusahaan', $pendaftaran->perusahaan?->nama ?? '—', true],
-                    ['Sektor Industri', $pendaftaran->perusahaan?->sektor_industri ?? '—', false],
-                    ['Jumlah Karyawan', $pendaftaran->perusahaan?->jumlah_karyawan ? $pendaftaran->perusahaan->jumlah_karyawan . ' Karyawan' : '—', false],
-                    ['Alamat', $pendaftaran->perusahaan?->alamat ?? '—', false],
-                ] as [$label, $value, $large])
-                <div>
-                    <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mb-0.5">{{ $label }}</span>
-                    <span class="font-bold text-slate-800 {{ $large ? 'text-sm' : 'text-xs' }} leading-snug block">{{ $value }}</span>
-                </div>
-                @endforeach
-            </div>
-        </div>
-
-        {{-- Data PIC --}}
-        <div class="bg-white rounded-[2rem] border border-slate-100 p-6 shadow-sm">
-            <h3 class="text-sm font-black text-slate-900 tracking-tight mb-5 flex items-center gap-2">
-                <svg class="w-4 h-4 text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                PIC / Penghubung
-            </h3>
-            <div class="space-y-4">
-                @php
-                    $jabatanPIC = $pendaftaran->perusahaan?->klienPerusahaan?->where('id_user', $pendaftaran->id_user)->first()?->jabatan ?? 'PIC';
-                @endphp
-                @foreach([
-                    ['Nama', $pendaftaran->user?->nama ?? '—'],
-                    ['Jabatan', $jabatanPIC],
-                    ['WhatsApp', $pendaftaran->user?->no_telp ?? '—'],
-                    ['Email', $pendaftaran->user?->email ?? '—'],
-                ] as [$label, $value])
-                <div>
-                    <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mb-0.5">{{ $label }}</span>
-                    <span class="font-bold text-slate-700 text-xs leading-snug block break-all">{{ $value }}</span>
-                </div>
-                @endforeach
-                <div class="pt-3 border-t border-slate-100 flex gap-2">
-                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $pendaftaran->user?->no_telp ?? '') }}"
-                       target="_blank"
-                       class="flex-1 bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#128C7E] text-xs font-bold px-3 py-2.5 rounded-xl flex items-center justify-center gap-1.5 transition border border-[#25D366]/20">
-                        <svg class="w-3.5 h-3.5 fill-[#25D366]" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.938 3.659 1.435 5.63 1.435h.008c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                        WhatsApp
-                    </a>
-                    <a href="mailto:{{ $pendaftaran->user?->email }}"
-                       class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-3 py-2.5 rounded-xl flex items-center justify-center gap-1.5 transition">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                        Email
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        {{-- Pengajuan Awal --}}
-        <div class="bg-white rounded-[2rem] border border-slate-100 p-6 shadow-sm">
-            <h3 class="text-sm font-black text-slate-900 tracking-tight mb-5">
-                🗒️ Catatan Pengajuan Awal
-            </h3>
-            <div class="space-y-3 text-xs">
-                <div>
-                    <span class="text-slate-400 font-bold block mb-0.5">Topik Pelatihan:</span>
-                    <span class="font-bold text-slate-800">{{ $pendaftaran->jadwal?->jenis?->nama ?? '—' }}</span>
-                </div>
-                <div>
-                    <span class="text-slate-400 font-bold block mb-0.5">Harapan Tanggal:</span>
-                    <span class="font-bold text-slate-800">
-                        {{ $pendaftaran->rencana_tanggal_mulai ? $pendaftaran->rencana_tanggal_mulai->format('d M Y') : '—' }}
-                        @if($pendaftaran->rencana_tanggal_selesai && $pendaftaran->rencana_tanggal_selesai != $pendaftaran->rencana_tanggal_mulai)
-                            s/d {{ $pendaftaran->rencana_tanggal_selesai->format('d M Y') }}
-                        @endif
-                    </span>
-                </div>
-                <div>
-                    <span class="text-slate-400 font-bold block mb-0.5">Pesan PIC:</span>
-                    <p class="text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100 leading-relaxed font-semibold">{{ $pendaftaran->catatan_klien ?: 'Tidak ada pesan tambahan.' }}</p>
-                </div>
-            </div>
-        </div>
-
     </div>
-
 </div>
-
 <!-- Modal Import Peserta -->
 <div id="modal-import-peserta" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
     <div class="bg-white rounded-[2rem] border border-slate-100 max-w-md w-full p-8 shadow-2xl space-y-6">
         <div>
             <h3 class="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
-                📥 Import Daftar Peserta
+                <i class="fi fi-rr-download"></i> Import Daftar Peserta
             </h3>
             <p class="text-xs text-slate-500 mt-1">Unggah berkas CSV untuk mendaftarkan seluruh karyawan peserta pelatihan kustom B2B sekaligus.</p>
         </div>

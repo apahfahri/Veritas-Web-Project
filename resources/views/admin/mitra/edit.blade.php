@@ -7,7 +7,7 @@
 <div class="max-w-4xl mx-auto">
     <div class="mb-6">
         <a href="{{ route('admin.mitra.index') }}" class="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-slate-900 transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            <i class="fi fi-rr-arrow-left"></i>
             Kembali ke Daftar Perusahaan
         </a>
     </div>
@@ -68,7 +68,7 @@
                 @if($cp && $cp->id_user)
                 <!-- Alert if CP has registered User Account -->
                 <div class="mb-5 bg-amber-50 border border-amber-100 rounded-2xl p-4 flex gap-3">
-                    <svg class="w-5 h-5 text-amber-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    <i class="fi fi-rr-triangle-warning text-amber-500 mt-0.5"></i>
                     <p class="text-[11px] font-bold text-amber-700 uppercase tracking-wider leading-relaxed">
                         CP ini terdaftar sebagai Akun User di sistem. Nama asli terhubung langsung ke profil user dan tidak dapat diubah manual di sini untuk menjaga validitas akun.
                     </p>

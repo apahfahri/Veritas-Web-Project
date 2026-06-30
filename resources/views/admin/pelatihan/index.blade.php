@@ -5,50 +5,60 @@
 
 @section('content')
 
-<div class="flex flex-wrap justify-between items-end gap-4 mb-8">
-    <div>
-        <h2 class="text-2xl font-black text-slate-900 tracking-tight">Daftar Layanan</h2>
-        <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-1">Total: {{ $layanans->total() }} Program Tersedia</p>
+<div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
+    <div class="flex items-center gap-3 w-full md:w-auto">
+        <form action="{{ route('admin.pelatihan.index') }}" method="GET" class="flex flex-1 md:w-64 bg-white border border-slate-200 rounded-2xl overflow-hidden focus-within:border-cyan-500 focus-within:ring-2 focus-within:ring-cyan-500/20 transition-all shadow-sm">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari layanan..."
+                   class="w-full bg-transparent border-none text-sm px-4 py-2 focus:ring-0 text-slate-700 placeholder-slate-400 font-medium">
+            <button type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 flex items-center justify-center transition">
+                <i class="fi fi-rr-search mt-0.5"></i>
+            </button>
+        </form>
+        @if(request()->hasAny(['search']))
+            <a href="{{ route('admin.pelatihan.index') }}" class="w-10 h-10 flex items-center justify-center bg-red-50 text-red-600 hover:bg-red-100 border border-red-100 rounded-2xl transition tooltip-trigger" title="Reset Filter">
+                <i class="fi fi-rr-cross"></i>
+            </a>
+        @endif
     </div>
     <a href="{{ route('admin.pelatihan.create') }}"
        class="bg-slate-900 text-white px-6 py-3 rounded-2xl hover:bg-slate-800 transition shadow-lg shadow-slate-200 flex items-center gap-2 text-sm font-black group">
-        <svg class="w-5 h-5 text-cyan-400 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+        <i class="fi fi-rr-plus text-cyan-400 group-hover:rotate-90 transition-transform duration-300"></i>
         Tambah Layanan Baru
     </a>
 </div>
 
-<div class="bg-white rounded-[32px] shadow-sm border border-slate-100 overflow-hidden">
+<div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="bg-slate-100/50 border-b-2 border-slate-100">
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Kategori Layanan</th>
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Nama Layanan</th>
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Materi</th>
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50 min-w-[240px]">Pemateri</th>
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50 text-center">Mode</th>
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Rentang Waktu</th>
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Biaya Investasi</th>
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50 text-center">Aksi</th>
+            <thead class="bg-slate-50 border-b border-slate-100 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">
+                <tr>
+                    <th class="px-5 py-4">Kategori Layanan</th>
+                    <th class="px-5 py-4">Nama Layanan</th>
+                    <th class="px-5 py-4">Materi</th>
+                    <th class="px-5 py-4 min-w-[240px]">Pemateri</th>
+                    <th class="px-5 py-4 text-center">Mode</th>
+                    <th class="px-5 py-4">Rentang Waktu</th>
+                    <th class="px-5 py-4">Biaya Investasi</th>
+                    <th class="px-5 py-4 text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-50">
                 @forelse($layanans as $l)
-                <tr class="hover:bg-slate-50/50 transition-colors group">
-                    <td class="p-6">
+                <tr class="hover:bg-slate-50/50 transition-colors">
+                    <td class="p-5">
                         <div class="flex flex-col">
                             <span class="text-[12px] font-medium text-slate-900">{{ $l->kategori?->nama ?? 'Tanpa Kategori' }}</span>
                         </div>
                     </td>
-                    <td class="p-6">
+                    <td class="p-5">
                         <div class="flex flex-col">
                             <span class="text-[12px] font-medium text-slate-900">{{ $l->nama }}</span>                            
                         </div>
                     </td>
-                    <td class="p-6">
+                    <td class="p-5">
                         <p class="text-[12px] text-slate-900 font-medium leading-relaxed max-w-[200px] truncate">{{ $l->materi }}</p>
                     </td>
-                    <td class="p-6 min-w-[240px]">
+                    <td class="p-5 min-w-[240px]">
                         <div class="flex flex-col gap-1">
                             @foreach($l->pemateri as $p)
                                 <div class="flex items-center gap-1.5 text-[12px] font-medium text-slate-900">
@@ -58,15 +68,15 @@
                             @endforeach
                         </div>
                     </td>
-                    <td class="p-6 text-center">
+                    <td class="p-5 text-center">
                         <span class="inline-flex px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest {{ $l->jenis_pertemuan === 'online' ? 'bg-cyan-50 text-cyan-600 border border-cyan-100' : 'bg-amber-50 text-amber-600 border border-amber-100' }}">
                             {{ $l->jenis_pertemuan }}
                         </span>
                     </td>
-                    <td class="p-6">
+                    <td class="p-5">
                         <div class="flex flex-col gap-1">
                             <div class="flex items-center gap-2 text-[12px] font-medium text-slate-900">
-                                <svg class="w-3.5 h-3.5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v12a2 2 0 002 2z"></path></svg>
+                                <i class="fi fi-rr-calendar text-indigo-400"></i>
                                 {{ $l->tgl_mulai ? $l->tgl_mulai->format('d/m/Y') : '-' }}
                             </div>
                             <div class="flex items-center gap-2 text-[11px] font-medium text-slate-400">
@@ -75,20 +85,20 @@
                             </div>
                         </div>
                     </td>
-                    <td class="p-6">
+                    <td class="p-5">
                         <span class="text-[12px] font-medium text-slate-900">IDR {{ number_format($l->harga, 0, ',', '.') }}</span>
                     </td>
-                    <td class="p-6">
+                    <td class="p-5 text-center">
                         <div class="flex items-center justify-center gap-2">
                             <a href="{{ route('admin.pelatihan.edit', $l->id_layanan) }}"
-                               class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-indigo-600 hover:text-indigo-600 hover:shadow-lg hover:shadow-indigo-50 transition shadow-sm">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                               class="w-8 h-8 flex items-center justify-center rounded-lg bg-cyan-50 text-cyan-600 hover:text-cyan-800 hover:bg-cyan-100 transition" title="Edit">
+                                <i class="fi fi-rr-edit"></i>
                             </a>
                             <form method="POST" action="{{ route('admin.pelatihan.destroy', $l->id_layanan) }}" class="delete-form" data-name="{{ $l->nama }}">
                                 @csrf @method('DELETE')
                                 <button type="submit"
-                                        class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-red-500 hover:text-red-500 hover:shadow-lg hover:shadow-red-50 transition shadow-sm">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        class="w-8 h-8 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:text-rose-700 hover:bg-rose-100 transition" title="Hapus">
+                                    <i class="fi fi-rr-trash"></i>
                                 </button>
                             </form>
                         </div>
@@ -96,10 +106,10 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="p-20 text-center">
+                    <td colspan="8" class="p-20 text-center">
                         <div class="flex flex-col items-center">
                             <div class="w-20 h-20 bg-slate-50 text-slate-200 rounded-3xl flex items-center justify-center mb-4">
-                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9l-.707.707M16.243 4.757l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                                <i class="fi fi-rr-bulb"></i>
                             </div>
                             <p class="text-sm font-black text-slate-400 uppercase tracking-widest">Belum ada program layanan</p>
                             <a href="{{ route('admin.pelatihan.create') }}" class="mt-4 text-xs font-bold text-indigo-600 hover:underline">Tambah Layanan Pertama</a>
@@ -112,8 +122,8 @@
     </div>
     
     @if($layanans->hasPages())
-    <div class="p-6 border-t border-slate-50 bg-slate-50/30">
-        {{ $layanans->links() }}
+    <div class="p-6 border-t border-slate-100">
+        {{ $layanans->appends(request()->query())->links('vendor.pagination.tailwind') }}
     </div>
     @endif
 </div>

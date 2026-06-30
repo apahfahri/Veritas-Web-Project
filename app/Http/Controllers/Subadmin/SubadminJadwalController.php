@@ -221,4 +221,21 @@ class SubadminJadwalController extends Controller
         return redirect()->route('subadmin.jadwal.index')
             ->with('success', 'Jadwal berhasil dihapus.');
     }
+
+    public function exportAbsensi($id)
+    {
+        $jadwal = Jadwal::with(['jenis', 'kategori', 'pemateri'])->findOrFail($id);
+        $pesertas = Pendaftaran::with(['user', 'perusahaan'])
+            ->where('id_jadwal', $id)
+            ->where('status_progres', '!=', 'dibatalkan')
+            ->orderBy('id_pendaftaran', 'asc')
+            ->get();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('subadmin.jadwal.export-absensi', compact('jadwal', 'pesertas'))
+            ->setPaper('a4', 'landscape');
+        
+        $filename = 'Daftar_Hadir_' . str_replace(' ', '_', $jadwal->jenis?->nama ?? 'Jadwal') . '_' . ($jadwal->tgl_mulai ? $jadwal->tgl_mulai->format('d_M_Y') : date('d_M_Y')) . '.pdf';
+        
+        return $pdf->stream($filename);
+    }
 }

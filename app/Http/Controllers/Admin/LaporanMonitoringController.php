@@ -27,8 +27,14 @@ class LaporanMonitoringController extends Controller
             $query->whereDate('created_at', '<=', $endDate);
         }
 
-        // Ambil data filtered untuk tabel (5 per halaman)
-        $registrations = $query->latest('id_pendaftaran')->paginate(5)->withQueryString();
+        // Clone query for unpaginated export BEFORE pagination
+        $exportQuery = clone $query;
+
+        // Ambil data filtered untuk tabel (15 per halaman)
+        $registrations = $query->latest('id_pendaftaran')->paginate(15, ['*'], 'page')->withQueryString();
+
+        // Get all filtered data for export
+        $allRegistrations = $exportQuery->latest('id_pendaftaran')->get();
 
         $data = [];
 
@@ -89,14 +95,19 @@ class LaporanMonitoringController extends Controller
             if ($startDate) $productQuery->whereDate('pendaftaran.created_at', '>=', $startDate);
             if ($endDate) $productQuery->whereDate('pendaftaran.created_at', '<=', $endDate);
 
-            $data['products'] = $productQuery->paginate(5)->withQueryString();
+            // Clone productQuery BEFORE pagination to prevent limit/offset mutation issues
+            $exportProductQuery = clone $productQuery;
+            $topProductsQuery = clone $productQuery;
+
+            $data['products'] = $productQuery->paginate(15, ['*'], 'ppage')->withQueryString();
+            $data['all_products'] = $exportProductQuery->get();
 
             // Horizontal bar chart top 5 products
-            $topProducts = (clone $productQuery)->limit(5)->get();
+            $topProducts = $topProductsQuery->limit(5)->get();
             $data['chart_labels'] = $topProducts->pluck('nama_layanan')->toArray();
             $data['chart_series'] = $topProducts->pluck('qty')->toArray();
         }
 
-        return view('admin.laporan.index', compact('type', 'registrations', 'data'));
+        return view('admin.laporan.index', compact('type', 'registrations', 'allRegistrations', 'data'));
     }
 }

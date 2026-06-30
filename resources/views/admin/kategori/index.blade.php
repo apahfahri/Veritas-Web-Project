@@ -8,24 +8,37 @@
 {{-- Alert --}}
 @if(session('success'))
 <div class="mb-6 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl px-6 py-4 flex items-center gap-3 text-sm font-bold">
-    <svg class="w-5 h-5 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+    <i class="fi fi-rr-check text-emerald-500"></i>
     {{ session('success') }}
 </div>
 @endif
 
-<div class="flex justify-between items-center mb-8">
-    <div>
-        <p class="text-[11px] text-slate-400 font-black uppercase tracking-widest">{{ $kategoris->count() }} Kategori · {{ $kategoris->sum(fn($k) => $k->jenis->count()) }} Jenis Program</p>
-    </div>
-    <div class="flex items-center gap-3">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+    <form method="GET" action="{{ route('admin.kategori.index') }}" class="flex flex-wrap items-center gap-3 w-full md:w-auto flex-1">
+        <div class="relative flex-1 min-w-[200px] max-w-md">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                <i class="fi fi-rr-search"></i>
+            </span>
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari kategori..."
+                   class="w-full bg-white border border-slate-200/80 rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium text-slate-700 outline-none focus:ring-2 focus:ring-cyan-500 transition shadow-sm">
+        </div>
+        <button type="submit" class="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-md transition flex items-center gap-2">
+            <i class="fi fi-rr-search"></i> Cari Data
+        </button>
+        @if(request()->has('search'))
+            <a href="{{ route('admin.kategori.index') }}" class="bg-white hover:bg-slate-50 text-slate-600 font-bold text-sm px-4 py-2.5 rounded-xl border border-slate-200 transition shadow-sm">Reset</a>
+        @endif
+    </form>
+
+    <div class="flex items-center gap-3 shrink-0">
         <button onclick="openImportModal()"
-                class="bg-white border border-slate-200 text-slate-700 px-5 py-2.5 rounded-2xl hover:bg-slate-50 transition shadow-sm flex items-center gap-2 text-sm font-black group">
-            <svg class="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                class="bg-white border border-slate-200 text-slate-700 font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-sm hover:bg-slate-50 transition uppercase tracking-wider flex items-center gap-2">
+            <i class="fi fi-rr-upload text-slate-400"></i>
             Import CSV
         </button>
         <button onclick="openAddKategoriModal()"
-                class="bg-slate-900 text-white px-5 py-2.5 rounded-2xl hover:bg-slate-800 transition shadow-lg shadow-slate-200 flex items-center gap-2 text-sm font-black group">
-            <svg class="w-4 h-4 text-cyan-400 group-hover:rotate-90 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                class="bg-slate-900 text-white font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-md transition uppercase tracking-wider flex items-center gap-2">
+            <i class="fi fi-rr-plus text-cyan-400"></i>
             Tambah Kategori
         </button>
     </div>
@@ -50,11 +63,11 @@
                 <div class="flex gap-1 shrink-0">
                     <button onclick="openEditKategoriModal({{ $k->id_kategori }}, '{{ addslashes($k->nama) }}', '{{ $k->kode_kategori }}')"
                             class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                        <i class="fi fi-rr-edit .5 .5"></i>
                     </button>
                     <button onclick="openAddJenisModal({{ $k->id_kategori }}, '{{ addslashes($k->nama) }}')"
                             class="w-8 h-8 flex items-center justify-center bg-slate-900 text-cyan-400 hover:bg-slate-800 rounded-xl transition">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        <i class="fi fi-rr-plus .5 .5"></i>
                     </button>
                 </div>
             </div>
@@ -78,12 +91,12 @@
                     <div class="flex gap-0.5 opacity-0 group-hover/item:opacity-100 transition shrink-0">
                         <button onclick="openEditJenisModal({{ $j->id_jenis }}, '{{ addslashes($j->nama) }}', '{{ $j->kode_jenis }}')"
                                 class="w-7 h-7 flex items-center justify-center text-slate-300 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                            <i class="fi fi-rr-pencil"></i>
                         </button>
                         <form action="{{ route('admin.kategori.jenis.destroy', $j->id_jenis) }}" method="POST" class="delete-jenis-form" data-name="{{ $j->nama }}">
                             @csrf @method('DELETE')
                             <button type="submit" class="w-7 h-7 flex items-center justify-center text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                <i class="fi fi-rr-trash"></i>
                             </button>
                         </form>
                     </div>
@@ -91,7 +104,7 @@
                 @empty
                 <li class="flex flex-col items-center py-8 text-center">
                     <div class="w-10 h-10 bg-slate-50 text-slate-200 rounded-2xl flex items-center justify-center mb-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                        <i class="fi fi-rr-plus"></i>
                     </div>
                     <p class="text-[10px] font-black uppercase tracking-widest text-slate-300">Belum ada jenis program</p>
                 </li>
@@ -223,7 +236,7 @@
                 <code class="block bg-white p-2 rounded-xl border border-slate-200/60 text-[10px] text-indigo-600 font-black leading-relaxed">kode_kategori, nama_kategori, deskripsi_kategori, kode_jenis, nama_jenis</code>
                 <p class="text-[10px]">*) Program jenis baru akan otomatis ditambahkan ke dalam kategori terkait.</p>
                 <a href="{{ route('admin.kategori.import-template') }}" class="inline-flex items-center gap-1.5 text-indigo-600 hover:underline font-bold mt-1">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    <i class="fi fi-rr-download"></i>
                     Unduh Template CSV
                 </a>
             </div>

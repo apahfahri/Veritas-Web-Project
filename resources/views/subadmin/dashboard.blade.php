@@ -3,9 +3,9 @@
 @section('page-title', 'Overview Subadmin ' . strtoupper(Auth::user()->cabang))
 
 @section('header-actions')
-<button onclick="exportDashboardAsPDF()" id="exportBtn" class="bg-cyan-600 hover:bg-cyan-700 text-white text-[11px] font-black uppercase tracking-wider px-5 py-3 rounded-xl transition-all shadow-lg shadow-cyan-600/20 flex items-center gap-2 group">
-    <svg class="w-4 h-4 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-    <span id="exportBtnText">Export Dashboard (PDF)</span>
+<button onclick="exportDashboardAsPNG()" class="bg-cyan-600 hover:bg-cyan-700 text-white text-[11px] font-black uppercase tracking-wider px-5 py-3 rounded-xl transition-all shadow-lg shadow-cyan-600/20 flex items-center gap-2 group">
+    <i class="fi fi-rr-picture group-hover:rotate-12 transition-transform"></i>
+    Export Dashboard (PNG)
 </button>
 @endsection
 
@@ -16,7 +16,7 @@
     <!-- Stat Card: Pelatihan -->
     <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-4 hover:shadow-md transition group">
         <div class="w-14 h-14 bg-cyan-50 text-cyan-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition duration-300 shrink-0">
-            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path></svg>
+            <i class="fi fi-rr-box"></i>
         </div>
         <div class="min-w-0">
             <p class="text-[10px] text-slate-500 font-extrabold uppercase tracking-widest truncate">Pelatihan</p>
@@ -27,7 +27,7 @@
     <!-- Stat Card: Konsultasi -->
     <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-4 hover:shadow-md transition group">
         <div class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition duration-300 shrink-0">
-            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+            <i class="fi fi-rr-comment-alt"></i>
         </div>
         <div class="min-w-0">
             <p class="text-[10px] text-slate-500 font-extrabold uppercase tracking-widest truncate">Konsultasi</p>
@@ -38,7 +38,7 @@
     <!-- Stat Card: Audit -->
     <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-4 hover:shadow-md transition group">
         <div class="w-14 h-14 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition duration-300 shrink-0">
-            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            <i class="fi fi-rr-shield-check w-7 h-7"></i>
         </div>
         <div class="min-w-0">
             <p class="text-[10px] text-slate-500 font-extrabold uppercase tracking-widest truncate">Audit</p>
@@ -49,10 +49,10 @@
     <!-- Stat Card: Sertifikat -->
     <div class="bg-slate-900 p-6 rounded-3xl shadow-xl flex items-center gap-4 hover:scale-[1.02] transition duration-300 relative overflow-hidden">
         <div class="absolute -right-4 -bottom-4 opacity-10 text-white">
-            <svg class="w-20 h-20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"></path></svg>
+            <i class="fi fi-rr-star"></i>
         </div>
         <div class="w-14 h-14 bg-white/10 text-white rounded-2xl flex items-center justify-center backdrop-blur-sm shrink-0">
-            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
+            <i class="fi fi-rr-diploma w-7 h-7"></i>
         </div>
         <div class="relative z-10 min-w-0">
             <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest truncate">Sertifikat</p>
@@ -211,7 +211,7 @@
         const originalText = btnText.innerHTML;
         
         btn.disabled = true;
-        btnText.innerHTML = '<svg class="w-4 h-4 animate-spin inline mr-1" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Memproses...';
+        btn.innerHTML = '<i class="fi fi-rr-spinner animate-spin"></i> Memproses...';
 
         const opt = {
             margin: 10,

@@ -4,9 +4,8 @@
 
 @section('content')
 <div class="mb-6">
-    <a href="{{ route('admin.jadwal.index') }}" class="inline-flex items-center gap-2 text-slate-400 hover:text-slate-900 font-bold text-xs uppercase tracking-widest transition">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-        Kembali
+    <a href="{{ route('admin.jadwal.index') }}" class="flex items-center gap-2 text-xs font-black text-slate-400 hover:text-slate-600 transition uppercase tracking-widest">
+        <i class="fi fi-rr-arrow-left"></i> KEMBALI
     </a>
 </div>
 
@@ -14,7 +13,7 @@
 
     {{-- Info Jadwal --}}
     <div class="lg:col-span-1 space-y-5">
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
             @if($jadwal->foto)
             <div class="w-full h-48 overflow-hidden border-b border-slate-100">
                 <img src="{{ asset('storage/' . $jadwal->foto) }}" alt="{{ $jadwal->jenis?->nama }}" class="w-full h-full object-cover">
@@ -87,7 +86,7 @@
                             </span>
                         @else
                             <span class="text-xs font-bold text-amber-600">
-                                ⏳ Belum dikirim
+                                <i class="fi fi-rr-time-past"></i> Belum dikirim
                             </span>
                         @endif
                     </div>
@@ -95,7 +94,7 @@
                     <form action="{{ route('admin.jadwal.resend', $jadwal->id_jadwal) }}" method="POST" onsubmit="return confirm('Kirim email konfirmasi ke semua peserta terkonfirmasi? Ini akan memakan waktu sejenak.');">
                         @csrf
                         <button type="submit" class="w-full bg-slate-900 text-white text-xs font-bold py-2.5 rounded-xl hover:bg-slate-800 transition flex items-center justify-center gap-2">
-                            <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                            <i class="fi fi-rr-envelope text-cyan-400"></i>
                             Kirim (Ulang) Email Konfirmasi
                         </button>
                     </form>
@@ -104,7 +103,7 @@
         </div>
 
         {{-- Pemateri --}}
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6">
             <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Pemateri / Instruktur</p>
             @forelse($jadwal->pemateri as $pm)
             <div class="flex items-center gap-3 mb-3">
@@ -126,7 +125,7 @@
         </div>
 
         {{-- Materi Pendukung --}}
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6">
             <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Materi Pendukung</p>
             @forelse($jadwal->materi as $m)
             <div class="flex items-center gap-3 mb-3">
@@ -150,7 +149,7 @@
 
     {{-- Daftar Peserta --}}
     <div class="lg:col-span-2">
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
             <div class="px-6 py-5 border-b border-slate-100 flex justify-between items-center">
                 <div>
                     <h3 class="text-lg font-black text-slate-900">Daftar Peserta</h3>

@@ -21,10 +21,18 @@ class SubadminController extends Controller
         });
     }
 
-    public function index()
+    public function index(Request $request)
     {
         // Ambil admin dengan role subadmin
-        $admins = Admin::where('role', 'subadmin')->latest()->paginate(10);
+        $query = Admin::where('role', 'subadmin')->latest();
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('username', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+        $admins = $query->paginate(10)->withQueryString();
         return view('admin.subadmin.index', compact('admins'));
     }
 

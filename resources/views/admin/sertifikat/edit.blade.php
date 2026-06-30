@@ -8,7 +8,7 @@
 <div class="max-w-4xl mx-auto">
     <div class="mb-6">
         <a href="{{ route('admin.sertifikat.index') }}" class="inline-flex items-center gap-2 text-slate-400 hover:text-slate-900 font-bold text-xs uppercase tracking-widest transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            <i class="fi fi-rr-arrow-left"></i>
             Kembali ke Repository
         </a>
     </div>
@@ -30,7 +30,7 @@
                         <div class="mt-4">
                             <a href="{{ route('admin.sertifikat.show', $sertifikat->no_sertifikat) }}" target="_blank" 
                                class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition border border-white/10">
-                                <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                <i class="fi fi-rr-eye text-cyan-400"></i>
                                 Lihat File Saat Ini
                             </a>
                         </div>
@@ -46,7 +46,7 @@
 
             <div class="bg-indigo-50 p-6 rounded-3xl border border-indigo-100">
                 <div class="flex items-start gap-3">
-                    <svg class="w-5 h-5 text-indigo-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <i class="fi fi-rr-info text-indigo-600"></i>
                     <p class="text-[10px] text-indigo-700 font-bold uppercase tracking-widest leading-relaxed">
                         Anda dapat mengubah <span class="underline">Nomor Sertifikat</span> jika terjadi kesalahan input. Sistem akan memperbarui data terkait secara otomatis.
                     </p>
@@ -115,7 +115,7 @@
                             <!-- FILE EXISTS STATE -->
                             <div id="file-display" class="w-full bg-emerald-50 border-2 border-emerald-200 p-8 rounded-3xl text-center group-hover:border-emerald-400 transition group-hover:bg-emerald-100/30">
                                 <div id="file-icon" class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm text-emerald-500">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138z"></path></svg>
+                                    <i class="fi fi-rr-diploma"></i>
                                 </div>
                                 <p id="file-text" class="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Dokumen Sudah Terunggah</p>
                                 <p id="file-subtext" class="text-[9px] text-emerald-500 font-bold mt-1 italic">Klik untuk mengganti dengan file baru</p>
@@ -124,7 +124,7 @@
                             <!-- NO FILE STATE -->
                             <div id="file-display" class="w-full bg-slate-50 border-2 border-dashed border-slate-200 p-8 rounded-3xl text-center group-hover:border-indigo-300 transition group-hover:bg-indigo-50/30">
                                 <div id="file-icon" class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm text-slate-400 group-hover:text-red-500 transition">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                                    <i class="fi fi-rr-file"></i>
                                 </div>
                                 <p id="file-text" class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Klik atau seret file PDF ke sini</p>
                                 <p id="file-subtext" class="text-[9px] text-slate-400 font-bold mt-1 italic">Maksimal ukuran file: 5MB</p>
@@ -139,7 +139,7 @@
                         <button type="submit"
                                 style="background-color: #7d2ae7;"
                                 class="flex-1 text-white py-3.5 rounded-2xl text-sm font-black hover:opacity-90 transition shadow-lg shadow-indigo-100 flex items-center justify-center gap-2">
-                            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <i class="fi fi-rr-check text-cyan-400"></i>
                             Simpan Perubahan
                         </button>
                     </div>
@@ -167,7 +167,7 @@
             
             icon.classList.remove('text-slate-400', 'text-emerald-500');
             icon.classList.add('text-emerald-600');
-            icon.innerHTML = '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
+            icon.innerHTML = '<i class="fi fi-rr-check-circle"></i>';
             
             text.innerHTML = "File Siap Diperbarui";
             text.classList.remove('text-slate-500', 'text-emerald-600');

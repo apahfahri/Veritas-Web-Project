@@ -8,7 +8,7 @@
 <div class="max-w-3xl mx-auto select-none">
     <div class="mb-6">
         <a href="{{ route('admin.rekening.index') }}" class="inline-flex items-center gap-2 text-slate-400 hover:text-slate-900 font-bold text-xs uppercase tracking-widest transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            <i class="fi fi-rr-arrow-left"></i>
             Kembali ke Daftar
         </a>
     </div>
@@ -16,7 +16,7 @@
     <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
         <div class="p-8 border-b border-slate-50 bg-slate-50/30 text-center">
             <div class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-3xl flex items-center justify-center shadow-sm mx-auto mb-4">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                <i class="fi fi-rr-plus"></i>
             </div>
             <h2 class="text-xl font-black text-slate-900 tracking-tight">Daftarkan Rekening Baru</h2>
             <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-1">Isi data bank dengan benar agar memudahkan verifikasi transfer pelanggan</p>
@@ -58,7 +58,7 @@
             <div class="flex flex-wrap gap-4 pt-8 border-t border-slate-50">
                 <a href="{{ route('admin.rekening.index') }}" class="px-8 py-4 text-sm font-black text-slate-400 hover:text-slate-600 transition">Batal</a>
                 <button type="submit" class="flex-1 bg-slate-900 text-white py-4 rounded-2xl text-sm font-black hover:bg-slate-800 transition shadow-lg shadow-slate-200 flex items-center justify-center gap-2 group">
-                    <svg class="w-5 h-5 text-cyan-400 group-hover:scale-110 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                    <i class="fi fi-rr-plus text-cyan-400 group-hover:scale-110 transition"></i>
                     Daftarkan Rekening Baru
                 </button>
             </div>

@@ -10,9 +10,13 @@ use Illuminate\Support\Facades\DB;
 
 class KategoriLayananController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $kategoris = KategoriLayanan::with('jenis')->get();
+        $query = KategoriLayanan::with('jenis');
+        if ($request->filled('search')) {
+            $query->where('nama', 'like', '%' . $request->search . '%');
+        }
+        $kategoris = $query->paginate(10)->withQueryString();
         return view('admin.kategori.index', compact('kategoris'));
     }
 

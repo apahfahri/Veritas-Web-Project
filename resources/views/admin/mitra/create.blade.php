@@ -7,7 +7,7 @@
 <div class="max-w-4xl mx-auto">
     <div class="mb-6">
         <a href="{{ route('admin.mitra.index') }}" class="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-slate-900 transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            <i class="fi fi-rr-arrow-left"></i>
             Kembali ke Daftar Perusahaan
         </a>
     </div>

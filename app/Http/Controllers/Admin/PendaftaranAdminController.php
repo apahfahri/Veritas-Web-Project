@@ -55,7 +55,7 @@ class PendaftaranAdminController extends Controller
             $query->where('status_bayar', $request->bayar);
         }
 
-        $pendaftarans = $query->paginate(5);
+        $pendaftarans = $query->paginate(5)->withQueryString();
 
         return view('admin.pendaftaran.index', compact('pendaftarans'));
     }
@@ -85,6 +85,14 @@ class PendaftaranAdminController extends Controller
         $pendaftaran->update($request->only('status_progres', 'status_bayar'));
 
         return back()->with('success', 'Status pendaftaran berhasil diperbarui.');
+    }
+
+    public function destroy($id)
+    {
+        $pendaftaran = Pendaftaran::findOrFail($id);
+        $pendaftaran->delete();
+
+        return back()->with('success', 'Pendaftaran berhasil dihapus.');
     }
 }
 

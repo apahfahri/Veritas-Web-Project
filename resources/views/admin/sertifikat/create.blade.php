@@ -8,7 +8,7 @@
 <div class="max-w-4xl mx-auto">
     <div class="mb-6">
         <a href="{{ route('admin.sertifikat.index') }}" class="inline-flex items-center gap-2 text-slate-400 hover:text-slate-900 font-bold text-xs uppercase tracking-widest transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            <i class="fi fi-rr-arrow-left"></i>
             Kembali ke Repository
         </a>
     </div>
@@ -42,7 +42,7 @@
 
             <div class="bg-slate-900 p-6 rounded-3xl shadow-xl shadow-slate-200">
                 <div class="flex items-start gap-3">
-                    <svg class="w-5 h-5 text-cyan-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <i class="fi fi-rr-info text-cyan-400"></i>
                     <p class="text-[10px] text-slate-300 font-bold leading-relaxed uppercase tracking-widest">
                         Input nomor sertifikat sesuai fisik dokumen BNSP/Lembaga terkait untuk validasi publik.
                     </p>
@@ -103,7 +103,7 @@
                                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
                                 <div id="file-display" class="w-full bg-slate-50 border-2 border-dashed border-slate-200 p-8 rounded-3xl text-center group-hover:border-indigo-300 transition group-hover:bg-indigo-50/30">
                                     <div id="file-icon" class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm text-slate-400 group-hover:text-red-500 transition">
-                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                                        <i class="fi fi-rr-file"></i>
                                     </div>
                                     <p id="file-text" class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Klik atau seret file PDF ke sini</p>
                                     <p id="file-subtext" class="text-[9px] text-slate-400 font-bold mt-1 italic">Maksimal ukuran file: 5MB</p>
@@ -118,7 +118,7 @@
                         <button type="submit"
                                 style="background-color: #7d2ae7;"
                                 class="flex-1 text-white py-3.5 rounded-2xl text-sm font-black hover:opacity-90 transition shadow-lg shadow-indigo-100 flex items-center justify-center gap-2">
-                            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                            <i class="fi fi-rr-upload text-cyan-400"></i>
                             Simpan Sertifikat
                         </button>
                     </div>
@@ -146,7 +146,7 @@
             
             icon.classList.remove('text-slate-400');
             icon.classList.add('text-emerald-600');
-            icon.innerHTML = '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
+            icon.innerHTML = '<i class="fi fi-rr-check-circle"></i>';
             
             text.innerHTML = "File Siap Diunggah";
             text.classList.remove('text-slate-500');

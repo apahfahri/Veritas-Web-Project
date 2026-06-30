@@ -5,40 +5,51 @@
 
 @section('content')
 
-<div class="flex flex-wrap justify-between items-end gap-4 mb-8">
-    <div>
-        <h2 class="text-2xl font-black text-slate-900 tracking-tight">Daftar Pemateri</h2>
-        <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-1">Total: {{ $pemateris->total() }} Instruktur Terdaftar</p>
-    </div>
-    <div class="flex items-center gap-3">
-        <button onclick="openImportModal()"
-                class="bg-white border border-slate-200 text-slate-700 px-6 py-3 rounded-2xl hover:bg-slate-50 transition shadow-sm flex items-center gap-2 text-sm font-black group">
-            <svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-            Import CSV
-        </button>
-        <a href="{{ route('admin.petugas.create') }}"
-           class="bg-slate-900 text-white px-6 py-3 rounded-2xl hover:bg-slate-800 transition shadow-lg shadow-slate-200 flex items-center gap-2 text-sm font-black group">
-            <svg class="w-5 h-5 text-cyan-400 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-            Tambah Pemateri Baru
-        </a>
-    </div>
-</div>
+<div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+    <div class="p-6 md:p-8 bg-slate-50/30 border-b border-slate-100 select-none">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <form method="GET" action="{{ route('admin.petugas.index') }}" class="flex flex-wrap items-center gap-3 w-full md:w-auto flex-1">
+                <div class="relative flex-1 min-w-[200px] max-w-md">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                        <i class="fi fi-rr-search"></i>
+                    </span>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari pemateri..."
+                           class="w-full bg-slate-50 border border-slate-200/80 rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium text-slate-700 outline-none focus:ring-2 focus:ring-cyan-500 transition">
+                </div>
+                <button type="submit" class="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-md transition flex items-center gap-2">
+                    <i class="fi fi-rr-search"></i> Cari Data
+                </button>
+                @if(request()->has('search'))
+                    <a href="{{ route('admin.petugas.index') }}" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm px-4 py-2.5 rounded-xl transition">Reset</a>
+                @endif
+            </form>
 
-<div class="bg-white rounded-[32px] shadow-sm border border-slate-100 overflow-hidden">
+            <div class="flex items-center gap-3 shrink-0">
+                <button onclick="openImportModal()"
+                        class="bg-white border border-slate-200 text-slate-700 font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-sm hover:bg-slate-50 transition uppercase tracking-wider flex items-center gap-2">
+                    <i class="fi fi-rr-upload"></i> Import CSV
+                </button>
+                <a href="{{ route('admin.petugas.create') }}"
+                   class="bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-md transition uppercase tracking-wider flex items-center gap-2">
+                    <i class="fi fi-rr-plus"></i> Tambah Pemateri Baru
+                </a>
+            </div>
+        </div>
+    </div>
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="bg-slate-100/50 border-b-2 border-slate-100">
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Nama & Identitas</th>
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Kontak Detail</th>
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Kompetensi</th>
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50">Portofolio</th>
-                    <th class="p-6 text-[13px] font-black text-slate-900 border-b border-slate-50 text-center">Aksi</th>
+            <thead class="bg-slate-50 border-b border-slate-100 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">
+                <tr>
+                    <th class="px-5 py-4">Nama & Identitas</th>
+                    <th class="px-5 py-4">Kontak Detail</th>
+                    <th class="px-5 py-4">Kompetensi</th>
+                    <th class="px-5 py-4">Portofolio</th>
+                    <th class="px-5 py-4 text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-50">
                 @forelse($pemateris as $p)
-                <tr class="hover:bg-slate-50/50 transition-colors group">
+                <tr class="hover:bg-slate-50/50 transition-colors">
                     <td class="p-6">
                         <div class="flex items-center gap-4">
                             @if($p->foto)
@@ -47,9 +58,7 @@
                                 </div>
                             @else
                                 <div class="w-12 h-12 rounded-2xl bg-slate-50 text-slate-300 flex items-center justify-center shadow-sm group-hover:scale-110 transition duration-300 border border-slate-100">
-                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
-                                    </svg>
+                                    <i class="fi fi-rr-user"></i>
                                 </div>
                             @endif
                             <div class="flex flex-col">
@@ -64,7 +73,7 @@
                                 <span class="text-[12px] font-medium text-slate-900">{{ $p->email ?? '-' }}</span>
                             </div>
                             <div class="flex items-center gap-2">
-                                <svg class="w-3.5 h-3.5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                                <i class="fi fi-rr-phone-call text-slate-300"></i>
                                 <span class="text-[12px] font-medium text-slate-900">{{ $p->no_telp ?? '-' }}</span>
                             </div>
                         </div>
@@ -87,17 +96,17 @@
                             </span>
                         @endif
                     </td>
-                    <td class="p-6 text-center">
+                    <td class="p-5 text-center">
                         <div class="flex items-center justify-center gap-2">
                             <a href="{{ route('admin.petugas.edit', $p->id_pemateri) }}"
-                               class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-indigo-600 hover:text-indigo-600 hover:shadow-lg hover:shadow-indigo-50 transition shadow-sm" title="Edit">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-5M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                               class="w-8 h-8 flex items-center justify-center rounded-lg bg-cyan-50 text-cyan-600 hover:text-cyan-800 hover:bg-cyan-100 transition" title="Edit">
+                                <i class="fi fi-rr-edit"></i>
                             </a>
                             <form action="{{ route('admin.petugas.destroy', $p->id_pemateri) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus pemateri ini?')">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:border-red-500 hover:text-red-500 hover:shadow-lg hover:shadow-red-50 transition shadow-sm" title="Hapus">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v1m3 5V4"></path></svg>
+                                <button type="submit" class="w-8 h-8 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:text-rose-700 hover:bg-rose-100 transition" title="Hapus">
+                                    <i class="fi fi-rr-trash"></i>
                                 </button>
                             </form>
                         </div>
@@ -108,7 +117,7 @@
                     <td colspan="5" class="p-24 text-center">
                         <div class="flex flex-col items-center">
                             <div class="w-20 h-20 bg-slate-50 text-slate-200 rounded-3xl flex items-center justify-center mb-4">
-                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                <i class="fi fi-rr-user"></i>
                             </div>
                             <p class="text-sm font-black text-slate-400 uppercase tracking-widest">Belum ada pemateri terdaftar</p>
                             <a href="{{ route('admin.petugas.create') }}" class="mt-4 text-xs font-bold text-indigo-600 hover:underline">Tambah Pemateri Pertama</a>
@@ -119,56 +128,9 @@
             </tbody>
         </table>
     </div>
-    @if($pemateris->count())
-    <div class="px-6 py-4 border-t border-slate-100 bg-slate-50/40 flex items-center justify-between gap-4">
-        {{-- Info halaman --}}
-        <p class="text-[13px] font-bold text-slate-900 tracking-widest whitespace-nowrap">
-            Menampilkan
-            <span class="text-slate-900">{{ $pemateris->firstItem() }}–{{ $pemateris->lastItem() }}</span>
-            dari
-            <span class="text-slate-900">{{ $pemateris->total() }}</span>
-            data
-        </p>
-
-        {{-- Navigasi halaman (hanya jika ada lebih dari 1 halaman) --}}
-        @if($pemateris->hasPages())
-        <div class="flex items-center gap-1">
-            {{-- Prev --}}
-            @if($pemateris->onFirstPage())
-                <span class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-100 text-slate-300 cursor-not-allowed">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                </span>
-            @else
-                <a href="{{ $pemateris->previousPageUrl() }}" class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 hover:border-indigo-500 hover:text-indigo-600 hover:shadow-sm transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                </a>
-            @endif
-
-            {{-- Nomor halaman --}}
-            @foreach($pemateris->getUrlRange(1, $pemateris->lastPage()) as $page => $url)
-                @if($page == $pemateris->currentPage())
-                    <span class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-900 text-white text-[12px] font-black shadow-sm">
-                        {{ $page }}
-                    </span>
-                @else
-                    <a href="{{ $url }}" class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 text-[12px] font-bold hover:border-indigo-500 hover:text-indigo-600 hover:shadow-sm transition">
-                        {{ $page }}
-                    </a>
-                @endif
-            @endforeach
-
-            {{-- Next --}}
-            @if($pemateris->hasMorePages())
-                <a href="{{ $pemateris->nextPageUrl() }}" class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 hover:border-indigo-500 hover:text-indigo-600 hover:shadow-sm transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </a>
-            @else
-                <span class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-100 text-slate-300 cursor-not-allowed">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </span>
-            @endif
-        </div>
-        @endif
+    @if($pemateris->hasPages())
+    <div class="p-6 border-t border-slate-100 flex justify-center">
+        {{ $pemateris->appends(request()->query())->links() }}
     </div>
     @endif
 </div>
@@ -189,7 +151,7 @@
                 <p class="font-bold text-slate-700">Format Kolom CSV:</p>
                 <code class="block bg-white p-2 rounded-xl border border-slate-200/60 text-[10px] text-indigo-600 font-black">nama_lengkap, email, no_telp, kompetensi, bio</code>
                 <a href="{{ route('admin.petugas.import-template') }}" class="inline-flex items-center gap-1.5 text-indigo-600 hover:underline font-bold mt-1">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    <i class="fi fi-rr-download"></i>
                     Unduh Template CSV
                 </a>
             </div>
